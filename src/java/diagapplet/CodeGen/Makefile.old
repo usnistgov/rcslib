@@ -1,0 +1,192 @@
+
+PLAT=java
+
+local_default: CodeGenCmdLine.jar
+
+.PHONY: local_default
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../../../..
+endif
+
+LOCAL_CLASSPATH=$(RCSLIB_MAIN_DIR)/plat/$(PLAT)/lib/rcs.jar:../..
+
+PACKAGE_NAME = diagapplet.CodeGen
+
+CMDLINE_JAVA_SOURCES1 = 	\
+	ModuleInfoInterface.java \
+	StructureTypeInfo.java \
+	EnumTypeInfo.java \
+	DiagNMLMsgDictInterface.java \
+	DiagNMLMsgDictCreatorInterface.java \
+	DiagNMLFormatConvertErrCallback.java \
+	info_array_elem_info.java \
+	ModuleInfo.java \
+	CodeGenCmdLine.java \
+	DefinedValue.java \
+	BufferInfo.java \
+	ChannelInfo.java \
+	ServerInfo.java \
+	CodeGenCommonInterface.java \
+	CodeGenBellRingerInterface.java \
+	CodeGenTextAreaInterface.java \
+	CodeGenListInterface.java \
+	CodeGenCheckBoxInterface.java \
+	CodeGenTextFieldInterface.java \
+	StringFuncs.java \
+	C_Generator.java \
+	Ada_Generator.java \
+	CodeGenCommon.java \
+	SplitInfoToken.java \
+	StructTypeInfoTokenizerInterface.java \
+	StructTypeInfoTokenizer.java
+
+
+ifdef USE_GCJ
+
+LOCAL_GCJ_FLAGS=-I../..
+
+SRCS=$(JAVA_SOURCES)
+
+OBJS=$(JAVA_SOURCES:%.java=%.o) $(CMDLINE_JAVA_SOURCES1:%.java=%.o)
+
+else
+
+CMDLINE_SOURCES=$(CMDLINE_JAVA_SOURCES1)
+CMDLINE_CLASSES=$(CMDLINE_JAVA_SOURCES1:%.java=$(DEVP_LIB_DIR)/%.class)
+REL_CMDLINE_CLASSES=$(CMDLINE_JAVA_SOURCES1:%.java=diagapplet/CodeGen/%.class)
+NMLCODEGEN_OBJS=
+JAVA_SOURCES = $(CMDLINE_JAVA_SOURCES1)  CodeGenTextFieldWrapper.java CodeGenTextAreaWrapper.java CodeGen.java CodeGenFrame.java \
+	DiagNMLmsg.java \
+	DiagNMLMsgDict.java \
+	DiagNMLMsgDictCreator.java \
+
+PLAT=java
+
+endif
+
+
+include ../../../Makefile.rcs
+
+ifdef DEVP_DIR
+
+$(DEVP_DIR)/lib/rcs/RCS_VERSION.class:
+	-$(MAKE) -k -C ../../rcs
+
+$(DEVP_DIR)/lib/diagapplet/utils/URLLoadInfoPanelInterface.class:
+	-$(MAKE) -k -C ../utils
+
+
+OTHER_CLASSES_NEEDED= $(DEVP_DIR)/lib/rcs/RCS_VERSION.class $(DEVP_DIR)/lib/diagapplet/utils/URLLoadInfoPanelInterface.class
+
+
+compile_all: $(OTHER_CLASSES_NEEDED) 
+
+documentation: $(DOC_DIR)/$(PACKAGE_NAME).CodeGen.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).EnumTypeInfo.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).StructureTypeInfo.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).CodeGenFrame.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).ModuleInfo.html
+
+
+ifdef FORCE_JARS
+CodeGen.jar: delete_codegen_jar rebuild_codegen_jar
+CodeGenCmdLine.jar: delete_codegen_jar rebuild_codegen_jar
+
+else
+
+CodeGen.jar: $(DEVP_DIR)/lib/CodeGen.jar
+
+CodeGenCmdLine.jar: $(DEVP_DIR)/lib/CodeGenCmdLine.jar
+
+endif
+
+delete_codegen_jar:
+	-\rm -f $(DEVP_DIR)/lib/CodeGen.jar
+	-\rm -f $(DEVP_DIR)/lib/CodeGenCmdLine.jar
+
+rebuild_codegen_jar:  $(DEVP_DIR)/lib/CodeGen.jar $(DEVP_DIR)/lib/CodeGenCmdLine.jar
+
+.PHONY: CodeGen.jar rebuild_codegen_jar delete_codegen_jar CodeGenCmdLine.jar
+
+ifdef USE_GCJ
+all: nml_codegen
+else
+all: CodeGen.jar CodeGenCmdLine.jar
+endif
+
+ADD_MANIFEST_INFO = 1
+
+ifndef TOP_SRCDIR
+TOP_SRCDIR=$(shell cd ../../../.. ; pwd )
+endif
+
+devp_CodeGenJarInfo.txt : $(DEVP_DIR)/lib/CodeGenJarInfo.txt
+
+.PHONY: devp_CodeGenJarInfo.txt
+
+ifdef ADD_MANIFEST_INFO
+
+$(DEVP_DIR)/lib/CodeGenJarInfo.txt: CodeGenJarInfo.txt
+	( set -x ; \
+	cd ../../..; \
+	rcs_version=`grep RCS_VERSION $(TOP_SRCDIR)/src/rcsvers.hh | awk '{print $$3}' | sed s/\"// | sed s/\"//`; \
+	echo $$rcs_version; \
+	cd java/diagapplet/CodeGen; \
+	cat < $^ | sed s/RCS_VERSION_STRING/$$rcs_version/ > $@;)
+
+
+
+$(DEVP_DIR)/lib/CodeGen.jar: $(DEVP_CLASSES) $(OTHER_CLASSES_NEEDED) $(DEVP_DIR)/lib/CodeGenJarInfo.txt
+	(cd $(DEVP_DIR)/lib; $(JAR) -cmf0 CodeGenJarInfo.txt CodeGen.jar rcs diagapplet/utils diagapplet/CodeGen;)
+
+
+$(DEVP_DIR)/lib/CodeGenCmdLineJarInfo.txt: CodeGenCmdLineJarInfo.txt
+	(set -x ; \
+	cd ../../..; \
+	rcs_version=`grep RCS_VERSION $(TOP_SRCDIR)/src/rcsvers.hh | awk '{print $$3}' | sed s/\"// | sed s/\"//`; \
+	echo $$rcs_version; \
+	cd java/diagapplet/CodeGen; \
+	cat < $^ | sed s/RCS_VERSION_STRING/$$rcs_version/ > $@;)
+
+$(DEVP_DIR)/lib/CodeGenCmdLine.jar: $(CMDLINE_SOURCES) $(DEVP_DIR)/lib/CodeGenCmdLineJarInfo.txt $(OTHER_CLASSES_NEEDED)
+	(cd $(DEVP_DIR)/lib; \
+	if test -f $(DEVP_DIR)/lib/rcs.jar -a '!' -f $(DEVP_DIR)/lib/rcs/RCS_VERSION.class ; then \
+	$(JAR) -xf rcs.jar; \
+	fi; )
+	$(JAVA_COMPILER) $(LOCAL_JAVA_FLAGS) -classpath $(DEVP_DIR)/lib:. -d $(DEVP_DIR)/lib $(CMDLINE_SOURCES);
+	(cd $(DEVP_DIR)/lib; \
+	 rm -f CodeGenCmdLine.jar; \
+	 $(JAR) -cmf0 CodeGenCmdLineJarInfo.txt CodeGenCmdLine.jar  rcs/utils/URL_and_FileLoader.class rcs/utils/StrToInt.class rcs/utils/StrToLong.class rcs/nml/NMLConnectionInterface.class rcs/nml/NMLConnectionCreatorInterface.class rcs/nml/NMLMessageDictionary.class rcs/nml/NMLFormatConvertErrCallbackInterface.class rcs/nml/errlogMsgDict.class diagapplet/utils/FakeFastListPanel.class diagapplet/utils/FastListPanelItem.class diagapplet/utils/FastListPanelInterface.class diagapplet/utils/CountButtonInterface.class diagapplet/utils/CountListInterface.class diagapplet/utils/URLLoadInfoPanelInterface.class $(REL_CMDLINE_CLASSES);)
+
+
+else
+
+
+$(DEVP_DIR)/lib/CodeGen.jar: $(DEVP_CLASSES) $(OTHER_CLASSES_NEEDED)
+	(cd $(DEVP_DIR)/lib; $(JAR) -cf0 CodeGen.jar rcs  diagapplet/utils diagapplet/CodeGen;)
+
+endif
+
+devp_classes: $(DEVP_CLASSES)
+
+.PHONY: devp_classes
+
+ifdef USE_GCJ
+
+nml_codegen: $(DEVP_DIR)/bin/nml_codegen$(EXE_EXT)
+
+.PHONY: nml_codegen
+
+
+nml_codegen.exe: $(DEVP_DIR)/bin/nml_codegen$(EXE_EXT)
+
+.PHONY: nml_codegen.exe
+
+$(DEVP_DIR)/bin/nml_codegen$(EXE_EXT): $(DEVP_OBJS)
+	gcj -I../.. --main=diagapplet.CodeGen.CodeGenCmdLine $^ -L$(DEVP_DIR)/lib -lrcsforgcj -ldiagutilforgcj -o $@
+
+endif
+
+endif
+# DEVP_DIR

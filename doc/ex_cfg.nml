@@ -1,0 +1,31 @@
+# ex_cfg.nml
+
+# buffers:
+# name		type	host		size	neut RPC# 	buffer#	 max_proc [type-spec]
+#		GLOBMEM	host		size	neut RPC# 	buffer#	 max_proc phys_addr
+#		SHMEM	host		size	neut RPC# 	buffer#	 max_proc key 
+B ex_buf1	SHMEM	localhost	512	0    0	 	1	 * 	101 TCP=5001 format_name=ex packed
+B ex_buf2	SHMEM	localhost	512	0    0	 	2	 * 	102 TCP=5001 format_name=ex packed
+B ex_buf3	GLOBMEM	vx40		512	0    0	 	3	 * 	vme_addr=0x4e00000 format_name=ex packed
+
+
+# processes:
+# name		buffer	type	host 	ops	server 	timeout	master 	c_num
+P ex1_proc	ex_buf1	LOCAL	localhost 	W	0	INF 	1	0
+P ex2_proc	ex_buf1	LOCAL	localhost 	W	0	INF 	1	1
+P ex2_proc	ex_buf2	LOCAL	localhost 	W	0	INF 	1	1
+P ex3_proc	ex_buf1	LOCAL	localhost 	R	0	INF 	1	2
+P ex4_proc	ex_buf1	LOCAL	localhost 	W	0	INF 	0	3
+P ex5_proc	ex_buf1	PHANTOM	localhost 	W	0	0.5 	1	4
+P ex6_proc	ex_buf1	LOCAL	localhost 	RW	0	0.5 	1	5
+P ex8_proc	ex_buf1	REMOTE	rosie 	RW	0	10.0 	0	6
+P ex8_svr	ex_buf1	LOCAL	localhost 	RW	1 	5.0 	1	8
+P ex8_svr	ex_buf3	LOCAL	localhost 	RW	1 	5.0 	1	8
+P ex9_svr	ex_buf1	LOCAL	localhost 	RW	1 	5.0 	1	9
+P ex9_svr	ex_buf2	LOCAL	localhost 	RW	1 	5.0 	1	9
+P ex10_svr	ex_buf1	LOCAL	localhost 	RW	2 	5.0 	1	10
+P ex10_svr	ex_buf2	LOCAL	localhost 	RW	2 	5.0 	1	10
+
+# special default process line that is matched by anybody looking for a process
+# line and is not explicitly listed above.
+P default       default AUTO	anyhost 	RW	0 	5.0 	0	11

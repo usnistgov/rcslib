@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE> Java-based Tools for Development and Diagnosis of Real-Time Control Systems</TITLE>
+<META NAME="Template" CONTENT="C:\Program Files\Microsoft Office\Office\html.dot">
+</HEAD>
+<BODY LINK="#0000ff" VLINK="#800080">
+
+<B><FONT FACE="Arial" SIZE=2><P ALIGN="RIGHT"><A NAME="PutConferenceHere">Proceedings of ASME:</P>
+<P ALIGN="RIGHT">Computers in Engineering Conference</P>
+<P ALIGN="RIGHT">Atlanta, Georgia September 16-18, 1998</P>
+</FONT><FONT FACE="Arial" SIZE=5><P ALIGN="RIGHT"><A NAME="PutDocumentNumberHere"></A>Put Paper Number Here</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY"></A></P>
+</FONT><B><FONT FACE="Arial"><P ALIGN="CENTER">Java-based Tools for Development and Diagnosis of Real-Time Control Systems</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">&nbsp;</P></FONT>
+<TABLE CELLSPACING=0 BORDER=0 CELLPADDING=7 WIDTH=624>
+<TR><TD WIDTH="50%" VALIGN="TOP" COLSPAN=2>
+<P ALIGN="CENTER"><FONT FACE="Arial" SIZE=2>Will Shackleford/ NIST</FONT></TD>
+<TD WIDTH="50%" VALIGN="TOP" COLSPAN=2>
+<FONT FACE="Arial" SIZE=2><P ALIGN="CENTER">Fredrick M. Proctor/NIST</FONT></TD>
+</TR>
+<TR><TD WIDTH="33%" VALIGN="TOP">
+<P>&nbsp;</TD>
+<TD WIDTH="34%" VALIGN="TOP" COLSPAN=2>
+<P>&nbsp;</TD>
+<TD WIDTH="33%" VALIGN="TOP">
+<P>&nbsp;</TD>
+</TR>
+<TR><TD WIDTH="50%" VALIGN="TOP" COLSPAN=2 HEIGHT=6><P></P></TD>
+<TD WIDTH="50%" VALIGN="TOP" COLSPAN=2 HEIGHT=6><P></P></TD>
+</TR>
+</TABLE>
+
+<FONT SIZE=2><P ALIGN="JUSTIFY"><A NAME="PutAuthorsHere"></P>
+<P ALIGN="JUSTIFY"></A></P>
+</FONT><B><FONT FACE="Arial" SIZE=2><P ALIGN="JUSTIFY">Abstract</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">The <B>N</B>ational <B>I</B>nstitute of <B>S</B>tandards and <B>T</B>echnology (NIST) has been using the <B>R</B><I>eal-time </I><B>C</B><I>ontrol </I><B>S</B><I>ystem</I> (RCS) Reference Model Architecture for<I> </I>building control systems based on a hierarchy of cyclically executing control modules. This paper describes the work done to build Java tools that allow developers to lay out their hierarchy according to RCS tenets and view or change the inputs and outputs of each module at run-time. </P>
+</FONT><B><FONT FACE="Arial" SIZE=2><P ALIGN="JUSTIFY">introduction</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">This paper describes the Java tools built for RCS and their relationship to the <B>R</B><I>eal-time </I><B>C</B><I>ontrol </I><B>S</B><I>ystem</I> (RCS) Reference Model Architecture. An overview of the other software tools and libraries created for developing RCS applications is presented. Several of the unique challenges and strategies encountered in building tools of this sort in Java are also presented.</P>
+</FONT><B><FONT FACE="Arial" SIZE=2><P ALIGN="JUSTIFY">BackGround</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">Early work by Albus [1,2] and Barbera [3] in the <B>A</B>utomated <B>M</B>anufacturing <B>R</B>esearch <B>F</B>acility (AMRF) led to the first definition of the Real-Time Control Systems engineering approach focusing primarily on software design. Later, software templates were created to make it easier to use RCS, encourage consistency both between modules in an application and between applications, and provide better structure (see Quintero [4]). Libraries of software were also created. These include:</P>
+
+<UL>
+<P ALIGN="JUSTIFY"><LI>Neutral Manufacturing Language (NML) for communications</LI></P>
+<P ALIGN="JUSTIFY"><LI>Portable <B>A</B>pplication <B>P</B>rogramming <B>I</B>nterfaces<I> </I>(API) for accessing operating systems services</LI></P>
+<P ALIGN="JUSTIFY"><LI>Functions for coordinate system transformations</LI></P>
+<P ALIGN="JUSTIFY"><LI>A base class for NML control modules. </LI></P></UL>
+
+</FONT><FONT FACE="Courier" SIZE=2><P ALIGN="JUSTIFY">Makefile</FONT><FONT SIZE=2> definitions and directory structures were developed to allow multiple programmers to work together to build applications which run on multiple platforms. Before the tools were developed, control systems were built by copying and renaming several C++ source files, doing several search and replace operations and then populating the source files with the appropriate functionality for that particular application. Information on how the control system was behaving was gathered by running source code debuggers and/or by watching displays of custom built graphical interfaces. This information was used to diagnose problems and suggest improvement.</P>
+</FONT><B><FONT FACE="Arial" SIZE=2><P ALIGN="JUSTIFY">GOALS</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">Goals for developing the tools are as follows:</P>
+<OL>
+
+<P ALIGN="JUSTIFY"><LI>Allow current users of the RCS source files to quickly and inexpensively develop applications of higher quality.</LI></P>
+<P ALIGN="JUSTIFY"><LI>Provide means for initiating new RCS developers with a much shorter learning curve.</LI></P>
+<P ALIGN="JUSTIFY"><LI>Allow problems to be found and diagnosed more easily.</LI></P>
+<P ALIGN="JUSTIFY"><LI>Provide means to control or view the activity of a control system remotely through a web browser.</LI></P>
+<P ALIGN="JUSTIFY"><LI>Provide a new perspective from which to view RCS and feed this back into our research into open architecture controllers and intelligent systems.</LI></P></OL>
+
+<P ALIGN="JUSTIFY">&nbsp;</P>
+</FONT><B><FONT FACE="Arial" SIZE=2><P ALIGN="JUSTIFY">Development Process</P>
+<P ALIGN="JUSTIFY"> </B></FONT><FONT SIZE=2>Figure 1 shows a diagram of the development process and the position of the tools we built within it. The process begins with analysis of the control problem and a design of the RCS architecture. Although we do not provide any tools for this part of the process, it is essential. Once the developer has a basic idea of the hardware to control and the major tasks this system will be asked to perform, the developer can proceed to draw the hierarchy inside the RCS Design Tool. The hierarchy will consist of several cyclically executing control modules. Each module receives commands from its superior and sends commands to one or more subordinate modules. Subordinates provide status information to their superiors. The control modules will be examined in more detail later. </P>
+<P ALIGN="JUSTIFY">&nbsp;</P>
+<IMG SRC="devproc.gif" > 
+<P ALIGN="JUSTIFY">The design tool then generates the C++ source code with stubs, </FONT><FONT FACE="Courier" SIZE=2>makefiles,</FONT><FONT SIZE=2> and configuration files. The source code may be edited either with a separate text editor or within the design tool. A </FONT><FONT FACE="Courier" SIZE=2>makefile</FONT><FONT SIZE=2> interpreter is run to call the compiler and generate the executable(s). These executables may be tested by running them with the RCS Diagnostics Tool. The diagnostics tool shows a hierarchy that is identical to the one from the design tool except that the current commands and status from the running controller are displayed. The tool also allows variables to be plotted, state tables to be examined, and errors to be logged. After each step of the process, the developer decides whether to proceed or go back to an earlier point in the process. Therefore, there is a need to be able modify to the existing system and allow as many options as possible to be kept open at each level.</P>
+</FONT><B><FONT FACE="Arial" SIZE=2><P ALIGN="JUSTIFY">rcs design Tool</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">The purpose of the RCS Design tool is to provide a graphical view of the application hierarchy and to generate the C++ source code, configuration files and makefiles needed to build the application. Several views may be selected by a drop-down list in the upper left. </P>
+
+<UL>
+</FONT><FONT FACE="Courier" SIZE=2><P ALIGN="JUSTIFY"><LI>Hierarchy View</FONT><FONT SIZE=2>, Figure A1 -</FONT><FONT FACE="Courier" SIZE=2> </FONT><FONT SIZE=2>The left side has a set of controls used to add modules, select subordinates, and add commands and auxiliary channels. The right side has a graphical depiction of the hierarchy. The selected module appears highlighted. As the user enters modules in the "</FONT><FONT FACE="Courier" SIZE=2>Add Module</FONT><FONT SIZE=2>" text field on the left, the modules are added as subordinates of the selected module. </LI></P>
+</FONT><FONT FACE="Courier" SIZE=2><P ALIGN="JUSTIFY"><LI>Files View</FONT><FONT SIZE=2>, Figure A2 - This is a convenient place to view or modify the generated source code and configuration files. A list of all the files needed to build and run the application is on the left of files view. A simple text editor showing the file selected from the list is located on the right.</LI></P>
+</FONT><FONT FACE="Courier" SIZE=2><P ALIGN="JUSTIFY"><LI>Options View -</FONT><FONT SIZE=2>This view</FONT><FONT FACE="Courier" SIZE=2> </FONT><FONT SIZE=2>is</FONT><FONT FACE="Courier" SIZE=2> </FONT><FONT SIZE=2>populated with controls to change miscellaneous options such as the directories where files are written. (Not Shown)</LI></P>
+</FONT><FONT FACE="Courier" SIZE=2><P ALIGN="JUSTIFY"><LI>Loops View</FONT><FONT SIZE=2> - The developer may use this view to assign modules to execution loops. All the modules in the same execution loop are linked together at compile time and must run on the same host at the same cycle time. However, there are advantages in synchronization to having the modules linked together. (Not Shown)</LI></P></UL>
+
+<P ALIGN="JUSTIFY">Buttons for creating the source code, running the makefile interpreter, running the application, and printing the graphical view of the hierarchy are located at the top of the design tool. A progress bar shows the progress and name of major tasks, such as creating source, which may take a few seconds.</P>
+</FONT><B><FONT FACE="Arial" SIZE=2><P ALIGN="JUSTIFY">Generated FILES</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">The design tool generates several different types of files. The detailed information needed to understand and work with each type of file is provided on the RCS Library Web Page [5]. An overview follows. The example files may also be found on the website.</P>
+<P ALIGN="JUSTIFY">NML message header files are C++ header files that define the classes of objects that can be sent to the module as commands or received from the module as status. We usually name the file according to the following convention </FONT><FONT FACE="Courier" SIZE=2>&lt;module name&gt;+'n.'+&lt;C++ header ext.&gt;</FONT><FONT SIZE=2>. (Some programmers prefer </FONT><FONT FACE="Courier" SIZE=2>.h</FONT><FONT SIZE=2> as a C++ header extension while others use </FONT><FONT FACE="Courier" SIZE=2>.hh</FONT><FONT SIZE=2> or </FONT><FONT FACE="Courier" SIZE=2>.hpp</FONT><FONT SIZE=2> to distinguish them from C header files. This is an option in the design tool.) The design tool generates a class for every command entered and one class for status. The programmer will probably add variables to these classes</P>
+<P ALIGN="JUSTIFY">Module header files define the C++ class that contains all the functions for the module. These functions are called by the NML_MODULE base class when the appropriate message is received, or every cycle, but are not used by other modules directly.</P>
+<P ALIGN="JUSTIFY">Module source files provide stubs for each command that the module accepts. Inside these stubs, the programmer is expected to add state tables related to each command and probably send commands to its subordinates using NML communication channels that have already been set up. The state tables for INIT and HALT are already set up by the design tool. The code from the state table can be made available to the diagnostics tool so the current line in the state table can be watched.</P>
+<P ALIGN="JUSTIFY">Main source files contain the main function used to start execution. The main function creates an object for each type of module. Each module's controller function is called inside a loop that pauses for a timer each cycle to provide consistent cycle times. </P>
+<P ALIGN="JUSTIFY">Other files generated include:</P>
+<P ALIGN="JUSTIFY">1. NML Configuration files that allow communications parameters and protocols to be selected.</P>
+<P ALIGN="JUSTIFY">2. </FONT><FONT FACE="Courier" SIZE=2>Makefiles</FONT><FONT SIZE=2> that control how the source code is compiled.</P>
+<P ALIGN="JUSTIFY">3. A configuration file used by the RCS Diagnostics Tool.</P>
+<P ALIGN="JUSTIFY">4. A shell script that allows multiple executables to be started with a single command.</P>
+</FONT><B><FONT FACE="Arial" SIZE=2><P ALIGN="JUSTIFY">Source Code Merger</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">One problem code generators often have is a conflict between the automatic tool generating code and the programmer manually creating or modifying code in the same file with a separate text editor. A programmer may already have edited code inside a module and then decide to add a command or subordinate to that by running the code generator. Unless the code generator keeps the manual edits, the programmer might lose the work he has already done.</P>
+<P ALIGN="JUSTIFY">To solve this problem, the tool uses a component called the </FONT><FONT FACE="Courier" SIZE=2>merger</FONT><FONT SIZE=2> that allows both user edits and automatically generated code to be merged in the same file. The position of the merger within the RCS-Design Tool is shown in Figure 2. To the rest of the design tool, the </FONT><FONT FACE="Courier" SIZE=2>merger</FONT><FONT SIZE=2> appears to be an object with functionality that is similar to an output stream. As each line is written, it is compared to see if it matches a line that already exists in the file. If the line does not match any of the lines in the file, it is inserted in a position that keeps it in order with the lines that do match. The conditions for a match were altered to make the </FONT><FONT FACE="Courier" SIZE=2>merger</FONT><FONT SIZE=2> work more effectively. Because loading a file in some editors changes the way tabs and spaces or new lines are stored, the white space is stripped out before the comparison is made. In addition, a nesting level is computed for each line. The nesting level must match for the lines to be considered matches. The </FONT><FONT FACE="Courier" SIZE=2>merger</FONT><FONT SIZE=2> can be disabled either for short periods inside the code using special comments or for the whole file using an option inside the tool. When the merger is disabled, the output is sent directly to the file without checking the old source file.</P>
+<IMG SRC="merger.gif">
+
+<P ALIGN="JUSTIFY">RCS DiAGNOSTICS TOOL</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">Once the software has been compiled, it must be tested. Previously, we tested our systems with traditional source code debuggers. However, by developing a diagnostics tool specifically for RCS applications, we can provide many features that traditional source code debuggers do not.</P>
+<OL>
+
+<P ALIGN="JUSTIFY"><LI>Show the entire hierarchy in one view with the current commands and status.</LI></P>
+<P ALIGN="JUSTIFY"><LI>Highlight the current line in the state table.</LI></P>
+<P ALIGN="JUSTIFY"><LI>Allow data to be taken from the system without stopping it.</LI></P>
+<P ALIGN="JUSTIFY"><LI>Allow multiple programmers to simultaneously view the state of the machine across a LAN or the Internet.</LI></P>
+<P ALIGN="JUSTIFY"><LI>Control the system by sending commands to any module.</LI></P></OL>
+
+<P ALIGN="JUSTIFY">When the tool is started, it needs to load a configuration file. The user can type the file name or URL of the configuration file into the text box at the top. The location can also be pre-set with the HTML tag </FONT><FONT FACE="Courier" SIZE=2>&lt;PARAM name=</FONT><FONT SIZE=2>"</FONT><FONT FACE="Courier" SIZE=2>ConfigurationFile</FONT><FONT SIZE=2>"</FONT><FONT FACE="Courier" SIZE=2> value=</FONT><FONT SIZE=2>"</FONT><FONT FACE="Courier" SIZE=2>app.cfg</FONT><FONT SIZE=2>"</FONT><FONT FACE="Courier" SIZE=2>&gt;</FONT><FONT SIZE=2> if the tool is to be loaded from a website dedicated to that application.</P>
+<P ALIGN="JUSTIFY">A diagnostics configuration file can be generated by the design tool or manually created with a text editor. This file provides information on the relationships between modules and the locations of the other files used in the application such as module source files, communications message headers, and communications configuration files that the diagnostics tool can use. It is not necessary to provide all of the files. For example, if the programmer preferred not to provide the module source code, the state table display would not be available. However, the developer could still send commands and examine status from the module.</P>
+<P ALIGN="JUSTIFY">The RCS Diagnostics tool has several views that can be selected with the drop-down list in the upper left.</P>
+
+<UL>
+<P ALIGN="JUSTIFY"><LI>The </FONT><FONT FACE="Courier" SIZE=2>hierarchy view,</FONT><FONT SIZE=2> shown in Figure A3, provides a graphical representation of the hierarchy similar to the one in the design tool except that each module displays the current command and status type of the module. The color of the boxes in the hierarchy change depending on the status type. (DONE, EXECUTING, ERROR) Clicking on any of the boxes brings up a menu of the commands that can be sent to that module. </LI></P>
+<P ALIGN="JUSTIFY"><LI>The </FONT><FONT FACE="Courier" SIZE=2>details view,</FONT><FONT SIZE=2> shown in Figure A4, provides much more information about one particular module selected with a list control. The information includes the current value of every variable in the current command and status classes rather than just the type. Any variable can be selected and added to the list of variables that are logged for plotting. </LI></P>
+<P ALIGN="JUSTIFY"><LI>The </FONT><FONT FACE="Courier" SIZE=2>graph view</FONT><FONT SIZE=2>, shown in Figure A5, shows a running plot of each variable that was selected from the details view for plotting versus time. </LI></P>
+<P ALIGN="JUSTIFY"><LI>The </FONT><FONT FACE="Courier" SIZE=2>state table view</FONT><FONT SIZE=2>, shown in Figure A6, displays the source code of the currently selected module with the current line in the state table highlighted. </LI></P></UL>
+
+<P ALIGN="JUSTIFY">&nbsp;</P>
+</FONT><B><FONT FACE="Arial" SIZE=2><P ALIGN="JUSTIFY">Java Challenges</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">Java has some unique advantages for this type of application, but it also creates some special challenges as well. Since the Java code must be able to run on any platform, some platform specific functions are not available. For these tools, functions are needed for setting file permissions, interpreting makefiles and creating symbolic links. A recommended approach for handling this limitation is to check </FONT><FONT FACE="Courier" SIZE=2>System.getProperties (</FONT><FONT SIZE=2>"</FONT><FONT FACE="Courier" SIZE=2>os.name</FONT><FONT SIZE=2>"</FONT><FONT FACE="Courier" SIZE=2>)</FONT><FONT SIZE=2> and then call </FONT><FONT FACE="Courier" SIZE=2>Runtime.getRuntime().exec( </FONT><FONT SIZE=2>...</FONT><FONT FACE="Courier" SIZE=2> )</FONT><FONT SIZE=2>. This technique is not 100% Pure Java, but it allows operating system dependant code to be localized for porting between platforms.</P>
+<P ALIGN="JUSTIFY">Security barriers built into web browsers introduce some restrictions on running Java code within web browsers. One restriction is that applets generally may not open socket connections to hosts other than the web server from which they were loaded. This might for example prevent the diagnostics tool from being able to communicate with some or all of the modules. The following strategies can be used to solve this problem:</P>
+<OL>
+
+<P ALIGN="JUSTIFY"><LI>Run a web server on the same host as the control system and have browsers download the applet from it. Free or very inexpensive web servers are available for most platforms. This strategy allows the applet to connect to the modules on that host in almost any browser that supports Java.</LI></P>
+<P ALIGN="JUSTIFY"><LI>Run a proxy program. A simple program called </FONT><FONT FACE="Courier" SIZE=2>tcpproxy</FONT><FONT SIZE=2> is included in the RCS library. It may run on the web server and accept requests from applets, forward them to the appropriate host where the modules run, and forwards the replies from the modules back to the applet. It can also be used on the host where the modules run to forward requests to the web server. Since the applet only needs to open a connection to the same host from which it was loaded, no security exception occurs.</LI></P>
+<P ALIGN="JUSTIFY"><LI>Sign the applet. Microsoft Internet Explorer 3+, Netscape Navigator 4+ and HotJava all provide means of identifying signed applets and will allow those applets to connect to any host after the user warning. Unfortunately, they use three different types of files to store the signatures. This provides the minimum overhead on the server side. However, this method does not allow users with other browsers or with concerns about letting go of the security protections to communicate with the modules.</LI></P></OL>
+
+<P ALIGN="JUSTIFY">The challenges and advantages of Java seem closely linked. The cost for improved portability is the lack of some operating system specific functions. Building an application to run inside a web browser allows it to be distributed more easily and provides the user with better security; however, it requires some additional work to get the same flexibility.</P>
+</FONT><B><FONT FACE="Arial" SIZE=2><P ALIGN="JUSTIFY">CONCLUSIONS</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">RCS provides a very good match for graphical software design and diagnostics tools. RCS hierarchies are abstract enough to provide a high level graphical view of the application, yet concrete enough to be used for building and testing real applications. Using Java to build those tools allows them to be distributed to multiple platforms easily. Although Java also creates some challenges, those challenges can be overcome without too many burdens.</P>
+</FONT><B><FONT FACE="Arial" SIZE=2><P ALIGN="JUSTIFY">References</P>
+</B></FONT><FONT SIZE=2><P ALIGN="JUSTIFY">[1] Albus, J. S., "Outline for a Theory of Intelligence," IEEE Transactions on Systems, Man, and Cybernetics, Vol. 21, No.3, May/June 1991.</P>
+<P ALIGN="JUSTIFY">[2] Albus, J. S., "RCS: A Reference Model Architecture for Intelligent Control," Computer, May 1992.</P>
+<P ALIGN="JUSTIFY">[3] Barbera, A.J., Albus, J.S., M.L. Fitzgerald, and L.S. Haynes, "RCS: The NBS Real-Time Control System," Robots 8 Conference and Exposition, Detroit, MI June 1984.</P>
+<P ALIGN="JUSTIFY">[4] Quintero, R., Barbera, A.J., "A Software Template Approach to Building Complex Large-Scale Intelligent Control Systems," 8<SUP>th</SUP> IEEE International Symposium on Intelligent Control, Chicago, IL, September 25-27, 1993.</P>
+<P ALIGN="JUSTIFY">[5] Shackleford, W. , "RCS Library Web Page", </FONT><A HREF="http://isd.cme.nist.gov/proj/rcs_lib"><FONT SIZE=2>http://isd.cme.nist.gov/proj/rcs_lib</FONT></A><FONT SIZE=2>.</P>
+<P ALIGN="JUSTIFY">&nbsp;</P></FONT>
+<h2><A HREF="Appendix.htm">Appendix<a/></h2>
+</BODY>
+</HTML>

@@ -1,0 +1,107 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    os5
+
+# The C compiler.
+CC =    gcc
+
+# The C++ compiler.
+CPLUSPLUS = g++
+CPLUSPLUS_EXTENSION = cc
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O2
+endif
+endif
+
+ifndef NO_DEBUG
+ifndef DEGUG_FLAG
+DEBUG_FLAG = -g
+endif
+endif
+
+
+ifndef WARN_FLAG
+ifdef WARN_MAX
+WARN_FLAG=-Wall -Werror
+endif
+endif
+
+ifndef WARN_FLAG
+ifdef NO_WARNINGS
+WARN_FLAG=-w
+endif
+endif
+
+ifndef WARN_FLAG
+WARN_FLAG=
+endif
+
+# The C and C++ compilation flags to be used.
+CFLAGS  = $(DEBUG_FLAG) $(OPTIMIZE_FLAG) $(WARN_FLAG) -DSUN -DNO_THREADS -D$(PLAT) -D$(OS) -Dsparc -DPLATNAME=\"$(PLAT)\"  -Dsunos5 -DHAVE_LIBDL -I/itl/apps/gcc-3.0.3/SunOS-sun4u-5.8/include
+CLINK = -lrpcsvc -lsocket -lnsl -lintl -lm -lposix4 -ldl
+CPLUSPLUSLINK =         -lrpcsvc -lsocket -lnsl -lposix4 -lintl -lm -ldl
+
+SEARCH_PATH_FLAG = -R
+RCS_LIB_SEARCH_PATH = $(RCS_PLATLIB) \
+	$(SEARCH_PATH_FLAG) /itl/links/gnu/lib
+
+# Flags for compiling and linking X Windows apps
+# FIXME remove the -fpermissive option when/if we have better X11 headers.
+# the headers I had were sloppy about prototyping function return values,
+# so you need -fpermissive to compile with gcc 2.95 and higher.
+XINC = -I/depot/X11R6/include -fpermissive -w
+XLINK = -L/depot/X11R6/arch/lib -lXaw -lXmu -lXt -lX11 -R /depot/X11R6/arch/lib:/usr/openwin/lib/:/usr/lib
+
+# Flags for compiling and linking Tcl apps
+TCL_INC = -I/depot/tcl/include
+TCL_LINK = -L/depot/tcl/arch/lib -ltcl8.3 -ltcl  -lsocket -lm -R /depot/tcl/arch/lib
+
+
+TK_LINK = -ltk8.3 -ltk
+
+#CLINK =        /lib/librpcsvc.a /lib/libsocket.a /lib/libnsl.a /lib/libdl.so.1 /lib/libintl.a /lib/libm.a
+CPLUSPLUSFLAGS = $(CFLAGS)      -D__CPLUSPLUS__
+
+MAKEDEPEND = /depot/x11r5/plat.sunos5/bin/makedepend
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        echo ranlib not needed for
+
+# The assembler.
+AS =    as
+
+LD =    ld
+LINKER = ld
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+
+DYNAMIC_LINK_FLAG = -dy -G
+
+
+STRIP = strip
+
+STRIP_DEBUG_OPTION = -x
+
+COPY_SOURCE_COMMAND = cp
+
+RCSLIB_LIBRARY_NAME = librcs.a
+
+% ::    SCCS/s.%
+	sccs get $@
+
+% ::    RCS/%,v
+	co $@
+
+ifdef OLD_JAVA
+JDK_DIR=/depot/jdk
+else
+
+JDK_DIR=/isd/depot/jdk1.2/usr/java1.2
+endif
+
+USE_GPP_M=1

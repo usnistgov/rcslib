@@ -1,0 +1,15 @@
+local : nml ini all
+
+# this builds the NML source
+nml :
+	(cd etc && $(MAKE) -f Makefile.local $@)
+	(cd src && $(MAKE) -f Makefile.local $@)
+
+# this builds the .ini and .nml files
+ini :
+	(cd etc && $(MAKE) -f Makefile.local $@)
+
+# this gets us the usual stuff
+include Makefile
+	
+.PHONY : local nml ini

@@ -1,0 +1,18 @@
+vxhStop
+set_vx_nml_test_write_quit_flag 1
+set_vx_nml_test_read_quit_flag 1
+taskDelay 100
+vx_test_nml_write_cleanup
+vx_test_nml_read_cleanup
+taskDelay 100
+unload_all_nml_config_file
+nml_cleanup
+unldByNameAndPath "vx_test_cycle_high_priority.o"
+unldByNameAndPath "vx_nml_test_write.o"
+unldByNameAndPath "vx_nml_test_read.o"
+unldByNameAndPath "nml_test_format_n.o"
+unldByNameAndPath "otherheader_n.o"
+unldByNameAndPath "librcs.o"
+
+moduleShow
+

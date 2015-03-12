@@ -1,0 +1,35 @@
+<html>
+<head>
+<TITLE>RCS Library Example Set Instructions</TITLE>
+</head>
+<body>
+<H1>Instructions for getting and using the RCS Library Example Set</H1>
+<p>The examples in the other RCS Library documents are available together in one set, which also includes makefiles and a directory structure for multi-platform development.</p>
+<OL>
+<LI>Get <A HREF="ftp://isdftp.cme.nist.gov/pub/emc/rcslib/examples.tar.Z">examples.tar.Z</a>(35k) or <A HREF="ftp://isdftp.cme.nist.gov/pub/emc/rcslib/examples.zip">examples.zip</a>(25k)</LI>
+<UL>
+<LI>For examples.tar.Z:</LI>
+<OL>
+<LI>Uncompresss the file by using the &quot;uncompress&quot; program.</LI>
+<LI>Extract all of the files from the tar file by using &quot;tar -xvf examples.tar&quot;</LI>
+</OL>
+<LI>For examples.zip:</LI>
+<OL><LI>Uncompress and extract the files with "pkunzip".</LI>
+</OL>
+</UL>
+<LI>In the newly created src directory edit Makefile.include so that EXAMPLE_APP_DIRECTORY is the directory where you extracted files from examples.tar. If necessary, change PROGTOOLS_DIRECTORY to point to the directory where the RCS programmer's tools have been installed.</LI>
+<LI>Run &quot;gnumake PLAT=???&quot; from the src directory with ??? replaced by one of the following: sunos4, sunos5, vxworks5.1, lynxosPC or lynxosVME.</LI>
+<LI>Run the programs created in the bin directory of the appropriate plat sub-directory after reading the on-line documentation to determine what each example is supposed to do.</LI>
+</OL>
+<HR>
+<p>Last Modified: 11/18/96</P>
+<UL>
+<LI><A HREF="index.html">See other RCS Library Documents.</A></LI>
+</UL>
+<P>If you have questions or comments regarding this page, please
+contact  <A HREF="http://isdftp.cme.nist.gov/personnel/shackleford/"
+>Will Shackleford</A> at <ADDRESS><A
+HREF="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</A></ADDRESS></P>
+
+</BODY>
+</HTML>

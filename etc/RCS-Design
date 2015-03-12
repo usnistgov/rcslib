@@ -1,0 +1,59 @@
+#!/bin/csh
+umask 0
+
+setenv | grep rcslib_dir
+if ( $status != 0 ) then
+set prog=`unalias which; which $0`
+echo Program Name $prog
+unalias cd
+unalias pwd
+set rcslib_etc_dir=$prog:h
+if ( ! -d $rcslib_etc_dir ) then
+if ( -d ../../rcslib/etc ) then
+    set rcslib_etc_dir=../../rcslib/etc
+else if ( -d ../rcslib/etc ) then
+    set rcslib_etc_dir=../rcslib/etc
+else if ( -d ${0:h} ) then
+    set rcslib_etc_dir=${0:h}
+else if ( -d ${0:h}/../../rcslib/etc ) then
+    set rcslib_etc_dir=${0:h}/../../rcslib/etc
+endif
+endif
+echo RCS Library Etc Directory $rcslib_etc_dir
+
+set rcslib_dir=$rcslib_etc_dir:h
+echo RCS Library Directory $rcslib_dir
+
+else
+set rcslib_etc_dir=$rcslib_dir/etc
+echo RCS Library Etc Directory $rcslib_etc_dir
+endif
+
+
+setenv | grep JDK_DIR
+if( $status != 0 ) then
+setenv JDK_DIR `$rcslib_etc_dir/jdk_dir.sh`
+endif
+echo JDK Directory $JDK_DIR
+setenv LD_LIBRARY_PATH $JDK_DIR/lib
+echo LD_LIBRARY_PATH $LD_LIBRARY_PATH
+set path = ($JDK_DIR/bin  $path  )
+
+
+setenv | grep PLAT
+if ( $status != 0 ) then
+    setenv PLAT `$rcslib_etc_dir/platname`
+    echo PLAT $PLAT
+endif
+
+
+$JDK_DIR/bin/java -help |& grep 'jar' >/dev/null
+if ( -f $rcslib_dir/plat/java/lib/rcsDesign.jar && $status == 0 ) then
+     echo  ${JDK_DIR}/bin/java  -jar ${rcslib_dir}/plat/java/lib/rcsDesign.jar  PLAT=$PLAT RcsLibDir=$rcslib_dir FinalScript=$rcslib_etc_dir/FinishUp MakeCmdPrefix="$rcslib_etc_dir/run_make "\$"USER_DIR  "\$"PLAT" RunCmdPrefix="xterm -sb -sl 500 -e $rcslib_etc_dir/run " DiagCmd=$rcslib_etc_dir/diagnostics-J1.1 JavaCmdPrefix=$JDK_DIR/bin/java ImportDir=$rcslib_dir/controllers ExecInDirCommand="$rcslib_etc_dir/exec_in_dir  "\$"dir  "\$"command  " $argv
+     ${JDK_DIR}/bin/java  -jar ${rcslib_dir}/plat/java/lib/rcsDesign.jar  PLAT=$PLAT RcsLibDir=$rcslib_dir FinalScript=$rcslib_etc_dir/FinishUp MakeCmdPrefix="$rcslib_etc_dir/run_make "\$"USER_DIR "\$"PLAT" RunCmdPrefix="xterm -sb -sl 500 -e $rcslib_etc_dir/run " DiagCmd=$rcslib_etc_dir/diagnostics-J1.1 JavaCmdPrefix=$JDK_DIR/bin/java ImportDir=$rcslib_dir/controllers ExecInDirCommand="$rcslib_etc_dir/exec_in_dir  "\$"dir  "\$"command  " $argv
+else
+   echo ${JDK_DIR}/bin/java  -classpath ${JDK_DIR}/lib/classes.zip:${rcslib_dir}/plat/java/lib/ rcsdesign.rcsDesign  PLAT=$PLAT RcsLibDir=$rcslib_dir FinalScript=$rcslib_etc_dir/FinishUp MakeCmdPrefix="$rcslib_etc_dir/run_make "\$"USER_DIR  "\$"PLAT" RunCmdPrefix="xterm -sb -sl 500 -e $rcslib_etc_dir/run " DiagCmd=$rcslib_etc_dir/diagnostics-J1.1 JavaCmdPrefix=$JDK_DIR/bin/java ImportDir=$rcslib_dir/controllers ExecInDirCommand="$rcslib_etc_dir/exec_in_dir  "\$"dir  "\$"command  " $argv
+   ${JDK_DIR}/bin/java  -classpath ${JDK_DIR}/lib/classes.zip:${rcslib_dir}/plat/java/lib/ rcsdesign.rcsDesign  PLAT=$PLAT RcsLibDir=$rcslib_dir FinalScript=$rcslib_etc_dir/FinishUp MakeCmdPrefix="$rcslib_etc_dir/run_make "\$"USER_DIR  "\$"PLAT" RunCmdPrefix="xterm -sb -sl 500 -e $rcslib_etc_dir/run " DiagCmd=$rcslib_etc_dir/diagnostics-J1.1 JavaCmdPrefix=$JDK_DIR/bin/java ImportDir=$rcslib_dir/controllers ExecInDirCommand="$rcslib_etc_dir/exec_in_dir  "\$"dir  "\$"command  " $argv
+endif
+
+

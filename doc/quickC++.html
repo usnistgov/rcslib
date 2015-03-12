@@ -1,0 +1,412 @@
+<!DOCTYPE HTML SYSTEM "html.dtd">
+<HTML>
+<HEAD>
+<TITLE>Quick C++ Introduction</TITLE>
+</HEAD>
+<BODY  BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="551A8B" ALINK="#FF0000" >
+<A NAME="TOP_OF_FILE"></A>
+<H1>A Quick C++ Introduction for RCS Library Users.</H1>
+<UL>
+<LI><A HREF="index.html">See Other RCS Library Documents</A></LI>
+<LI><A HREF="qC++toc.html">Go to the Table of Contents</A></LI>
+<LI><A HREF="http://www.isd.mel.nist.gov/misc/hotlist.html#code">View a List of C and C++  Web Sites</a></LI>
+</UL>
+<HR>
+<P>This introduction to C++ is provided primarily for C programmers who
+need to learn just enough C++ to use the RCS Library. </P>
+<H2><A NAME="Classes_Header">Classes</A></H2>
+<P>Classes in C++ define types of data structures and the functions
+that operate on those data structures. Instances of the class are called
+objects. While the variables and functions in the definition of the
+class are called members.</P>
+<P>Example: <A HREF="c++_ex1.cc"> c++_ex1.cc </A></P>
+<PRE>#include &lt;stdio.h&gt;
+
+class CLASS_A {
+  public:	// Defines the access for the following members.
+	int first_data_member;
+	float second_data_member;
+	void function_member();
+};
+
+void CLASS_A::function_member()
+{
+	printf("first_member = %d, second_member = %lf\n", 
+	first_member, second_member);
+}
+
+CLASS_A first_instance_of_A;
+CLASS_A second_instance_of_A;
+
+main()
+{
+	first_instance_of_A.first_member = 123;
+	first_instance_of_A.second_member = 3.14;
+	second_instance_of_A.first_member = 501;
+	second_instance_of_A.second_member = 2.718;
+	first_instance_of_A.function_member();
+	second_instance_of_A.function_member();
+}
+</PRE>
+<P>This example produces the following output after being compiled and
+run.</P>
+<PRE>first_member = 123, second_member = 3.140000
+first_member = 501, second_member = 2.718000
+</PRE>
+<P>The first_instance_of_A and the second_instance_of_A are objects.
+Both objects of the same class contain the same type of data and provide
+the same functions but the value of the data for different objects can
+be different. The keyword <I>public</I> is used to set access permissions so
+that the members following it can be used anywhere that an object of
+CLASS_A can be used. The remainder of this document uses only public
+members. For information on private and protected member access see the
+<A HREF="references.html">references</A> at the end of
+this document.</P>
+<H2><A NAME="Constructors_Header">Constructors</A></H2>
+<P>Constuctors are functions which are called whenever a new instance
+of a class is created. They are often used to initialize the data in the
+class. In NML, constructors allocate memory, initialize communications
+channels, read configuration files, set the type and size of messages,
+and perform almost all of the run-time setup necessary for NML to work.
+There are several times when instances of a class can be created.</p>
+<UL>
+<LI>before main is called </LI>
+<LI>when a function is called in which the object is declared</LI>
+<LI>when the &quot;new&quot; operator is used</LI>
+</UL>
+<p> Constructors are declared as member functions with the
+same name as the class. Constructors may also have arguments. If a
+constructor has arguments, then the arguments should be added to the
+declaration of any object of that class and when the new operator is
+used.</P>
+<P>Example: <A HREF="c++_ex2.cc">c++_ex2.cc</A></P>
+<PRE>
+#include &lt;stdio.h&gt;
+
+class CLASS_B {
+  public:
+	CLASS_B(char *name); // This is the constructor declaration.
+};
+
+CLASS_B::CLASS_B(char *name)
+{
+	printf("Constructor for CLASS_B called with name = %s.\n",name);
+}
+
+
+// VxWorks users should probably not 
+// declare objects with constructors here.
+CLASS_B outside_B("outside"); 
+
+void my_function();
+
+main()
+{	
+	CLASS_B main_B("main");
+	my_function();
+}
+
+void my_function()
+{
+	CLASS_B my_function_B("my_function");
+	CLASS_B *ptr_to_B;
+
+	ptr_to_B = new CLASS_B("new");
+
+	delete ptr_to_B; // See <A HREF="quickC++.html#Destructors_Header">Destructors</A>
+}
+</PRE>
+<P>This example produces the following output after being compiled and
+run.</P>
+<PRE>Constructor for CLASS_B called with name = outside.
+Constructor for CLASS_B called with name = main.
+Constructor for CLASS_B called with name = my_function.
+Constructor for CLASS_B called with name = new.
+</PRE>
+<P>VxWorks users should not declare objects with
+constructors outside of functions, as outside_B is declared unless they
+use a special C++ loader that calls the constructors of objects declared
+outside of functions. The default "ld" loader does not call the
+constructor in this case, which means the object may not be properly
+initialized.</P>
+<H2><A NAME="Destructors_Header">Destructors</A></H2>
+<P>Destructors are functions that are called whenever an object of the
+class is destroyed. Destructors are often used to deallocate memory,
+close communications channels and files, and to return the system to
+some known or stable state. Objects may be destroyed after the function
+they were declared in returns, when the delete operator is used or when
+the program is over. Destructors are declared with the same name as the
+class except that they are preceded with a "~". Destructors can not have
+arguments.</P>
+<P>Example: <A HREF="c++_ex3.cc">c++_ex3.cc</A></P>
+<PRE>#include &lt;stdio.h&gt;
+
+class CLASS_C {
+  public:
+	CLASS_C(char *_name); // This is the constructor declaration.
+	~CLASS_C(); // This is the destructor declaration.
+	char *name;
+};
+
+CLASS_C::CLASS_C(char *_name)
+{	
+	name = _name;
+	printf("Constructor for CLASS_C called with name = %s.\n",name);
+}
+
+CLASS_C::~CLASS_C()
+{	
+	printf("Destructor for CLASS_C called with name = %s.\n",name);
+}
+
+// VxWorks users should probably not 
+// declare objects with constructors here.
+CLASS_C outside_C("outside"); 
+
+void my_function();
+
+main()
+{	
+	CLASS_C main_C("main");
+	my_function();
+	//<A NAME="exit_in_ex3">exit(0);</A>
+}
+
+void my_function()
+{
+	CLASS_C my_function_C("my_function");
+	CLASS_C *ptr_to_C;
+
+	ptr_to_C = new CLASS_C("new");
+
+	delete ptr_to_C; // See <A HREF="quickC++.html#Destructors_Header">Destructors</A>
+}
+</PRE>
+<P>This example produces the following output after being compiled and
+run.</P>
+<PRE>Constructor for CLASS_C called with name = outside.
+Constructor for CLASS_C called with name = main.
+Constructor for CLASS_C called with name = my_function.
+Constructor for CLASS_C called with name = new.
+Destructor for CLASS_C called with name = new.
+Destructor for CLASS_C called with name = my_function.
+Destructor for CLASS_C called with name = main.
+Destructor for CLASS_C called with name = outside.
+</PRE>
+<P>Unfortunately, if the <A HREF="quickC++.html#exit_in_ex3">exit</A>
+is uncommented then the following output results.</P>
+<PRE>Constructor for CLASS_C called with name = outside.
+Constructor for CLASS_C called with name = main.
+Constructor for CLASS_C called with name = my_function.
+Constructor for CLASS_C called with name = new.
+Destructor for CLASS_C called with name = new.
+Destructor for CLASS_C called with name = my_function.
+Destructor for CLASS_C called with name = outside.
+</PRE>
+<P>Notice that the destructor for main_C was never called which could
+mean that the program would not properly clean up something associated
+with that object. For this reason, I recommend using the new and delete
+operators whenever possible and to avoid using the exit function.</P>
+<H2><A NAME="Overloaded_Functions_Header">Overloaded Functions</A></H2>
+<P>In C only one function in a given scope with the same name is
+allowed. However, in C++ more than one function in the same scope can
+have the same name as long as the functions have different arguments.
+Such functions are called overloaded. Constructors, stand-alone and
+class member functions can all be overloaded.</P>
+<P>Example: <A HREF="c++_ex4.cc">c++_ex4.cc</A></P>
+<PRE>#include &lt;stdio.h&gt;
+
+void output(int i)
+{
+	printf("output int: %d\n",i);
+}
+
+void output(float f)
+{
+	printf("output float: %f\n",f);
+}
+
+main()
+{
+	int integer;
+	float floating_point;
+	integer = 501;
+	floating_point = 1.41;
+	output(integer);
+	output(floating_point);
+}
+</PRE>
+<P>This example produces the following output after being compiled and
+run.</P>
+<PRE>output int: 501
+output float: 1.410000
+</PRE>
+<P>The function output was overloaded so that you can give it either an
+integer or a floating point number and it will print the value out. </P>
+<H2><A NAME="Inheritance_Header">Inheritance</A></H2>
+<P>Inheritance in C++ allows programmers to create classes that are
+extended or modified versions of existing classes without modifying the
+original class. The derived class will have all of the members of
+original class plus any members of it's own. If the original class had
+<A HREF="quickC++.html#Virtual_Functions_Header">virtual member
+functions</A>, they can effectively be replaced in the derived class by
+declaring new functions with the same name and arguments.</P>
+<P>Example: <A HREF="c++_ex5.cc">c++_ex5.cc</A></P>
+<PRE>#include &lt;stdio.h&gt;
+
+class BASE_CLASS_A {
+  public:
+	int ia;
+	void print_ia();
+};
+
+class DERIVED_CLASS_B: public BASE_CLASS_A {
+  public:
+	float fb;
+	void print_fb();
+};
+
+void BASE_CLASS_A::print_ia()
+{
+	printf("ia = %d\n", ia);
+}
+
+void DERIVED_CLASS_B::print_fb()
+{
+	printf("fb = %f\n", fb);
+}
+
+main()
+{
+	DERIVED_CLASS_B b;
+	b.ia = 1;
+	b.fb = 2.0;
+	b.print_ia();
+	b.print_fb();
+}
+</PRE>
+<P>This example produces the following output after being compiled and
+run.</P>
+<PRE>ia = 1
+fb = 2.000000
+</PRE>
+<P>The example shows that DERIVED_CLASS_B could be used as if it were
+defined as it is below.</P>
+<PRE>class DERIVED_CLASS_B {
+  public:
+	int ia; // inherited from BASE_CLASS_A
+	void print_ia(); // inherited from BASE_CLASS_A
+	float fb; // added to derived class
+	void print_fb(); // added to derived class
+};
+</PRE>
+<H2><A NAME="Virtual_Functions_Header">Virtual Functions</A></H2>
+<P>Virtual functions allow programmers to write code that is extremely
+general, because the selection of which functions are called does not
+occur until run-time. To use virtual functions in this way it is
+necessary to call them through a pointer to the base class, because
+only by using a pointer can the type of object passed to a function be
+changed at run-time. It is necessary to declare the function virtual to
+obtain run-time binding because of the following fact. If a function which is not virtual 
+is overloaded in a derived class, then the derived class version of the function will be used if
+the derived class is used explicitly, but not if it is used though a
+pointer to the base class.</P>
+<P>Example: <A HREF="c++_ex6.cc">c++_ex6.cc</A></P>
+<PRE>#include &lt;stdio.h&gt;
+
+class BASE_CLASS_C {
+  public:
+	BASE_CLASS_C(char *_name) {name = _name;} ;
+	char *name;
+	virtual void virtual_function();
+	void non_virtual_function();
+};
+
+void BASE_CLASS_C::virtual_function()
+{
+	printf("BASE_CLASS_C::virtual_function called with name = %s\n",name);
+}
+
+void BASE_CLASS_C::non_virtual_function()
+{
+	printf("BASE_CLASS_C::non_virtual_function called with name = %s\n",name);
+}
+
+class DERIVED_CLASS_D: public BASE_CLASS_C {
+  public:
+	DERIVED_CLASS_D(char *_name): BASE_CLASS_C(_name) {};
+	virtual void virtual_function();
+	void non_virtual_function();
+};
+	
+void DERIVED_CLASS_D::virtual_function()
+{
+	printf("DERIVED_CLASS_D::virtual_function called with name = %s\n",name);
+}
+
+void DERIVED_CLASS_D::non_virtual_function()
+{
+	printf("DERIVED_CLASS_D::non_virtual_function called with name = %s\n",name);
+}
+
+int function_using_ptr_to_base_class(BASE_CLASS_C *ptr_to_c)
+{
+	ptr_to_c-&gt;virtual_function();
+	ptr_to_c-&gt;non_virtual_function();
+}
+
+main()
+{
+	BASE_CLASS_C c("c");
+	DERIVED_CLASS_D d("d");
+
+	printf("calling c.virtual_function()\n");
+	c.virtual_function();
+	printf("calling c.non_virtual_function()\n");
+	c.non_virtual_function();
+	printf("calling d.virtual_function()\n");
+	d.virtual_function();
+	printf("calling d.non_virtual_function()\n");
+	d.non_virtual_function();
+	
+	printf("calling function_using_ptr_to_base_class(&c;)\n");
+	function_using_ptr_to_base_class(&c;);	
+	printf("calling function_using_ptr_to_base_class(&d;)\n");
+	function_using_ptr_to_base_class(&d;);
+}
+</PRE>
+<P>This example produces the following output after being compiled and
+run.</P>
+<PRE>calling c.virtual_function()
+BASE_CLASS_C::virtual_function called with name = c
+calling c.non_virtual_function()
+BASE_CLASS_C::non_virtual_function called with name = c
+calling d.virtual_function()
+DERIVED_CLASS_D::virtual_function called with name = d
+calling d.non_virtual_function()
+DERIVED_CLASS_D::non_virtual_function called with name = d
+calling function_using_ptr_to_base_class(&c;)
+BASE_CLASS_C::virtual_function called with name = c
+BASE_CLASS_C::non_virtual_function called with name = c
+calling function_using_ptr_to_base_class(&d;)
+DERIVED_CLASS_D::virtual_function called with name = d
+BASE_CLASS_C::non_virtual_function called with name = d
+</PRE>
+<P> Notice the last two lines of the output where the program ends up
+calling the virtual_function of the derived_class and the
+non_virtual_function of the base class. Also notice that this example
+shows how to use an inline constructor and how to pass an argument from
+the constructor of a derived class to the constructor of the base class.</P>
+<HR>
+<P>Last Modified: 08/25/99 </P>
+<UL>
+<LI><A HREF="quickC++.html#TOP_OF_FILE">Return to the start of this
+document.</A></LI>
+<LI><A HREF="qC++toc.html">Go to Table Of Contents</A></LI>
+<LI><A HREF="index.html">See other RCS Library Documents</A></LI>
+</UL>
+<P>If you have questions or comments regarding this page, please
+contact  <A HREF="http://isd.cme.nist.gov/staff/shackleford/"
+>Will Shackleford</A> at <ADDRESS><A HREF="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</A></ADDRESS></P>
+</BODY>
+</HTML>

@@ -1,0 +1,24 @@
+# newnmlcfgex.nml
+ 
+
+# Buffers:
+#       name 	   type  	      host 	size 	neut 	0 	buf# 	max_proc 	. . .
+B     ex_cmd 	SHMEM    	     localhost 	128 	0 	* 	1 	* 	35001 	TCP=20001  format_name=exCmd format_source=exCmd_n.cc header=exCmd.hh packed
+B    ex_stat 	SHMEM    	     localhost 	256 	0 	* 	2 	* 	35002 	TCP=20002  format_name=exStat format_source=exStat_n.cc header=exStat.hh packed
+ 
+
+# Processes: 
+#       Name 	    Buffer 	      type 	      host 	       ops 	server 	timeout 	master 	c_num  	 . . .
+P      mysvr 	    ex_cmd 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P      mysvr 	   ex_stat 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+ 
+P         pl 	    ex_cmd 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P         pl 	   ex_stat 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+ 
+P         ex 	    ex_cmd 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P         ex 	   ex_stat 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+ 
+# Double pound comment get preserved in output config file.
+# Special default process line that will be used by any process that does not match above.
+P    default 	   default 	      AUTO 	 localhost 	        RW 	0 	INF     	0 	0 	
+

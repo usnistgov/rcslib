@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en-US">
+<head>
+<title>RCS/NML Bugs</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://www.isd.mel.nist.gov/mel2.css" type="text/css" />
+
+<style type="text/css">
+  div.problem{
+    width: 0
+    font-family: monospaced;
+    font-size: small;
+    background: rgb(235,235,255);
+    padding: 0.1em;
+    overflow: auto;
+    overflow-y: visible;
+  }
+  div.response{
+    width: 0
+    font-family: monospaced;
+    font-size: small;
+    background: rgb(235,255,235);
+    padding: 0.1em;
+    overflow: auto;
+    overflow-y: visible;
+  }
+</style>
+
+</head>
+<body>
+<h1>How to report RCS and NML Bugs or get support:</h1>
+<p>I can not guarantee to be able to provide support, whether I can or not
+depends on what projects I am working on as well as how many reports/questions arrive around the same time and  the availability of various computer resources, however I do intend to at least try.</p>
+<p>Create an email with the following information.</p>
+<ul>
+<li>A description of the problem.</li>
+<li>The exact version of RCS library being used. If this is being run on
+a NIST computer this might be whatever is installed in a given directory on given host otherwise I need the name of the tar.gz file it came from, or you can check rcsvers.hh</li>
+<li>The operating system, compiler and CPU architecture.</li>
+<li>A log of any compiler or run-time error messages produced. If it is more
+than a page or two I ussually want the first page with errors.
+ If it involves a graphical tool you can usually get a screen shot by pressing the print screen key, saving to a file and attach that to the email.</li>
+<li>The name of the project and how/if it impacts NIST or the US Federal Government. If someone else on the same project contacts me sometimes it is useful to
+be able to make the connection. I also hate to play favorites, but someday it might be necessary to make sure the NIST related problems are solved first.</li>
+<li>If any of the information needs to be kept secret to protect intellectual property, privacy or security, please let me know otherwise I would like to post
+at least the more interesting bugs or questions and thier resolution on the 
+website.</li>
+<li>If you can create a simple program than demonstrates the problem without requiring any special hardware/software that is not widely/freely available and you can send me the source for that it might be very helpful.</li>
+<li>The NML configuration file is often helpful.</li>
+</ul>
+
+<p>Send the email to <a href="mailto:shackle@nist.gov">shackle@nist.gov</a>.</p>
+
+<p>Do not be afraid to send additional emails a couple of days later if you do not get a response or an excessively terse one. I might have more time a couple of days later but I do not ussually go back to the old emails since it is likely the problem was by that time solved or completely given up on.</p>
+
+<hr />
+<h2>Previously reported problems:</h2>
+
+<ul>
+<li>
+<div class="problem">
+<pre>
+
+Opening NML channel mapsout...done
+initialize maps we need to start nav data first
+nml.cc 155: !ERROR! void *NML::operator new() called with size (336) < sizeof(NML) (616) the code calling NML was probably not compiled with the correct header file version. 
+
+I still can run the program even I got the above error. 
+
+</pre>
+</div>
+
+<div class="response">
+<pre>
+
+This is typically caused by compiling with -I pointing to the headers for one version 
+of NML and linking with another version or changing the rcslib version between the time 
+of the compile and the link if rcslib is statically linked or between the compile and 
+the run if the library is dynamically linked.  You might theoretically run anyway, but 
+it is probably a good idea to clean this up. 
+
+</pre>
+</div>
+</li>
+</ul>
+
+<hr />
+        
+<div><b>Software Disclaimer</b>          
+<blockquote><p>This software was produced by the <a href="http://www.nist.gov">National Institute of Standards and Technology (NIST)</a>, an agency of the U.S. government, and by statute is not subject to copyright in the United States. Recipients of this software assume all responsibility associated with its operation, modification, maintenance, and subsequent redistribution.</p>
+</blockquote>
+</div>
+
+
+</body>
+</html>

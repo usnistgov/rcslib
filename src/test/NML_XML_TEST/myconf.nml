@@ -1,0 +1,6 @@
+#		SHMEM	host	   size	neut    RPC# 	buffer#	 max_proc key
+B clock_buf 	SHMEM 	localhost  1000	0 	0	 1       25 	1023 TCP=2001 xml
+
+# processes:
+# name		buffer	type	host 		ops	server 	timeout	master 	c_num
+P clock_proc	clock_buf LOCAL	localhost 	RW	2	0.5  	1	1

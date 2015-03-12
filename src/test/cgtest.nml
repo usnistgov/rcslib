@@ -1,0 +1,32 @@
+# cgtest.nml
+
+# buffers:
+# name		type	host		size	neut    RPC# 	buffer#	 max_proc [type-spec]
+#		SHMEM	host		size	neut    RPC# 	buffer#	 max_proc key
+B cgtest_buf1 	SHMEM 	127.0.0.1	50000	1 	0	 1       25 	1023  TCP=5001 xml xmllog confirm_write
+B cgtest_buf2 	SHMEM 	127.0.0.1	50000	1 	0	 1       25 	1024  TCP=5002 xml xmllog confirm_write
+
+# processes:
+# name		buffer	type	host 		ops	server 	timeout	master 	c_num
+P cgtestsvr	cgtest_buf1	LOCAL	127.0.0.1 	RW	1	10.0 	1	0
+P cgtestsvr	cgtest_buf2	LOCAL	127.0.0.1 	RW	1	10.0 	1	0
+
+
+P cgtestwrite_local cgtest_buf1 LOCAL	127.0.0.1 	W	0	10.0 	0	1
+P cgtestwrite_local cgtest_buf2 LOCAL	127.0.0.1 	W	0	10.0 	0	1
+
+P cgtestwrite_remote cgtest_buf1 REMOTE	127.0.0.1 	W	0	INF 	0	1
+P cgtestwrite_remote cgtest_buf2 REMOTE	127.0.0.1 	W	0	INF 	0	1
+
+
+P cgtestread_local cgtest_buf1 LOCAL	127.0.0.1 	R	0	10.0 	0	2
+P cgtestread_local cgtest_buf2 LOCAL	127.0.0.1 	R	0 	10.0 	0	2
+
+P cgtestread_remote cgtest_buf1 REMOTE	127.0.0.1 	R	0	INF 	0	2
+P cgtestread_remote cgtest_buf2 REMOTE	127.0.0.1 	R	0	INF 	0	2
+
+P exread  cgtest_buf1 REMOTE	127.0.0.1 	R	0	10.0 	0	3
+P exread  cgtest_buf2 REMOTE	127.0.0.1 	R	0	10.0 	0	3
+
+P exwrite cgtest_buf1 REMOTE	127.0.0.1 	W	0	10.0 	0	4
+P exwrite  cgtest_buf2 REMOTE	127.0.0.1 	W	0	10.0 	0	3

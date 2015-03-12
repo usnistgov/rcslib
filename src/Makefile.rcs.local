@@ -1,0 +1,99 @@
+# This file is included by all the makefiles in the Real-Time Control System
+# library src subdirectories.
+# USERS that down-load the source code from the ISD FTP server, MUST
+# set RCS_INSTALL_DIRECTORY to the directory, where the RCS library
+# was installed.
+# RCS_INSTALL_DIRECTORY =
+
+# Add any local CFLAGS for all platforms such as -pg here.
+
+
+# set the path to the RCS master
+RCSLIB_MAIN_DIR = $(EXTRA_DOTS)../../../rcslib
+
+# set the path to the master for this application
+APPDIR =	$(EXTRA_DOTS)../../../emc
+
+# set the user dir to the master, for single-user in /usr/local
+USER_DIR =	$(EXTRA_DOTS)../../../emc
+
+# compile for multiple platforms
+MULTI_PLAT = 1
+
+# use platform-specific .depend files
+USE_SEPARATE_DEPENDS = YES
+
+# include the generic rules makefile for RCS applications
+include $(RCSLIB_MAIN_DIR)/etc/generic.def
+
+#Set flags in generic.def to prevent accidental install
+COMPILING_RCSLIB=1
+
+# Alway optimize if the compiler allows it.
+OPTIMIZE=1
+
+ifdef RCS_INSTALL_DIR
+
+# Set default RCS directory
+RCSLIB_MAIN_DIR = $(RCS_INSTALL_DIR)
+
+# set the path to the RCS master
+APPDIR = $(RCS_INSTALL_DIR)
+
+# set the USER dir to the RCS master
+ifndef USER_DIR
+USER_DIR = $(RCS_INSTALL_DIR)
+endif
+
+#set the location of the generic.def
+GENERIC_MAKEFILE = $(RCS_INSTALL_DIR)/etc/generic.def
+
+else
+
+# Set default RCS directory
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR = /isd/proj/rcslib
+endif
+
+# set the path to the RCS master
+ifndef APPDIR
+APPDIR = /isd/proj/rcslib
+endif
+
+#set the location of the generic.def
+ifndef GENERIC_MAKEFILE
+GENERIC_MAKEFILE = $(RCSLIB_MAIN_DIR)/etc/generic.def
+endif
+
+endif
+
+
+ifdef DEBUG_MEMORY
+DEBUG_MEMORY_CFLAGS = -DDEBUG_MEMORY
+endif
+
+ifdef WARN
+LOCAL_CFLAGS = $(DEBUG_MEMORY_CFLAGS) -Wall
+else
+LOCAL_CFLAGS = $(DEBUG_MEMORY_CFLAGS) -w
+endif
+
+LOCAL_JAVA_FLAGS = -g
+
+include $(GENERIC_MAKEFILE)
+
+ifeq ($(LOGNAME), shackle)
+RCS_ADMIN=1
+endif
+
+ifeq ($(LOGNAME), proctor)
+RCS_ADMIN=1
+endif
+
+
+MULTI_PLAT = 1
+
+
+
+% : remote/%
+	cp $^ $@

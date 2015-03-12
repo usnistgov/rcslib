@@ -1,0 +1,8 @@
+# NML CodeGen Script for cgtester
+load cgtester.hh
+generate C++ format >cgtester.cc
+generate C++ update >cgtester.cc
+generate C++ constructor >cgtester.cc
+generate Java classes >*
+generate Java dict >cgtesterMsgDict.java
+

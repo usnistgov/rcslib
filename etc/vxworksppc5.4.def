@@ -1,0 +1,106 @@
+
+#
+# Makefile for VxWorks-specific code
+#
+
+ifdef WIND_BASE
+ifeq ($(findstring 68k, $(WIND_BASE)),68k)
+override WIND_BASE=/isd/depot/tornado2/ppc
+endif
+endif
+
+
+ifndef WIND_BASE
+WIND_BASE=/isd/depot/tornado2/ppc
+endif
+
+ifndef WIND_HOST_TYPE
+WIND_HOST_TYPE=sun4-solaris2
+endif
+
+
+TORNADO2_PPC_BIN=$(WIND_BASE)/host/$(WIND_HOST_TYPE)/bin
+
+
+PLAT = vxworks5.4
+OS =    5_4
+CC =    $(TORNADO2_PPC_BIN)/ccppc
+C++ =   $(TORNADO2_PPC_BIN)/g++ppc
+CXX =   $(TORNADO2_PPC_BIN)/g++ppc
+CPLUSPLUS = $(TORNADO2_PPC_BIN)/g++ppc
+CPLUSPLUS_EXTENSION = cc
+NO_BINS=1
+
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O
+endif
+endif
+
+ifndef NO_DEBUG
+ifndef DEGUG_FLAG
+DEBUG_FLAG = -g
+endif
+endif
+
+
+# This line removes dependancies on the Remote Procedure Call libraries
+# to use RPCMEM it must be removed or commented out.
+NO_RPC = 1
+
+
+ifdef NO_RPC
+NO_RPC_FLAGS= -DNO_DCE_RPC
+else
+NO_RPC_FLAGS=
+endif
+
+ifndef WARN_FLAG
+ifdef WARN_MAX
+WARN_FLAG=-Wall -Werror
+endif
+endif
+
+ifndef WARN_FLAG
+ifdef NO_WARNINGS
+WARN_FLAG=-w
+endif
+endif
+
+ifndef WARN_FLAG
+WARN_FLAG=
+endif
+
+# The C and C++ compilation flags to be used.
+CFLAGS = $(OPTIMIZE_FLAG) $(DEBUG_FLAG) $(WARN_FLAG) -nostdinc -DVXWORKS -DV5_4 -DCPU=PPC601 -DPOWERPC -D__PROTOTYPE_5_0 -mlongcall -I. -I/isd/depot/tornado2/ppc/target/h  -DPLATNAME=\"$(PLAT)\" -DADD_STRDUP
+
+
+C++FLAGS =      $(CFLAGS) -D__CPLUSPLUS__
+CPLUSPLUSFLAGS = $(CXXFLAGS) -D__CPLUSPLUS__
+AR = $(TORNADO2_PPC_BIN)/arppc
+RANLIB = $(TORNADO2_PPC_BIN)/ranlibppc
+AS =    $(TORNADO2_PPC_BIN)/asppc
+LD =    $(TORNADO2_PPC_BIN)/ldppc
+
+MAKEDEPEND = /depot/x11r5/plat/bin/makedepend
+
+GENERIC =       $(RCSDIR)/plat/generic/src
+INCLUDE =       $(RCSDIR)/plat/generic/include
+
+COPY_SOURCE_COMMAND = cp
+
+RCSLIB_LIBRARY_NAME = librcs.o
+
+STRIP = $(TORNADO2_PPC_BIN)/stripppc
+
+STRIP_DEBUG_OPTION = --strip-debug --discard-locals
+
+COMPILER_SETUP = \
+	GCC_EXEC_PREFIX=/isd/depot/tornado2/ppc/host/sun4-solaris2/lib/gcc-lib/; \
+	export GCC_EXEC_PREFIX; \
+	PATH=$(TORNADO2_PPC_BIN); \
+	export PATH; \
+	LD_LIBRARY_PATH=/usr/dt/lib:/usr/openwin/lib; \
+	export LD_LIBRARY_PATH
+

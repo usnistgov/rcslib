@@ -1,0 +1,78 @@
+# skel.nml
+
+# Buffers:
+#       name 	   type  	      host 	size 	neut 	0 	buf# 	max_proc 	. . .
+B    skelErr 	SHMEM    	 localhost 	2816 	0 	* 	1 	* 	30701 	TCP=25700 bsem=1            xdr queue
+ 
+B     supCmd 	SHMEM    	 localhost 	1088 	0 	* 	2 	* 	30702 	TCP=25701  xdr
+B    supStat 	SHMEM    	 localhost 	1088 	0 	* 	3 	* 	30703 	TCP=25702  xdr
+B     supCfg 	SHMEM    	 localhost 	1088 	0 	* 	4 	* 	30704 	TCP=25703  xdr
+B     supSet 	SHMEM    	 localhost 	1088 	0 	* 	5 	* 	30705 	TCP=25704  xdr
+ 
+B    subCmd1 	SHMEM    	 localhost 	1088 	0 	* 	6 	* 	30706 	TCP=25705  xdr
+B   subStat1 	SHMEM    	 localhost 	1088 	0 	* 	7 	* 	30707 	TCP=25706  xdr
+B    subCfg1 	SHMEM    	 localhost 	1088 	0 	* 	8 	* 	30708 	TCP=25707  xdr
+B    subSet1 	SHMEM    	 localhost 	1088 	0 	* 	9 	* 	30709 	TCP=25708  xdr
+ 
+B    subCmd2 	SHMEM    	 localhost 	1088 	0 	* 	10 	* 	30710 	TCP=25709  xdr
+B   subStat2 	SHMEM    	 localhost 	1088 	0 	* 	11 	* 	30711 	TCP=25710  xdr
+B    subCfg2 	SHMEM    	 localhost 	1088 	0 	* 	12 	* 	30712 	TCP=25711  xdr
+B    subSet2 	SHMEM    	 localhost 	1088 	0 	* 	13 	* 	30713 	TCP=25712  xdr
+ 
+
+# Processes: 
+#       Name 	    Buffer 	      type 	      host 	       ops 	server 	timeout 	master 	c_num  	 . . .
+P skelNmlSvr 	   skelErr 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	    supCmd 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	   supStat 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	    supCfg 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	    supSet 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	   subCmd1 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	  subStat1 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	   subCfg1 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	   subSet1 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	   subCmd2 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	  subStat2 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	   subCfg2 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P skelNmlSvr 	   subSet2 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+ 
+P    supMain 	   skelErr 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	    supCmd 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	   supStat 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	    supCfg 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	    supSet 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	   subCmd1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	  subStat1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	   subCfg1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	   subSet1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	   subCmd2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	  subStat2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	   subCfg2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    supMain 	   subSet2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+ 
+P   supShell 	    supCmd 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P   supShell 	   supStat 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P   supShell 	    supCfg 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P   supShell 	    supSet 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+ 
+P    subMain 	   skelErr 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P    subMain 	   subCmd1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P    subMain 	  subStat1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P    subMain 	   subCfg1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P    subMain 	   subSet1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P    subMain 	   subCmd2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P    subMain 	  subStat2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P    subMain 	   subCfg2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+P    subMain 	   subSet2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	
+ 
+P   subShell 	   subCmd1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	3 	
+P   subShell 	  subStat1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	3 	
+P   subShell 	   subCfg1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	3 	
+P   subShell 	   subSet1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	3 	
+P   subShell 	   subCmd2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	3 	
+P   subShell 	  subStat2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	3 	
+P   subShell 	   subCfg2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	3 	
+P   subShell 	   subSet2 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	3 	
+ 
+P    skelLog 	   skelErr 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	3 	
+

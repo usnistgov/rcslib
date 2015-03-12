@@ -1,0 +1,26 @@
+# build the .ini and .nml files, and then run the "all" target 
+# in case there's anything else to do
+
+ini : skel.ini
+
+nml : skel.nml
+
+# get RCSLIB_DIR, "all" et al
+include Makefile
+
+# read in the version number from configure.ac and stick it in skel.ini
+
+skel.ini : Makefile
+	@ echo setting VERSION = $(PACKAGE_VERSION) in skel.ini
+	@ mv -f skel.ini skel.ini.bak
+	@ sed s/^[[:space:]]*VERSION[[:space:]]*=[[:print:]]*/VERSION\ =\ $(PACKAGE_VERSION)/ skel.ini.bak > skel.ini
+
+# use the RCS NML file generator to build skel.nml
+
+NMLCFG = $(RCSLIB_DIR)/bin/nmlcfg
+
+%.nml : %.cfg
+	@ echo building $@ from $<
+	$(NMLCFG) $< -o $@
+
+.PHONY : ini nml

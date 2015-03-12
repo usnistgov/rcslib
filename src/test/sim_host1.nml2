@@ -1,0 +1,4 @@
+
+buffer_default key=1000 port=1000 bufnumber=1000
+
+include generic.nml2

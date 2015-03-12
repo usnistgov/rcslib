@@ -1,0 +1,44 @@
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../../../..
+endif
+
+
+
+PACKAGE_NAME = rcs.utils
+
+COMPILE_TOGETHER=1
+
+
+JAVA_SOURCES = jcrypt.java \
+	URL_and_FileLoader.java \
+	CorrectedPipeData.java \
+	CorrectedPipedOutputStreamInterface.java \
+	CorrectedPipedInputStreamInterface.java \
+	CorrectedPipedInputStream.java \
+	CorrectedPipedOutputStream.java \
+	BrowserInfo.java \
+	StrToLong.java \
+	StrToInt.java \
+	SimpleFileFilter.java
+
+# cposi = CorrectedPipedInputStreamInterface.java \
+
+ifdef USE_GCJ
+
+LOCAL_GCJ_FLAGS=-I../..
+
+SRCS=$(JAVA_SOURCES)
+
+OBJS=$(JAVA_SOURCES:%.java=%.o)
+
+else
+
+PLAT=java
+
+endif
+
+include ../../../Makefile.rcs
+
+documentation: $(DOC_DIR)/$(PACKAGE_NAME).jcrypt.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).URL_and_FileLoader.html

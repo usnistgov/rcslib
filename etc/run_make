@@ -1,0 +1,26 @@
+#!/bin/csh
+
+
+if($1 != "") then
+cd $1
+endif
+
+echo "cd  " `pwd`
+echo $0 $*
+
+if ( `uname -s` != "SunOS" ) then
+    set make_cmd=make
+else
+    set make_cmd=gnumake
+endif
+
+if($2 == "") then
+echo $make_cmd
+$make_cmd
+else
+echo $make_cmd PLAT=$2
+$make_cmd PLAT=$2
+endif
+
+echo Press Enter to Close Window
+set confirm = $<

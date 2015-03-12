@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NML Code Generator Instructions</title>
+</head>
+<body>
+
+<h1>NML Code Generator</h1>
+
+<h2>Introduction</h2>
+
+<p>The NML Code Generator is a Java program that can be run in four ways.
+</p>
+
+<ol>
+<li>As an interactive stand-alone graphical program.</li>
+<li>As a component of the RCS-Design tool.</li>
+<li>As a non-interactive program suitable for use in a makefile.</li>
+<li>As an applet &ndash;&ndash; (See <a href="http://www.isd.mel.nist.gov/projects/rcslib/diagapplet/CodeGen.html">http://www.isd.mel.nist.gov/projects/rcslib/diagapplet/CodeGen.html</a>. However this no longer works with the default configuration of most newer browsers, and is therefore not recommended.)</li>
+</ol>
+
+<p>
+Its purpose is to take definitions of NML messages from C++ header files and
+create either the corresponding C++ update, format, and constructor functions or Java definitions of those messages.
+</p>
+
+<p>Currently at least Java 2 Standard Edition 1.4 is generally needed. ( See <a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://java.sun.com">http://java.sun.com</a> )</p>
+
+<h2>Execution from within a Makefile or build script.</h2>
+
+<p>Running the command line non-interactive version of the program is 
+recommended for most situations, since it can be run from within a Makefile or build script automatically whenever the header files change just before 
+running the compiler.</p>
+
+<p>There are two options here. One can either write a script in a small language unique the NML Code Generator for controlling the process or accept a default way of doing things and simply pass the generator a C++ header file.</p>
+<p>The precompiled copy of CodeGenCmdLine.jar is available at
+<a href="ftp://ftp.isd.mel.nist.gov/pub/rcslib/CodeGenCmdLine.jar">ftp://ftp.isd.mel.nist.gov/pub/rcslib/CodeGenCmdLine.jar</a>.</p>
+
+<pre>
+java -jar <i>path_to_rcslib_bin</i>/CodeGenCmdLine.jar mymsgs.hh
+</pre>
+
+<p>OR</p>
+
+<pre>
+java -jar <i>path_to_rcslib_bin</i>/CodeGenCmdLine.jar script=myscript.gen
+</pre>
+
+<p>The option &quot;script=yourscript.gen&quot; tells the program
+to open up the file &quot;myscript.gen&quot; and look there for commands.
+The file yourscript.gen is a text-file with a series of commands to generate
+the C++/Java files. In both cases the option &quot;-I<i>some_directory</i>&quot; can be used to tell the NML Code Generator to look in a given directory for header files that are included within your header file and that define types needed in your messages. To have the generated code be compatible with versions of the RCS library before 2003.9 add the option &quot;update_with_name=false&quot;.</p>
+
+
+<p>Some additional options:</p>
+
+<dl>
+<dt>   debug_on=</dt>
+<dd>       set to true to print extensive
+                        debug output
+</dd>
+<dt>        update_with_name=</dt>
+<dd>       set to false to use the
+                        older style CMS::update() functions rather than
+                        CMS::update_with_name() functions.
+</dd>
+<dt>        create_print_sizes_file=</dt>
+<dd>       set to true to
+                        create a seperate file just for printing message sizes
+</dd>
+<dt>        select_from_all_files=</dt>
+<dd>       if more than one
+                        header is given and no script is used set to true to
+                        include messages from all headers instead of just the last.
+</dd>
+<dt>        sizes_filename=</dt>
+<dd>       when creating a file to
+                        print sizes, use a name other than print_nmlmsg_sizes.cc
+</dd>
+<dt>        generate_for_c=</dt>
+<dd>       when no script is given,
+                        generate code for C
+</dd>
+<dt>        generate_for_all_langs=</dt>
+<dd>        when no script is given,
+                        generate code for C,C++, Ada &amp; Java
+</dd>
+<dt>        generate_for_cpp=</dt>
+<dd>       when no script is given,
+                        set to false to NOT generate code for C++
+</dd>
+<dt>        generate_for_java=</dt>
+<dd>       when no script is given,
+                        generate code for Java
+</dd>
+<dt>        generate_for_ada=</dt>
+<dd>      when no script is given,
+                        generate code for Ada
+</dd>
+<dt>        dla_length_init=</dt>
+<dd>       set a default length other
+                        than 0 for dynamic length arrays
+</dd>
+<dt>        UseDefaultTypes=</dt>
+<dd>       use some default
+                        builtin types
+</dd>
+<dt>       print_script=</dt>
+<dd>       set to true to print
+                        commands as they are executed from a script.
+</dd>
+</dl>
+
+
+
+<p>Here is the list of commands for the &quot;.gen&quot; script.</p>
+
+<dl>
+<dt><strong># </strong><i>Comment</i></dt>
+<dd>Lines that begin with a # are considered comments.</dd>
+<dt><strong>debug </strong><i>on/off</i></dt>
+<dd>Turn on or off the printing of debug messages, useful for finding 
+incompatibilities in your C++ header files.</dd>
+<dt><strong>load </strong><i>filename</i></dt>
+<dd>Read the C++ header file, <i>filename</i>, for NML message definitions.</dd>
+<dt><strong>select_from_file </strong><i>filename</i></dt>
+<dd>Select the classes from the given file for use by later commands.</dd>
+<dt><strong>cd </strong><i>directory</i></dt>
+<dd>Change to the given <i>directory</i>.</dd>
+<dt><strong>set_format_function </strong><i>format_function_name</i></dt>
+<dd>Set the name of the format function to generate.</dd>
+<dt><strong>package</strong> <i>java_package_name</i></dt>
+<dd>Set the name of a Java package to put any Java classes into.</dd>
+<dt><strong>generate java classes &gt;*</strong></dt>
+<dd>Create Java classes from each of the currently selected C++ classes and place them in separate files.</dd>
+<dt><strong>generate java dict &gt;</strong><i>filename</i></dt>
+<dd>Create an NML Message Dictionary in java using the currently selected classes and put it in the given file.</dd>
+<dt><strong>generate C++ update &gt;</strong><i>filename</i></dt>
+<dd>Create C++ update functions for each of the currently selected classes and append them to the given file.</dd>
+<dt><strong>generate C++ format &gt;</strong><i>filename</i></dt>
+<dd>Create a C++ format function using the currently selected classes and append it to the given file.</dd>
+<dt><strong>generate C++ constructor &gt;</strong><i>filename</i></dt>
+<dd>Create C++ constructors for each of the currently selected classes and append them to the given file.</dd>
+<dt><strong>clear</strong></dt>
+<dd>Deselect all the classes.</dd>
+<dt><strong>exit</strong></dt>
+<dd>Causes the code-generator to exit, ignoring any commands after this.</dd>
+</dl>
+
+<p>Here's an example script.</p>
+
+<pre>
+# CodeGen Script file to create emoven.cc from emoven.hh
+load emoven.hh
+generate C++ format >emoven.cc
+generate C++ update >emoven.cc
+generate C++ constructor >emoven.cc
+exit
+</pre>
+
+
+<h2>Special Rules for the Header Files</h2>
+
+<p>The purpose of using C++ header files to provide the type information is to 
+make adding variables to command and status messages or adding new commands and status messages as simple and painless as possible. However the tool is not 
+a C++ compiler and so there are some issues to be aware of.</p>
+
+<ol>
+<li><strong>Update 15-Jun-2004:</strong>#include directives are now followed. </li>
+<li>The types &quot;long long&quot;, &quot;unsigned long long&quot;, and &quot;long double&quot; are not portable and should therefore be avoided if possible.( See <a href="l64notes.html">l64notes.html</a> if your application deals with 64 bit integers.)</li>
+<li>#if directives are considered false unless JAVA_DIAG_APPLET_FORCE_TRUE is 
+defined.</li>
+<li>Only one variable should be defined on a line.</li>
+<li>Surround things that should not be parsed by the tool with 
+#ifndef JAVA_DIAG_APPLET  and #endif. This includes:
+<ul>
+<li>Multiple line functions and macros. (Most functions don't belong in
+the header file any way.)</li>
+<li>Variables included in the message but that should not updated in the NML update function.</li>
+<li>Large classes which will never be sent as NML messages and will just 
+slow down the tool and eat up more memory to include.</li>
+</ul>
+</li>
+<li>Each NML message should have a #define in the same header file 
+	giving the unique message type id formed by adding _TYPE to the
+	class name. For example for class NML_TASKEX_INIT  there
+	should be a 
+<pre>
+#define NML_TASKEX_INIT_TYPE 101
+</pre>
+</li>
+</ol>
+
+<h2>Interactive Operation</h2>
+
+<ol>
+<li>Enter the URL or file name of the C++ header file or Diagnostics Configuration file into the text field at the top of the applet.
+</li>
+<li>
+Select  NML messages for which
+update and/or format functions should be created from the &quot;Available Classes&quot; that were found.
+</li>
+<li>
+Press one or more of the "Add" buttons to create the source code.
+</li>
+<li>
+Copy and paste the code into a text editor.
+</li>
+</ol>
+
+<h3>Notes:</h3>
+<ul>
+<li>
+ Once You have
+generated any C++ code, the tool will not allow you to create Java code or vice-versa until you press the "CLEAR" button.
+</li>
+<li>
+Some browsers  does not allow java applets to read or write to local files.
+Microsoft Internet Explorer 3+ and Netscape 4+ have the same restriction unless you see my  digital signiture when you load the applet and choose &quot;Yes&quot;
+<strong>Update 15-Jun-2004:</strong> I no longer sign the applet, running inside a browser just does not work anymore.
+</li>
+<li>
+For information on how to use this code, see The NML Programmer's Guide <a href="http://www.isd.mel.nist.gov/projects/rcslib/NMLcpp.html">C++</a> and/or <a href="http://www.isd.mel.nist.gov/projects/rcslib/NMLjava.html">Java</a> versions.
+</li>
+</ul>
+
+<hr />
+<p>Last Modified: 15-Jun-2004</p>
+<p>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email, please
+contact  <a href="http://www.isd.mel.nist.gov/personnel/shackleford/"
+>Will Shackleford</a> at <i><a href="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</a></i></p>
+
+</body>
+</html>
+
+

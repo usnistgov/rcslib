@@ -1,0 +1,86 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    darwin
+
+# The C compiler.
+CC =    gcc
+
+# The C++ compiler.
+CPLUSPLUS =     g++
+CPLUSPLUS_EXTENSION = cc
+
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O2
+endif
+endif
+
+ifndef NO_DEBUG
+ifndef DEGUG_FLAG
+DEBUG_FLAG = -g
+endif
+endif
+
+
+ifndef WARN_FLAG
+ifdef WARN_MAX
+WARN_FLAG=-Wall -Werror
+endif
+endif
+
+ifndef WARN_FLAG
+ifdef NO_WARNINGS
+WARN_FLAG=-w
+endif
+endif
+
+ifndef WARN_FLAG
+WARN_FLAG=
+endif
+
+SEARCH_PATH_FLAG =
+RCS_LIB_SEARCH_PATH=
+
+# The C and C++ compilation flags to be used.
+CFLAGS  = $(DEBUG_FLAG) $(OPTIMIZE_FLAG) $(WARN_FLAG) -DDARWIN -D$(PLAT) -DPLATNAME=\"$(PLAT)\" -L/usr/lib  -Ddarwin -Wno-long-double
+
+CLINK = 
+CPLUSPLUSFLAGS =        -D__CPLUSPLUS__ $(CFLAGS)
+CPLUSPLUSLINK =         $(CLINK)
+
+# makedepend must be run from a sun. (Preferably one with a cross-compiler.)
+MAKEDEPEND = /usr/X11R6/bin/makedepend
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        ranlib
+
+# The assembler.
+AS =    as
+
+LD =    ld
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+DYNAMIC_LINK_FLAG = -dynamic -lm -lc -lcc_dynamic -lstdc++
+
+
+COPY_SOURCE_COMMAND = cp
+RCSLIB_LIBRARY_NAME = librcs.a
+STRIP = strip
+
+NO_STRIP_FOR_LIBS=1
+
+
+# disable SCCS make rule for Darwin
+% : SCCS/s.%
+	@true
+
+% ::    RCS/%,v
+	co $@
+
+
+MKDIR_CMD=mkdir -p
+DYNAMIC_LIB_BUILD_TOOL=libtool

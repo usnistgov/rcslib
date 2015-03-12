@@ -1,0 +1,70 @@
+#!/bin/sh
+
+if test "x${DEBUG}" != "x" ; then
+    echo "Starting $0 $*";
+    set -x;
+    pwd;
+fi
+
+\rm -f RCS_VERSION.java.r*
+\rm -f RCS_VERSION.java.R*
+\rm -f RCS_VERSION.java.[0-9]*
+\rm -f RCS_VERSION.java.C*
+\rm -f RCS_VERSION.java.mine
+
+if test "x${DEVP_LIB_DIR}" = "x" ; then
+    if test -d ../../../_build/plat/java/lib/ ; then
+	DEVP_LIB_DIR=../../../_build/plat/java/lib/;
+    elif test -d ../../../plat/java/lib/ ; then
+	DEVP_LIB_DIR=../../../plat/java/lib/;
+    fi
+fi
+
+if test "x${JAVAC}" = "x" ; then
+    JAVAC=javac;
+fi
+
+if test -f ./RCS_VERSION.java.perm ; then
+    
+    if test -f RCS_VERSION.class ; then
+	\rm -f RCS_VERSION.class
+    fi
+
+    rcsvers_hh=../../rcsvers.hh
+      
+    if test "x${TOP_SRCDIR}" != "x" -a -f ${TOP_SRCDIR}/src/rcsvers.hh ; then
+	rcsvers_hh=${TOP_SRCDIR}/src/rcsvers.hh
+    fi
+	
+    if test -f "${rcsvers_hh}" ; then
+    
+	rcs_version=`cat "${rcsvers_hh}" | awk '{ if ( $1 == "#define" && $2 == "RCS_VERSION" ) print $3;}' | sed s/\"// | sed s/\"//`
+	svn_ver=`svnversion -n .` 2>/dev/null;
+	if test "x${svn_ver}" != "x" ; then
+	    rcs_version=`echo "${rcs_version}_${svn_ver}"`;
+	fi
+	date_var=`date`;
+	if test "x${rcs_version}" != "x" -a "x${date_var}" != "x"  ; then
+	    if test  -w . ; then
+		if test "x${DEBUG}" != "x" ; then
+		    pwd
+		    ls -l
+		    cat RCS_VERSION.java*;
+		fi
+		if test -f RCS_VERSION.java ; then
+		    \rm -f RCS_VERSION.java
+		fi
+		cat < RCS_VERSION.java.perm | sed s/RCS_VERSION_STRING/$rcs_version/ | sed "s/RCS_VERSION_DATE/\"${date_var}\"/" >RCS_VERSION.java
+	    else
+		cat < RCS_VERSION.java.perm | sed s/RCS_VERSION_STRING/$rcs_version/ | sed "s/RCS_VERSION_DATE/\"${date_var}\"/" >/tmp/RCS_VERSION.java
+		( cd /tmp ; ${JAVAC} RCS_VERSION.java ; )
+		cp /tmp/RCS_VERSION.class ${DEVP_LIB_DIR} 
+	    fi
+	fi
+    fi
+
+fi
+
+if test "x${DEBUG}" != "x" ; then
+    echo "Ending $0 $*";
+fi

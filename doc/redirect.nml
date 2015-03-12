@@ -1,0 +1,21 @@
+
+# Buffer lines
+
+# connect to one nmlcfgsvr if we are looking for b1
+B b1 nmlcfgsvr::50000
+
+#connect to a different nmlcfgsvr if we are looking for queued_buffer and set the option queue=10
+B queued_buffer nmlcfgsvr:129.6.78.68:::options=queue=10
+
+# Process lines
+
+# if this process is named "svr" use the new create type and set the server flag to 1
+P svr default nmlcfgsvr_options=create=new set_to_server=1
+
+# if this process is not named above but the buffer is
+#       then  use the checkwait createtype and set the timeout to 0.5
+P default  default nmlcfgsvr_options=create=checkwait timeout=0.5
+
+# If we read this far without finding a matching buffer line and process line connect to nmlcfgsvr.
+nmlcfgsvr:
+

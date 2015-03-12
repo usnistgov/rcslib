@@ -1,0 +1,2 @@
+s/$(DEVP_LIB_DIR)/\
+$(DEVP_LIB_DIR)/

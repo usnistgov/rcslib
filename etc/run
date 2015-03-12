@@ -1,0 +1,11 @@
+#!/bin/csh
+
+echo "cd  "`pwd`
+echo $0 $*
+
+echo $1 $2 $3 $4
+
+csh $1 $2 $3 $4
+
+echo Press Enter to Close Window
+set confirm = $<

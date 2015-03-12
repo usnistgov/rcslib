@@ -1,0 +1,42 @@
+#!/bin/sh
+
+cd `dirname $0`
+
+pid1=0
+sig1=INT
+
+pid2=0
+sig2=INT
+
+pid3=0
+sig3=INT
+
+pid4=0
+sig4=INT
+
+function cleanup()
+{
+    if test $pid1 -ne 0 ; then kill -$sig1 $pid1 2> /dev/null ; fi
+    if test $pid2 -ne 0 ; then kill -$sig2 $pid2 2> /dev/null ; fi
+    if test $pid3 -ne 0 ; then kill -$sig3 $pid3 2> /dev/null ; fi
+    if test $pid4 -ne 0 ; then kill -$sig4 $pid4 2> /dev/null ; fi
+
+    exit $1
+}
+
+./skelNmlSvr &
+pid1=$!
+sleep 1
+
+./subMain -b 1 -d 0xFF &
+pid2=$!
+
+./subMain -b 2 -d 0xFF &
+pid3=$!
+
+./supMain -d 1 &
+pid4=$!
+
+./supShell
+
+cleanup 0

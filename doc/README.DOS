@@ -1,0 +1,120 @@
+Because I do not expect users to have gnumake ready to be used for DOS and MS-WINDOWS 
+there are several additional steps required for creating the 
+Real-time Control Systems(RCS) Library for DOS or Windows.
+
+1. You will need to change the names of *.cc files to *.cpp files, and you will probably want to unix2dos the files as well. You can accomplish this from a UNIX host such as a Sunos 4 workstation by running a command such as:
+
+gnumake -k PLAT=win16bor sources
+
+Since no actual compiling will occur you could just as easily use any of the win* or dos* plat, but win16bor is intended for 16-bit MS-Windows version with a Borland C++ compiler.
+
+2. You will need to create a project file using the your compiler's development environment. 
+
+Since the server code will not work on DOS or Windows exclude the following files from the project:
+
+nml_srv.cpp
+cms_srv.cpp
+sem.cpp
+_sem.c
+shm.cpp
+_shm.c
+shmem.cpp
+_table.c
+table.cpp
+rpc_svr.cpp
+tcp_svr.cpp
+udp_svr.cpp
+and all files in the nml, pcio, node, and pmac subdirectories
+
+Also eliminate the following files because they are intended to be part of stand-alone applications rather than part of the library.
+
+nmlperf.cpp
+perfsvr.cpp
+nmltest.cpp
+perftype.cpp
+nmlclean.cpp
+nmlwatch.cpp
+printest.cpp
+windlg.c
+perfdlg.cpp
+testtimer.cpp
+testtable.cpp
+
+
+
+This should leave the following list.
+
+_physmem.c
+_timer.c
+bit3.cpp
+bt_remid.c
+btcommon.c
+btecard.c
+cmd_msg.cpp
+cms.cpp
+cms_aup.cpp
+cms_cfg.cpp
+cms_in.cpp
+cms_up.cpp
+cms_xup.cpp
+globmem.cpp
+nml.cpp
+nmlmsg.cpp
+phantom.cpp
+rcs_prnt.cpp
+readn.c
+recvmsgt.c
+recvn.c
+rpcintrf.cpp
+rpcmem.cpp
+sendmsgt.c
+sendn.c
+sokintrf.cpp
+tcp_opts.cpp
+tcpmem.cpp
+timer.cpp
+udp_opts.cpp
+udpmem.cpp
+win_prnt.cpp
+writen.c
+xdr_msg.cpp
+
+
+Do one of the following:
+
+1. Obtain a copy of the PC-NFS Programmer's Toolkit for the appropriate platform.(Unfortunately this costs $$$), and add its includes to the directories searched for include files.
+
+
+OR
+
+2. Add the define NO_DCE_RPC as a compile line option and eliminate the following files from the project.
+
+rpcintrf.cpp
+xdr_msg.cpp
+rpcmem.cpp
+cms_xup.cpp
+
+
+Finally, for strictly DOS without MS-Windows versions you may also want to eliminate win_prnt.cpp.
+
+
+
+***************************************************************
+Additional Notes:
+If you are only interested in the RCS_LINKED_LIST class 
+linklist.cpp does not require any functions from other parts of
+the library so you could compile only it and link linklist.obj with
+your application instead of the whole RCS library.
+
+If you have any problems with the RCS library, please do not hesitate
+to call me, Will Shackleford, at (301) 975-4286 or reach me via e-mail at
+shackle@cme.nist.gov.
+
+
+
+
+
+
+-----------------------------------------------------------------------
+Last Modified: 08/25/99
+

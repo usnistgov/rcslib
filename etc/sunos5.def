@@ -1,0 +1,91 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    os5
+
+# The C compiler.
+CC =    /depot/gnu/plat/bin/gcc
+
+# The C++ compiler.
+CPLUSPLUS =     /depot/gnu/plat/bin/g++
+CPLUSPLUS_EXTENSION = cc
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O2
+endif
+endif
+
+ifndef NO_DEBUG
+ifndef DEGUG_FLAG
+DEBUG_FLAG = -g
+endif
+endif
+
+ifndef WARN_FLAG
+WARN_FLAG=
+
+ifdef WARN_MAX
+WARN_FLAG=-Wall
+endif
+
+ifdef NO_WARN
+WARN_FLAG=-w
+endif
+endif
+
+# The C and C++ compilation flags to be used.
+CFLAGS  = $(DEBUG_FLAG) $(OPTIMIZE_FLAG) $(WARN_FLAG) -DSUN -DNO_THREADS -D$(PLAT) -D$(OS) -Dsparc -DPLATNAME=\"$(PLAT)\" -DHAVE_LIBDL
+CLINK = -lrpcsvc -lsocket -lnsl -lintl -lm -lposix4 -ldl
+CPLUSPLUSLINK =         -lrpcsvc -lsocket -lnsl -lposix4 -lintl -lm -ldl /depot/gnu/plat/lib/libg++.a
+
+# Flags for compiling and linking X Windows apps
+XINC = -I/depot/X11R6/include
+XLINK = -L/depot/X11R6/arch/lib -lXaw -lXmu -lXt -lX11 -R /depot/X11R6/arch/lib:/usr/openwin/lib/:/usr/lib
+
+# Flags for compiling and linking Tcl apps
+TCL_INC = -I/depot/tcl/include
+TCL_LINK = -L/depot/tcl/arch/lib -ltcl8.3 -lsocket -lm -R /depot/tcl/arch/lib
+TK_LINK = -ltk8.3
+
+#CLINK =        /lib/librpcsvc.a /lib/libsocket.a /lib/libnsl.a /lib/libdl.so.1 /lib/libintl.a /lib/libm.a
+CPLUSPLUSFLAGS = $(CFLAGS)      -D__CPLUSPLUS__
+
+MAKEDEPEND = /depot/x11r5/plat.sunos5/bin/makedepend
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        echo ranlib not needed for
+
+# The assembler.
+AS =    as
+
+LD =    ld
+LINKER = ld
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+
+DYNAMIC_LINK_FLAG = -dy -G
+
+
+STRIP = strip
+
+STRIP_DEBUG_OPTION = -x
+
+COPY_SOURCE_COMMAND = cp
+
+RCSLIB_LIBRARY_NAME = librcs.a
+
+% ::    SCCS/s.%
+	sccs get $@
+
+% ::    RCS/%,v
+	co $@
+
+ifdef OLD_JAVA
+JDK_DIR=/depot/jdk
+else
+
+JDK_DIR=/isd/depot/jdk1.2/usr/java1.2
+endif

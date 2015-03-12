@@ -1,0 +1,87 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    rtai
+PLAT=RTAI
+
+# The C compiler.
+ifndef CC
+CC =    gcc
+endif
+
+ifndef CXX
+CXX=g++
+endif
+
+# The C++ compiler.
+ifndef CPLUSPLUS
+CPLUSPLUS =   $(CXX)
+endif
+
+CPLUSPLUS_EXTENSION = cc
+
+
+RTAI_DIR := $(shell $(RCSLIB_MAIN_DIR)/etc/rtaidir )
+
+KERNEL_DIR:=$(shell $(RCSLIB_MAIN_DIR)/etc/linuxkerneldir)
+
+RTAI_INCLUDE:=-I$(RTAI_DIR)/include 
+
+include $(RTAI_DIR)/Rules.make
+
+CFLAGS :=$(CFLAGS_FP)
+
+CFLAGS += -DUSE_RTAI $(RTAI_INCLUDE)
+
+BUILD_REALTIMEONLY=1
+
+NO_CPLUSPLUS=1
+
+
+WARN_FLAG=
+
+ifdef WARN_MAX
+WARN_FLAG=-Wall
+endif
+
+ifdef NO_WARN
+WARN_FLAG=-w
+endif
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O2 -ffast-math
+endif
+endif
+
+
+# The C and C++ compilation flags to be used.
+CFLAGS  :=  -DNO_STDIO_SUPPORT -D$(PLAT)  $(WARN_FLAG) $(CFLAGS)  -DPLATNAME=\"$(PLAT)\" -Dnocplusplus -Drealtimeonly -I$(KERNEL_DIR)/include -DLINUX -Dlinux $(OPTIMIZE_FLAG) 
+CLINK =
+CPLUSPLUSFLAGS =        -D__CPLUSPLUS__ $(CFLAGS)
+CPLUSPLUSLINK =         $(CLINK)
+
+# makedepend must be run from a sun. (Preferably one with a cross-compiler.)
+MAKEDEPEND = /usr/X11R6/bin/makedepend
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        ranlib
+
+# The assembler.
+AS =    as
+
+LD =    gcc
+STRIP = strip
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+COPY_SOURCE_COMMAND = cp
+RCSLIB_LIBRARY_NAME = librcs.a
+
+# disable SCCS make rule for Linux
+% : SCCS/s.%
+	@true     
+
+% ::    RCS/%,v
+	co $@

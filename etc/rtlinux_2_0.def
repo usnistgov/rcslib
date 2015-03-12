@@ -1,0 +1,72 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    rtlinux
+
+# The C compiler.
+CC =    gcc
+
+# The C++ compiler.
+CPLUSPLUS =     g++
+CPLUSPLUS_EXTENSION = cc
+
+RTLMKFILE := $(shell find /usr/src/rtlinux-2.0/ -name rtl.mk | grep -v examples | grep -v drivers | grep -v schedulers | grep -v fifos | grep -v system )
+
+include $(RTLMKFILE)
+
+$(RTLMKFILE):
+	-@( echo foo > /dev/null)
+
+ifndef WARN_FLAG
+WARN_FLAG=
+
+ifdef WARN_MAX
+WARN_FLAG=-Wall
+endif
+
+ifdef NO_WARN
+WARN_FLAG=-w
+endif
+endif
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O2
+endif
+endif
+
+# The C and C++ compilation flags to be used.
+CFLAGS  := -DRTLINUX -Drtlinux  -Drtlinux2 -DNO_STDIO_SUPPORT -D$(PLAT)  $(WARN_FLAG) $(CFLAGS)  -DPLATNAME=\"$(PLAT)\" $(OPTIMIZE_FLAG)
+CLINK =
+CPLUSPLUSFLAGS =        -D__CPLUSPLUS__
+CPLUSPLUSLINK =         $(CLINK)
+MAKEDEPEND_CFLAGS = -DRTLINUX -Drtlinux  -Drtlinux2 -DNO_STDIO_SUPPORT -D$(PLAT) $(INCLUDE)
+
+# makedepend must be run from a sun. (Preferably one with a cross-compiler.)
+MAKEDEPEND = /usr/X11R6/bin/makedepend
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        ranlib
+
+# The assembler.
+AS =    as
+
+STRIP = strip
+LD =    gcc
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+RCS_LINK_FLAG = -L$(RCS_PLATLIB) -lrcs
+
+COPY_SOURCE_COMMAND = cp
+RCSLIB_LIBRARY_NAME = librcs.a
+
+# disable SCCS make rule for Linux
+% : SCCS/s.%
+	@true
+
+% ::    RCS/%,v
+	co $@
+
+NEVER_USE_GENERIC_DEPEND=1

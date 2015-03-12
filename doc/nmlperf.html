@@ -1,0 +1,127 @@
+<html>
+<head>
+<title>NML Performance Measures</title>
+</head>
+<body>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="551A8B" ALINK="#FF0000" >
+<H1>NML Performance Measures</H1>
+<H2>Introduction</H2>
+<p>This document will describe various methods that have been used to test 
+the performance of NML, the results of some of those tests and how they
+might be used to optimize NML-based applications. It assumes that the
+reader is familiar with either the <A HREF="NMLcpp.html">NML C++ Interface</a> or the <A HREF="NMLjava.html">NML Java Interface</A> and with the options available in the <A HREF="NMLcfg.html">NML Configuration Files</a>.</p>
+<H2>Factors Affecting Performance</H2>
+<p>Unfortunately, the performance of NML can not be effectively characterized by a single number. Instead we need a series of tests and performance measures that take all of the following factors into account.</p>
+<DL>
+<DT>Platform: -- CPU, Operating System, and compiler</DT>
+<DD>Because NML is portable, there are a large number of platforms that should be tested. In systems with multiple platforms communicating, the number of possible combinations is infinite.</DD>
+<DT>Options/Protocols -- Methods of communicating selected within the configuration file</DT>
+<DD>Because NML is flexible there are a large number of options and protocols that should be considered. </DD>
+<DT> Application Type/Performance Measure <DT>
+<DD> Different applications can use NML in different ways and are likely to be interested in different measures of the performance. These measures will be defined in a later section.</DD>
+<DT> Message Size</DT>
+<DD>Generally for large messages the times, latencies and CPU load used will
+be proportional to the size of the message. For small messages the message size may have little effect.</DD>
+</DL>
+<H2>Performance Measures</H2>
+<P>Different types of applications will be interested in different measures of
+NML performance.</p>
+<DL>
+<DT>Maximum Read/Write Time.</DT>
+<DD> -- maximum amount of time spent during the test that between a call to NML::read() or NML::write() and it returning control to the calling function. It does not matter whether the CPU was available to process other tasks during that time or not. Maximum time measures can be greatly influenced by the system clock resolution. The resolution of clocks for reading vary from 1 microsecond to 20 milliseconds. Applications that need to run at a deterministic cycle time should pay close attention to this number. It can generally be controlled with the timeout option. NIST does not guarantee that the value will never be exceeded.
+</DD>
+<DT>Average Read/Write Time.</DT>
+<DD> -- average amount of time spent during the test  between a call to NML::read() or NML::write() and it returning control to the calling function. It does not matter whether the CPU was available to process other tasks during that time or not. The effect of poor system clock resolution is less since the measurement is made over many reads. Applications that will be the only one of interest running on their CPU  or applications for platforms where information the average CPU time used is not available should consider this number.</DD>
+<DT>Average CPU Time Used for a Read/Write </DT>
+<DD> -- average time spent by the CPU on the calling process per call to NML::read or NML::write() during a particular test. Since the operating system may swap out the process during a read or write or NML may block temporarily on a socket or semaphore this will be less than the average read/write time. This number is important to applications that should run on operating systems where it is important to reserve time for other applications on the same CPU should.</DD>
+<DT>Throughput</DT>
+<DD> -- average number of new messages that were received per second during a particular test. Since NML::read() can return and indicate "No New Data" this number will less than the number of calls to NML::read that occurred per second. Since calls to NML::write may overwrite each other it may also be less than the number of calls to NML::write per second. This number is of importance to applications that are tightly bound to one input. Since most RCS applications poll multiple inputs and do not care if they miss messages this number is of lesser importance to RCS applications.
+<DT>Latency</DT>
+<DD> -- average length of time required between a the return of a write  and that the beginning of a read with the same message being received for a particular test. This number is important to some applications that have a long chain of modules that pass along a piece of data, applications that send large messages over a network and applications that check for data only asynchronously. However for most applications the latency will be sufficiently small so that its exact value is not relevant.</DD>
+</DL>
+<H2>NMLPERF - The NML Performance Testing Program</H2>
+<P>The program that we will used to perform most of the tests is called nmlperf.The source code for the NMLPERF program consists of 3 files:</p>
+<DL>
+<DT><A HREF="perftype.hh">perftype.hh</a></DT>
+<DD> -- a C++ header file that contains declarations for the 
+NML_PERFORMANCE_TEST_MSG class which will be used to create the messages to be exchanged. The class is somewhat complicated. Because NML may need to convert messages from their native format to a neutral format such as XDR. XDR may be more efficient at converting certain data types than others. The class essentially contains a variable length array of a union of all the basic data types. An integer in the message will indicate to the update function which type of data the union is considered to currently contain and therefore which conversion
+is necessary. Rather than report different numbers for each data type we will 
+rotate the data type constantly through each. The array length is also modified with each message so that the message length stays the same. So when the message contains characters it needs an array length that is four times larger than when it contains long integers. Special new and delete operators allow the message to be created at any size. The function set_real_test_msg size is used before a call to new to set the size that the message should be created.</DD>
+<DT><A HREF="perftype.cc">perftype.cc</a></DT>
+<DD> -- a C++ source file that contains the code for the NML format function,
+perf_types_format, the update function for NML_PERFORMANCE_TEST_MSG as well as
+the special new and delete operators.</DD>
+<DT><A HREF="nmlperf.cc">nmlperf.cc</a></DT>
+<DD> -- a C++ source file that contains the main function for the nmlperf program. When the program is started it will ask the user for the buffer name, process name and configuration file to use, and the maximum number of messages to read or write (which can be infinite). It will then create one NML object using those parameters and check that it is valid. If it is valid it will ask which role to play in the performance test, write only, read only or a combination alternating read and write. For the write or combination mode it will ask what size message to create. It will then perform the test by repeatedly reading or writing from the channel until the maximum number of messages were written or read or until the user presses Control-C. Finally, it prints out the information collected.</DD>
+</DL>
+<P>An additional program must be run for some tests. The program perfsvr connects to each buffer with a given host name and provides an NML server for the buffer. There are currently no performance measures made within perfsvr. However it must be running for nmlperf to connect remotely and test the performance of the remote protocols. The source code is available for review at <A HREF="perfsvr.cc">perfsvr.cc</a>.</p>
+
+<H2>Platform Details</H2>
+<p>In the test results summary I have included the hostnames so that readers can look up the 
+exact details of the platform used for each test.</p>
+
+<DL>
+<DT>dopey(sunos5)</DT>
+<DD> Sun Ultra 1 Creator, CPU Type: sparc, Number of CPUs: 1, App Architecture: sparc, Kernel Architecture: sun4u,OS Name: SunOS,OS Version: 5.5.1, Kernel Version: SunOS Release 5.5.1 Version Generic_103640-08 [UNIX(R) System V Release 4.0], gcc version: 2.7.2.1, System Clock Interval: 10ms</DD>
+<DT>rolle(sunos5)</DT>
+<DD>Sun SparcStation 20, CPU Type: sparc, Number of CPUs: 1,App Architecture: sparc, Kernel Architecture : sun4m, OS Name : SunOS,OS Version: 5.5.Kernel Version: SunOS Release 5.5 Version Generic_103093-06 [UNIX(R) System V Release 4.0], gcc version: 2.7.2.1, System Clock Interval: 10ms</DD>
+<DT>vx10(vxworks5.3)</DT>
+<DD>Motorola MVME162-22, CPU Type: 25MHz MC68040, Number of CPUs:1, OS Name: VxWorks (for Motorola MVME162),
+OS Version:  5.3.1, Kernel Version: WIND version 2.5, gcc version: cygnus-2.7.2-960126</DD>
+<DT>feed(win32msc), System Clock Interval: 200 microseconds</DT>
+<DD>Windows NT PC, CPU Type: 133MHz Pentium, Number of CPUs: 1, OS Name: Windows NT, OS Version: 4.0(Build 1381: Service Pack 3), Visual C++ Version: 5.0</DD>
+</DL>
+
+<p>It is also worth noting that all of the hosts were on the same Class C subnet connected with 10 Mbs Ethernet. Other computers could  use the same network and network utilization averaged around 2%  without
+the performance test traffic, however significant bursts seem to occur every few 
+minutes. These observations are based on watching the graph  of the NT Performance Monitor Network
+Utilization chart.</p>
+
+<H2>Test Results Summary</H2>
+
+<TABLE BORDER=1>
+<TR><TD>Test #</TD><TD> Test Platform</TD><TD>Buffer Location</TD><TD>Read/Write</TD><TD>Protocol</TD><TD>Options</TD><TD>Size</TD><TD>Max. Time</TD><TD>Avg. Time</TD><TD>CPU Time</TD><TD>Throughput</TD><TD>Latency</TD></TR>
+<TR><TD>1</TD><TD>dopey(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD><TD>SHMEM</TD><TD>default</TD><TD>200</TD><TD>0.012</TD><TD>0.000113</TD><TD>0.000112</TD><TD>4438</TD><TD>0.0</TD></TR>
+<TR><TD>2</TD><TD>dopey(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>SHMEM</TD><TD>queue</TD><TD>200</TD><TD>0.020</TD><TD>0.000118</TD><TD>0.000117</TD><TD>4250</TD><TD>0.0</TD></TR>
+<TR><TD>3</TD><TD>dopey(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>SHMEM</TD><TD>mutex=mao split</TD><TD>200</TD><TD>0.012</TD><TD>0.000013</TD><TD>0.000012</TD><TD>39914</TD><TD>0.0</TD></TR>
+<TR><TD>4</TD><TD>dopey(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>TCP</TD><TD>default</TD><TD>200</TD><TD>0.097</TD><TD>0.000712</TD><TD>0.000291</TD><TD>702</TD><TD>0.0</TD></TR>
+<TR><TD>5</TD><TD>rolle(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>TCP</TD><TD>default</TD><TD>200</TD><TD>0.035</TD><TD>0.001471</TD><TD>0.000671</TD><TD>335</TD><TD>0.0</TD></TR>
+<TR><TD>6</TD><TD>rolle(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>TCP</TD><TD>poll</TD><TD>200</TD><TD>0.218</TD><TD>0.000427</TD><TD>0.000360</TD><TD>184</TD><TD>0.002565</TD></TR>
+<TR><TD>7</TD><TD>rolle(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>TCP</TD><TD>confirm_write</TD><TD>200</TD><TD>1.532</TD><TD>0.003127</TD><TD>0.000771</TD><TD>159</TD><TD>0.0</TD></TR>
+<TR><TD>8</TD><TD>rolle(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Write</TD></TD><TD>TCP</TD><TD>confirm_write</TD><TD>200</TD><TD>0.569</TD><TD>0.003097</TD><TD>0.000707</TD><TD>--</TD><TD>--</TD></TR>
+<TR><TD>9</TD><TD>rolle(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Write</TD></TD><TD>TCP</TD><TD>default</TD><TD>200</TD><TD>0.006</TD><TD>0.000521</TD><TD>0.000463</TD><TD>--</TD><TD>--</TD></TR>
+<TR><TD>10</TD><TD>dopey(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>UDP</TD><TD>default</TD><TD>200</TD><TD>0.072</TD><TD>0.000537</TD><TD>0.000220</TD><TD>931</TD><TD>0.0</TD></TR>
+<TR><TD>11</TD><TD>dopey(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>UDP</TD><TD>poll</TD><TD>200</TD><TD>0.016</TD><TD>0.000189</TD><TD>0.000140</TD><TD>15</TD><TD>0.000140</TD></TR>
+<TR><TD>12</TD><TD>rolle(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>UDP</TD><TD>default</TD><TD>200</TD><TD>0.058</TD><TD>0.001210</TD><TD>0.000461</TD><TD>410</TD><TD>0.0</TD></TR>
+<TR><TD>13</TD><TD>rolle(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>UDP</TD><TD>poll</TD><TD>200</TD><TD>0.005</TD><TD>0.000527</TD><TD>0.000452</TD><TD>43</TD><TD>0.011061</TD></TR>
+<TR><TD>14</TD><TD>rolle(sunos5)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>TCP</TD><TD>default</TD><TD>100000</TD><TD>0.461</TD><TD>0.169032</TD><TD>0.030998</TD><TD>2.96</TD><TD>--</TD></TR>
+<TR><TD>15</TD><TD>vx10(vxworks5.3)</TD><TD>vx10(vxworks5.3)</TD><TD>Both</TD></TD><TD>SHMEM</TD><TD>default</TD><TD>200</TD><TD>0.0002</TD><TD>0.000107</TD><TD>--</TD><TD>4673</TD><TD>0.0</TD></TR>
+<TR><TD>16</TD><TD>vx10(vxworks5.3)</TD><TD>vx10(vxworks5.3)</TD><TD>Both</TD></TD><TD>SHMEM</TD><TD>mutex=no_switching</TD><TD>200</TD><TD>0.0002</TD><TD>0.000067</TD><TD>--</TD><TD>7500</TD><TD>0.0</TD></TR>
+<TR><TD>17</TD><TD>vx10(vxworks5.3)</TD><TD>vx10/vx11 backplane</TD><TD>Both</TD></TD><TD>GLOBMEM</TD><TD>default</TD><TD>200</TD><TD>0.0004</TD><TD>0.000184</TD><TD>--</TD><TD>2713</TD><TD>0.0</TD></TR>
+<TR><TD>18</TD><TD>vx10(vxworks5.3)</TD><TD>vx10/vx11 backplane</TD><TD>Both</TD></TD><TD>GLOBMEM</TD><TD>lock_bus</TD><TD>200</TD><TD>0.0002</TD><TD>0.000141</TD><TD>--</TD><TD>3553</TD><TD>0.0</TD></TR>
+<TR><TD>19</TD><TD>vx10(vxworks5.3)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>TCP</TD><TD>default</TD><TD>200</TD><TD>3.4936</TD><TD>0.012991</TD><TD>--</TD><TD>37.8</TD><TD>0.0</TD></TR>
+<TR><TD>20</TD><TD>vx10(vxworks5.3)</TD><TD>dopey(sunos5)</TD><TD>Write</TD></TD><TD>TCP</TD><TD>default</TD><TD>200</TD><TD>0.0344</TD><TD>0.00143</TD><TD>--</TD><TD>--</TD><TD>--</TD></TR>
+<TR><TD>21</TD><TD>vx10(vxworks5.3)</TD><TD>dopey(sunos5)</TD><TD>Write</TD></TD><TD>TCP</TD><TD>default</TD><TD>10000</TD><TD>3.486</TD><TD>0.069465</TD><TD>--</TD><TD>--</TD><TD>--</TD></TR>
+<TR><TD>22</TD><TD>vx10(vxworks5.3)</TD><TD>dopey(sunos5)</TD><TD>Write</TD></TD><TD>UDP</TD><TD>default</TD><TD>200</TD><TD>0.0028</TD><TD>0.001099</TD><TD>--</TD><TD>--</TD><TD>--</TD></TR>
+<TR><TD>23</TD><TD>feed(win32msc)</TD><TD>feed(win32msc)</TD><TD>Both</TD></TD><TD>SHMEM</TD><TD>default</TD><TD>200</TD><TD>0.011</TD><TD>0.000041</TD><TD>--</TD><TD>12213</TD><TD>0.0</TD></TR>
+<TR><TD>24</TD><TD>feed(win32msc)</TD><TD>dopey(sunos5)</TD><TD>Both</TD></TD><TD>TCP</TD><TD>default</TD><TD>200</TD><TD>0.13</TD><TD>0.001349</TD><TD>--</TD><TD>370</TD><TD>--</TD></TR>
+<TR><TD>25</TD><TD>feed(win32msc)</TD><TD>feed(win32msc)</TD><TD>Both</TD></TD><TD>TCP</TD><TD>default</TD><TD>200</TD><TD>0.020</TD><TD>0.001220</TD><TD>--</TD><TD>409</TD><TD>--</TD></TR>
+</TABLE>
+
+<H2>Interpreting the Results</H2>
+
+<p>Here are some of the conclusions I draw from these tests.</p>
+
+<UL>
+<LI>Shared Memory was 4 to 40 times faster than using TCP or UDP even when both processes ran on the same host.</LI>
+<LI>Eliminating the delays caused by semaphores by using an alternate mutex mechanism can improve shared memory speeds for small messages  by about a factor of between 2  and 10.</LI>
+<LI>The "poll" option significantly improved average and maximum read times but  decreased throughput and increased latency.</LI>
+<LI>The "confirm_write" option is about twice as slow as the default without the confirmation for small messages( < 1K).</LI>
+<LI>Backplane GLOBMEM is 50% to 100% slower than single board SHMEM.</LI>
+</UL>
+
+
+</body>
+</html>
+
+

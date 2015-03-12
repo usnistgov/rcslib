@@ -1,0 +1,1467 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 54 72 558 720
+%%Creator: Mozilla (NetScape) HTML->PS
+%%DocumentData: Clean7Bit
+%%Orientation: Portrait
+%%Pages: 6
+%%PageOrder: Ascend
+%%Title: Using Makefile.generic for RCS Applications
+%%EndComments
+%%BeginProlog
+[ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+ /.notdef /.notdef /space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright
+ /parenleft /parenright /asterisk /plus /comma /hyphen /period /slash /zero /one
+ /two /three /four /five /six /seven /eight /nine /colon /semicolon
+ /less /equal /greater /question /at /A /B /C /D /E
+ /F /G /H /I /J /K /L /M /N /O
+ /P /Q /R /S /T /U /V /W /X /Y
+ /Z /bracketleft /backslash /bracketright /asciicircum /underscore /quoteleft /a /b /c
+ /d /e /f /g /h /i /j /k /l /m
+ /n /o /p /q /r /s /t /u /v /w
+ /x /y /z /braceleft /bar /braceright /asciitilde /.notdef /.notdef /.notdef
+ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+ /space /exclamdown /cent /sterling /currency /yen /brokenbar /section /dieresis /copyright
+ /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron /degree /plusminus /twosuperior /threesuperior
+ /acute /mu /paragraph /periodcentered /cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf
+ /threequarters /questiondown /Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla
+ /Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis /Eth /Ntilde
+ /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply /Oslash /Ugrave /Uacute /Ucircumflex
+ /Udieresis /Yacute /Thorn /germandbls /agrave /aacute /acircumflex /atilde /adieresis /aring
+ /ae /ccedilla /egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis
+ /eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide /oslash /ugrave
+ /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis] /isolatin1encoding exch def
+/c { matrix currentmatrix currentpoint translate
+     3 1 roll scale newpath 0 0 1 0 360 arc setmatrix } bind def
+/F0
+    /Times-Roman findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/f0 { /F0 findfont exch scalefont setfont } bind def
+/F1
+    /Times-Bold findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/f1 { /F1 findfont exch scalefont setfont } bind def
+/F2
+    /Times-Italic findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/f2 { /F2 findfont exch scalefont setfont } bind def
+/F3
+    /Times-BoldItalic findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/f3 { /F3 findfont exch scalefont setfont } bind def
+/F4
+    /Courier findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/f4 { /F4 findfont exch scalefont setfont } bind def
+/F5
+    /Courier-Bold findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/f5 { /F5 findfont exch scalefont setfont } bind def
+/F6
+    /Courier-Oblique findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/f6 { /F6 findfont exch scalefont setfont } bind def
+/F7
+    /Courier-BoldOblique findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/f7 { /F7 findfont exch scalefont setfont } bind def
+/rhc {
+    {
+        currentfile read {
+	    dup 97 ge
+		{ 87 sub true exit }
+		{ dup 48 ge { 48 sub true exit } { pop } ifelse }
+	    ifelse
+	} {
+	    false
+	    exit
+	} ifelse
+    } loop
+} bind def
+
+/cvgray { % xtra_char npix cvgray - (string npix long)
+    dup string
+    0
+    {
+	rhc { cvr 4.784 mul } { exit } ifelse
+	rhc { cvr 9.392 mul } { exit } ifelse
+	rhc { cvr 1.824 mul } { exit } ifelse
+	add add cvi 3 copy put pop
+	1 add
+	dup 3 index ge { exit } if
+    } loop
+    pop
+    3 -1 roll 0 ne { rhc { pop } if } if
+    exch pop
+} bind def
+
+/smartimage12rgb { % w h b [matrix] smartimage12rgb -
+    /colorimage where {
+	pop
+	{ currentfile rowdata readhexstring pop }
+	false 3
+	colorimage
+    } {
+	exch pop 8 exch
+	3 index 12 mul 8 mod 0 ne { 1 } { 0 } ifelse
+	4 index
+	6 2 roll
+	{ 2 copy cvgray }
+	image
+	pop pop
+    } ifelse
+} def
+/cshow { dup stringwidth pop 2 div neg 0 rmoveto show } bind def
+/rshow { dup stringwidth pop neg 0 rmoveto show } bind def
+%%EndProlog
+%%Page: 1 1
+%%BeginPageSetup
+/pagelevel save def
+54 0 translate
+%%EndPageSetup
+newpath 0 72 moveto 504 0 rlineto 0 648 rlineto -504 0 rlineto  closepath clip newpath
+48 697.5 moveto
+24 f1
+(RCS Makefiles and Directory Structure) show
+39.5 662.2 moveto
+18 f1
+(Using Makefile.generic and Other Programmer's Tools) show
+18.1 638.4 moveto
+3.3 3.3 c  fill 
+28 634.3 moveto
+12 f0
+(See other RCS Library Documents.) show
+198.3 634.3 moveto
+12 f0
+( ) show
+0 611.9 moveto
+504 0 rlineto 0 -2.1 rlineto -504 0 rlineto closepath  fill 
+0 575 moveto
+18 f1
+(Introduction) show
+0 547.1 moveto
+12 f0
+(Makefiles are files that provide rules for compiling a particular application, which are applied by) show
+0 533.8 moveto
+12 f0
+(programs such as ) show
+86.3 533.8 moveto
+12 f0
+(GNU Make) show
+142.6 533.8 moveto
+12 f0
+(. Usually these rules are written for a specific application and for a) show
+0 520.5 moveto
+12 f0
+(particular ) show
+48.9 520.5 moveto
+12 f0
+(platform) show
+90.2 520.5 moveto
+12 f0
+(. Makefile.generic is a makefile that provides additional rules that are not application) show
+0 507.2 moveto
+12 f0
+(specific that are then included in application makefiles to provide these features: ) show
+12.4 480.6 moveto
+12 f0
+(1.) show
+28 480.6 moveto
+12 f0
+(Allow the application to be easily compiled for multiple platforms.) show
+349.3 480.6 moveto
+12 f0
+( ) show
+12.4 467.3 moveto
+12 f0
+(2.) show
+28 467.3 moveto
+12 f0
+(Provide each programmer with ability to develop and test modifications to the application without) show
+28 454 moveto
+12 f0
+(affecting other programmers working on the application or users.) show
+340.9 454 moveto
+12 f0
+( ) show
+12.4 440.7 moveto
+12 f0
+(3.) show
+28 440.7 moveto
+12 f0
+(Allow information about the compilers and libraries available at a given site for each platform to) show
+28 427.4 moveto
+12 f0
+(be centralized.) show
+97.9 427.4 moveto
+12 f0
+( ) show
+12.4 414.1 moveto
+12 f0
+(4.) show
+28 414.1 moveto
+12 f0
+(Allow programmer's to more easily generate and use automatically generated dependency rules) show
+28 400.8 moveto
+12 f0
+(for header files.) show
+103.6 400.8 moveto
+12 f0
+( ) show
+12.4 387.5 moveto
+12 f0
+(5.) show
+28 387.5 moveto
+12 f0
+(Add's the directory for the RCS Library header files to the compiler's include path.) show
+428.5 387.5 moveto
+12 f0
+( ) show
+0 360.9 moveto
+12 f0
+(In order for Makefile.generic to work applications need to follow a particular directory structure, set) show
+0 347.6 moveto
+12 f0
+(certain Makefile variables, and follow some conventions for filenames. It is compatible with GNU Make) show
+0 334.3 moveto
+12 f0
+(but is not compatible with some other make utilities like Microsoft's NMAKE. ) show
+0 301.6 moveto
+18 f1
+(Directory Structure) show
+0 273.7 moveto
+12 f0
+(Each application is expected to select one main application directory and to mirror the directory tree) show
+0 260.4 moveto
+12 f0
+(under this directory for each programmer working on the application. This allows each programmer to) show
+0 247.1 moveto
+12 f0
+(change the source code, re-compile and test those changes in a private ) show
+339.5 247.1 moveto
+12 f0
+(workspace) show
+390.8 247.1 moveto
+12 f0
+( before releasing the) show
+0 233.8 moveto
+12 f0
+(changes to be used by the rest of the organization. The main application release directory should contain) show
+0 220.5 moveto
+12 f0
+(the directory tree shown in the ) show
+149.3 220.5 moveto
+12 f0
+(Directory Tree Table) show
+250.5 220.5 moveto
+12 f0
+(. Each programmer's copy follows the same) show
+0 207.2 moveto
+12 f0
+(structure except that the SCCS directories are replaced with symbolic links to the corresponding SCCS) show
+0 193.9 moveto
+12 f0
+(directory under the main application directory. ) show
+0 161.2 moveto
+18 f1
+(The Application Include Makefile) show
+0 133.3 moveto
+12 f0
+(It is recommended that each application create a short makefile to include some definitions to be used by) show
+0 120 moveto
+12 f0
+(makefiles throughout the application. This file should be a very convenient place to include) show
+0 106.7 moveto
+12 f0
+(Makefile.generic and to define the ) show
+167.9 106.7 moveto
+12 f0
+(APPDIR) show
+210.5 106.7 moveto
+12 f0
+( variable which Makefile.generic will use. APPDIR should) show
+0 93.4 moveto
+12 f0
+(be set to the full path to the main application directory. This may also be a good place to set) show
+0 80.1 moveto
+12 f0
+(LOCAL_CFLAGS) show
+92 80.1 moveto
+12 f0
+( or other ) show
+135.6 80.1 moveto
+12 f0
+(variables) show
+178.9 80.1 moveto
+12 f0
+( used by Makefile.generic. The following is an example file that) show
+pagelevel restore
+showpage
+%%Page: 2 2
+%%BeginPageSetup
+/pagelevel save def
+54 0 translate
+%%EndPageSetup
+newpath 0 72 moveto 504 0 rlineto 0 648 rlineto -504 0 rlineto  closepath clip newpath
+0 709.2 moveto
+12 f0
+(will be called "Makefile.app" in later examples: ) show
+0 685.3 moveto
+10 f4
+(#  Application Include Makefile for the application called `app'.) show
+0 664.3 moveto
+10 f4
+(# Add some C and C++ compilation flags for our application. ]) show
+0 653.8 moveto
+10 f4
+(#  \(-g -- include debugging info, -pg -- include profiling support for ) show
+426 653.8 moveto
+10 f4
+(gprof) show
+456 653.8 moveto
+10 f4
+(\)) show
+0 643.3 moveto
+10 f4
+(LOCAL_CFLAGS = -g -pg) show
+0 622.3 moveto
+10 f4
+(# Define APPDIR) show
+0 611.8 moveto
+10 f4
+(APPDIR = /home/manta/app) show
+0 590.8 moveto
+10 f4
+(# Include the generic Makefile definitions) show
+0 580.3 moveto
+10 f4
+(include /home/manta/prog_tools/makefiles/Makefile.generic) show
+0 556.6 moveto
+12 f0
+(\(To follow the Enhanced Machine Controller\(EMC\) convention, Makefile.app should be placed in the) show
+0 543.3 moveto
+12 f0
+(top-level directory.\)) show
+0 510.6 moveto
+18 f1
+(The Top-Level Makefile) show
+0 482.7 moveto
+12 f0
+(The primary purpose of the top-level makefile is to provide a convenient way to call for a make of the) show
+0 469.4 moveto
+12 f0
+(appropriate target\(s\) in each subdirectory. There are several ) show
+289.5 469.4 moveto
+12 f0
+(targets) show
+321.4 469.4 moveto
+12 f0
+( of importance in Makefile.generic) show
+0 456.1 moveto
+12 f0
+(that can easily be passed to the subdirectories as the following example shows: ) show
+0 421.7 moveto
+10 f4
+(# Top-Level Makefile for the application called `app'.) show
+0 400.7 moveto
+10 f4
+(# Include the Application Include Makefile) show
+0 390.2 moveto
+10 f4
+(include Makefile.app) show
+0 369.2 moveto
+10 f4
+(# To build any of these phony targets go to each subdirectory and run make.) show
+0 358.7 moveto
+10 f4
+(clean depend install all headers sources:) show
+0 348.2 moveto
+10 f4
+(        \(cd src/sub_directory1; $\(MAKE\) -k $@\)) show
+0 337.7 moveto
+10 f4
+(        \(cd src/sub_directory2; $\(MAKE\) -k $@\)) show
+0 327.2 moveto
+10 f4
+(        \(cd src/sub_directory3; $\(MAKE\) -k $@\)) show
+0 286.9 moveto
+18 f1
+(Subdirectory Makefiles) show
+0 259 moveto
+12 f0
+(Each source subdirectory should have its own Makefile. Within this makefile programmers will need to) show
+0 245.7 moveto
+12 f0
+(define several variables, include the application include makefile, and provide rules for linking any) show
+0 232.4 moveto
+12 f0
+(binaries or libraries together. The following example can be used as a template: ) show
+0 208.5 moveto
+10 f4
+(# Makefile for sub_directory1 of the application called `app'.) show
+0 187.5 moveto
+10 f4
+(# Set the variables required by Makefile.generic) show
+0 177 moveto
+10 f4
+(SOURCES = example1.cc example2.cc example3.cc) show
+0 166.5 moveto
+10 f4
+(OBJS = example1.o example2.o example3.o) show
+0 156 moveto
+10 f4
+(LIBS = ) show
+0 135 moveto
+10 f4
+(ifeq \(vxworks,$\(findstring vxworks,$\(PLAT\)\)\)) show
+0 124.5 moveto
+10 f4
+(BINS = ) show
+0 114 moveto
+10 f4
+(else) show
+0 103.5 moveto
+10 f4
+(BINS = example_bin) show
+0 93 moveto
+10 f4
+(endif) show
+pagelevel restore
+showpage
+%%Page: 3 3
+%%BeginPageSetup
+/pagelevel save def
+54 0 translate
+%%EndPageSetup
+newpath 0 72 moveto 504 0 rlineto 0 648 rlineto -504 0 rlineto  closepath clip newpath
+0 711.9 moveto
+10 f4
+(# Include the Application Include Makefile) show
+0 701.4 moveto
+10 f4
+(include ../../Makefile.app) show
+0 680.4 moveto
+10 f4
+(# Create rules to link together specific binaries.) show
+0 669.9 moveto
+10 f4
+($\(DEVP_PLAT_BIN\)/example_bin: \\ ) show
+0 659.4 moveto
+10 f4
+(        $\(DEVP_PLAT_LIB\)/example1.o \\) show
+0 648.9 moveto
+10 f4
+(        $\(DEVP_PLAT_LIB\)/example2.o \\) show
+0 638.4 moveto
+10 f4
+(        $\(DEVP_PLAT_LIB\)/example1.o) show
+0 627.9 moveto
+10 f4
+(        \($\(COMPILER_SETUP\); \\) show
+0 617.4 moveto
+10 f4
+(        $\(CPLUSPLUS\) $\(CFLAGS\) $\(CPLUSPLUSFLAGS\) $\(CLINK\) $\(CPLUSPLUSLINK\) $^ -o $@;\)) show
+0 577.1 moveto
+18 f1
+(Variables used in Makefile.generic) show
+0 549.2 moveto
+12 f0
+(Several variables are used within Makefile.generic to control how your application is built. Other) show
+0 535.9 moveto
+12 f0
+(variables are set by Makefile.generic or within one of the platform specific makefiles \(of the form) show
+0 522.6 moveto
+12 f0
+(Makefile.$\(PLAT\) such as Makefile.vxworksCC or Makefile.sunos4\) to aid in the development of rules) show
+0 509.3 moveto
+12 f0
+(for specific binaries and libraries. In the table below the "Where Set?" column provides recommended) show
+0 496 moveto
+12 f0
+(locations for setting each variable, unless the location is Makefile.$\(PLAT\) or Makefile.generic in which) show
+0 482.7 moveto
+12 f0
+(case the variable must be set there and should not be set anywhere else. The platform specific makefiles) show
+0 469.4 moveto
+12 f0
+(are automatically included by Makefile.generic so there is no need to include them directly from) show
+0 456.1 moveto
+12 f0
+(application makefiles.) show
+gsave 0.7 setlinewidth
+ 0 440.2 moveto
+504 0 rlineto 0 -1190.5 rlineto -504 0 rlineto closepath  stroke 
+grestore
+gsave 0.7 setlinewidth
+ 2.1 438.1 moveto
+161.4 0 rlineto 0 -23.5 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+35.3 419.9 moveto
+18 f1
+(VARIABLE) show
+gsave 0.7 setlinewidth
+ 164.9 438.1 moveto
+115 0 rlineto 0 -23.5 rlineto -115 0 rlineto closepath  stroke 
+grestore
+177.7 419.9 moveto
+18 f1
+(Where Set?) show
+gsave 0.7 setlinewidth
+ 281.3 438.1 moveto
+220.6 0 rlineto 0 -23.5 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+357.6 419.9 moveto
+18 f1
+(Meaning) show
+gsave 0.7 setlinewidth
+ 2.1 413.2 moveto
+161.4 0 rlineto 0 -56 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 380.9 moveto
+12 f1
+(APPDIR) show
+gsave 0.7 setlinewidth
+ 164.9 413.2 moveto
+115 0 rlineto 0 -56 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 387.8 moveto
+12 f0
+(Application Include) show
+166.3 374.5 moveto
+12 f0
+(Makefile) show
+gsave 0.7 setlinewidth
+ 281.3 413.2 moveto
+220.6 0 rlineto 0 -56 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 401.1 moveto
+12 f0
+(Specifies the main application directory,) show
+282.7 387.8 moveto
+12 f0
+(which is used in the INCLUDE path and for) show
+282.7 374.5 moveto
+12 f0
+(performing an install when the application is) show
+282.7 361.2 moveto
+12 f0
+(ready to be released.) show
+gsave 0.7 setlinewidth
+ 2.1 355.8 moveto
+161.4 0 rlineto 0 -42.7 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 330.2 moveto
+12 f1
+(AR) show
+gsave 0.7 setlinewidth
+ 164.9 355.8 moveto
+115 0 rlineto 0 -42.7 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 330.4 moveto
+12 f0
+(Makefile.$\(PLAT\)) show
+gsave 0.7 setlinewidth
+ 281.3 355.8 moveto
+220.6 0 rlineto 0 -42.7 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 343.7 moveto
+12 f0
+(Provides the name and path of the library) show
+282.7 330.4 moveto
+12 f0
+(archiver for the given platform. \(See the ) show
+478.6 330.4 moveto
+12 f0
+(ar) show
+282.7 317.1 moveto
+12 f0
+(manpage.\) ) show
+gsave 0.7 setlinewidth
+ 2.1 311.7 moveto
+161.4 0 rlineto 0 -56 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 279.4 moveto
+12 f1
+(BINS) show
+gsave 0.7 setlinewidth
+ 164.9 311.7 moveto
+115 0 rlineto 0 -56 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 279.7 moveto
+12 f0
+(Subdirectory Makefile) show
+gsave 0.7 setlinewidth
+ 281.3 311.7 moveto
+220.6 0 rlineto 0 -56 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 299.6 moveto
+12 f0
+(Lists the executable binary files that should) show
+282.7 286.3 moveto
+12 f0
+(be created by running make in this) show
+282.7 273 moveto
+12 f0
+(subdirectory. Binaries will need to have a) show
+282.7 259.7 moveto
+12 f0
+(separate rule at the end of the makefile. ) show
+gsave 0.7 setlinewidth
+ 2.1 254.3 moveto
+161.4 0 rlineto 0 -29.4 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 235.3 moveto
+12 f1
+(CC) show
+gsave 0.7 setlinewidth
+ 164.9 254.3 moveto
+115 0 rlineto 0 -29.4 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 235.6 moveto
+12 f0
+(Makefile.$\(PLAT\)) show
+gsave 0.7 setlinewidth
+ 281.3 254.3 moveto
+220.6 0 rlineto 0 -29.4 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 242.2 moveto
+12 f0
+(Provides the name and path of the C) show
+282.7 228.9 moveto
+12 f0
+(compiler for the given platform. ) show
+gsave 0.7 setlinewidth
+ 2.1 223.5 moveto
+161.4 0 rlineto 0 -29.4 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 204.5 moveto
+12 f1
+(CPLUSPLUS) show
+gsave 0.7 setlinewidth
+ 164.9 223.5 moveto
+115 0 rlineto 0 -29.4 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 204.8 moveto
+12 f0
+(Makefile.$\(PLAT\)) show
+gsave 0.7 setlinewidth
+ 281.3 223.5 moveto
+220.6 0 rlineto 0 -29.4 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 211.4 moveto
+12 f0
+(Provides the name and path of the C++) show
+282.7 198.1 moveto
+12 f0
+(compiler for the given platform. ) show
+gsave 0.7 setlinewidth
+ 2.1 192.7 moveto
+161.4 0 rlineto 0 -69.3 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 153.8 moveto
+12 f1
+(COMPILER_SETUP) show
+gsave 0.7 setlinewidth
+ 164.9 192.7 moveto
+115 0 rlineto 0 -69.3 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 154 moveto
+12 f0
+(Makefile.$\(PLAT\)) show
+gsave 0.7 setlinewidth
+ 281.3 192.7 moveto
+220.6 0 rlineto 0 -69.3 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 180.6 moveto
+12 f0
+(Provides the command\(s\) required to setup) show
+282.7 167.3 moveto
+12 f0
+(the environment so the compiler and related) show
+282.7 154 moveto
+12 f0
+(tools can be used. It should be used at the) show
+282.7 140.7 moveto
+12 f0
+(beginning of commands in rules for specific) show
+282.7 127.4 moveto
+12 f0
+(binaries and libraries. ) show
+pagelevel restore
+showpage
+%%Page: 4 4
+%%BeginPageSetup
+/pagelevel save def
+54 0 translate
+%%EndPageSetup
+newpath 0 72 moveto 504 0 rlineto 0 648 rlineto -504 0 rlineto  closepath clip newpath
+gsave 0.7 setlinewidth
+ 0 1039.6 moveto
+504 0 rlineto 0 -1190.5 rlineto -504 0 rlineto closepath  stroke 
+grestore
+gsave 0.7 setlinewidth
+ 2.1 719.9 moveto
+161.4 0 rlineto 0 -56 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 687.6 moveto
+12 f1
+(DEVP_PLAT_BIN) show
+gsave 0.7 setlinewidth
+ 164.9 719.9 moveto
+115 0 rlineto 0 -56 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 687.9 moveto
+12 f0
+(Makefile.generic) show
+gsave 0.7 setlinewidth
+ 281.3 719.9 moveto
+220.6 0 rlineto 0 -56 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 707.8 moveto
+12 f0
+(Provides the name of the directory where) show
+282.7 694.5 moveto
+12 f0
+(executable binary files should land within) show
+282.7 681.2 moveto
+12 f0
+(the programmer's workspace. It should be) show
+282.7 667.9 moveto
+12 f0
+(used to provide rules for specific binaries. ) show
+gsave 0.7 setlinewidth
+ 2.1 662.5 moveto
+161.4 0 rlineto 0 -69.3 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 623.6 moveto
+12 f1
+(DEVP_PLAT_LIB) show
+gsave 0.7 setlinewidth
+ 164.9 662.5 moveto
+115 0 rlineto 0 -69.3 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 623.8 moveto
+12 f0
+(Makefile.generic) show
+gsave 0.7 setlinewidth
+ 281.3 662.5 moveto
+220.6 0 rlineto 0 -69.3 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 650.4 moveto
+12 f0
+(Provides the name of the directory where) show
+282.7 637.1 moveto
+12 f0
+(object files and libraries should land within) show
+282.7 623.8 moveto
+12 f0
+(the programmer's workspace. It should be) show
+282.7 610.5 moveto
+12 f0
+(used to provide rules for specific binaries) show
+282.7 597.2 moveto
+12 f0
+(and libraries. ) show
+gsave 0.7 setlinewidth
+ 2.1 591.8 moveto
+161.4 0 rlineto 0 -56 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 559.5 moveto
+12 f1
+(HEADERS) show
+gsave 0.7 setlinewidth
+ 164.9 591.8 moveto
+115 0 rlineto 0 -56 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 559.8 moveto
+12 f0
+(Subdirectory Makefile) show
+gsave 0.7 setlinewidth
+ 281.3 591.8 moveto
+220.6 0 rlineto 0 -56 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 579.7 moveto
+12 f0
+(Lists the header files found in this directory) show
+282.7 566.4 moveto
+12 f0
+(that should be copied to the platform include) show
+282.7 553.1 moveto
+12 f0
+(directory so that they may be used from) show
+282.7 539.8 moveto
+12 f0
+(other directories or by other programmers. ) show
+gsave 0.7 setlinewidth
+ 2.1 534.4 moveto
+161.4 0 rlineto 0 -56 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 502.1 moveto
+12 f1
+(LIBS) show
+gsave 0.7 setlinewidth
+ 164.9 534.4 moveto
+115 0 rlineto 0 -56 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 502.4 moveto
+12 f0
+(Subdirectory Makefile) show
+gsave 0.7 setlinewidth
+ 281.3 534.4 moveto
+220.6 0 rlineto 0 -56 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 522.3 moveto
+12 f0
+(Lists the library files that should be created) show
+282.7 509 moveto
+12 f0
+(by running make in this subdirectory.) show
+282.7 495.7 moveto
+12 f0
+(Libraries will need to have a separate rule at) show
+282.7 482.4 moveto
+12 f0
+(the end of the makefile. ) show
+gsave 0.7 setlinewidth
+ 2.1 477 moveto
+161.4 0 rlineto 0 -29.4 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 458 moveto
+12 f1
+(LOCAL_CFLAGS) show
+gsave 0.7 setlinewidth
+ 164.9 477 moveto
+115 0 rlineto 0 -29.4 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 464.9 moveto
+12 f0
+(Application Include) show
+166.3 451.6 moveto
+12 f0
+(Makefile) show
+gsave 0.7 setlinewidth
+ 281.3 477 moveto
+220.6 0 rlineto 0 -29.4 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 464.9 moveto
+12 f0
+(Lists options that will be passed to the C or) show
+282.7 451.6 moveto
+12 f0
+(C++ compiler. ) show
+gsave 0.7 setlinewidth
+ 2.1 446.2 moveto
+161.4 0 rlineto 0 -29.4 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 427.2 moveto
+12 f1
+(LOCAL_CPLUSPLUSFLAGS) show
+gsave 0.7 setlinewidth
+ 164.9 446.2 moveto
+115 0 rlineto 0 -29.4 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 434.1 moveto
+12 f0
+(Application Include) show
+166.3 420.8 moveto
+12 f0
+(Makefile) show
+gsave 0.7 setlinewidth
+ 281.3 446.2 moveto
+220.6 0 rlineto 0 -29.4 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 434.1 moveto
+12 f0
+(Lists options that will be passed to the C++) show
+282.7 420.8 moveto
+12 f0
+(compiler. \(not to a C compiler\) ) show
+gsave 0.7 setlinewidth
+ 2.1 415.4 moveto
+161.4 0 rlineto 0 -29.4 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 396.4 moveto
+12 f1
+(OBJS) show
+gsave 0.7 setlinewidth
+ 164.9 415.4 moveto
+115 0 rlineto 0 -29.4 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 396.7 moveto
+12 f0
+(Subdirectory Makefile) show
+gsave 0.7 setlinewidth
+ 281.3 415.4 moveto
+220.6 0 rlineto 0 -29.4 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 403.3 moveto
+12 f0
+(Lists the object files that should be compiled) show
+282.7 390 moveto
+12 f0
+(by running make in this subdirectory. ) show
+gsave 0.7 setlinewidth
+ 2.1 384.6 moveto
+161.4 0 rlineto 0 -82.6 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 339 moveto
+12 f1
+(PLAT) show
+gsave 0.7 setlinewidth
+ 164.9 384.6 moveto
+115 0 rlineto 0 -82.6 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 339.3 moveto
+12 f0
+(Command Line) show
+gsave 0.7 setlinewidth
+ 281.3 384.6 moveto
+220.6 0 rlineto 0 -82.6 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 372.5 moveto
+12 f0
+(Specifies which ) show
+362 372.5 moveto
+12 f0
+(platform) show
+403.3 372.5 moveto
+12 f0
+( to compile for. It is) show
+282.7 359.2 moveto
+12 f0
+(normally set on the command line so that) show
+282.7 345.9 moveto
+12 f0
+(programmers can easily switch between) show
+282.7 332.6 moveto
+12 f0
+(multiple compilers and cross-compilers. It) show
+282.7 319.3 moveto
+12 f0
+(defaults to the value of the osrev) show
+282.7 306 moveto
+12 f0
+(environment variable. ) show
+gsave 0.7 setlinewidth
+ 2.1 300.6 moveto
+161.4 0 rlineto 0 -82.6 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 255 moveto
+12 f1
+(RANLIB) show
+gsave 0.7 setlinewidth
+ 164.9 300.6 moveto
+115 0 rlineto 0 -82.6 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 255.3 moveto
+12 f0
+(Makefile.$\(PLAT\)) show
+gsave 0.7 setlinewidth
+ 281.3 300.6 moveto
+220.6 0 rlineto 0 -82.6 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 288.5 moveto
+12 f0
+(Provides the name and path of the ranlib) show
+282.7 275.2 moveto
+12 f0
+(utility for the given platform if one exists) show
+282.7 261.9 moveto
+12 f0
+(and is required, otherwise the variable) show
+282.7 248.6 moveto
+12 f0
+(contains some command that should have no) show
+282.7 235.3 moveto
+12 f0
+(effect. The ranlib utility converts archives to) show
+282.7 222 moveto
+12 f0
+(random libraries. \(See the ) show
+409.6 222 moveto
+12 f0
+(ranlib) show
+437.5 222 moveto
+12 f0
+( manpage.\) ) show
+gsave 0.7 setlinewidth
+ 2.1 216.6 moveto
+161.4 0 rlineto 0 -29.4 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 197.6 moveto
+12 f1
+(RCS_INCLUDE) show
+gsave 0.7 setlinewidth
+ 164.9 216.6 moveto
+115 0 rlineto 0 -29.4 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 197.9 moveto
+12 f0
+(Makefile.generic) show
+gsave 0.7 setlinewidth
+ 281.3 216.6 moveto
+220.6 0 rlineto 0 -29.4 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 204.5 moveto
+12 f0
+(Provides the directory where header files for) show
+282.7 191.2 moveto
+12 f0
+(the RCS library are placed. ) show
+gsave 0.7 setlinewidth
+ 2.1 185.8 moveto
+161.4 0 rlineto 0 -29.4 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 166.8 moveto
+12 f1
+(RCS_LIBRARY) show
+gsave 0.7 setlinewidth
+ 164.9 185.8 moveto
+115 0 rlineto 0 -29.4 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 167.1 moveto
+12 f0
+(Makefile.generic) show
+gsave 0.7 setlinewidth
+ 281.3 185.8 moveto
+220.6 0 rlineto 0 -29.4 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 173.7 moveto
+12 f0
+(Provides the name and path of the RCS) show
+282.7 160.4 moveto
+12 f0
+(Library for the platform set with PLAT. ) show
+gsave 0.7 setlinewidth
+ 2.1 155 moveto
+161.4 0 rlineto 0 -56 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 122.7 moveto
+12 f1
+(RCS_PLATLIB) show
+gsave 0.7 setlinewidth
+ 164.9 155 moveto
+115 0 rlineto 0 -56 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 123 moveto
+12 f0
+(Makefile.generic) show
+gsave 0.7 setlinewidth
+ 281.3 155 moveto
+220.6 0 rlineto 0 -56 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 142.9 moveto
+12 f0
+(Provides the path to the RCS Library for the) show
+282.7 129.6 moveto
+12 f0
+(platform set with PLAT. This is also the) show
+282.7 116.3 moveto
+12 f0
+(location of the pmac and pcio libraries if) show
+282.7 103 moveto
+12 f0
+(they exist for the platform. ) show
+pagelevel restore
+showpage
+%%Page: 5 5
+%%BeginPageSetup
+/pagelevel save def
+54 0 translate
+%%EndPageSetup
+newpath 0 72 moveto 504 0 rlineto 0 648 rlineto -504 0 rlineto  closepath clip newpath
+gsave 0.7 setlinewidth
+ 0 1661.9 moveto
+504 0 rlineto 0 -1190.5 rlineto -504 0 rlineto closepath  stroke 
+grestore
+gsave 0.7 setlinewidth
+ 2.1 719.9 moveto
+161.4 0 rlineto 0 -95.9 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 667.7 moveto
+12 f1
+(SOURCES) show
+gsave 0.7 setlinewidth
+ 164.9 719.9 moveto
+115 0 rlineto 0 -95.9 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 667.9 moveto
+12 f0
+(Subdirectory Makefile) show
+gsave 0.7 setlinewidth
+ 281.3 719.9 moveto
+220.6 0 rlineto 0 -95.9 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 707.8 moveto
+12 f0
+(Lists the C and C++ files used from that) show
+282.7 694.5 moveto
+12 f0
+(subdirectory. C files should have the .c) show
+282.7 681.2 moveto
+12 f0
+(extension and C++ files should have the .cc) show
+282.7 667.9 moveto
+12 f0
+(extension. Thie list is used for creating) show
+282.7 654.6 moveto
+12 f0
+(automatic dependency lists and for storing) show
+282.7 641.3 moveto
+12 f0
+(archives of the source code during an install.) show
+282.7 628 moveto
+12 f0
+(Do not list header files here. ) show
+gsave 0.7 setlinewidth
+ 2.1 622.6 moveto
+161.4 0 rlineto 0 -149.1 rlineto -161.4 0 rlineto closepath  stroke 
+grestore
+3.5 543.8 moveto
+12 f1
+(USER_DIR) show
+gsave 0.7 setlinewidth
+ 164.9 622.6 moveto
+115 0 rlineto 0 -149.1 rlineto -115 0 rlineto closepath  stroke 
+grestore
+166.3 570.6 moveto
+12 f0
+(Programmer's) show
+166.3 557.3 moveto
+12 f0
+(Environment,) show
+166.3 544 moveto
+12 f0
+(Application Include) show
+166.3 530.7 moveto
+12 f0
+(Makefile, or command) show
+166.3 517.4 moveto
+12 f0
+(line) show
+gsave 0.7 setlinewidth
+ 281.3 622.6 moveto
+220.6 0 rlineto 0 -149.1 rlineto -220.6 0 rlineto closepath  stroke 
+grestore
+282.7 610.5 moveto
+12 f0
+(Specifies the top-level directory in the) show
+282.7 597.2 moveto
+12 f0
+(programmer's workspace. It defaults to the) show
+282.7 583.9 moveto
+12 f0
+(name of the application under the) show
+282.7 570.6 moveto
+12 f0
+(programmer's home directory. It is) show
+282.7 557.3 moveto
+12 f0
+(recommended that the applications be set up) show
+282.7 544 moveto
+12 f0
+(so that the default can be used and) show
+282.7 530.7 moveto
+12 f0
+(USER_DIR need not be set. ) show
+282.7 517.4 moveto
+12 f0
+(For example: If APPDIR=/home/manta/emc) show
+282.7 504.1 moveto
+12 f0
+(and the programmer's login name was) show
+282.7 490.8 moveto
+12 f0
+("shackle" then the workspace should be) show
+282.7 477.5 moveto
+12 f0
+(placed in ~shackle/emc to match the default. ) show
+0 441.3 moveto
+18 f1
+(Special Targets) show
+0 413.4 moveto
+12 f0
+(Makefile.generic provides rules for creating several ) show
+250.9 413.4 moveto
+12 f0
+(PHONY targets) show
+327.2 413.4 moveto
+12 f0
+(. By specifying one of these targets) show
+0 400.1 moveto
+12 f0
+(on the command line, the programmer can have several useful tasks performed. ) show
+gsave 0.7 setlinewidth
+ 0 397.5 moveto
+504 0 rlineto 0 -246 rlineto -504 0 rlineto closepath  stroke 
+grestore
+gsave 0.7 setlinewidth
+ 2.1 395.4 moveto
+65.8 0 rlineto 0 -30.4 rlineto -65.8 0 rlineto closepath  stroke 
+grestore
+17.7 382.8 moveto
+12 f1
+(Target) show
+20 369 moveto
+12 f1
+(Name) show
+gsave 0.7 setlinewidth
+ 69.3 395.4 moveto
+432.6 0 rlineto 0 -30.4 rlineto -432.6 0 rlineto closepath  stroke 
+grestore
+264.6 375.9 moveto
+12 f1
+(Purpose) show
+gsave 0.7 setlinewidth
+ 2.1 363.6 moveto
+65.8 0 rlineto 0 -29.4 rlineto -65.8 0 rlineto closepath  stroke 
+grestore
+3.5 344.6 moveto
+12 f1
+(all) show
+gsave 0.7 setlinewidth
+ 69.3 363.6 moveto
+432.6 0 rlineto 0 -29.4 rlineto -432.6 0 rlineto closepath  stroke 
+grestore
+70.7 351.5 moveto
+12 f0
+(Update everything within the programmer's workspace, including copying header files to) show
+70.7 338.2 moveto
+12 f0
+(the include directory, compiling, linking and archiving as necessary.) show
+gsave 0.7 setlinewidth
+ 2.1 332.8 moveto
+65.8 0 rlineto 0 -42.7 rlineto -65.8 0 rlineto closepath  stroke 
+grestore
+3.5 307.2 moveto
+12 f1
+(clean) show
+gsave 0.7 setlinewidth
+ 69.3 332.8 moveto
+432.6 0 rlineto 0 -42.7 rlineto -432.6 0 rlineto closepath  stroke 
+grestore
+70.7 320.7 moveto
+12 f0
+(Deletes object files and programs from the programmer's workspace. This is useful for) show
+70.7 307.4 moveto
+12 f0
+(example when a change in compiler options would not take effect unless the entire) show
+70.7 294.1 moveto
+12 f0
+(application is rebuilt. ) show
+gsave 0.7 setlinewidth
+ 2.1 288.7 moveto
+65.8 0 rlineto 0 -29.4 rlineto -65.8 0 rlineto closepath  stroke 
+grestore
+3.5 269.7 moveto
+12 f1
+(depend) show
+gsave 0.7 setlinewidth
+ 69.3 288.7 moveto
+432.6 0 rlineto 0 -29.4 rlineto -432.6 0 rlineto closepath  stroke 
+grestore
+70.7 276.6 moveto
+12 f0
+(Generate lists of dependencies so that files will be recompiled whenever a header file) show
+70.7 263.3 moveto
+12 f0
+(they include directly or indirectly has changed \(uses the ) show
+341.6 263.3 moveto
+12 f0
+(makedepend) show
+402.2 263.3 moveto
+12 f0
+( utility\). ) show
+gsave 0.7 setlinewidth
+ 2.1 257.9 moveto
+65.8 0 rlineto 0 -29.4 rlineto -65.8 0 rlineto closepath  stroke 
+grestore
+3.5 238.9 moveto
+12 f1
+(headers) show
+gsave 0.7 setlinewidth
+ 69.3 257.9 moveto
+432.6 0 rlineto 0 -29.4 rlineto -432.6 0 rlineto closepath  stroke 
+grestore
+70.7 245.8 moveto
+12 f0
+(Copies the header files to the src and include subdirectory of the current platform) show
+70.7 232.5 moveto
+12 f0
+(directory. For Windows and DOS platforms the files are also converted with ) show
+440.9 232.5 moveto
+12 f0
+(unix2dos) show
+484.9 232.5 moveto
+12 f0
+(. ) show
+gsave 0.7 setlinewidth
+ 2.1 227.1 moveto
+65.8 0 rlineto 0 -29.4 rlineto -65.8 0 rlineto closepath  stroke 
+grestore
+3.5 208.1 moveto
+12 f1
+(install) show
+gsave 0.7 setlinewidth
+ 69.3 227.1 moveto
+432.6 0 rlineto 0 -29.4 rlineto -432.6 0 rlineto closepath  stroke 
+grestore
+70.7 215 moveto
+12 f0
+(Copy all the source, header, object files, libraries and programs from the programmer's) show
+70.7 201.7 moveto
+12 f0
+(workspace to the main application release the main application directory. ) show
+gsave 0.7 setlinewidth
+ 2.1 196.3 moveto
+65.8 0 rlineto 0 -42.7 rlineto -65.8 0 rlineto closepath  stroke 
+grestore
+3.5 170.7 moveto
+12 f1
+(sources) show
+gsave 0.7 setlinewidth
+ 69.3 196.3 moveto
+432.6 0 rlineto 0 -42.7 rlineto -432.6 0 rlineto closepath  stroke 
+grestore
+70.7 184.2 moveto
+12 f0
+(Copies the source and header files to the src and include subdirectories of the current) show
+70.7 170.9 moveto
+12 f0
+(platform directory. For Windows and DOS platforms the files are also converted with) show
+70.7 157.6 moveto
+12 f0
+(unix2dos) show
+114.7 157.6 moveto
+12 f0
+( and the .cc extension is replaced with .cpp. ) show
+0 121.4 moveto
+18 f1
+(Terminology) show
+0 93 moveto
+12 f1
+(Platform) show
+45.9 93 moveto
+12 f0
+( ) show
+28 79.7 moveto
+12 f0
+(Each platform specifies a particular compiler, CPU type, operating system and sometimes certain) show
+pagelevel restore
+showpage
+%%Page: 6 6
+%%BeginPageSetup
+/pagelevel save def
+54 0 translate
+%%EndPageSetup
+newpath 0 72 moveto 504 0 rlineto 0 648 rlineto -504 0 rlineto  closepath clip newpath
+28 709.2 moveto
+12 f0
+(compiler options, such as whether to compile a Windows program as a 16 or 32 bit application.) show
+28 695.9 moveto
+12 f0
+(For each platform there will be a subdirectory in both the programmer's workspace directory and) show
+28 682.6 moveto
+12 f0
+(in the application release directory. The PLAT variable should be set the name of this) show
+28 669.3 moveto
+12 f0
+(subdirectory. The ) show
+115.6 669.3 moveto
+12 f0
+(Platforms Tested Table) show
+227.5 669.3 moveto
+12 f0
+( for the RCS Library also lists the names of the platforms) show
+28 656 moveto
+12 f0
+(as used by Makefile.generic. ) show
+0 642.2 moveto
+12 f1
+(WorkSpace) show
+60 642.2 moveto
+12 f0
+( ) show
+28 628.9 moveto
+12 f0
+(Each programmer will have a separate workspace directory which mirrors the main application) show
+28 615.6 moveto
+12 f0
+(directory except that the SCCS directories are replaced with symbolic links to their counterparts in) show
+28 602.3 moveto
+12 f0
+(the main application directory. ) show
+0 579.9 moveto
+504 0 rlineto 0 -1.4 rlineto -504 0 rlineto closepath  fill 
+0 549.1 moveto
+12 f0
+(Last Modified: 04/17/96 ) show
+18.1 526.6 moveto
+3.3 3.3 c  fill 
+28 522.5 moveto
+12 f0
+(See other RCS Library Documents.) show
+198.3 522.5 moveto
+12 f0
+( ) show
+18.1 513.3 moveto
+3.3 3.3 c  fill 
+28 509.2 moveto
+12 f0
+(Go to the top of this document.) show
+177.6 509.2 moveto
+12 f0
+( ) show
+0 482.6 moveto
+12 f0
+(If you have questions or comments regarding this page or you would like to be notified of changes to the) show
+0 469.3 moveto
+12 f0
+(RCS library via email, please contact ) show
+181.6 469.3 moveto
+12 f0
+(Will Shackleford) show
+263.9 469.3 moveto
+12 f0
+( at ) show
+278.5 469.3 moveto
+12 f2
+(shackle@cme.nist.gov) show
+pagelevel restore
+showpage
+%%EOF

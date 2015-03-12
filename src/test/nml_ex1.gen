@@ -1,0 +1,8 @@
+# NML CodeGen Script for nml_ex1
+add_include_dir test_include
+debug_on
+load nml_ex1.hh
+generate C++ format >nml_ex1.cc
+generate C++ update >nml_ex1.cc
+generate C++ constructor >nml_ex1.cc
+

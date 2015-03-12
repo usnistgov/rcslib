@@ -1,0 +1,57 @@
+#!/bin/csh
+
+if ( $?rcslib_dir != 1 ) then
+set prog=`which $0 | grep $0`
+set rcslib_etc_dir=$prog:h
+set rcslib_dir=$rcslib_etc_dir:h
+endif
+
+if($?RCSLIBDIR != 1)    then
+        set RCSLIBDIR = $rcslib_dir
+endif
+
+echo RCSLIBDIR = $RCSLIBDIR
+
+
+setenv | grep JDK_DIR
+if( $status != 0 ) then
+setenv JDK_DIR `$RCSLIBDIR/etc/jdk_dir`
+endif
+echo JDK Directory $JDK_DIR
+setenv LD_LIBRARY_PATH $JDK_DIR/lib
+echo LD_LIBRARY_PATH $LD_LIBRARY_PATH
+set path = ($JDK_DIR/bin  $path  )
+
+
+if ( -f $JDK_DIR/lib/classes.zip ) then
+if ( -f $RCSLIBDIR/plat/java/lib/diagapplet.jar ) then
+if($?CLASSPATH == 1) then
+        set CLASSPATH = $CLASSPATH\:$JDK_DIR/classes.zip\:$RCSLIBDIR/plat/java/lib/diagapplet.jar
+else
+        set CLASSPATH = $JDK_DIR/classes.zip:$RCSLIBDIR/plat/java/lib/diagapplet.jar
+endif
+else
+if($?CLASSPATH == 1) then
+        set CLASSPATH = $CLASSPATH\:$JDK_DIR/classes.zip\:$RCSLIBDIR/plat/java/lib
+else
+        set CLASSPATH = $JDK_DIR/classes.zip:$RCSLIBDIR/plat/java/lib/
+endif
+endif
+setenv CLASSPATH $CLASSPATH
+endif
+
+$JDK_DIR/bin/java -help |& grep 'jar' >/dev/null
+
+if ( -f $RCSLIBDIR/plat/java/lib/diagapplet.jar && $status == 0 ) then
+echo $JDK_DIR/bin/java  -jar $RCSLIBDIR/plat/java/lib/diagapplet.jar $argv
+$JDK_DIR/bin/java  -jar $RCSLIBDIR/plat/java/lib/diagapplet.jar $argv
+
+else
+
+echo CLASSPATH = $CLASSPATH
+echo $JDK_DIR/bin/java  -classpath $CLASSPATH diagapplet.diagappletMain $argv
+$JDK_DIR/bin/java  -classpath $CLASSPATH diagapplet.diagapplet $argv
+endif 
+
+
+echo diagapplet exited.

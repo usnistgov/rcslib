@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en-US">
+<head>
+<title>NML Configuration Files</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://www.isd.mel.nist.gov/mel2.css" type="text/css" />
+</head>
+<body>
+
+<h1>Writing NML Configuration Files.</h1>
+
+<p>Most of the options available in CMS are specified in a
+configuration file. There should be one line in the file for every
+buffer that is required and every process using CMS should have one
+line for every buffer it accesses. Currently there is no difference
+between a CMS configuration file and an NML configuration file. The files 
+may contain only ASCII characters, and can be generated with any text editor.
+</p>
+<p><strong>Update 9-Apr-2004:</strong> See <a href="nmlcfgsvr.html">The NML Configuration Server</a> for information on how this information can be determined at run-time and also for some extensions to this format.</p>
+
+<p>Lines beginning with # or white space are comments.  </p>
+<p>Lines beginning with B specify information about a particular buffer and are
+called buffer lines.  </p>
+<p>Lines beginning with P specify information about how a particular process accesses a buffer and are called process lines.  </p>
+
+<p>Before writing the details of the buffer and process lines, you will need to
+review the major buffer and process types available. </p>
+
+<h2><a name="Buffer_and_Process_Types">Buffer and Process Types</a></h2>
+
+<p>
+Local processes can connect to buffers using GLOBMEM, SHMEM, FILEMEM or LOCMEM.
+Remote processes can connect using TCP, UDP or RPC.</p>
+
+<h4><a name="GLOBMEM">GLOBMEM</a></h4> 
+
+<p>GLOBMEM is intended for communication across a VME backplane between processors with minimal operating system intervention, which allows greater portability and interoperability than SHMEM, but users need to specify the addresses of
+memory to use and mutual exclusion is implemented with a set of locks in memory rather than with semaphores provided by the operating system. GLOBMEM may also
+be used with a Bit3 ISA or EISA to VME adapter.</p>
+
+<h4><a name="SHMEM">SHMEM</a></h4> 
+
+<p>SHMEM is intended for communications between tasks managed by the same operating system. The operating system allocates the memory to be shared so users 
+do not need to specify one. Users have a choice of mutual exclusion techniques with include something similar to GLOBMEM's method, using an operating system semaphore or mutex, or disabling and enabling context switching or interrupts during the appropriate critical sections.</p>
+
+<h5>Mutual Exclusion for Shared Memory</h5>
+<p>One of the most significant ways of optimizing shared memory accesses is 
+to choose a the fastest form of mutual exclusion that still allows the application to run reliably. Mutual Exclusion is used to prevent multiple tasks, threads, or processors from using the same resource at the same time. This is necessary when using shared memory to prevent a process from reading the shared memory
+while only part of the message has been written or vice versa. Here are the
+currently available options:(One of them can be placed on the buffer line after the shared memory key.)</p>
+<p>
+&quot;mutex=os_sem&quot; This is the default. An operating system semaphore
+is created using the same key used for shared memory. This semaphore is taken
+before each read or write and released afterwards. If another process already
+has taken but not released the semaphore when the semaphore is taken the 
+operating system puts the process to sleep until the semaphore is released.
+This is reliable, however the operating system calls to take and release 
+the semaphore take from 100 to 500 microseconds depending on CPU and operating
+system to execute. This is a very long time compared to the time required
+to copy small messages (less than 10k) into the shared memory area.
+</p>
+<p>&quot;mutex=none&quot; The library will make no attempt to provide 
+mutual exclusion. This is a very dangerous option that is only recommended when
+some other form of mutual exclusion is implemented on top of NML. One example might be to use only a single semaphore for multiple buffers like this:</p>
+
+<pre>
+	. . .
+	rcs_sem_wait( . . .);
+	type1 = nml1->read(); // configured not to provide mutual exclusion internally 
+	type2 = nml2->read(); // configured not to provide mutual exclusion internally 
+	type3 = nml3->read(); // configured not to provide mutual exclusion internally 
+	rcs_sem_post( . . .);
+	. . .
+</pre>
+
+<p>
+&quot;mutex=no_interrupts&quot; If there is only a single processor running
+multiple tasks or threads, most operating systems will be prevented from switching tasks, or threads as long as interrupts are disabled. Since disabling and enabling interupts is often much faster than the semaphore calls, this can be 
+an efficient means of mutual exclusion. Currently this option will only work
+under Lynx and VxWorks. Under Lynx it is necessary to run the process as root.
+You also need to know how long your system can tolerate having interrupts
+disabled.
+</p>
+
+<p>
+&quot;mutex=no_switching&quot; Some operating systems allow you to disable
+task switching which can be used just as disabling interrupts above, except that it is a little gentler in that it only prevents other tasks from executing 
+but allows hardware interrupts to execute.  Currently this option will only work under Lynx and VxWorks. Under Lynx it is necessary to run the process as root.
+</p>
+
+<p>
+&quot;mutex=mao split&quot; This is an experimental option. It provides mutual
+exclusion by splitting the buffer in half. At any given time one half is
+used for reading while the other half is used for writing. Only at the end of
+a write is a flag changed that switches which half is used for what. A small
+area at the beginning of the buffer is used for registering which processes are
+reading and which are writing at any given time. This allows many readers and one writer to access the buffer simultaneously without allowing any reader to get a partial message or require semaphore calls.  However situations can occur where it is necessary to force one of the processes to wait, or return an error. When a process is forced to wait there is currently no provision for priority
+inheritance, which means that currently while most of the time this option is
+very fast compared to the others, it can occasionally take significantly longer or timeout.
+</p>
+
+
+<h4><a name="FILEMEM">FILEMEM</a></h4>
+
+<p>FILEMEM is useful primarily for debugging. Messages are read from and written to a file, or messages may be read from one file and written to another. Record locking is used to provide mutual exclusion. This is the least efficient method, however the output file can be used for post-mortem analysis and scripts can 
+be written and used as the input file for unit testing. FILEMEM buffers must have neutral set to 1 and add "disp" to the bufferline to use the displayable method of neutral data encoding. The input file can be set by adding  "in=&lt;filename&gt;" at the end of the bufferline  or it defaults to waiting for input from stdin, the output file can be set with "out=&lt;filename&gt;" or it defauls to stdout.</p>
+
+<h4><a name="LOCMEM">LOCMEM</a></h4>
+
+<p>LOCMEM is useful when many modules are linked together in one thread of execution but you want to write them such that each module uses the NML API just as it would if it needed to communicate with the other modules running separately. There is no need for any mutual exclusion mechanism and memory is obtained with a simple malloc so the operating system will not exceed its limits for 
+semaphores or shared memory segments.
+</p>
+
+<h4><a name="TCP">TCP</a></h4>
+
+<p>TCP stands for "Transmission Control Protocol". This is the recommended method for remote connection, for most applications. It is more reliable and can handle larger messages than UDP and is more widely available than RPC.</p>
+
+<h4><a name="STCP">STCP</a></h4>
+
+<p>STCP is a simplified form of the software on top of TCP. It is useful 
+for as an interface to languages other than C++/Java where creating a 
+binary version of the NML message structure(s) is difficult and/or there is no 
+version of the RCS library available. It allows that applications in that language to send 
+and receive simple text strings with low-level socket functions, while C++ and
+Java applications still use the normal NML API. It must be used with the
+display neutral encoding method. This means &quot;disp&quot; or &quot;xml&quot; must be placed on the bufferline and &quot;xdr&quot; or &quot;ascii&quot; must be removed if present.</p>
+
+
+<h4><a name="UDP">UDP</a></h4>
+
+<p>UDP stands for "User Datagram Protocol". UDP is sometimes faster than TCP since it eliminates some of the error checking  but messages should not exceed 512 bytes.</p>
+
+<h2> <a name="Buffer_Lines_Header">Buffer Lines</a></h2>
+<p>Lines declaring buffers should have the following
+format: </p>
+<pre> 
+B 	name	type	host	size	neut	RPC# 	buffer# max_procs [Type-spec data]
+</pre>
+<p>B is the literal character identifying the line as describing a
+buffer. 
+</p>
+
+<p><strong>name</strong> is a string identifying the buffer.
+</p>
+
+<p><strong>type</strong> is a string which can currently be &quot;SHMEM&quot; for shared memory
+buffers used for communications between processes on the same CPU ,
+&quot;GLOBMEM&quot; for global memory buffers on a VME or EISA backplane,
+&quot;LOCMEM&quot; for a communications between functions run within
+the same process (multi-threaded applications should never use LOCMEM), 
+ or &quot;PHANTOM&quot;
+for buffers that use phantom functions.
+</p>
+
+<p><strong>host</strong> is a the name of the host for the buffer. If remote processes
+need to access the buffer they will look for an NML server on this host.
+</p>
+
+<p><strong>size</strong> is size of the buffer in decimal.
+</p>
+
+<p><strong>neut</strong> should be either 0 or 1. 1 indicates that the data stored in
+the buffer should be formatted into a machine independent or neutral
+format. Remote processes can still access buffers with a O even when
+running on a processor using incompatible types because the NML server
+can encode and decode automatically. However, the buffer itself must be 
+encoded(neut=1) if the buffer will be accessed locally by processors of incompatible types.
+</p>
+
+<p><strong>RPC#</strong> - A remote procedure call number.
+</p>
+<p><strong>Update 9-Apr-2004:</strong> Use of RPC is now deprecated. A TCP port or UDP port should always be specified, so the RPC# will ignored.  0 is typically used as a placeholder for this parameter.
+</p>
+
+<p><strong>buffer#</strong> - A server for more than one buffer will use the buffer
+number to determine which buffer to access for each request. Give each
+buffer a unique buffer number.
+</p>
+
+<p><strong>max_procs</strong>- The maximum number of processes allowed to use this
+buffer.(If the total possible connections equals n then the connection 
+number in the process lines may be 0 to n-1.)<strong>Update February.2005</strong>The limit is only enforced for local processes connected tho GLOBMEM or when mutex=mao.
+</p>
+
+<p>The area following the max_procs number is used to store information
+relevant to particular types of buffers, or to set options that have defaults.
+</p>
+
+<p>GLOBMEM buffers require a physical address. 
+ The physical address may be specified
+with 1 or more address equations of the form &quot;???_addr=0xnnnnnnnn&quot; where
+??? may be a host name, process name or bus name. 
+</p>
+
+<p>SHMEM buffers expect an integer key in the type specific area.
+The key needs to be a unique shared memory key on your system. For 
+many UNIX systems the command &quot;ipcs&quot; can tell you which 
+shared memory keys are in use. All of the NML buffers using SHMEM on
+a particular host  need to have  different keys.
+</p>
+
+<p>To configure the use of TCP or UDP instead of RPC for remote access
+to the buffer, add either &quot;TCP=&quot; or &quot;UDP=&quot; and a port number to the buffer line. Use a port number greater than 1024 since ports 1-1023 are reserved for processes with user ID 0. It is recommended that you select a port between 5000 and 32000 to minimize the chance of conflicting with another application.</p>
+
+<p>To use an alternative neutral encoding scheme where the messages are converted to ascii or plain text strings, add the word &quot;ascii&quot; to the buffer line. Or add &quot;disp&quot; to use an neutral encoding scheme that produces text strings with look much better for display. (The &quot;disp&quot; is required for FILEMEM.) </p>
+<p><strong>Update 9-Apr-2004:</strong> Use of &quot;ascii&quot; encoding is deprecated. For compatibility with previous versions of NML  &quot;xdr&quot; should no be explicitly placed on the bufferline. A warning may be printed if no method is explicitly mentioned. XDR stands for &quot;External Data Representation&quot; a standard used by RPC. Two new encoding options available are &quot;packed&quot; and &quot;xml&quot;. See <a href="NML_XML.html">NML support for XML</a> for information concerning xml. &quot;packed&quot; encoding is unique to NML, it is binary similiar to XDR but not compaible with it. It packs structures more tightly and avoids byte-endian conversions when not necessary by adding the original endian type to the message. &quot;packed&quot; is the new default.
+</p>
+<p><strong>Update 14-Jun-2004:</strong>  &quot;packedl64&quot; can be used to
+store long and unsigned long types in 64 bits. This is only useful if used on
+a system that uses 64 bit longs and unsigned longs, such as Itanium systems.
+(See <a href="l64notes.html">NML 64bit long notes</a>.)</p>
+
+<p>To set the input file for FILEMEM add &quot;in=&quot; and the filename to the buffer line. Without this FILEMEM will use stdin.</p>
+
+<p>To set the output file for FILEMEM add &quot;out=&quot; and the filename to the buffer line. Without this FILEMEM will use stdout.</p>
+
+<p>To force FILEMEM to limit the number of messages in the output file add 
+&quot;max_out=&quot; and the maximum number of messages to store in the output file. When this limit is reached the file will be overwritten starting at the beginning. </p>
+
+<p>To enable queuing of messages in the buffer, add the word &quot;queue&quot; to the buffer line. The size of the buffer determines how many messages can be simultaneously queued. Ie a 10k buffer might have 2 5k messages, 10 1k messages or even a combo like 1 5k message and 5 1k messages. The server allocates several temperary buffers that are only ever used for 1 message at a time. If the buffer size is much larger than the size of the largest message adding &quot;max_message_size=&quot; and a smaller size may reduce the amount of memory needed by the server without reducing the number of small messages that could be stored. <strong>Updated 29-Aug-2008</strong></p>
+
+<p>To enable supplemental timing diagnostic information to be logged to the buffer, add the word &quot;diag&quot; to the buffer line.( See <a href="timingdiag.html">Supplementary NML Timing Diagnostics Tools</a>.)</p>
+
+<p>To create a second semaphore needed for blocking_reads, add &quot;bsem=&lt;key&gt;&quot; where key is a unique semaphore key on that host. The key should
+also be different thatn the shmem key(s).</p>
+
+<p>To force backwards version compatibility, add &quot;version=&lt;version number&gt;&quot;.</p>
+
+<p>To force the server to send confirmation messages back to a remote writer add "confirm_write". This allows a remote writer to detect problems such as a full queue or if a write_if_read failed because the buffer was not read but it 
+reduces performance. </p>
+
+<p>To set the baudrate to use on an RS232 serial port add &quot;baud_rate=n&quot; where n is and integer baud rate. The baud rates available depend on your 
+hardware and operating system. The default is 9600. This parameter has no effect on non-serial port communications.</p>
+
+<p>To prevent GLOBMEM from using &quot;taskLock()/taskUnlock()&quot; under VxWorks add &quot;NO_TASK_LOCK&quot;. Note: the taskLock() is needed when multiple tasks on the same processor access the same GLOBMEM buffer, to ensure deadlocks do not occur. This tag can also be placed on the process line to effect only that process rather than all processes accessing this buffer.</p>
+
+<p><strong>Update February-2005:</strong> To select the use of IPV6 addresses and protocols instead of the default IPV4 addressess and protocols for remote TCP,STCP and UDP connections add  &quot;use_ipv6&quot; . Warning: IPV6 addresses beginning with hexidecimal digits fe8,fe9,fea, or feb are link-local addresses. Many systems default to only having a link-local IPV6 address. These require binding to specific interfaces and therefore currently do not work with NML. </p>
+
+<p><strong>Update March-2006:</strong> To indicate that a local clone buffer will be used on a given host add &quot;cloned_on=&lt;hostname/ip_address&gt;&quot; process on this host will read from a local shared memory copy of the buffer rather than to original remote buffer. One process on this hostshould have &quot;do_cloning&quot; set on the process line. Also a blocking semaphore is needed since the cloning uses a blocking_read.</p>
+
+<p><strong>Update February-2009:</strong> To set the name of the format function that should be used with the buffer use &quot;format_name=&quot; . The format name should not include the final &quot;_format&quot; If the NML constructor should have been passed ex_format as the first argument, the tag in the nml file &quot;format_name=ex&quot; would accept this. If the format name does not match
+the process will print an error message, NML::valid() will return false, and 
+NML::error_type will be set to NML_FORMAT_NAME_DOES_NOT_MATCH_ERROR.  &quot;format=&quot; is also accepted as a shorter verion of &quot;format_name=&quot;.</p>
+
+<p><strong>Update February-2009:</strong> To set the name of the header file that defines the types of messages used with this buffer. Add &quot;header=&quot;.
+It can be used by some tools including the Java diagnostics tool, and can serve as additional documentation. If format_name is not set then it will check for a
+format name that is a substring of the header name.
+</p>
+
+<p><strong>Update February-2009:</strong> To set the name of the C++ source file that includes the automatically generated format and update function implementations add &quot;format_source=&quot;
+It can be used by some tools including the Java diagnostics tool, and can serve as additional documentation. If format_name is not set then it will check for a
+format name that is a substring of the format source file name.
+</p>
+
+<h2> <a name="Process_Lines_Header">Process Lines</a></h2>
+
+<p>Process lines should have the following format:
+</p>
+
+<pre>
+P 	name	buffer	type	host 	ops 	server 	timeout master 	c_num
+</pre>	
+<p><strong>P</strong> is the literal character identifying the line as describing a
+process. 
+</p>
+
+<p><strong>name</strong> is a string matching the process name passed to the CMS config
+function or the NML constructor. <strong>Update 2005.February</strong>if the name is given is &quot;default&quot; then the information will be used by any process without an explicit process line already given.
+</p>
+
+<p><strong>buffer</strong> is the string matching the identifier used in a buffer line
+to which this process intends to connect. <strong>Update 2005.February</strong> if the name is given is &quot;default&quot; then the information will be used by the given process for any buffer without an explicit process line already given. Having default set for both the process name and buffer name matches all combinations.
+</p>
+
+<p><strong>type</strong> is a string which can currently be "LOCAL" , "REMOTE","AUTO". LOCAL processes normally connect directly to the buffer via shared memory regardless of the buffer or process hosts. REMOTE process always use UDP or TCP to connect even when running on the same machine. <strong>Update 2005.February</strong>  AUTO processes attempt to determine if a LOCAL direct shared memory connection is possible and to use it if it appears to be and connect via the REMOTE method otherwise. Servers should always be LOCAL.
+</p>
+
+<p><strong>host</strong> is the name of the processor that the process is expected to run on. <strong>Update February-2005:</strong> This is not used unless bind_proc_host is added to the end of the process line.
+</p>
+
+<p><strong>ops</strong> is a string indicating whether the process will read or write. R, W or RW
+</p>
+
+<p><strong>server</strong> should be either 0, 1, 2, or 3. 
+A 1 indicates that this process is
+responsible for running a server for the buffer,
+a 2 indicates that the <a href="#nml_start_function">nml_start</a> function 
+should spawn  a server for the buffer, and a 0 is for processes that 
+will neither spawn nor run a server for the buffer.</p>
+<p><strong>Update 9-Apr-2004:</strong> 3 indicates that a server should be spawned immediately rather than waiting for nml_start to be called. Unlike the other options, the TCP port or UDP port can not be shared with any other buffers.
+</p>
+
+<p><strong>timeout</strong> is the time in seconds for the process to wait for the
+mutual exclusion semaphore or for an RPC call to return before an error is reported. A time can be
+specified in floating point and the timeout is measured as close as possible
+for the given platform and process type or "INF" to never timeout. 
+</p>
+
+<p><strong>master</strong> is a flag which should be 0 or 1, to indicate whether this process should create and initialize this buffer. On some operating systems there 
+must be one and only one master process, on some there can be multiple masters.
+The parameter is ignored for REMOTE processes. There must be atleast one master that is a local process started before non-master and remote processes are started.</p>
+<p><strong>Update 9-Apr-2004:</strong> On some operating systems even non-masters can be started first and they will create the buffer, making this parameter almost irrelavent. We may attempt to eliminate this behavior in the future. For maximum portability, setting only a single process to be the master and ensuring it is started first is still recommended.</p>
+
+<p><strong>c_num</strong> is the connection number for this process.c_num must be between 0 and n-1 where n is the number of total_connections specified
+on the buffer line. <strong>Update February-2005:</strong> This is not used unless the BufferType is GLOBMEM or mutex=mao is specified and autocnum is not specified. </p>
+
+<p>The area of the process line after the connection number is used to 
+choose some options that have defaults. These options can be added in any 
+order. </p>
+
+<p>To have a remote processes set the non-blocking flag on its socket, add
+&quot;poll&quot;. A remote process with the poll flag set will not expect a remote server to reply when read or peek is called, but rather
+to get that data in some future call to read or peek so data is generally delayed by one or more cycles but less time is spent waiting for the server.</p>
+
+<p>To have a remote process setup a subscription with a TCP server add, 
+&quot;sub=&lt;subscription interval&gt;&quot;. The subscription interval is given
+in seconds as a floating point number. Example: To setup subscription interval
+of 20 milliseconds add &quot;sub=0.02&quot;.</p>
+
+<p>To prevent GLOBMEM from using &quot;taskLock()/taskUnlock()&quot; under VxWorks add &quot;NO_TASK_LOCK&quot;. Note: the taskLock() is needed when multiple tasks on the same processor access the same GLOBMEM buffer, to ensure deadlocks do not occur. This tag can also be placed on the buffer line to effect all processes accessing this buffer.</p>
+
+<p>To have a process use an RS232 serial port for communications add &quot;serialPortDevName=&lt;name&gt;&quot; where name is a device name such as &quot;/dev/ttyb&quot; or &quot;COM2:&quot;. In addition the process must either be a 
+server or be REMOTE. This is available only on certain platforms. By default,
+the port will be set to 9600 baud, 8 data bits, 1 stop bit, no parity.</p>
+
+<p><strong>Update February-2005:</strong>  &quot;bind_proc_host&quot; forces the process to bind to the specific address in the host field on the process line. It is necessary for some IPv6 addresses on some platforms where binding to &quot;any&quot; address is not allowed.</p>
+
+<p><strong>Update March-2006:</strong>  To have a remote process ignore a connection failure add &quot;ignore_connect_err&quot; allowing another alternative way of having a remote process
+start earlier than the server it needs. The process will attempt to make another connection each time a function that needs one such as read or write is called until a successful connection is made.</p>
+
+<p><strong>Update March-2006:</strong> To skip the usual checking for a remote process to verify that buffer name matches the buffer name known to server add &quot;no_verify_buf&quot; and 
+perhaps speed up the startup process.</p>
+
+<p><strong>Update March-2006:</strong> &quot;read_timeout=&quot;, &quot;write_timeout=&quot;,or  &quot;connect_timeout=&quot; override the previously set timeout but only for read/peek operations, or write operations, or when connecting.</p>
+
+<p><strong>Update March-2006:</strong> To make this process responsible for creating a local clone buffer and for spawning a thread to maintain it by copying data from this remote buffer add &quot;do_cloning&quot;. The local clone buffer
+is a buffer that will be available on this host for other processes that need the same data.</p>
+
+<p><strong>Update February-2009:</strong> &quot;retry=&quot; sets a UDP retry period. To have an effect it must be on the client process line of a remote client
+on a buffer accessed via UDP. Value set should be a period in seconds for a response from the server to wait before automatically resending a request.
+</p>
+
+
+<p><strong>Update July-2009:</strong> &quot;do_not_print_errors&quot; prevents errors from this particular buffer and process from being printed. It could be used if known/unimportant errors from this buffer are making it potentially more difficult to seee errors related to other buffers.
+</p>
+
+<p><strong>Update July-2009:</strong> &quot;do_not_print_timeout_errors&quot; prevents errors from this particular buffer and process from being printed if they are related to a timeout. On some systems timeouts are common.  It could be used if known/unimportant errors from this buffer are making it potentially more difficult to seee errors related to other buffers.
+</p>
+
+
+<h4>Example: NML Configuration File </h4>
+
+<p>This configuration file provides a possible configuration file for
+the rest of the examples in this document. On your system, at the very least the host names will have to be changed. Although ex_buf4 is never used by any of the examples, but it is included as an example of the use of GLOBMEM.<!-- FIXME -->(The tab-stops on your browser or text editor may not make the columns line up neatly. NML only needs &quot;some&quot; white space between the items so feel free to add/remove tabs and spaces as needed for better appearance.)</p>
+
+<h5>
+<a href="ex_cfg.nml">ex_cfg.nml</a></h5>
+
+<pre>
+# ex_cfg.nml
+
+# buffers:
+# name		type	host	        size	neut RPC# 	buffer#	 max_proc [type-spec]
+#		GLOBMEM	host	        size	neut RPC# 	buffer#	 max_proc phys_addr
+#		SHMEM	host	        size	neut RPC# 	buffer#	 max_proc key 
+B ex_buf1	SHMEM	localhost	512	0    0	 	1	 * 	101 TCP=5001 format_name=ex packed
+B ex_buf2	SHMEM	localhost	512	0    0	 	2	 * 	102 TCP=5001 format_name=ex packed
+B ex_buf3	GLOBMEM	vx40		512	0    0	 	3	 * 	vme_addr=0x4e00000 format_name=ex packed
+
+# processes:
+# name		buffer	type	host 	ops	server 	timeout	master 	c_num
+P ex1_proc	ex_buf1	LOCAL	mypc 	W	0	INF 	1	0
+P ex2_proc	ex_buf1	LOCAL	mypc 	W	0	INF 	1	1
+P ex2_proc	ex_buf2	LOCAL	mypc 	W	0	INF 	1	1
+P ex3_proc	ex_buf1	LOCAL	mypc 	R	0	INF 	1	2
+P ex4_proc	ex_buf1	LOCAL	mypc 	W	0	INF 	0	3
+P ex5_proc	ex_buf1	PHANTOM	192.168.1.1 	W	0	0.5 	1	4
+P ex6_proc	ex_buf1	LOCAL	192.168.1.1 	RW	0	0.5 	1	5
+P ex8_proc	ex_buf1	REMOTE	rosie 	RW	0	10.0 	0	6
+P ex8_svr	ex_buf1	LOCAL	192.168.1.1 	RW	1 	5.0 	1	8
+P ex8_svr	ex_buf2	LOCAL	192.168.1.1 	RW	1 	5.0 	1	8
+P ex9_svr	ex_buf1	LOCAL	192.168.1.1 	RW	1 	5.0 	1	9
+P ex9_svr	ex_buf2	LOCAL	192.168.1.1 	RW	1 	5.0 	1	9
+P ex10_svr	ex_buf1	LOCAL	192.168.1.1 	RW	1 	5.0 	1	10
+P ex10_svr	ex_buf2	LOCAL	192.168.1.1 	RW	1 	5.0 	1	10
+
+# special default process line that is matched by anybody looking for a process
+# line and is not explicitly listed above.
+P default       default AUTO	anyhost 	RW	0 	5.0 	0	11
+</pre>
+
+
+<hr />
+
+<p>Last Modified: February-2009</p>
+<p>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email, please
+contact  <a href="http://www.isd.cme.nist.gov/staff/shackleford/"
+>Will Shackleford</a> at <em><a href="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</a></em></p>
+
+</body>
+</html>
+
+
+

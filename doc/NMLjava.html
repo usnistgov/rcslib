@@ -1,0 +1,728 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<HTML lang="en">
+<head>
+ <title>NML Programmer`s Guide (Java Version)</title> 
+<meta http-equiv="Content-Type" content="text/html;
+    charset=utf-8">
+<meta name="description" content="The Neutral Message Language (NML)is
+a mechanism to allow control modules to communicate using standard set(s) of
+messages.">
+<meta name="keywords" content="real-time control programming manufacturing
+software Java network communications">
+<link rel="stylesheet" href="http://www.isd.mel.nist.gov/mel2.css" type="text/css">
+</head>
+ 
+<body>
+<p><a name="TOP_OF_FILE"></a></p>
+<h1>The NML Programmer's Guide (Java Version)</h1>
+ <ul>
+<li><a href="javadoc/index.html">Class Hierarachy (javadoc generated)</a></li>
+<li><a href="rcslib_javadoc.zip">Zip Archive of javadoc files for local reference.</a></li>
+<li><a href="index.html">See other RCS Library Documents.</a></li>
+ </ul>
+<hr>
+<h2><a name="Intro_Header"> Introduction</a></h2>
+<p>The Real-Time Control System (RCS) library is a class library intended
+for multi-platform real-time distributed applications. There are now 2 versions of the library, one in C++ and the other in Java. The Java version currently does not provide all of the functionality of the C++ version, but the client-side communications classes for NML have been re-written in Java. This document
+describes the use of the Neutral Message Language (NML)
+components of the library.</p>
+<p>The Communication Management System
+(CMS) provides access to a fixed-size buffer of general data to
+multiple reader or writer processes on the same processor, across a
+backplane, or over a network. Regardless of the communication method
+required, the interface to CMS is uniform.  Methods are provided to
+encode all of the basic C/Java data types in a machine independent or
+neutral format, and to return them to the native format. A CMS_HEADER
+is added to each buffer which provides information about whether the
+buffer has been written or read from last, whether the buffer is new
+to a particular process and the size of the last write to the buffer.
+CMS uses a configuration file so that users can change communications
+protocols or parameters without recompiling or relinking the
+applications.  </p>
+ <p>The Neutral Message Language (NML)
+provides a higher level interface to CMS. It provides a mechanism for
+handling multiple types of messages in the same buffer as well as
+simplifying the interface for encoding and decoding buffers in neutral
+format and the configuration mechanism. <!-- (Eventually it may also
+include sets of standard message formats and routines to handle them
+more easily. See <a href="nml_emc.html#TOP_OF_FILE">"The EMC-NML
+Message Set"</a>) --></p>
+
+ <h2>
+<a name="Terminology_Header">Terminology</a></h2>
+ <p>The figure below
+illustrates the structure of a typical RCS application using NML. The
+application is distributed across three computers. Processes 1, 2, and
+3 are able to write directly into the shared memory buffers they use
+because they are located in the same computer or backplane. It is for
+this reason that they are labeled "LOCAL". Processes 4,5 and 6 can
+only access the buffers through an NML Server and are therefore
+labeled "REMOTE". The description might need to be complicated in a
+system with buffers in more than one machine. Processes would then
+need to be described as local or remote with respect to a particular
+buffer.</p>
+<p><img src="fig1.gif" alt="NML Example System"/></p>
+ <p>NML servers must be run for
+each buffer that will be accessed by remote processes. They read and
+write to the buffer in the same way as local processes on the behalf
+of remote processes.</p>
+<p>NML uses configuration files to store information about which processes communicate with 
+which buffers and how. Most of the options available to NML programmers are chosen by specifying them in the 
+configuration file. (The configuration files are ascii text files with a format described under 
+<a href="NMLcfg.html">"Writing NML Configuration Files"</a>.)</p>
+ <p>NML is message-based rather than
+stream-based. Each successful read operation retrieves the data sent
+in exactly one write operation. Unless queuing is enabled, each write
+operation moves one message into the buffer replacing any previous
+message. </p>
+<p>  More than one type of message can be sent to the same buffer so a
+unique type identifier is always contained in the message. After a
+read operation, the process must use this identifier to determine the
+type of message before using any of the data in the message. Each type
+of message implies a particular data structure. Most messages are
+user-defined.</p>
+ <p>Messages are called encoded if they have been
+translated into a machine-independent or neutral format such as the
+eXternal Data Representation (XDR). Buffers are called encoded if the
+messages in them are to be encoded which is established in the
+configuration file. NML servers can encode and decode messages on
+behalf of remote processes. An NML vocabulary defines the set of
+messages that may be used in an application and provides the necessary
+functions for encoding and decoding the messages.</p>
+ <p>Header File</p>
+ <p>All of the necessary header files will be included if
+rcs.hh is included.</p>
+ <p>Classes</p>
+<p>The following classes provide the programming interface for CMS and NML:</p>
+
+<p>NML<br/>NMLmsg<br/>NML_SERVER</p>
+
+<p>CMS<br/>CMS_HEADER<br/>CMS_SERVER</p>
+ <p>CMS_USER</p>
+ <p>These
+classes are detailed in the following sections.</p>
+ <p>NML Application
+Structure</p>
+ <p>The next figure shows the structure of a single
+concurrent process module using NML (the memory buffer appears to be
+local to the application)</p>
+ <p><img src="appstrut.gif" alt="On the left is a key. Light blue-green boxes are modules from the RCS library. White boxes are modules the user is expected to complete. Green rectancgle with rounded corners is a shared memory buffer. Arrows chow the communications channels. On the right : The white box Application Routines (user) over light blue-green box NML library Routines(rcslib) over white box User-defined Format function over white box user defined update functions over light blue-green box CMS update functions over light green box CMS Communications Functions over arrow to green outline labeled shared memory buffer."/> </p>
+ <p>The applications routines initialize and use objects from class NML and
+NMLmsg which depend on some user-defined functions. The format
+function selects from a set of user defined update functions for each
+aggregate type the user will need to pass to the memory buffer. The
+update function for each aggregate type is built by updating each
+member individually using CMS routines for the basic C data types.
+These basic update routines write to and read from internal CMS
+buffers which are themselves read or written to memory buffers that
+are available to other concurrent processes using the CMS
+Communications Routines.</p>
+
+
+<h2>
+<a name="Design_Header">Designing an NML Application.  </a></h2>
+
+<p>Because NML is configurable, programmers can choose between
+protocols with higher performance but which may be more restrictive or
+require more expensive hardware or those that are less restrictive or
+require less expensive more widely available hardware. By making a
+buffer local to a process you can improve the performance of that
+process. By moving processes you may be able to reduce the load on one
+CPU or increase the number of processes able to use the faster local
+protocol. Using servers to provide remote access to buffers frees
+local processes from being slowed down by the communications with
+remote processes. Currently the NML communications servers and most-likely the
+real-time modules need to be written in C++, however GUI's, diagnostics tools,
+and upper level supervisors with less-rigid time deadlines can be written in
+Java and use NML to communicate with C++ parts of the application. </p>
+ <h4>
+Example: Robot Controller/Supervisor
+Design </h4>
+ <p>A controller for a robot must poll a variety of inputs
+and perform some computations every &quot;n&quot; milliseconds and a
+remote supervisor should be able to check the status of the robot when
+needed.  </p>
+ <p>The next figure shows one possible design for this
+application.  Because the controller can write directly to the shared
+memory buffer, writing the status takes a minimum time for the
+controller. Using the NML server allows the supervisor to be located
+almost anywhere and on almost any host.  </p>
+<p> <img src="nml_ex.gif" alt="Controller/Supervisor System Diagram"/></p>
+<p></p>
+ <h3>
+Summary of Design Suggestions.  </h3>
+ <ol><li>Avoid
+overloading any CPU by assigning too many processes to it or building
+a single process which must do too much work.  </li>
+ <li>Place buffers
+so that they may be accessed locally by the most time-critical
+process(es).  </li>
+ <li>Use the "LOCAL" protocol whenever possible.
+</li>
+ <li>Only use neutrally encoded buffers when necessary.(i.e.
+backplane communications between different types of processors)
+</li>
+</ol> <h2>
+<a name="Programming_Header">Programming with NML
+</a></h2>
+ <p>
+NML applications programmers need to create a message
+vocabulary and associated format function, write a configuration file,
+create an NML object, and use the read and write member functions.
+</p>
+ <h3>
+<a name="NML_Vocab_Header">Creating an NML Vocabulary (Format Functions, Update Functions, and Message Definitions)</a>
+</h3>
+ <p>The message vocabulary is a set of C++/Java classes, derived from
+NMLmsg, which can be thought of as data structures that are copied
+into the NML buffer during a write operation, and copied out during a
+read operation.  Each class is associated with a unique identifier, a
+positive integer, that allows readers to identify which message is
+present in the buffer.  Besides the particular data members of the
+class, each class also needs an update function which calls CMS
+methods to convert the data members to types CMS can handle.
+Currently, CMS provides support for the basic C/Java language built-in
+types. However, avoid using enums or long doubles in NML messages.
+(See <a href="NML.html#Insufficient_Args_Error">"Trouble Shooting -
+Insufficient Arguments Error"</a>) </p>
+ <p>To enable CMS to neutrally
+format the data in the buffer or to allow NML servers to encode and
+decode the data for remote processes, a format function is required.
+This format function is nothing more than a switch statement,
+associating NML identifiers with the update functions of particular
+NML message classes.  The format function can be manually programmed as 
+will be described below, or it can be automatically generated using
+the <a href="CodeGen-Instructions.html">NML Code Generator</a>.</p>
+<h4>
+Example: Message Definition. </h4>
+<p>Files needed for this example include: <a href="nml_ex1MsgDict.java">nml_ex1MsgDict.java</a>, <a href="EXAMPLE_MSG.java">EXAMPLE_MSG.java</a>
+</p> 
+<p>Both EXAMPLE_MSG.java, and nml_ex1MsgDict.java were generated from
+<a href="nml_ex1.hh">nml_ex1.hh</a> using the <a href="CodeGen-Instructions.html">NML Code Generator</a>. nml_ex1.hh is also used in the C++ examples. </p>
+
+<pre> 
+/*
+*	New Java File starts here.
+*	This file should be named nml_ex1_MsgDict.java
+*	Automatically generated by NML CodeGen Java Applet.
+*	with command line arguments :  generate_for_java=true generate_for_cpp=false HHFile=nml_ex1.hh
+*	RCS_VERSION=2009.12.17_1575*
+*	.gen script :
+*		0:load nml_ex1.hh
+*		1:clear
+*		2:select_from_file nml_ex1.hh
+*		3:generate Java dict&gt;nml_ex1_MsgDict.java
+*		4:generate Java classes &gt;*
+*		5:exit
+*
+*/
+
+// Import NML classes and interfaces
+import rcs.nml.*;
+
+import java.util.Hashtable;
+/*
+*	Class definition for nml_ex1_MsgDict
+*	Automatically generated by NML CodeGen Java Applet.
+*/
+public class nml_ex1_MsgDict implements NMLMessageDictionary
+{
+
+	// Define an object of every message class.
+	private EXAMPLE_MSG EXAMPLE_MSG_object = null;
+
+	// ID Type Constants
+	public static final int EXAMPLE_MSG_TYPE  = 101;
+
+	// Sizes useful for C++ compat and preallocating byte storage. 
+	//(not used for normal NML reads/writes).
+	public long getEstimatedSize(final int _type)
+	{
+		switch(_type)
+		{
+			case EXAMPLE_MSG_TYPE: /*101*/
+				return 232;
+		default:
+			break;
+		}
+		return 232; /* maximum */
+	}
+
+	public long getMaxEstimatedSize() {
+		return 232;
+	}
+
+
+
+	//Define an NML_ENUM_INFO object for the type ID's
+	NML_ENUM_INFO nml_enum_info_for_type_names =null;
+
+
+	//Create a constructor to setup the NML_ENUM_INFO object.
+	public nml_ex1_MsgDict()
+	{
+		nml_enum_info_for_type_names= new NML_ENUM_INFO();
+		nml_enum_info_for_type_names.name="nml_ex1_MsgDict";
+		Hashtable h1 = new Hashtable();
+		Hashtable h2 = new Hashtable();
+		Integer I = null;
+		String  S = null;
+		I=new Integer(EXAMPLE_MSG_TYPE);
+		S="EXAMPLE_MSG";
+		h1.put(I,S); h2.put(S,I);
+		nml_enum_info_for_type_names.int_to_string_hash=h1;
+		nml_enum_info_for_type_names.string_to_int_hash=h2;
+	}
+
+
+
+	// Miscellaneous Pre-Defined Values
+
+	// Enumerated Type Constants
+
+
+	// NML Format Function
+	public int formatMsg(NMLFormatConverter nml_fc)
+	{
+		int return_val=0;
+		nml_fc.check_type_info(nml_enum_info_for_type_names);
+
+		switch(nml_fc.msg_type)
+		{
+		case EXAMPLE_MSG_TYPE: /*101*/
+			if(null == EXAMPLE_MSG_object) { 
+				EXAMPLE_MSG_object = new EXAMPLE_MSG();
+			}
+			nml_fc.msg_to_update  = EXAMPLE_MSG_object;
+			EXAMPLE_MSG_object.update(nml_fc);
+			break;
+
+		default:
+			return_val=-1;
+			break;
+		}
+		return(return_val);
+	}
+
+}
+</pre>
+
+<pre>
+/*
+*	New Java File starts here.
+*	This file should be named EXAMPLE_MSG.java
+*/
+
+// Import all NML, CMS, and RCS classes and interfaces
+import rcs.nml.*;
+import rcs.nml.NMLFormatConverter;
+import rcs.nml.NMLMessageDictionary;
+import rcs.nml.NMLmsg;
+import rcs.nml.RCS_CMD_MSG;
+import rcs.nml.RCS_STAT_MSG;
+
+/*
+*	Class definition for EXAMPLE_MSG
+*	Automatically generated by RCS Java Diagnostics Tool.
+*	on Thu Jun 05 13:38:12 EDT 1997
+*/
+public class EXAMPLE_MSG extends NMLmsg
+{
+	float f = 0;
+	byte c = 0;
+	int i = 0;
+
+
+	// Constructor 
+	public EXAMPLE_MSG()
+	{
+		super(101);
+	}
+
+
+	public void update(NMLFormatConverter nml_fc)
+	{
+		super.update(nml_fc);
+		f  = nml_fc.update(f );
+		c  = nml_fc.update(c );
+		i  = nml_fc.update(i );
+
+	}
+}
+</pre>
+
+<p>These two files could also be generated with the command.</p>
+<pre>
+java -jar CodeGenCmdLine.jar generate_for_java=true generate_for_cpp=false nml_ex1.hh
+</pre>
+
+<p>Whether you generate the source files or download them, the should be
+compiled with this command.</p>
+
+<pre>
+javac -classpath rcs.jar EXAMPLE_MSG.java  nml_ex1_MsgDict.java
+</pre>
+
+<p>It is normal to see the following notes. (We could change the code to use
+safer checked functions but then the code would no longer compile with older
+jdk's. The files rcs.jar and CodeGenCmdLine.jar are available on the NIST ftp site o
+r can be built with the rcslib to be found in the bin directory or plat/java/lib directory.</p>
+
+<pre>
+Note: nml_ex1_MsgDict.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+</pre>
+
+
+<p>NOTE: All the NML updates are
+identical except that the body should call the NMLFormatConverter
+update function for each member in the class. 
+The update function has been overloaded
+to accept references to all of the basic data types (ints, floats,
+etc.) Depending on the NMLFormatConverter mode the update functions will either store
+their argument in a neutrally encoded buffer or decode the buffer and
+store the output in the variables passed to the update functions. Just as
+with the format function, the update functions can be either manually coded
+or generated automatically with the <a href="CodeGen-Instructions.html">NML Code
+Generator</a>.
+</p>
+ 
+<h3>
+<a name="Creating_Object_Header">Creating an NML Object
+</a></h3>
+ <p>NMLConnection has several constructors, but most users will use the
+following.  </p>
+ <p>NMLConnection(NMLMessageDictionary <var>msg_dict</var>, 
+	String <var>buf</var>, String <var>proc</var>, String <var>file</var>) throws NMLException </p>
+
+<p>The parameters are: <br/><var>msg_dict</var> = &lt; message dictionary object
+to use&gt;; <br/><var>buf</var> = &lt;name of the buffer to
+connect to as specified in configuration file&gt;; <br/><var>proc</var>
+= &lt;name under which to access the buffer&gt;; <br/><var>file</var> =
+&lt;name of the configuration file&gt;; </p>
+
+ <h4>
+Example:
+Constructors </h4>
+<p>Files needed for this example include: <a href="nml_ex1MsgDict.java">nml_ex1MsgDict.java</a>, <a href="EXAMPLE_MSG.java">EXAMPLE_MSG.java</a>,<a href="nml_ex2.java">nml_ex2.java</a>
+</p> 
+<pre>
+/* nml_ex2.java */
+
+//Import the custom message dictionary
+// Normally one would have something like import package.nml_ex1_MsgDict;
+// but since we are not using packages we don't need the import.
+
+// Import all NML, CMS, and RCS classes and interfaces
+import rcs.nml.*;
+	
+public class nml_ex2
+{
+	public static void main(String args[]) throws Exception
+	{	
+		/* NML( format function, buffer name, process name, configuration file ) */
+		NMLConnection example_nml = new NMLConnection(new nml_ex1_MsgDict(), "ex_buf1","ex2_proc", "ex_cfg.nml");
+	} 
+}
+</pre>
+
+<p>Compile with:</p>
+
+<pre>
+javac -classpath rcs.jar nml_ex2.java nml_ex1_MsgDict.java EXAMPLE_MSG.java
+</pre>
+
+<p>To run it you need to first start the server in the background. The server must be written in C++ and is example 9 in the <a href="NMLcpp.html">NML C++ Programmer's Guide</a>.</p>
+
+<pre>
+# Compile command depends on OS and compiler versions.
+g++ nml_ex9.cc nml_ex1.cc rcslib/lib/librcs.a -lpthread -o nml_ex9
+./nm_ex9 &
+</pre>
+
+<p>To run the java app.</p>
+
+<pre>
+java -classpath rcs.jar nml_ex2
+</pre>
+
+<p>This example normally has no output or effect.</p>
+
+<h3>
+<a name="Reading_NML_Header">Reading NML Data </a></h3>
+ <p>These are the member functions used to perform
+reads: </p>
+
+<dl>
+  <dt> <img src="images/red-ball-small.gif" width="6" height="6" alt="o"/>
+	<a href="rcs.nml.NMLConnection.html#peek()"><b>public NMLmsg peek() throws NMLException</b></a>()
+  </dt>
+  <dd>  Read an NMLmsg but do not change the was_read flag.
+  </dd>
+  <dt> <img src="images/red-ball-small.gif" width="6" height="6" alt="o"/>
+	<a href="rcs.nml.NMLConnection.html#peekDataString()"><b>public String peekDataString() throws NMLException</b></a>()
+  </dt>
+  <dd> 
+ Reads an NMLmsg using peek() and converts it to a String.
+  </dd>
+  <dt> <img src="images/red-ball-small.gif" width="6" height="6" alt="o"/>
+	<a href="rcs.nml.NMLConnection.html#read()"><b>public NMLmsg read() throws NMLException</b></a>()
+  </dt>
+  <dd> 
+ Read a NMLmsg.
+  </dd>
+  <dt> <img src="images/red-ball-small.gif" width="6" height="6" alt="o"/>
+	<a href="rcs.nml.NMLConnection.html#readDataString()"><b>public String readDataString() throws NMLException</b></a>()
+  </dt>
+  <dd> 
+ Reads an NMLmsg and converts it to a String.
+ </dd>
+</dl>
+<p>There is a difference between these functions and the C++ versions.
+The C++ functions NML::read() and NML::peek() return an integer indicating
+what type of message if any was read and the actual data is stored in 
+the area that can be found by calling NML::get_address(). But in java these functions return references to NMLmsg objects or null if there was no message to read, and there is no get_address function. (References are as close as Java gets to pointers.) The reason  is that Java has two features that are not commonly
+available in C++: Run-time type checking and automatic garbage collection.
+In Java, it is not possible to simply create one static memory area to 
+deposit all the NML messages recieved there, on the other hand once the 
+objects are created, casting them to the wrong class causes a 
+ClassCastException unlike C++ which would just let the object be
+used in inappropriate ways as long as there was an explicit cast.</p>
+ <p>If an error occurs that makes it
+impossible to read from this NML buffer, an NMLException is thrown.</p>
+<p>Peek works exactly the
+same as read except that the flag that lets others know when the
+buffer is read is not changed and if queuing is enabled the message is
+not removed from the queue. This could be useful if you need to monitor
+a buffer without letting other processes using the buffer know.</p>
+
+<h4>
+Example: Reading from an NML
+Channel.</h4>
+<p>Files needed in this example include: <a href="nml_ex1MsgDict.java">nml_ex1MsgDict.java</a>, <a href="EXAMPLE_MSG.java">EXAMPLE_MSG.java</a>, <a href="nml_ex3.java">nml_ex3.java</a></p>
+<pre>
+
+// Import the custom message dictionary and message classes
+// import nml_ex1MsgDict; -- import not needed since not using packages
+// import EXAMPLE_MSG; -- import not needed since not using packages
+
+// Import all NML, CMS, and RCS classes and interfaces
+import rcs.nml.*;
+import rcs.utils.*;
+
+class nml_ex3
+{
+  public static void main(String args[])  throws Exception
+  {	
+    /* NMLConnection( message dictionary, buffer name, process name, configuration file ) */
+    NMLConnection example_nml = new NMLConnection(new nml_ex1_MsgDict(), 
+						  &quot;ex_buf1&quot;,
+						  &quot;ex3_java_proc&quot;, 
+						  &quot;ex_cfg.nml&quot;);
+		
+    EXAMPLE_MSG msg = null;
+    while(msg == null)
+    {
+      msg = (EXAMPLE_MSG) example_nml.read();
+      Thread.sleep(100);	/* Sleep for 100 milliseconds. */
+    }
+    /* Print something to the console to indicate a message was recieved. */
+    System.out.println(&quot;Message recieved: f = &quot;+msg.f+&quot;, c = &quot;+msg.c+&quot;, i = &quot;+msg.i);
+  } 
+}
+</pre>
+
+<p>
+Compile with:
+</p>
+
+<pre>
+javac -classpath rcs.jar nml_ex3.java nml_ex1_MsgDict.java EXAMPLE_MSG.java
+</pre>
+
+<p>To run it you need to first start the server in the background. The server must be written in C++ and is example 9 in the <a href="NMLcpp.html">NML C++ Programmer's Guide</a>.</p>
+
+<pre>
+# Compile command depends on OS and compiler versions.
+g++ nml_ex9.cc nml_ex1.cc rcslib/lib/librcs.a -lpthread -o nml_ex9
+./nm_ex9 &
+</pre>
+
+<p>To run the java app.</p>
+
+<pre>
+java -classpath rcs.jar nml_ex3
+</pre>
+
+
+<p>If you try to run this
+example, it will wait for something to be written into the buffer. To
+write something into the buffer, you can use the example in 
+&quot;Writing NML Data&quot;. You will also need 
+an NML server. The program nml_ex9 which is described in <a href="NMLcpp.html#Using_RUN_NML_SERVERS_Header">the C++ version of this guide under &quot;Using the run_nml_servers function.&quot;</a> can be used as the NML server.</p>
+
+<h3>
+<a name="Writing_NML_Header">Writing NML Data </a></h3>
+
+ <p>These are the member functions used to perform
+writes: </p>
+
+<dl>
+<dt> 
+<img src="images/red-ball.gif" width="12" height="12" alt="o"/>
+<b>write</b>
+</dt>
+<dd>
+<pre>
+ public int write(<a href="rcs.nml.NMLmsg.html#_top_">NMLmsg</a> msg)
+</pre>
+<dl>
+  <dd> Writes an NMLmsg.</dd>
+  <dd><dl>
+    <dt> <b>Parameters:</b></dt>
+    <dd> msg - the NMLmsg to write.</dd>
+    <dt> <b>Returns:</b></dt>
+    <dd> 0 if the writ*e was successful, -1 if there was an error</dd>
+  </dl></dd>
+</dl>
+</dd>
+
+<dt>
+<img src="images/red-ball.gif" width="12" height="12" alt="o"/>
+<b>writeDataString</b>
+</dt>
+<dd>
+<pre>
+ public int writeDataString(String dataString)
+</pre>
+<dl>
+  <dd> Convert a String to an NMLmsg and then write it to the buffer.</dd>
+  <dd><dl>
+    <dt> <b>Parameters:</b></dt>
+    <dd> dataString - string to write</dd>
+    <dt> <b>Returns:</b></dt>
+    <dd> 0 if the write was successful, -1 otherwise</dd>
+  </dl></dd>
+</dl>
+</dd>
+</dl>
+
+<p>The equivalent of the write_if_read() function in C++ has
+not been implemented yet.</p>
+
+  <h4>
+Example: Writing to an NML Channel.
+</h4>
+<p>Files needed in this example include: <a href="nml_ex1MsgDict.java">nml_ex1MsgDict.java</a>, <a href="EXAMPLE_MSG.java">EXAMPLE_MSG.java</a>, <a href="nml_ex4.java">nml_ex4.java</a></p>
+<pre>
+// Import the custom message dictionary and message classes
+// import nml_ex1MsgDict; -- import not needed, not using packages
+// import EXAMPLE_MSG; -- import not needed, not using packages
+
+// Import all NML, CMS, and RCS classes and interfaces
+import rcs.*;
+import rcs.nml.*;
+import rcs.utils.*;
+
+class nml_ex4
+{
+  public static void main(String args[]) throws Exception
+  {	
+    /* NMLConnection( message dictionary, buffer name, process name, configuration file ) */
+    NMLConnection example_nml = new NMLConnection(new nml_ex1_MsgDict(), 
+						  "ex_buf1",
+						  "ex2_proc", 
+						  "ex_cfg.nml");
+		
+    EXAMPLE_MSG msg = new EXAMPLE_MSG();
+    msg.f = (float) 3.14;
+    msg.c = (byte) '1';
+    msg.i = 1024;
+    example_nml.write(msg);
+ 
+   System.out.println("Sent message: f = "+msg.f+", c = "+msg.c+", i = "+msg.i);
+  } 
+}
+</pre>
+
+<p>Compile with:</p>
+
+<pre>
+javac -classpath rcs.jar nml_ex4.java nml_ex1_MsgDict.java EXAMPLE_MSG.java
+</pre>
+
+<p>Before running start the NML server, see previous examples.</p>
+
+<p>To run the java app.</p>
+
+<pre>
+java -classpath rcs.jar:. nml_ex4
+</pre>
+
+<p>
+It should print:
+</p>
+
+<pre>
+Sent message: f = 3.14, c = 49, i = 1024
+</pre>
+
+<p>This example writes a message into a buffer. To
+read the message use the example in <a href="NML.html#Reading_NML_Header">Reading NML Data</a></p>
+
+<h3> <a name="Handling_Errors_Header">Handling Errors </a></h3>
+
+<p>Errors from NML can be dealt with more rigorously by catching 
+NMLException.</p>
+
+ <h4>
+Example: Catching an NMLException.
+</h4>
+
+<pre>
+. . . 
+	try
+	{
+		/* NMLConnection( message dictionary, buffer name, process name, configuration file ) */
+		NMLConnection example_nml = new NMLConnection(new nml_ex1MsgDict(), 
+						  &quot;ex_buf1&quot;,
+						  &quot;ex3_java_proc&quot;, 
+						  &quot;ex_cfg.nml&quot;);
+		
+		EXAMPLE_MSG msg = null;
+		while(msg == null)
+		{
+		  msg = (EXAMPLE_MSG) example_nml.read();
+		  Thread.sleep(100);	/* Sleep for 100 milliseconds. */
+		}
+	}
+	catch(NMLException nml_except)
+	{
+		System.out.println("Sorry can't read from NML.");
+		return(-1);
+	}
+	return(0);
+. . .
+</pre>
+
+<h2><a href="NMLcfg.html">The Section called &quot;Writing an NML Configuration
+File&quot; has been moved to it's own page at http://www.isd.mel.nist.gov/projects/rcs_lib/NMLcfg.html.</a></h2>
+ 
+
+
+<hr>
+ 
+<p>Last Modified:  Feb 1,2010</p>
+<ul>
+<li><a href="index.html">See other RCS Library Documents.</a></li>
+<li><a href="NMLjava.html#TOP_OF_FILE">Go to the top of this document.</a></li>
+
+</ul>
+
+<p>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email, please
+contact  <a href="http://www.isd.mel.nist.gov/personnel/shackleford/"
+>Will Shackleford</a> at <i><a href="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</a></i></p>
+
+</body>
+</html>
+

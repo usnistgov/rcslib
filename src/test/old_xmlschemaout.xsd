@@ -1,0 +1,312 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="EXAMPLE_MESSAGE" type="EXAMPLE_MESSAGE"/>
+	<xsd:element name="INSIDE_COMMAND" type="INSIDE_COMMAND"/>
+	<xsd:element name="INSIDE_STATUS" type="INSIDE_STATUS"/>
+
+
+	<xsd:complexType name="EXAMPLE_MESSAGE">
+		<xsd:sequence>
+			<xsd:element name="is" type="INSIDE_STATUS"/>
+			<xsd:element name="i" type="xsd:int"/>
+			<xsd:element name="c" type="xsd:byte"/>
+			<xsd:element name="f" type="xsd:float"/>
+			<xsd:element name="d" type="xsd:double"/>
+			<xsd:element name="ia" type="xsd:int" maxOccurs="3"/>
+			<xsd:element name="ca"><xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="2"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="hexdata">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:hexBinary">
+						<xsd:length value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="name"><xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="59"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="enumtestvar" type="enumtest"/>
+			<xsd:element name="rcsstatus" type="RCS_STATUS"/>
+			<xsd:element name="enumtestvar_array" type="enumtest"/>
+			<xsd:element name="enumtestvar_array" type="enumtest"/>
+			<xsd:element name="enumtestvar_array" type="enumtest"/>
+			<xsd:element name="enumtestvar_array" type="enumtest"/>
+			<xsd:element name="enumtestvar_array" type="enumtest"/>
+			<xsd:element name="enumtest_dla" type="enumtest" minOccurs="0"/>
+			<xsd:element name="enumtest_dla" type="enumtest" minOccurs="0"/>
+			<xsd:element name="enumtest_dla" type="enumtest" minOccurs="0"/>
+			<xsd:element name="enumtest_dla" type="enumtest" minOccurs="0"/>
+			<xsd:element name="enumtest_dla" type="enumtest" minOccurs="0"/>
+			<xsd:element name="fa" type="xsd:float" maxOccurs="3"/>
+			<xsd:element name="da" type="xsd:double" maxOccurs="3"/>
+			<xsd:element name="cart" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_array" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_array" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_array" type="PM_CARTESIAN"/>
+			<xsd:element name="homo" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_array" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_array" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_array" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="cda"><xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="9"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ida" type="xsd:int" minOccurs="0" maxOccurs="10"/>
+			<xsd:element name="fda" type="xsd:float" minOccurs="0" maxOccurs="10"/>
+			<xsd:element name="dda" type="xsd:double" minOccurs="0" maxOccurs="10"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="ic_dynamic_array" minOccurs="0" type="INSIDE_COMMAND"/>
+			<xsd:element name="ic_dynamic_array" minOccurs="0" type="INSIDE_COMMAND"/>
+			<xsd:element name="ic_dynamic_array" minOccurs="0" type="INSIDE_COMMAND"/>
+			<xsd:element name="ic_dynamic_array" minOccurs="0" type="INSIDE_COMMAND"/>
+			<xsd:element name="ic_dynamic_array" minOccurs="0" type="INSIDE_COMMAND"/>
+			<xsd:element name="ic_dynamic_array" minOccurs="0" type="INSIDE_COMMAND"/>
+			<xsd:element name="ic_dynamic_array" minOccurs="0" type="INSIDE_COMMAND"/>
+			<xsd:element name="ic_dynamic_array" minOccurs="0" type="INSIDE_COMMAND"/>
+			<xsd:element name="ic_dynamic_array" minOccurs="0" type="INSIDE_COMMAND"/>
+			<xsd:element name="ic_dynamic_array" minOccurs="0" type="INSIDE_COMMAND"/>
+			<xsd:element name="cda_unbounded" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="ida_unbounded" type="xsd:int" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="fda_unbounded" type="xsd:float" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="dda_unbounded" type="xsd:double" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="ic_unbounded_array" minOccurs="0" maxOccurs="unbounded" type="INSIDE_COMMAND"/>
+			<xsd:element name="s" type="mystruct"/>
+			<xsd:element name="sa" type="mystruct"/>
+			<xsd:element name="sa" type="mystruct"/>
+			<xsd:element name="sa" type="mystruct"/>
+			<xsd:element name="sda" minOccurs="0" type="mystruct"/>
+			<xsd:element name="sda" minOccurs="0" type="mystruct"/>
+			<xsd:element name="sda" minOccurs="0" type="mystruct"/>
+			<xsd:element name="sda" minOccurs="0" type="mystruct"/>
+			<xsd:element name="sda" minOccurs="0" type="mystruct"/>
+			<xsd:element name="sda" minOccurs="0" type="mystruct"/>
+			<xsd:element name="sda" minOccurs="0" type="mystruct"/>
+			<xsd:element name="sda" minOccurs="0" type="mystruct"/>
+			<xsd:element name="sda" minOccurs="0" type="mystruct"/>
+			<xsd:element name="sda" minOccurs="0" type="mystruct"/>
+			<xsd:element name="sda_unbounded" minOccurs="0" maxOccurs="unbounded" type="mystruct"/>
+			<xsd:element name="lastvar" type="xsd:int"/>
+		</xsd:sequence>
+		<xsd:attribute name="i_attribute" type="xsd:int"/>
+		<xsd:attribute name="c_attribute" type="xsd:byte"/>
+		<xsd:attribute name="f_attribute" type="xsd:float"/>
+		<xsd:attribute name="d_attribute" type="xsd:double"/>
+		<xsd:attribute name="ca_attribute" type="xsd:string"/>
+	</xsd:complexType>
+	<xsd:complexType name="INSIDE_STATUS">
+		<xsd:complexContent>
+			<xsd:extension base="INSIDE_STATUS_BASE">
+				<xsd:sequence>
+						<xsd:element name="inside_status_int" type="xsd:int"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="INSIDE_STATUS_BASE">
+		<xsd:complexContent>
+			<xsd:extension base="RCS_STAT_MSG">
+				<xsd:sequence>
+						<xsd:element name="inside_status_base_int" type="xsd:int"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="RCS_STAT_MSG">
+		<xsd:sequence>
+			<xsd:element name="command_type" type="xsd:int"/>
+			<xsd:element name="echo_serial_number" type="xsd:int"/>
+			<xsd:element name="status" type="RCS_STATUS"/>
+			<xsd:element name="state" type="xsd:int"/>
+			<xsd:element name="line" type="xsd:int"/>
+			<xsd:element name="source_line" type="xsd:int"/>
+			<xsd:element name="source_file"><xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="63"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="RCS_STATUS">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="RCS_DONE"/>
+			<xsd:enumeration value="RCS_ERROR"/>
+			<xsd:enumeration value="RCS_EXEC"/>
+			<xsd:enumeration value="UNINITIALIZED_STATUS"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="enumtest">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="a"/>
+			<xsd:enumeration value="b"/>
+			<xsd:enumeration value="c"/>
+			<xsd:enumeration value="d"/>
+			<xsd:enumeration value="e"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="PM_CARTESIAN">
+		<xsd:sequence>
+			<xsd:element name="x" type="xsd:double"/>
+			<xsd:element name="y" type="xsd:double"/>
+			<xsd:element name="z" type="xsd:double"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PM_HOMOGENEOUS">
+		<xsd:sequence>
+			<xsd:element name="tran" type="PM_CARTESIAN"/>
+			<xsd:element name="rot" type="PM_ROTATION_MATRIX"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PM_ROTATION_MATRIX">
+		<xsd:sequence>
+			<xsd:element name="x" type="PM_CARTESIAN"/>
+			<xsd:element name="y" type="PM_CARTESIAN"/>
+			<xsd:element name="z" type="PM_CARTESIAN"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="INSIDE_COMMAND">
+		<xsd:complexContent>
+			<xsd:extension base="INSIDE_COMMAND_BASE">
+				<xsd:sequence>
+						<xsd:element name="inside_command_int" type="xsd:int"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="INSIDE_COMMAND_BASE">
+		<xsd:complexContent>
+			<xsd:extension base="RCS_CMD_MSG">
+				<xsd:sequence>
+						<xsd:element name="inside_command_base_int" type="xsd:int"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="RCS_CMD_MSG">
+		<xsd:sequence>
+			<xsd:element name="serial_number" type="xsd:int"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mystruct">
+		<xsd:sequence>
+			<xsd:element name="is" type="INSIDE_STATUS"/>
+			<xsd:element name="i" type="xsd:int"/>
+			<xsd:element name="c" type="xsd:byte"/>
+			<xsd:element name="f" type="xsd:float"/>
+			<xsd:element name="d" type="xsd:double"/>
+			<xsd:element name="ia" type="xsd:int" maxOccurs="3"/>
+			<xsd:element name="ca"><xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="2"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="hexdata">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:hexBinary">
+						<xsd:length value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="name"><xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="59"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="enumtestvar" type="enumtest"/>
+			<xsd:element name="enumtestvar_array" type="enumtest"/>
+			<xsd:element name="enumtestvar_array" type="enumtest"/>
+			<xsd:element name="enumtestvar_array" type="enumtest"/>
+			<xsd:element name="enumtestvar_array" type="enumtest"/>
+			<xsd:element name="enumtestvar_array" type="enumtest"/>
+			<xsd:element name="enumtest_dla" type="enumtest" minOccurs="0"/>
+			<xsd:element name="enumtest_dla" type="enumtest" minOccurs="0"/>
+			<xsd:element name="enumtest_dla" type="enumtest" minOccurs="0"/>
+			<xsd:element name="enumtest_dla" type="enumtest" minOccurs="0"/>
+			<xsd:element name="enumtest_dla" type="enumtest" minOccurs="0"/>
+			<xsd:element name="fa" type="xsd:float" maxOccurs="3"/>
+			<xsd:element name="da" type="xsd:double" maxOccurs="3"/>
+			<xsd:element name="cart" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_array" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_array" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_array" type="PM_CARTESIAN"/>
+			<xsd:element name="homo" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_array" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_array" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_array" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="cda"><xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="9"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ida" type="xsd:int" minOccurs="0" maxOccurs="10"/>
+			<xsd:element name="fda" type="xsd:float" minOccurs="0" maxOccurs="10"/>
+			<xsd:element name="dda" type="xsd:double" minOccurs="0" maxOccurs="10"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="cart_dynamic_array" minOccurs="0" type="PM_CARTESIAN"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="homo_dynamic_array" minOccurs="0" type="PM_HOMOGENEOUS"/>
+			<xsd:element name="initialized_cda_unbounded" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="cda_unbounded" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="ida_unbounded" type="xsd:int" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="fda_unbounded" type="xsd:float" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="dda_unbounded" type="xsd:double" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="i_attribute" type="xsd:int"/>
+		<xsd:attribute name="c_attribute" type="xsd:byte"/>
+		<xsd:attribute name="f_attribute" type="xsd:float"/>
+		<xsd:attribute name="d_attribute" type="xsd:double"/>
+		<xsd:attribute name="ca_attribute" type="xsd:string"/>
+	</xsd:complexType>
+
+
+
+
+
+</xsd:schema>

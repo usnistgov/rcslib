@@ -1,0 +1,4 @@
+# Set host aliases.
+define host1=localhost
+
+

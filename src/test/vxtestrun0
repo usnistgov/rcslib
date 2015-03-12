@@ -1,0 +1,30 @@
+set_vx_nml_test_write_quit_flag 1
+set_vx_nml_test_read_quit_flag 1
+vxhStop
+taskDelay 100
+unload_all_nml_config_file
+nml_cleanup
+taskDelay 100
+vx_test_nml_write_cleanup
+vx_test_nml_read_cleanup
+taskDelay 100
+set_vx_nml_test_write_quit_flag 0
+set_vx_nml_test_read_quit_flag 0
+taskDelay 100
+sysClkRateSet 1000
+
+load_nml_config_file "/tmp/vxtest.nml"
+taskShow 0,2
+rcsinfo
+vxhGo
+taskDelay 10
+sp vx_nml_test_write, "b1", "squid0wr", "/tmp/vxtest.nml",99, -1,-1
+taskDelay 20
+#taskShow 0,2
+#rcsinfo
+#taskDelay 100
+sp vx_nml_test_read, "b1", "squid0rd", "/tmp/vxtest.nml",99, -1,2
+taskDelay 100
+#taskShow 0,2
+#rcsinfo
+

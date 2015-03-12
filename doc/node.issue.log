@@ -1,0 +1,72 @@
+RECENT CONTROLLER NODE ISSUES
+
+1.	Implementation of the Operator Interface (OI) function
+
+Options:
+(a)	As a module in the node that handles all the I/O between the node and the devices.
+(b)	As a process running concurrently with the node.
+(c)	Scattered wherever I/O is needed (e.g., with a planner as Sandor implemented)
+
+Resolution:
+Leave optional between (a) and (b) depending on the execution time and communication load (see below).
+
+Discussion:  
+Option (a) reduces communication bottleneck if the node and the devices communicate frequently.  Option (b) reduces the cycling time of a controller node, since the the OI may deal with the following issues and which may make it a complex function:
+
+*	parsing through command scripts;
+*	parsing strings;
+*	operator cmd execution timing--execute right away, after the current cmd done, delay for certain time, delay until another condition met;
+*	handshaking between human input and the controller:
+	--	operator hitting a key repeatedly, to ignore, to queue, or to barf?
+	--	some devices require a status back every cycle.
+*	multiple OI devices to a node--arbitration;
+*	one device to multiple nodes;
+
+2.	OI to enter at the same level as the corresponding controller or one level higher.
+
+Options:
+(a)	Same level
+(b)	On level higher
+
+Resolution:
+Use (a)
+
+Discussion:
+(a) is more intuitive from a human understanding perspective.  It also eliminates the need to have to implement an upper level node just for the sake of handling OI.
+
+3.	Timing for operator to take over control 
+
+Options:
+(a)	Allowing operator to take over at any time as long as he switches the mode to tele-operation.
+(b)	Operator to take over only under the preprogrammed and controlled conditions (“computer determines whether OI is allowed”)
+
+Resolution:
+TBD
+
+Discussion:
+Ideally human should be in charge.  Practically the worry is that, say, if we allow an operator to take over low level control, the high levels may lose track of world state and won’t be able to resume once the mode switched back to auto.  The counter argument is that separate status buffers are still used to send up status during tele mode, along with the updated world model.  I.e., the upper nodes continue computing everything else other than sending commands down.
+
+4.	Whether and how to allow human and computer combined execution of plans.
+
+Options:
+(a)	The parent decomposes the plan to a series of plans at every point where human input is expected.  The parent switches mode for the son controller when sending the plans.
+(b)	The parent does not decompose.  Include in the plan the mode switching statements and allow human to interact closely with the controller, execution can stop to wait for human input if necessary.
+(c)	Templates do not dictate this level of detail.
+
+Resolution:
+TBD
+
+Discussion:
+Might be application specific.
+
+5.	At what state should the system be brought up?
+
+Options:
+(a)	Include in the template a built in Init command that automatically ripples through all the nodes and gets executed when the system starts up.  The system will be ready to execute the real missions.
+(b)	Requires that the user enter an initialization command before allowing any other commands.
+
+Resolution:  
+(a)
+
+Discussion:
+Unless applications have their specific start up procedures.

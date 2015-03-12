@@ -1,0 +1,4 @@
+#!/bin/csh
+
+setenv LD_LIBRARY_PATH /isd/depot/jdk/lib
+setenv CLASSPATH /isd/depot/jdk/lib/classes.zip

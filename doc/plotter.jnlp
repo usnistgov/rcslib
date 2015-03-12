@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+"
+  codebase="http://www.isd.mel.nist.gov/projects/rcslib/"
+  codebase_for_testing="file:///home/shackle/rcslib/plat/java/lib"
+>
+<information>
+  <title>XY Data Plotter</title>
+  <vendor>Will Shackleford</vendor>
+  <homepage href="http://www.isd.mel.nist.gov/personnel/shackleford/index.htm" />
+  <description>Display Data plotted on XY graph.</description>
+  <icon href="plottericon.jpg" />
+  <offline-allowed/>
+  <shortcut online="false">
+    <desktop/>
+    <menu/> 
+  </shortcut>
+</information>
+
+<security>
+  <all-permissions/>
+</security>
+<resources>
+  <j2se version="1.6+" />
+  <jar href="plotter_NB.jar"/>
+</resources>
+<application-desc />
+</jnlp>

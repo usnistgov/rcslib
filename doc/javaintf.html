@@ -1,0 +1,119 @@
+<html>
+<head>
+<title>Java Interface to NML</title>
+</head>
+<body  BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="551A8B" ALINK="#FF0000">
+<h1>Connecting to NML from languages (such as Java) other than C++ via sockets.</h1>
+<HR>
+
+<h2>Introduction</h2>
+<p>When using languages other than C++ with NML, there are several problems.
+The header files with the NML message definitions can not be included. The libraries for managing the NML communications are not available. In the case of
+a Java applet the NML configuration file might also not be available. 
+One solution to this problem is to link together C++ code with 
+the code written in another language into a single program. This was the approach used in the EMC Graphical User Interface which is primarily written in
+Visual Basic. Another approach is that the program written in non-C++
+connect via sockets to an NML server. However because the NML server has 
+many options writing the client might require a great deal of work to support
+all the options. Here I will choose a set of options that simplifies the 
+interface for a Java client and describe  how the client can be written.
+</p>
+<h2>NML Configuration</h2>
+<p> On each buffer line  for buffers remove any of the following if they were there: (TCP=?, UDP=?, ascii, xdr). 
+Then add &quot;STCP=<port>&quot; to set the remote protocol to a simplified TC P protocol to the end of each buffer line. Unlike the normal TCP protocol, each
+buffer must have a unique port.
+ Add &quot;disp&quot; to set the updater type to the ascii display type.
+</p>
+<h2>Java Socket Code</h2>
+<p>
+To open a connection create a new socket, making sure to match the host
+and port from the NML configuration file.
+<pre>
+	String host = "giskard.cme.nist.gov";
+	int port = 2001;
+	Socket nmlsocket;
+	nmlSocket = new Socket(host, port);
+</pre>
+<p>
+Then create a DataInputStream and DataOutputStream using that socket.
+</p>
+<pre>
+	DataOutputStream nmlOs;
+	DataInputStream nmlIs;
+	nmlOs = new DataOutputStream(nmlSocket.GetOutputStream);
+	nmlIs = new DataInputStream(nmlSocket.GetInputStream);
+</pre>
+<p>
+To read from an  NML buffer, write &quot;read:\n&quot; or &quot;peek:&quot; to
+the DataOutputStream, then read a line from the DataInputStream. The line will
+contain the NML message beginning with the type and size of the message and followed by members in the order the update functions are called. (The size indicates the size of the structure in C++ not the length of the string returned. -- Ignore it.) The parameters are separated by commas. Below is an example of how to parse this string.
+</p>
+<pre>
+	// Receive the current position.
+	String nmlMsgString;
+	long type;
+	long size;
+	float x;
+	int index;
+	nmlOs.writeBytes(&quot;read:\n&quot;);
+	nmlMsgString = nmlIs.ReadLine();
+	// nmlMsgString might look like this &quot;8010,32,5.0,-25.0,0.7&quot;
+	type = (Long.valueOf(nmlMsgString)).longValue();
+	index = nmlMsgString.indexOf(",");
+	size = (Long.valueOf(nmlMsgString.substring(index))).longValue();
+	index = nmlMsgString.indexOf(",",index);
+	x = (Float.valueOf(nmlMsgString.substring(index))).floatValue();
+</pre>
+To write to a NML buffer send write &quot;write:&quot; or  &quot;write_if_read:&quot; followed by the message in the same form as they are read in, beginning with the type and size followed by members separated by commas. It is not necessary to provide all of the members of the message. Members omitted from the end of the string will be considered to be zero. It is also not necessary to
+calculate the size of the message, but a place holder is necessary if there are any other members to set in the string.
+<pre>
+	// Send the command to goto x,0,0
+	nmlOs.writeBytes(&quot;8001,0,&quot; + (new Double(x)).toString());
+</pre>
+
+<h2>A Complete Example</h2>
+<p>
+This example consists of 3 programs:
+
+<OL>
+<LI>A C++ pseudo controller 
+which accepts commands and updates a world model buffer. (<A HREF="socapplet/wtimer.cc">wtimer.cc</a>,<A HREF="socapplet/timetype.cc">timetype.cc</a>, and <A HREF="socapplet/timetype.hh">timetype.hh</a>)</LI>
+<LI>A C++ server which passes messages back and forth between remote processes and the local buffers read and updated by the controller.(<A HREF="socapplet/timesvr.cc">timesvr.cc</a>,<A HREF="socapplet/timetype.cc">timetype.cc</a>, and <A HREF="socapplet/timetype.hh">timetype.hh</a>)<LI>
+<LI>A Java Applet that sends
+commands when buttons are pushed and polls the world model for display.
+(<A HREF="socapplet/socapplet.java">socapplet.java</a> and <A HREF="socapplet/CountButton.java">CountButton.java</a>)</LI>
+</OL>
+
+<p>
+The applet looks somewhat like a stopwatch. The controller doesn't have any
+hardware to control so I simulate world model by just updating the time
+in the world model buffer. Since we lack the computing resources here
+to run a separate controller for each user that starts the applet, pressing
+reset, start, or stop changes not only your display but also the display
+of anyone else viewing this applet.
+</p>
+
+<p>
+Viewing the applet has been disabled as it 
+can't be supported on our new webserver.</p>
+
+<!-- 
+<CENTER><A HREF="socapplet/socapplet.cgi"><FONT SIZE=5>View the Applet</FONT></A>
+</CENTER>
+-->
+ 
+<HR>
+ 
+<p>Last Modified:  08/25/99 </p>
+<UL>
+<LI><A HREF="index.html">See other RCS Library Documents.</A></LI>
+</UL>
+
+<P>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email, please
+contact  <A HREF="http://isd.cme.nist.gov/staff/shackleford/"
+>Will Shackleford</A> at <I><A HREF="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</A></I></P>
+
+
+</body>
+</html>
+

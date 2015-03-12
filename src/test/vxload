@@ -1,0 +1,13 @@
+cd "../rcs_lib_dir"
+pwd
+ls
+ld <librcs.o
+ld <otherheader_n.o
+ld <nml_test_format_n.o
+ld <vx_nml_test_read.o
+ld <vx_nml_test_write.o
+ld <vx_test_cycle_high_priority.o
+
+cd "../rcslib_test_dir"
+moduleShow
+pwd

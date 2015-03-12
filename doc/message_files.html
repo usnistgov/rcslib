@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<title>NML Message Files</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://www.isd.mel.nist.gov/mel2.css" type="text/css" />
+
+<style type="text/css">
+  div.user{
+    width: 0
+    font-family: monospaced;
+    font-size: small;
+    background: rgb(235,235,255);
+    padding: 0.1em;
+    overflow: auto;
+    overflow-y: visible;
+  }
+  div.output{
+    width: 0
+    font-family: monospaced;
+    font-size: small;
+    background: rgb(235,255,235);
+    padding: 0.1em;
+    overflow: auto;
+    overflow-y: visible;
+  }
+  div.file{
+    width: 0
+    font-family: monospaced;
+    font-size: small;
+    background: rgb(255,235,235);
+    padding: 0.1em;
+    border: thin solid black;
+    overflow: auto;
+    overflow-y: visible;
+  }
+  em.var {
+    font-style: italic;
+    font-family: fantasy;
+    font-size: larger;
+   }
+  strong.bnfterminal {
+    font-weight:bolder;
+  }
+</style>
+</head>
+<body>
+<h1>NML Message Files</h1>
+
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#CPP_API">C++ API</a></li>
+<li><a href="#SIMPLE_DATA_LOGGER">Simple DATA Logger</a></li>
+<li><a href="#SIMPLE_DATA_PLAYBACK">Simple DATA Playback</a></li>
+<li><a href="#EXAMINE_LOGGED_DATA">Examine the logged data</a></li>
+<li><a href="#VIEW_WITH_DIAG_TOOL">View the logged data using the diag tool.</a></li>
+<li><a href="#OBTAINING_THE_MEMORY_MAP">Obtaining the memory map.</a></li>
+<li><a href="#nml_packed_file_to_csv">nml_packed_file_to_csv</a></li>
+<li><a href="#UPGRADING_FORMAT">Upgrading the Format</a></li>
+<li><a href="#JAVA_API">Java API</a></li>
+
+</ul>
+
+<h2><a name="introduction">Introduction</a></h2>
+
+<p>Data logging and playback are very important during the development of intelligent systems especially in unstructured environments where simulation of sufficient accuracy is impractical. Ideally the logged data can be used to present a number of potential candidate algorithms the exact environment that it would have experienced had it been run when the data was collected. If the application gets all of itst inputs though NML this can be accomplished by writing the logged data back to the NML channels it was recorded from during data collection. For systems with a few scalar variables developers often wrote custom data logging code that would save the files in a text, CSV or XML file. Corresponding custom code to parse the files for playback also needed to be written. The advantage of these formats are that the data files are somewhat self documenting, can be read back on any platfrom rather than just the platfrom they are written from, and can be imported into various analysis or display tools. However when the data frames get larger the overhead of converting the data to ascii becomes more prohibitive. For some formats like CSV the self-documenting nature disappears since a text file with a list of 10 variables might have meaning but a list of 10,000 probably requires a more application specific display. There may also be a tendancy not to add all variables to the log file, which means default values have to be assumed during playback and performance during playback becomes more likely to be different than performance in the real world. Another approach is to simply write the binary data structure as stored in the programs memory out to disk. This is very simple and efficient, however the data can only be read back in reliably on the platform and in the same programming language as it was written with. If additional documentation is not kept with the data it may be impossible understand the format later.  The approach here is to combine these using the data mashalling built into NML so that one could write the data with the simplicity and efficiency of dumping binary with the portability and openness of the text formats. 
+</p>
+
+<h3><a name="NOTATION">Notation</a></h3>
+
+<p>I like lots of examples.</p>
+
+<div class="user">
+<pre>
+
+     Commands users are expected to enter at a command prompt will look like this.
+
+</pre>
+</div>
+
+<div class="output">
+<pre>
+
+     Computer program generated example output will look like this.
+
+</pre>
+</div>
+
+<div class="file">
+<pre>
+
+Text files listed in line look like this.
+
+</pre>
+</div>
+
+<p>All of the example files referred to are in 
+<a href="rcslib_doc_examples.zip">rcslib_doc_examples.zip</a>.</p>
+
+<h2><a name="CPP_API">C++ API</a></h2>
+
+<p>
+From the header file &quot;<a href="nml.hh">nml.hh</a>&quot;:
+</p>
+
+<div class="file">
+<pre>
+// ...
+
+class NML
+{
+
+// ...
+
+
+  /*
+    Get a multi-line string that describes the offset to each variable 
+    of the given message type and encoding method
+    as well as other properties such as its type, whether it is an array or 
+    dynamic length array. The first line is a header line and then one line
+    for each variable with comma seperated fields.
+    The buffer the string is written to may be overwritten by subsequent
+    operations on this NML object and will be freed when this 
+    NML object is deleted.
+  */
+  const char *getEncodedMessageMemoryMap(NMLmsg *nml_msgP,
+					 const int encoding_method);
+
+
+  /*
+    Writes the string that would have been obtained with 
+    getEncodedMessageMemoryMap to the file filename.
+  */
+  void writeEncodedMessageMemoryMapToFile(NMLmsg *nml_msgP,
+					  const int encoding_method,
+					  const char *filename);
+
+
+  /*
+    Get a multi-line string that describes the offset to each variable 
+    of the given message type as stored in memory on this platform
+    as well as other properties such as its type, whether it is an array or 
+    dynamic length array. The first line is a header line and then one line
+    for each variable with comma seperated fields.
+    The buffer the string is written to may be overwritten by subsequent
+    operations on this NML object and will be freed when this 
+    NML object is deleted.
+  */
+  const char *getRawMessageMemoryMap(NMLmsg *nml_msgP);
+
+
+  /*
+    Writes the string that would have been obtained with 
+    getRawMessageMemoryMap to the file filename.
+  */
+  void writeRawMessageMemoryMapToFile(NMLmsg *nml_msgP,
+				      const char *filename);
+
+
+  /* 
+     Run the given nml_msg through the NML data marshalling using the given
+     encoding_method but do not send it anywhere. 
+     The encoded version of the data will be pointed to by encoded_data pointer
+     and the size stored in encoded_size. The buffer encoded_data points to may
+     be overwritten by subsequent operations on this NML object. The buffer will
+     be freed when this NML object is deleted.
+  */
+  void msg_to_encoded_data(NMLmsg *nml_msg, 
+		   void *&amp;encoded_data, 
+                   long &amp;encoded_size,
+		   const int  _encoding_method);
+
+  /* 
+     Read a message file and pass the contents through 
+     the NML data marshalling using the given
+     encoding_method.
+     Return a pointer to the decoded message that can then be cast to 
+     a message pointer of the appropriate type.
+     The buffer storing the message returned to may
+     be overwritten by subsequent operations on this NML object. The buffer will
+     be freed when this NML object is deleted.
+  */
+  NMLmsg *read_encoded_data_from_file (const char *filename, 
+				       const int _encoding_method);
+
+  /* 
+     Run the given nml_msg through the NML data marshalling using the given
+     encoding_method and write the resulting encoded data to the file filaname. 
+  */
+  void write_encoded_data_to_file(NMLmsg *nml_msg, 
+        const int _encoding_method, 
+        const char *filename);
+
+
+  /* 
+     Pass the provided encoded_data through 
+     the NML data marshalling using the given
+     encoding_method.
+     Return a pointer to the decoded message that can then be cast to 
+     a message pointer of the appropriate type.
+     The buffer storing the message returned to may
+     be overwritten by subsequent operations on this NML object. The buffer will
+     be freed when this NML object is deleted.
+  */
+  NMLmsg * encoded_data_to_msg(
+		    void *encoded_data, 
+		    long encoded_size,
+		    const int _encoding_method);
+
+
+// ... 
+
+};
+
+// ... 
+</pre>
+</div>
+
+<p>The encoding methods are listed in &quot;<a href="cms_types.hh">cms_types.hh</a>:</p>
+
+<div class="file">
+<pre>
+// ...
+
+enum CMS_NEUTRAL_ENCODING_METHOD
+{
+  CMS_NO_ENCODING,
+  CMS_XDR_ENCODING,
+  CMS_ASCII_ENCODING,
+  CMS_DISPLAY_ASCII_ENCODING,
+  CMS_XML_ENCODING,
+  CMS_PACKED_ENCODING,
+  CMS_PACKEDL64_ENCODING
+};
+
+// ...
+</pre>
+</div>
+
+
+<h2><a name="SIMPLE_DATA_LOGGER">Simple DATA Logger</a></h2>
+
+<p>The following provides an extremely simple data logger using the 
+API. (Extending the example from <a href="NMLcpp.html">NMLcpp.html</a>) </p>
+
+<p><a href="simple_data_logger.cc">simple_data_logger.cc</a>:</p>
+
+<div class="file">
+<pre>
+
+#include &quot;<a href="nml_ex1.hh">nml_ex1.hh</a>&quot;
+
+int main()
+{
+  NML nml(ex_format,&quot;ex_buf1&quot;,&quot;simple_data_logger&quot;,&quot;<a href="ex_cfg.nml">ex_cfg.nml</a>&quot;);
+
+  nml.read();
+  nml.write_encoded_data_to_file(nml.get_address(),
+				 CMS_PACKED_ENCODING,
+				 &quot;ex_msg_file.EXAMPLE_MSG_TYPE&quot;);
+}
+</pre>
+</div>
+
+<p>Compile and run with:<a href="#UNIX_COMMANDS">*</a></p>
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the path for finding librcs.so
+LD_LIBRARY_PATH=&quot;${RCSLIB_DIR}/lib/:${LD_LIBRARY_PATH}&quot;;
+export LD_LIBRARY_PATH;
+
+## Create <a href="nml_ex1.cc">nml_ex1.cc</a> from <a href="nml_ex1.hh">nml_ex1.hh</a>
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/<a href="CodeGenCmdLine.jar">CodeGenCmdLine.jar</a> <a href="nml_ex1.hh">nml_ex1.hh</a> -o <a href="nml_ex1.cc">nml_ex1.cc</a>
+
+## Compile examples:
+g++ <a href="nml_ex9.cc">nml_ex9.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_ex9
+g++ <a href="nml_ex4.cc">nml_ex4.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_ex4
+g++ <a href="nml_ex3.cc">nml_ex3.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_ex3
+g++ <a href="simple_data_logger.cc">simple_data_logger.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I &quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o simple_data_logger
+
+ ## NML server
+./nml_ex9 &amp;
+
+##  write something into the buffer.
+./nml_ex4; 
+
+## Log the data from the nml buffer to a file.
+./simple_data_logger ;
+
+## Kill the previously spawned server
+killall -INT nml_ex9
+
+</pre>
+</div>
+
+<p>This should create a file named &quot;<a href="ex_msg_file.EXAMPLE_MSG_TYPE">ex_msg_file.EXAMPLE_MSG_TYPE</a>&quot;.</p>
+
+<h2><a name="SIMPLE_DATA_PLAYBACK">Simple DATA Playback</a></h2>
+
+<p>The following provides a very simple program to playback the data recorded with the previous example: <a href="simple_data_playback.cc">simple_data_playback.cc</a></p>
+
+<div class="file">
+<pre>
+
+#include &quot;<a href="nml_ex1.hh">nml_ex1.hh</a>&quot;
+
+int main()
+{
+  NML nml(ex_format,&quot;ex_buf1&quot;,&quot;simple_data_playback&quot;,&quot;ex_cfg.nml&quot;);
+
+  nml.write(nml.read_encoded_data_from_file(&quot;ex_msg_file.EXAMPLE_MSG_TYPE&quot;,
+					    CMS_PACKED_ENCODING));
+}
+</pre>
+</div>
+
+<p>It could be run with something like the following:<a href="#UNIX_COMMANDS">*</a></p>
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the path for finding librcs.so
+LD_LIBRARY_PATH=&quot;${RCSLIB_DIR}/lib/:${LD_LIBRARY_PATH}&quot;;
+export LD_LIBRARY_PATH;
+
+## Create <a href="nml_ex1.cc">nml_ex1.cc</a> from <a href="nml_ex1.hh">nml_ex1.hh</a>
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/<a href="CodeGenCmdLine.jar">CodeGenCmdLine.jar</a> <a href="nml_ex1.hh">nml_ex1.hh</a> -o <a href="nml_ex1.cc">nml_ex1.cc</a>
+
+## Compile examples:
+g++ <a href="nml_ex9.cc">nml_ex9.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_ex9
+g++ <a href="nml_ex4.cc">nml_ex4.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_ex4
+g++ <a href="nml_ex3.cc">nml_ex3.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_ex3
+g++ <a href="simple_data_playback.cc">simple_data_playback.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I &quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o simple_data_playback
+
+ ## NML server
+./nml_ex9 &amp;
+
+ ## Write the file &quot;<a href="ex_msg_file.EXAMPLE_MSG_TYPE">ex_msg_file.EXAMPLE_MSG_TYPE</a>&quot; back to the NML buffer.
+./simple_data_playback ;
+
+##  Read the NML buffer and do something with it.
+./nml_ex3; 
+
+## Kill the previously spawned server
+killall -INT nml_ex9
+
+</pre>
+</div>
+
+<p>Running nml_ex3 should produce:</p>
+
+<div class="output">
+<pre>
+ We have a new example message. 
+ The value of its members are:
+  f=123.456001, c=c, i=99
+</pre>
+</div>
+
+<p>The point of this somewhat silly exercize is that now we can produce as many versions of nml_ex3 as we want and test them against the same data produced on the real system. The tests can be performed on pretty much any computer without the  risks or hassles of running on the real system, and without the development costs of creating a simulator. When the ideal nml_ex3 is finally found it should be ready to be compiled to run on the real system without modification. Of course a more complicated logger and playback system would probably log and playback a series of messages rather than just one but that is easily enough added with a simple while loop.</p>
+
+<h2><a name="EXAMINE_LOGGED_DATA">Examine the logged data</a></h2>
+
+<p>There are several options for examining the logged data. Using the playback program as in the previous example is one. Another is to write a custom viewer such as the following <a href="examine_logged_data.cc">examine_logged_data.cc</a>:</p>
+
+<div class="file">
+<pre>
+
+#include &quot;<a href="nml_ex1.hh">nml_ex1.hh</a>&quot;
+
+int main(int argc, const char **argv) 
+{
+  if(argc &lt; 2)
+    {
+      rcs_print_error(&quot;Need filename argument.\n&quot;);
+      rcs_exit(1);
+    }
+
+  NML nml(ex_format, 0,0,0);
+  EXAMPLE_MSG *example_msg_ptr = ( EXAMPLE_MSG *)
+    nml.read_encoded_data_from_file(argv[1],
+				    CMS_PACKED_ENCODING);
+	
+  rcs_print(&quot; %s:. \n&quot;);
+  rcs_print(&quot; The value of its members are:\n &quot;);
+  rcs_print(&quot; f=%f, c=%c, i=%d\n &quot;,
+	    example_msg_ptr-&gt;f,
+	    example_msg_ptr-&gt;c,
+	    example_msg_ptr-&gt;i);
+}
+</pre>
+</div>
+
+<p>Compile and run with:<a href="#UNIX_COMMANDS">*</a></p>
+
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the path for finding librcs.so
+LD_LIBRARY_PATH=&quot;${RCSLIB_DIR}/lib/:${LD_LIBRARY_PATH}&quot;;
+export LD_LIBRARY_PATH;
+
+## Create <a href="nml_ex1.cc">nml_ex1.cc</a> from <a href="nml_ex1.hh">nml_ex1.hh</a>
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/<a href="CodeGenCmdLine.jar">CodeGenCmdLine.jar</a> <a href="nml_ex1.hh">nml_ex1.hh</a> -o <a href="nml_ex1.cc">nml_ex1.cc</a>
+
+## Compile examples:
+g++ <a href="examine_logged_data.cc">examine_logged_data.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o examine_logged_data
+
+## Display the logged data.
+./examine_logged_data <a href="ex_msg_file.EXAMPLE_MSG_TYPE">ex_msg_file.EXAMPLE_MSG_TYPE</a>
+
+</pre>
+</div>
+
+<p> .. should produce: </p>
+
+<div class="output">
+<pre>
+ ex_msg_file.EXAMPLE_MSG_TYPE:. 
+ The value of its members are:
+  f=123.456001, c=c, i=99
+</pre>
+</div>
+
+<p>The most interesting thing about the example is that it passes 0,0,0 as the last three arguments to the NML constructror. This means there is no need for an NML config file or server and no shared memory segments or sockets used. The NML channel is being used only to read the file. Of course this viewer was hardly worth the trouble since it just prints some variable values out that could easily be obtained with either of the next two methods without writing any code.</p>
+
+<h2><a name="VIEW_WITH_DIAG_TOOL">View the logged data using the diag tool.</a></h2>
+
+<p>To tell the diagnostics tool display a message file at startup:</p>
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+java -jar "${RCSLIB_DIR}"/bin/diag_NB.jar input_headers=nml_ex1.hh message_files=ex_msg_file.EXAMPLE_MSG_TYPE
+</pre>
+</div>
+
+<p>The message_files and input_headers can both be set to a list of files.
+The files should be seperated with ':' on Unix/Linux and with ';' on MS Windows.
+The message_files lists the files to display while the input headers is the list of C++ header files which define those messages.</p>
+
+<p><img src="Screenshot-ex_msg_file.EXAMPLE_MSG_TYPE.png" alt="Screen shot showing message file in diag tool."/></p>
+
+<h2><a name="OBTAINING_THE_MEMORY_MAP">Obtaining the memory map.</a></h2>
+
+<p>The memory map file provides the information needed to determine the position of each variable in the file. The first character in the file is either 'L' (0x4c) to indicate the file is little-endian or 'B' (0x42) to indicate the file is big-endian. It can be read with a text-editor or opened with a spread sheet program. To generate the file write a program such as this &quot;<a href="write_mem_map.cc">write_mem_map.cc</a>&quot;which really only needs to be run once.</p>
+
+ 
+<div class="file">
+<pre>
+#include &quot;<a href="nml_ex1.hh">nml_ex1.hh</a>&quot;
+
+int main(int argc, const char **argv) 
+{
+ NML nml(ex_format, 0,0,0);
+ EXAMPLE_MSG example_msg;
+ 
+ nml.writeEncodedMessageMemoryMapToFile(&amp;example_msg,
+					CMS_PACKED_ENCODING,
+					&quot;<a href="EXAMPLE_MSG_TYPE_map.csv">EXAMPLE_MSG_TYPE_map.csv</a>&quot;);
+}
+</pre>
+</div>
+
+<p>To compile and run:</p>
+
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the path for finding librcs.so
+LD_LIBRARY_PATH=&quot;${RCSLIB_DIR}/lib/:${LD_LIBRARY_PATH}&quot;;
+export LD_LIBRARY_PATH;
+
+## Create <a href="nml_ex1.cc">nml_ex1.cc</a> from <a href="nml_ex1.hh">nml_ex1.hh</a>
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/<a href="CodeGenCmdLine.jar">CodeGenCmdLine.jar</a> <a href="nml_ex1.hh">nml_ex1.hh</a> -o <a href="nml_ex1.cc">nml_ex1.cc</a>
+
+## Compile examples:
+g++ <a href="write_mem_map.cc">write_mem_map.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o write_mem_map
+
+./write_mem_map
+</pre>
+</div>
+
+<p>This produces the following file &quot;<a href="EXAMPLE_MSG_TYPE_map.csv">EXAMPLE_MSG_TYPE_map.csv</a>&quot;:</p>
+
+<div class="file">
+<table border="1">
+<tr><th>type</th><th>name</th><th>size</th><th>offset</th><th>elsize</th><th>arraylen</th><th>offset_from</th><th>dla_maxlen</th><th>comment</th></tr>
+<tr><td>long,</td><td>type,</td><td>4,</td><td>1,</td><td>4,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>long,</td><td>size,</td><td>4,</td><td>5,</td><td>4,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>double,</td><td>d,</td><td>8,</td><td>9,</td><td>8,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>float,</td><td>f,</td><td>4,</td><td>17,</td><td>4,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>char,</td><td>c,</td><td>1,</td><td>21,</td><td>1,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>short,</td><td>s,</td><td>2,</td><td>22,</td><td>2,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>int,</td><td>i,</td><td>4,</td><td>24,</td><td>4,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>long,</td><td>l,</td><td>4,</td><td>28,</td><td>4,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>uchar,</td><td>uc,</td><td>1,</td><td>32,</td><td>1,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>ushort,</td><td>us,</td><td>2,</td><td>33,</td><td>2,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>uint,</td><td>ui,</td><td>4,</td><td>35,</td><td>4,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>ulong,</td><td>ul,</td><td>4,</td><td>39,</td><td>4,</td><td>0,</td><td>,</td><td>0,</td><td>,</td></tr>
+<tr><td>int,</td><td>da_length,</td><td>4,</td><td>43,</td><td>4,</td><td>0,</td><td>,</td><td>0,</td><td>#dynamic_length,</td></tr>
+<tr><td>double_array,</td><td>da,</td><td>8,</td><td>47,</td><td>0,</td><td>20,</td><td>,</td><td>20,</td><td>#dynamic_length_array,</td></tr>
+</table>
+</div>
+
+<p>The first field is the C type of each variable. The second field is the name of the variable. The next field is the size of the variable. For static arrays this will be the size of the entire array for dynamic length arrays it is the size of only the first element. The offset is either an offset from the begininning or the file (in which case the offset from field will be blank) or the offset to the end of the last dynamic length array (in which case the offset from field will list this variable).  For static arrays the next field lists the size of one element in the array. If there are no dynamic length arrays in the message or only one at the end the next field is blank indicating that the offsets are from the beginning of the file. Dynamic length arrays that have a maximum length list the value in the next field. Finally a comment field indicates the beginning and end of dynamic length arrays.</p>
+
+<h2><a name="nml_packed_file_to_csv">nml_packed_file_to_csv</a></h2>
+
+<p>The program nml_packed_file_to_csv can be used to display the values of each variable and also computes the final offsets given the current lengths of any dynamic length arrays.</p>
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the path for finding librcs.so
+LD_LIBRARY_PATH=&quot;${RCSLIB_DIR}/lib/:${LD_LIBRARY_PATH}&quot;;
+export LD_LIBRARY_PATH;
+
+&quot;${RCSLIB_DIR}/bin/nml_packed_file_to_csv&quot; <a href="EXAMPLE_MSG_TYPE_map.csv">EXAMPLE_MSG_TYPE_map.csv</a> <a href="ex_msg_file.EXAMPLE_MSG_TYPE">ex_msg_file.EXAMPLE_MSG_TYPE</a>
+
+</pre>
+</div>
+
+<p>produces:</p>
+
+<div class="output">
+<pre>
+running_on_big_endian = 0
+file_is_big_endian = 0
+swap_byte_order=0
+0x0001,	        long,	                          type,	101
+0x0005,	        long,	                          size,	208
+0x0009,	      double,	                             d,	0.000000
+0x0011,	       float,	                             f,	1.234560e+02
+0x0015,	        char,	                             c,	c (99,0x63)
+0x0016,	       short,	                             s,	0
+0x0018,	         int,	                             i,	99
+0x001C,	        long,	                             l,	0
+0x0021,	      ushort,	                            us,	0
+0x0023,	        uint,	                            ui,	0
+0x0027,	       ulong,	                            ul,	0
+0x002B,	         int,	                     da_length,	0
+</pre>
+</div>
+
+<h2><a name="UPGRADING_FORMAT">Upgrading the Format</a></h2>
+
+<p>Often after data has been collected a decision is made to change the format of the message that was stored. The data collected in the old format represents a substantial data collection and testing effort. To use the old data with new programs it needs to be updated. Converting to XML and back is one way of accomplishing that. In <a href="nml_ex1_v2.hh">nml_ex1_v2.hh</a> the EXAMPLE_MSG class was modified to remove the first variable d and add an additional variable name at the end and thus changing the offset to every variable.</p>
+
+<p><a href="ex_packed_to_xml.cc">ex_packed_to_xml.cc</a> includes and links with the old header and format function to convert the packed file to xml.</p>
+
+<div class="file">
+<pre>
+#include &quot;<a href="nml_ex1.hh">nml_ex1.hh</a>&quot;
+
+int main(int argc, const char **argv)
+{
+  if(argc != 3)
+    {
+      rcs_print_error(&quot;run with packed_file xml_file\n&quot;);
+      rcs_exit(1);
+    }
+
+  NML nml(ex_format,0,0,0);
+  
+  nml.write_encoded_data_to_file(
+				 nml.read_encoded_data_from_file(argv[1],CMS_PACKED_ENCODING),
+				 CMS_XML_ENCODING,
+				 argv[2]);
+}
+</pre>
+</div>
+
+<p><a href="ex_v2_xml_to_packed.cc">ex_v2_xml_to_packed.cc</a> includes the new header and links with the new format function to convert the XML back to the packed format.</p>
+
+<div class="file">
+<pre>
+#include &quot;<a href="nml_ex1_v2.hh">nml_ex1_v2.hh</a>&quot;
+
+int main(int argc, const char **argv)
+{
+  if(argc != 3)
+    {
+      rcs_print_error(&quot;run with xml_file packed_file\n&quot;);
+      rcs_exit(1);
+    }
+
+  NML nml(ex_format,0,0,0);
+  
+  nml.write_encoded_data_to_file(
+				 nml.read_encoded_data_from_file(argv[1],
+								 CMS_XML_ENCODING),
+				 CMS_PACKED_ENCODING,
+				 argv[2]);
+}
+</pre>
+</div>
+
+<p>Compile and perform the conversion using the following:<a href="#UNIX_COMMANDS">*</a></p>
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the path for finding librcs.so
+LD_LIBRARY_PATH=&quot;${RCSLIB_DIR}/lib/:${LD_LIBRARY_PATH}&quot;;
+export LD_LIBRARY_PATH;
+
+## Generate <a href="nml_ex1.cc">nml_ex1.cc</a> and <a href="nml_ex1_v2.cc">nml_ex1_v2.cc</a>
+## Note the addition of generate_symbol_lookups=true which is needed anytime you 
+## use XML related functions.
+
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/CodeGenCmdLine.jar generate_symbol_lookups=true <a href="nml_ex1.hh">nml_ex1.hh</a> -o <a href="nml_ex1.cc">nml_ex1.cc</a>
+
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/CodeGenCmdLine.jar generate_symbol_lookups=true <a href="nml_ex1_v2.hh">nml_ex1_v2.hh</a> -o <a href="nml_ex1_v2.cc">nml_ex1_v2.cc</a>
+
+## Complile the examples.
+g++ <a href="ex_packed_to_xml.cc">ex_packed_to_xml.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I"${RCSLIB_DIR}"/include -L "${RCSLIB_DIR}"/lib -lrcs -o ex_packed_to_xml
+
+g++ <a href="ex_v2_xml_to_packed.cc">ex_v2_xml_to_packed.cc</a> <a href="nml_ex1_v2.cc">nml_ex1_v2.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o ex_v2_xml_to_packed
+
+## Convert the OLD format packed file to XML
+./ex_packed_to_xml <a href="ex_msg_file.EXAMPLE_MSG_TYPE">ex_msg_file.EXAMPLE_MSG_TYPE</a> <a href="ex_msg_file.xml">ex_msg_file.xml</a>
+
+## Convert the XML file to the new format
+./ex_v2_xml_to_packed <a href="ex_msg_file.xml">ex_msg_file.xml</a> <a href="ex_v2_msg_file.EXAMPLE_MSG_TYPE">ex_v2_msg_file.EXAMPLE_MSG_TYPE</a>
+
+## Display the new file to check it.
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/<a href="diag_NB.jar">diag_NB.jar</a> input_headers=<a href="nml_ex1_v2.hh">nml_ex1_v2.hh</a> message_files=<a href="ex_v2_msg_file.EXAMPLE_MSG_TYPE">ex_v2_msg_file.EXAMPLE_MSG_TYPE</a>
+
+</pre>
+</div>
+
+<p>Variable that were added since the version change will be set to zero, variables common to both versions have transferred the values. Deleted variables are gone without affecting the rest of the structure.</p>
+
+<h2><a name="JAVA_API">Java API</a></h2>
+
+<p>The two classes &quot;<a href="javadoc/rcs/nml/PackedFileReader.html">rcs.nml.PackedFileReader</a>&quot; and &quot;<a href="javadoc/rcs/nml/PackedFileWriter.html">rcs.nml.PackedFileWriter</a>&quot; provide the interface to read and write these files from within a java program.</p>
+
+<p>The first example reads the file similiar to <a href="examine_logged_data.cc">examine_logged_data.cc</a> is called <a href="pfr_ex.java">pfr_ex.java</a>:</p>
+
+<div class="file">
+<pre>
+import <a href="javadoc/rcs/nml/PackedFileReader.html">rcs.nml.PackedFileReader</a>;
+
+public class pfr_ex
+{    
+    static public void main(String args[])
+    {
+	PackedFileReader pfr = new PackedFileReader(new exampleMsgDict(),false);
+	EXAMPLE_MSG ex_msg = (EXAMPLE_MSG) pfr.ReadFile(args[0]);
+	System.out.println(&quot;ex_msg.f=&quot;+ex_msg.f);	
+	System.out.println(&quot;ex_msg.c=&quot;+Character.toString((char)ex_msg.c));	
+	System.out.println(&quot;ex_msg.i=&quot;+ex_msg.i);
+    }
+}
+</pre>
+</div>
+
+<p>Compile and run with:<a href="#UNIX_COMMANDS">*</a></p>
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the class path for java compiler and run time.
+CLASSPATH="${RCSLIB_DIR}"/bin/rcs.jar:.;
+export CLASSPATH;
+
+## Generate <a href="exampleMsgDict.java">exampleMsgDict.java</a> and <a href="EXAMPLE_MSG.java">EXAMPLE_MSG.java</a>
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/CodeGenCmdLine.jar nml_ex1.hh -o exampleMsg.java
+
+## Compile to produce java byte code .class files.
+javac <a href="pfr_ex.java">pfr_ex.java</a> <a href="EXAMPLE_MSG.java">EXAMPLE_MSG.java</a> <a href="exampleMsgDict.java">exampleMsgDict.java</a>
+
+## Run the compiled file.
+java pfr_ex <a href="ex_msg_file.EXAMPLE_MSG_TYPE">ex_msg_file.EXAMPLE_MSG_TYPE</a>
+
+</pre>
+</div>
+
+<p>It should produce:</p>
+
+<div>
+<pre>
+ex_msg.f=123.456
+ex_msg.c=c
+ex_msg.i=99
+</pre>
+</div>
+
+<p>Finally an example that writes the data read from the ex_buf1 channel <a href="pfw_ex.java">pfw_ex.java</a></p>
+
+<div class="file">
+<pre>
+import <a href="javadoc/rcs/nml/PackedFileWriter.html">rcs.nml.PackedFileWriter</a>;
+import <a href="javadoc/rcs/nml/NMLConnection.html">rcs.nml.NMLConnection</a>;
+
+public class pfw_ex
+{    
+    static public void main(String args[]) throws Exception
+    {
+	NMLConnection nml = new NMLConnection(new exampleMsgDict(),
+					     &quot;ex_buf1&quot;,
+					     &quot;pfw_ex&quot;,
+					     &quot;ex_cfg.nml&quot;);
+	PackedFileWriter pfw = new PackedFileWriter(new exampleMsgDict(),false);
+	pfw.WriteFile(args[0],nml.read());
+    }
+}
+</pre>
+</div>
+
+<p>Compile and run with:<a href="#UNIX_COMMANDS">*</a></p>
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the path for finding librcs.so
+LD_LIBRARY_PATH=&quot;${RCSLIB_DIR}/lib/:${LD_LIBRARY_PATH}&quot;;
+export LD_LIBRARY_PATH;
+
+## Create <a href="nml_ex1.cc">nml_ex1.cc</a> from <a href="nml_ex1.hh">nml_ex1.hh</a>
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/<a href="CodeGenCmdLine.jar">CodeGenCmdLine.jar</a> <a href="nml_ex1.hh">nml_ex1.hh</a> -o <a href="nml_ex1.cc">nml_ex1.cc</a>
+
+## Compile examples:
+g++ <a href="nml_ex9.cc">nml_ex9.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_ex9
+g++ <a href="nml_ex4.cc">nml_ex4.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_ex4
+
+## Set the class path for java compiler and run time.
+CLASSPATH="${RCSLIB_DIR}"/bin/rcs.jar:.;
+export CLASSPATH;
+
+## Generate <a href="exampleMsgDict.java">exampleMsgDict.java</a> and <a href="EXAMPLE_MSG.java">EXAMPLE_MSG.java</a>
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/CodeGenCmdLine.jar nml_ex1.hh -o exampleMsg.java
+
+## Compile to produce java byte code .class files.
+javac <a href="pfw_ex.java">pfw_ex.java</a> <a href="EXAMPLE_MSG.java">EXAMPLE_MSG.java</a> <a href="exampleMsgDict.java">exampleMsgDict.java</a>
+
+ ## NML server
+./nml_ex9 &amp;
+
+##  write something into the buffer.
+./nml_ex4; 
+
+## Run java program to copy the message from the buffer into the file .
+java pfw_ex <a href="ex_msg_file_from_java_pfw.EXAMPLE_MSG_TYPE">ex_msg_file_from_java_pfw.EXAMPLE_MSG_TYPE</a>
+
+## Kill the previously spawned server
+killall -INT nml_ex9
+
+</pre>
+</div>
+
+
+<p><a name="UNIX_COMMANDS">*</a>Commands are generally appropriate for Linux/Unix/MacOS by just pasting them into a terminal. For Windows install Cygwin and Java Develeper's Kit, set the PATH to add the JDK dir and paste the commands into cygwin.</p>
+
+
+</body>
+</html>

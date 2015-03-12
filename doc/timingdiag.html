@@ -1,0 +1,205 @@
+<html>
+<head>
+<title>NML Timing Diagnostics</title>
+</head>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="551A8B" ALINK="#FF0000">
+
+<H1>Supplementary NML Timing Diagnostics Tools</H1>
+
+<H2>Introduction</h2>
+
+<p>Prior to October, 1999 we had the following tools that could be used to 
+measure the performance of NML, or diagnose problems within NML.</p>
+
+<DL>
+
+<DT>nmlperf</DT>
+<DD>A C++ command-line program that could be used to measure the performance of NML with various options and on different platforms. Although this is good for getting a picture of what the effect of various options are on performance and for comparing platforms and protocols, it doesn't directly measure a particular application or allow one to discover for example that a buffer is being read to frequently or infrequently. (See <A HREF="nmlperf.html">NML Performance Results</A>.)
+</DD>
+<DT>nmltest</DT>
+<DD>A C++ command-line program that could be used to test for the existance of certain application buffers and servers and discover some flaws in the configuration file. A message count could give you some idea of how often the buffer
+was being written to, but prior to the modifications discussed below there was no way to determine how often it was being read or by whom. Also the message
+count did not work, when nmltest connected remotely.</DD>
+<DT>diagapplet</DT>
+<DD>A graphical Java program that could be run inside a web-browser as a stand-alone application. This is the only generic tool that would interpret the application data inside the NML buffer, and the only one that would repeatedly update the display. It could give one some sense of how often the status buffer was being written by watching the heartbeat, but there was no way to find out how often reads were occuring. Also this tool needed access to additional configuration files and header files to be completely functional and NML applications that did not use the RCS-Design tool generally did not have these already set these up. (See <A HREF="diagapplet">RCS Java-based Diagnostics Tool</a> and <A HREF="javadiag.html">RCS Java-based Diagnostics Tool Instructions</a>)</DD>
+<DT>rcs_info</DT>
+<DD>A function that could be called from within the VxWorks shell or from within an application to print the current state of several NML related variables.</DD>
+</DL>
+
+<p>During October, 1999 it was decided that NML needed to be modified so that a great deal more diagnostic information could be logged into NML buffers. A &quot;diag&quot; option was added to the buffer line of the configuration files that turned on the additional logging informaion and the nmltest program and rcs_info function were modified to display this additional information. The modifications to the &quot;RCS Java-based Diagnostics Tool&quot; have yet to be done.
+</p>
+
+<H2>Modifying the Configuration Files</H2>
+
+
+<h3>For Version 1.0 configuration file users</h3>
+
+<P>To enable the additional diagnostics logging add &quot;diag&quot; to the end of the buffer line. The additional diagnostics information requires 144 bytes per process connecting, so you may need to increase the size of the buffer manually. It is neccessary to make sure that theprocess connection numbers are unique even when the configuration options would not have otherwise required this.  Currently these additional diagnostics features do not work with FILEMEM, STCPMEM, or UDP. </p>
+
+
+<h3>For Version 2.0+ configuration file users</h3>
+
+<p>To enable the additional diagnostics logging add &quot;diag=1&quot; to the end of the buffer line or buffer default line. As was mentioned above, The additional diagnostics information requires 144 bytes per process connecting.  This overhead will be automatically accounted for by the nmlcfg program by automatically increasing the size of SHMEM buffers. (At this time this is not done for GLOBMEM buffers.) It is neccessary to make sure that theprocess connection numbers are unique even when the configuration options would not have otherwise required this. The nmlcfg program will generate unique process connection numbers so that this is not an issue for most 2.0 users. Currently these additional diagnostics features do not work with FILEMEM, STCPMEM, or UDP. </p>
+
+
+<h2>Using nmltest</h2>
+
+<p>To ensure that you get all of the diagnostic information available it is best to add a line in the configuration file for process  "nmltest" and the buffer of interest and to  test one buffer at a time. nmltest should not be the master for the buffer since the master zeroes all the diagnostic information. The program itself is  a command line program located in a directory that depends on where the RCS library was installed and which platform you are using. At ISD, for example the sunos5 version is at:</p>
+
+<pre>
+/isd/proj/rcslib/plat/sunos5/bin/nmltest
+</pre>
+ 
+<p>Here's an example of it's output, with user input is in <B>bold</b>. For questions that appear to have no
+answer the user simply responded by pressing the &lt;Return&gt; or &lt;Enter&gt; key. For most unix systems if the program has not yet been built change directories to  src/cms directory and use the command &quot;gmake nmltest PLAT=&lt;your_platform&gt;&quot;, for other systems link &quot;nmltest.cc&quot; or &quot;nmltest.cpp&quot; with the RCS library.</p>
+
+<pre>
+***** NML Test Program **************************
+ This program can be used to test whether all buffers
+ in a configuration file can be connected to or it can test
+ only one buffer/process connection.
+ It is best to use a version of nmltest using the same version
+ of the RCS library your application(s) use.
+Just press enter when prompted to accept default.
+@(#) RCS_LIBRARY_VERSION: 3.72 Compiled on  Oct  8 1999 at 13:01:19 for the sunos5 platform with compiler version 2.7.2.1 .
+nmltest version 1.5 compiled onOct  8 1999
+ 
+ 
+Configuration File? <B>ex_cfg.nml</B>
+Test all buffers in the file? [yn] (default = No) 
+Buffer Name? <b>ex_buf1</B>
+Process Name? <B>nmltest</B>
+RCS_CMD_CHANNEL ? [yn] (default = No)  
+RCS_STAT_CHANNEL ? [yn] (default = No)  
+Dump Hex Data ? [yn] (default = No)  
+Show Diagnostics Info? [yn] (default = No)  <B>y</B>
+Use_Passwd? [yn] (default = No) 
+Calling constructor . . .
+Constructor returned d4fc8.
+nmltest_format called.
+NML::peek() returned 101
+ 
+nml->cms->header.write_id = 0
+nml->cms->header.was_read = 0
+NMLmsg *msg = nml->get_address() = d8498
+msg->type = 101
+msg->size = 422
+********************************************
+* Diagnostics for ex_buf1
+Last writer = 2 (bWriter)
+Last reader = 1 (bReader)
+
+Info for process bReader:
+         Host and system info: squid, Motorola MVME162,VxWorks
+         Process Id: 3156792
+         RCS Library Version: 3.720000
+         Last operation:  1 (READ)
+         msg_id: 4770
+         msg_size: 422
+         msg_type: 101
+         number_of_accesses: 1474
+         number_of_new_messages: 1006
+         bytes_moved: 459884.000000
+         first_access_time: 939740314.080460 :  Tue Oct 12 10:58:34 1999
+ 
+         last_access_time: 939740401.347127  : Tue Oct 12 11:00:01 1999
+ 
+         Maximum time between accesses: 3.200000
+         Minumum time between accesses: 0.016667
+         Time between first and last access: 87.266667 -- 0:1:27
+         Average time between accesses: 0.059204
+         Average time between new messages: 0.086746
+         Average bytes moved per second: 5269.870131
+         Average bytes moved per message: 457.141153
+ 
+Info for process bWriter:
+         Host and system info: squid, Motorola MVME162,VxWorks
+         Process Id: 3126784
+         RCS Library Version: 3.720000
+         Last operation:  4 (WRITE)
+         msg_id: 4779
+         msg_size: 422
+         msg_type: 101
+         number_of_accesses: 4779
+         number_of_new_messages: 4779
+         bytes_moved: 2130988.000000
+         first_access_time: 939740321.863793 :  Tue Oct 12 10:58:41 1999
+         last_access_time: 939740401.497127  : Tue Oct 12 11:00:01 1999
+ 
+         Maximum time between accesses: 0.016667
+         Minumum time between accesses: 0.016667
+         Time between first and last access: 79.633333 -- 0:1:19
+         Average time between accesses: 0.016663
+         Average time between new messages: 0.016663
+         Average bytes moved per second: 26760.000003
+         Average bytes moved per message: 445.906675
+ 
+Info for process nmltest:
+         Host and system info: dopey, SunOS 5.5.1,SUNW,Ultra-
+         Process Id: 28777
+         RCS Library Version: 3.720000
+         Last operation:  1 (READ)
+         msg_id: 4779
+         msg_size: 422
+         msg_type: 101
+         number_of_accesses: 1
+         number_of_new_messages: 1
+         bytes_moved: 0.000000
+         first_access_time: 939740401.497127 :  Tue Oct 12 11:00:01 1999
+         last_access_time: 939740401.497127  : Tue Oct 12 11:00:01 1999
+ 
+********************************************
+ 
+<p>Hopefully both the questions and the output are self-explanatory. If you 
+have any doubts about the meaning or accuracy of this output please send email to <A HREF="mailto:shackle@nist.gov">shackle@nist.gov</a>.
+
+<H2>Using rcs_info</H2>
+
+<P>nmltest is convenient for occasional use since it does not require the user 
+to write any code but if you frequently want the diagnostics information writing a short stand-alone program that captures all the information of interest without asking for any input might be a good idea.</p>
+
+<p>As you create NML channels they are added to a linked list. The function
+rcs_info() gets the diagnostic data from each channel on the list and prints it out in a format similiar to nmltest.</p>
+
+<p>Here's an example of it's use</p>
+
+<pre>
+
+#include "rcs.hh"
+
+main()
+{
+	// Create list of channels.
+	NML *nml1 = new NML( . . .);	
+	NML *nml2 = new NML( . . .);	
+	NML *nml3 = new NML( . . .);
+	
+	// Print diagnostic info for all of those channels with diagnostics enabled. 
+	rcs_info();	
+
+}
+</pre>
+
+<P>Just as when using nmltest you will probably want to make sure that this
+process has a unique process name, connection number and that it is not the
+master.</p> 
+
+<h2>Accessing the diagnostic info directly</h2>
+
+<p>It is possible to get the diagnostic information using the function get_diagnostics_info() prototyped below and then display the information obtained in some custom way. (See the files &quot;nmldiag.hh&quot; and &quot;cmsdiag.hh&quot; for the details on the format of the class NML_DIAGNOSTICS_INFO.)
+</p>
+
+<pre>
+	NML_DIAGNOSTICS_INFO *NML::get_diagnostics_info();
+</pre>
+
+
+<HR>
+
+<p>Last Modified: 10/15/99</p>
+<P>If you have questions or comments regarding this page  please
+contact  <A HREF="http://www.isd.mel.nist.gov/personnel/shackleford/"
+>Will Shackleford</A> at <I><A HREF="mailto:shackle@nist.gov">shackle@nist.gov</A></I></P>
+
+</body>
+</html>

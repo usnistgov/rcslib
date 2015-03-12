@@ -1,0 +1,1482 @@
+ <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en-US">
+<head>
+<title>NML AND XML</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="The Neutral Message Language (NML)is
+has some support for sending and receiving messages using the eXtensible Markup Language(XML)" />
+<meta name="keywords" content="XML NML software C++ network communications" />
+<link rel="stylesheet" href="http://www.isd.mel.nist.gov/mel2.css" type="text/css" />
+<style type="text/css">
+  div.prototypes{
+    background: rgb(235,235,255);
+    padding: 0.5em;
+    overflow: auto;
+    overflow-y: visible;
+  }
+  div.example {
+    background: rgb(235,255,235);
+    padding: 0.5em;
+    overflow: auto;
+    overflow-y: visible;
+  }
+</style>
+</head>
+ 
+<body>
+
+		    <h1>NML support for XML</h1>
+
+<ul>
+<li><a href="#INTRODUCTION">Introduction</a>
+<ul> 
+<li><a href="#NOTATION">Notation</a></li>
+</ul>
+</li>
+<li><a href="#CONFIG_FILE">Configuration File Options</a></li>
+<li><a href="#CPP_API">Using the XML within a C++ Application</a>
+<ul>
+<li><a href="#READ_WRITE_XML_FILES">Reading and writing XML files</a></li>
+<li><a href="#ADD_XML_FUNCS">Additional XML Functions</a></li>
+<li><a href="#SCHEMA">XML Schema</a></li>
+<li><a href="#STYLE">Adding some style</a></li>
+<li><a href="#XSD2NMLH">The xsd2nmlh tool</a></li>
+<li><a href="#HTTP_SERVICES">HTTP services</a></li>
+</ul></li>
+<li><a href="#NML_HEADERS_AND_CODEGEN">NML C++ Headers and the Code Generation Tool</a>
+<ul>
+<li><a href="#BUILDING">Building an NML/XML application.</a></li>
+<li><a href="#TAGNAME">Changing the Tag Name</a></li>
+<li><a href="#ATTRIBUTES">Using attributes</a></li>
+<li><a href="#DEFAULT">Default Values</a></li>
+<li><a href="#UNBOUNDED">NML_UNBOUNDED_ARRAY</a></li>
+<li><a href="#ARRAY_INDEXES">Array Indexes</a></li>
+<li><a href="#DATE">Dates and Times</a></li>
+</ul></li>
+<li><a href="#JAVA">Java Support</a></li>
+</ul>
+
+
+<h2><a name="INTRODUCTION"> Introduction</a></h2>
+<p>According to World Wide Web Consortium (W3C) at <a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.w3.org/XML/">http://www.w3.org/XML/</a>:</p>
+<blockquote><p>Extensible Markup Language (XML) is a simple, very flexible text format derived from SGML (ISO 8879). Originally designed to meet the challenges of large-scale electronic publishing, XML is also playing an increasingly important role in the exchange of a wide variety of data on the Web and elsewhere.</p></blockquote>
+<p>The Neutral Message Language (NML) provides a way of defining and transmitting messages over a network or between processes using a variety of protocols. Typically messages passed between processes on the same computer use shared memory and use a raw binary format specific to the operating system, compiler and processor architecture in use. Messages across a network are typically sent using the eXternal Data Representation (XDR) which is also a binary format but is not specific to a particular operating system or processor. While XDR is usually more efficient than XML, NML can be configured to compose and/or parse XML. There is also an experimental program that allows  XML Schemas with some restrictions to be automatically converted to NML message classes. XML also allows a little more flexibility in defining the NML message structures, and the use of XML allows for some additional error checking and debugging support. NML never produces and currently can not parse mixed content. The XML messages we deal with here must be small enough to be stored entirely in memory.</p>
+
+<h3><a name="NOTATION">Notation</a></h3>
+
+<p>I like lots of examples.</p>
+
+<div class="example">
+<pre>
+
+     Examples are in boxes like this.
+
+</pre>
+</div>
+
+<p>Occasionally I need to highlight more formal prototypes and definitions.</p>
+
+<div class="prototypes">
+<pre>
+
+     Prototypes are in boxes like this.
+
+</pre>
+</div>
+
+<h2><a name="CONFIG_FILE">Configuration File Options</a></h2>
+
+<p>See <a href="http://www.isd.mel.nist.gov/projects/rcslib/NMLcfg.html">NML Configuration Files</a> for a complete description of  the configuration files. There are three options that might be of interest here.
+The string &quot;xml&quot; can replace &quot;xdr&quot; or &quot;disp&quot; at the end of the buffer line to force all remote communication to use the XML format for the data rather than XDR or comma delimited ascii text. &quot;xmldiff&quot; can be used in the same place and instructs NML only to send the variables that changed from the last message. This generally can not be used with classes generated from external XML schema since it requires that maxOccurs for any element not be set greater than one. It is also incompatible with setting the option
+cms-&gt;add_array_indexes_to_name=false described below.
+The string &quot;xmllog&quot; placed at the end of either a process line or buffer line does not change the way processes communicate but causes one process or all processes to log each message received or sent to a file in XML format. Buffers that may contain messages that contain unions or NML_UNBOUNDED_ARRAYS must have the option &quot;xml&quot; set and must have neutral set to 1 on the buffer line.</p>
+
+
+<h2><a name="CPP_API">Using the XML within a C++ Application</a></h2>
+
+<p>In the section <a href="#NML_HEADERS_AND_CODEGEN">NML C++ Headers and the Code Generation Tool</a> details will be given on how to define the NML message classes and how their definition will affect the generated or expected XML. Combining this with changes in the NML configuration file would allow existing NML applications to begin passing messages in XML rather than XDR without any changes to the user written source code. The next section describes functions that new applications could use to make use of NML and XML within their application.</p>
+
+<h3><a name="READ_WRITE_XML_FILES">Reading and writing XML files</a></h3>
+
+<p>The simplest way to use XML would probably be to use it to allow NML messages to persist between runs of the application.</p>
+<p>The following functions could be used.</p>
+
+<div class="prototypes">
+<pre>
+
+NMLmsg *NML::readMsgFromXmlFile (const char *filename)
+int     NML::xmlMsgSaveAs (NMLmsg * nml_msg, const char *filename)
+
+</pre>
+</div>
+
+
+<p>in myconf.h</p>
+
+<div class="example">
+<pre>
+
+#ifndef MY_CONF_H
+#define MY_CONF_H
+
+#include &lt;rcs.hh&gt;
+
+#define MY_CONF_TYPE 10001
+
+class MY_CONF : public NMLmsg
+{
+ public:
+  MY_CONF();
+  void update(CMS *);
+
+  double p_gain;
+  double i_gain;
+  double d_gain;
+};
+
+#endif
+
+</pre>
+</div>
+
+<p>in writeconf.cc</p>
+
+<div class="example">
+<pre>
+
+#include &quot;myconf.h&quot;
+#include &quot;myconf_n_codegen_protos.hh&quot;
+
+int 
+main(int argc, const char **argv)
+{
+  NML nml(MY_CONF_format,0,0,0);
+  
+  MY_CONF cf;
+  
+  cf.p_gain=0.99;
+  cf.i_gain=0.01;
+  cf.d_gain=0.02;
+  nml.xmlMsgSaveAs(&amp;cf,&quot;myconf.xml&quot;);
+  exit(0);
+}
+
+</pre>
+</div>
+
+<p>Passing zero for the buffer name, process name and configuration file to the NML constructor only works if you are not interested in actually communicating with another process. This can be compiled and run with the following series of commands:</p>
+
+<pre>
+
+nml_codegen myconf.h
+g++ writeconf.cc myconf_n.cc -I<i>pathtorcslibinclude</i> -L<i>pathtorcsliblibs</i> -lrcs -o writeconf
+./writeconf
+
+</pre>
+
+<p>This should create the following file for myconf.xml:</p>
+
+<div class="example">
+<pre>
+
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;MY_CONF&gt;
+	&lt;!--MY_CONF MY_CONF--&gt;
+	&lt;p_gain&gt;0.99&lt;/p_gain&gt;
+	&lt;i_gain&gt;0.01&lt;/i_gain&gt;
+	&lt;d_gain&gt;0.02&lt;/d_gain&gt;
+
+&lt;/MY_CONF&gt;
+
+</pre>
+</div>
+
+<p>in readconf.cc</p>
+
+<div class="example">
+<pre>
+
+#include &quot;myconf.h&quot;
+#include &quot;myconf_n_codegen_protos.hh&quot;
+
+#include &lt;stdio.h&gt;
+
+int 
+main(int argc, const char **argv)
+{
+  NML nml(MY_CONF_format,0,0,0);
+  
+  
+  MY_CONF *cf = (MY_CONF *) nml.readMsgFromXmlFile(&quot;myconf.xml&quot;);
+  if(NULL != cf)
+    {
+      printf(&quot;p:%f\ni:%f\nd:%f\n&quot;,cf-&gt;p_gain,cf-&gt;i_gain,cf-&gt;d_gain);
+    }
+
+  exit(0);
+}
+
+</pre>
+</div>
+
+<p>Use the following commands to compile and run:</p>
+
+<pre>
+
+g++ readconf.cc myconf_n.cc -I<i>pathtorcslibinclude</i> -L<i>pathtorcsliblibs</i> -lrcs -o readconf
+./readconf
+
+</pre>
+
+<p>The following output should be produced:</p>
+
+<div class="example">
+<pre>
+
+p:0.990000
+i:0.010000
+d:0.020000
+
+</pre>
+</div>
+
+<p>When NML reads the XML data it currently does not do a full validation 
+using a schema. This means if the messages were generated with a schema and
+the input is in invalid NML may or may not print an error and return NULL. However if it is grossly wrong an error message is very likely. Full validation might be added to a future version but it would most likely reduce performance. If this is necessary for your application you may want to check with a third party
+XML Schema validator before the call to readMsgFromXmlFile.</p>
+
+<h3><a name="ADD_XML_FUNCS">Additional XML Functions</a></h3>
+
+<p>The following can be used to convert between XML stored in a character string and an NML message. After a call to xml2msg the message is retrieved with
+NML::get_address().</p>
+
+<div class="prototypes">
+<pre>
+
+NMLTYPE       NML::xml2msg (const char *string)
+const char *  NML::msg2xml (NMLmsg * nml_msg)
+
+</pre>
+</div>
+
+<h3><a name="SCHEMA">XML Schema</a></h3>
+
+<p>According to World Wide Web Consortium (W3C) at <a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.w3.org/XML/Schema">http://www.w3.org/XML/Schema</a>:</p>
+<blockquote><p>XML Schemas express shared vocabularies and allow machines to carry out rules made by people. They provide a means for defining the structure, content and semantics of XML documents. 
+</p></blockquote>
+
+<p>The following functions can be used to generate an XML Schema that describes the XML messages that can be sent or received from a given NML channel.</p>
+
+<div class="prototypes">
+<pre>
+
+const char *  NML::xmlSchema (void)
+int           NML::xmlSchemaSaveAs (const char *filename)
+
+</pre>
+</div>
+
+
+<p>in writeconfschema.cc </p>
+
+<div class="example">
+<pre>
+
+#include "myconf.h"
+#include "myconf_n_codegen_protos.hh"
+
+int 
+main(int argc, const char **argv)
+{
+  NML nml(MY_CONF_format,0,0,0);
+  
+  nml.xmlSchemaSaveAs("myconf.xsd");
+  exit(0);
+}
+
+</pre>
+</div>
+
+
+<p>Use the following commands to compile and run:</p>
+
+<pre>
+
+g++ writeconfschema.cc myconf_n.cc -I<i>pathtorcslibinclude</i> -L<i>pathtorcsliblibs</i> -lrcs -o writeconfschema
+./writeconfschema
+
+</pre>
+
+<p>The output stored in myconf.xsd should be:</p>
+
+<div class="example">
+<pre>
+
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;xsd:schema xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+	&lt;xsd:element name=&quot;MY_CONF&quot; type=&quot;MY_CONF&quot;/&gt;
+
+
+	&lt;xsd:complexType name=&quot;MY_CONF&quot;&gt;
+		&lt;xsd:sequence&gt;
+			&lt;xsd:element name=&quot;p_gain&quot; type=&quot;xsd:double&quot;/&gt;
+			&lt;xsd:element name=&quot;i_gain&quot; type=&quot;xsd:double&quot;/&gt;
+			&lt;xsd:element name=&quot;d_gain&quot; type=&quot;xsd:double&quot;/&gt;
+		&lt;/xsd:sequence&gt;
+	&lt;/xsd:complexType&gt;
+
+&lt;/xsd:schema&gt;
+
+</pre>
+</div>
+
+<p>One can use third party tools to prove that messages such as
+myconf.xml conform to the requirements expressed in schemas such as myconf.xsd. Unfortunately NML does not currently include it's own XML validator and therefore will not check every message received for strict conformance.</p>
+
+<h3><a name="STYLE">Adding some style</a></h3>
+
+<p>There are a number of options that one might want to set that do not affect the content used by NML. To do this the following function was added:</p>
+
+<div class="prototypes">
+<pre>
+
+      int NML::xmlSetStyleProperty (const char *propstr)
+
+</pre>
+</div>
+
+<p><i>propstr</i> is always of the form property=value</p>
+<p>The two properties currently defined that are useful are AFTER_XML_DECLARATION which sets a string that will always be added after the xml declaration ( &lt;?xml version=&quot;1.0&quot;?&gt; ) and the first or root node and XML_ROOT_START which sets a string that will be added at the end of the root start tag.</p>
+
+<div class="example">
+<pre>
+
+     nml.xmlSetStyleProperty(&quot;XML_ROOT_START= xmlns:xsi=\&quot;http://www.w3.org/2001/XMLSchema-instance\&quot; xsi:noNamespaceSchemaLocation=\&quot;myconf.xsd\&quot; &quot;);
+     nml.xmlSetStyleProperty(&quot;AFTER_XML_DECLARATION=&lt;?xml-stylesheet href=\&quot;myconf.xsl\&quot; type=\&quot;text/xsl\&quot;?&gt;\n&quot;);
+
+</pre>
+</div>
+
+<p>Adding the code above to the previous example, should modify the output to produce the following:</p>
+
+<div class="example">
+<pre>
+
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;?xml-stylesheet href=&quot;myconf.xsl&quot; type=&quot;text/xsl&quot;?&gt;
+&lt;MY_CONF xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;myconf.xsd&quot; &gt;
+	&lt;!--MY_CONF MY_CONF--&gt;
+	&lt;p_gain&gt;0.99&lt;/p_gain&gt;
+	&lt;i_gain&gt;0.01&lt;/i_gain&gt;
+	&lt;d_gain&gt;0.02&lt;/d_gain&gt;
+
+&lt;/MY_CONF&gt;
+
+</pre>
+</div>
+
+<p>The example adds information about the location of an external schema and an  XSL style sheet. (See <a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.w3.org/Style/XSL">http://www.w3.org/Style/XSL</a> for more information. on XSL style sheets.)</p>
+
+<div class="example">
+<pre>
+
+&lt;html xsl:version=&quot;1.0&quot; xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;title&gt;My Configuration&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+
+&lt;table border=&quot;1&quot; &gt;
+&lt;tr&gt;&lt;th&gt;Gain&lt;/th&gt;&lt;th&gt;Value&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Proportional&lt;/td&gt;&lt;td&gt;&lt;xsl:value-of select=&quot;MY_CONF/p_gain&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Integral&lt;/td&gt;&lt;td&gt;&lt;xsl:value-of select=&quot;MY_CONF/i_gain&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Derivative&lt;/td&gt;&lt;td&gt;&lt;xsl:value-of select=&quot;MY_CONF/d_gain&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+
+</pre>
+</div>
+
+
+
+<p>Viewing the xml file,<a href="myconf.xml">myconf.xml</a>, in some of the newer web browsers  should display something like this:
+( This would be more likely to work if our web server put &quot;Content-Type: text/xml&quot; instead of &quot;Content-type: text/plain&quot; in the HTTP header, so some browsers only work if you save both the xml and xsl files and then reopen them as local files. )
+ </p>
+
+<p><img src="netscape-myconf-xml.png" alt="Screen capture of Netscape showing a small table with Gains and Values, Proportional:0.99,Integral:0.01,Derivative:0.02" /></p>
+
+<h3><a name="XSD2NMLH">The xsd2nmlh tool</a></h3>
+
+<p>While generating XML Schema from a C++ class definition is relatively straight forward the reverse is more complicated and error prone. A tool that at least will attempt this is xsd2nmlh.</p>
+
+<p>The tool is run from the command line and takes two arguments [schemafile] [nmlheaderfile].</p>
+
+<p>The following command will create myconf2.h:</p>
+
+<pre>
+
+xsd2nmlh myconf.xsd myconf2.h 
+
+</pre>
+
+<p>myconf2.h will be very similar to the original myconf.h, since we have
+now come full circle.</p>
+
+<div class="example">
+<pre>
+
+// This file automatically generated
+// from myconf.xsd
+// on Fri Jul 11 13:47:20 2003
+
+// by xsd2nmlh
+
+
+#ifndef myconf2_header_included
+#define myconf2_header_included
+
+#include &quot;rcs.hh&quot;
+
+
+#define DO_NOT_ADD_INDEXES_TO_ARRAY_NAMES
+#define myconf2_URI_STRING_LENGTH 64
+#define myconf2_STRING_LENGTH 64
+#define myconf2_UNBOUNDED_LENGTH 10
+
+#define MY_CONF_TYPE 	847201
+
+
+class MY_CONF : public NMLmsg
+{
+public:
+	MY_CONF();
+	void update(CMS *);
+
+	double p_gain;
+	double i_gain;
+	double d_gain;
+};
+
+#endif
+ 	// myconf2_header_included
+
+</pre>
+</div>
+
+<p>The tool has a number of limitations. It can only handle schemas that are
+fully expressed in a single file. It can not work if the schema uses types such as lists and mixed content that NML currently does not support. There are a number of schema types which only roughly correspond with C++ types. For example a positiveInteger is replaced with an unsigned int, even though an unsigned int could be zero and is limited to 32 bits. Schemas can include a number of requirements  that NML currently has no way to enforce, strings that match regular expressions, numbers with min and max values etc. In these cases it is left up to the application developer to ensure that the values inside NML messages do not violate the schema's constraints.</p>
+
+<h3><a name="HTTP_SERVICES">HTTP services</a></h3>
+
+<p>To make the live data available in a web browser one can use set the global variable   cms_force_http_port  to a non zero integer before a call to run_nml_servers or nml_start. The default port for HTTP is 80, however on many systems special permission is required to use that port, so the following example uses port 8090.</p>
+
+<p>I am using a new header for this example:</p>
+
+<div class="example">
+<pre>
+
+#ifndef CLOCK_HH
+#define CLOCK_HH
+
+#include "rcs.hh"
+
+#define MY_CLOCK_TYPE 1001
+
+class MY_CLOCK: public NMLmsg
+{
+public:
+  MY_CLOCK();
+  void update(CMS *);
+  
+  CMS_TIME now;
+};
+
+
+#endif
+
+</pre>
+</div>
+
+<p>The following code runs an HTTP server and periodically updates the message in shared memory so that the time is correct.</p>
+
+<div class="example">
+<pre>
+
+#include &quot;clock.hh&quot;
+#include &quot;clock_n_codegen_protos.hh&quot;
+
+#include &lt;signal.h&gt;
+
+static int quit_clock=0;
+
+static void clock_control_c_handler(int sig)
+{
+  quit_clock=1;
+}
+
+int main(int argc, const char *argv)
+{
+
+  cms_force_http_port=8090;
+
+  signal(SIGINT,clock_control_c_handler);
+
+  NML nml(MY_CLOCK_format,&quot;clock_buf&quot;,&quot;clock_proc&quot;,&quot;clock.nml&quot;);
+  MY_CLOCK clk;
+
+  nml_start();
+
+  while(!quit_clock)
+    {
+      get_current_cms_time(&amp;clk.now);
+      nml.write(clk);
+      sleep(1);
+    }
+  
+  nml_cleanup();
+}
+
+</pre>
+</div>
+
+<p>This is one of the few examples in this document that requires an NML configuration file (clock.nml).</p>
+
+<div class="example">
+<pre>
+
+#		SHMEM	host	   size	neut    RPC# 	buffer#	 max_proc key
+B clock_buf 	SHMEM 	localhost  1000	0 	0	 1       25 	1023 TCP=2001
+
+# processes:
+# name		buffer	type	host 		ops	server 	timeout	master 	c_num
+P clock_proc	clock_buf LOCAL	localhost 	RW	2	0.5  	1	1
+
+</pre>
+</div>
+
+<p>You should be able to see the live data by pointing a web browser to <a href="http://localhost:8090/clock_buf.xml">http://localhost:8090/clock_buf.xml</a> This link only works if you are running the server on your machine. The time will not update automatically, so you will need to reload to see the changes. It could be made to update more automatically by using an XSL style sheet.</p>
+
+<p>Since the HTTP server only allows remote processes to read the data, you may need to run a second NML server using one of the normal NML protocols, for remote writers.</p>
+
+<p>Reading NML messages from an HTTP server producing the appropriate XML can be done using the HttpXmlNml class:</p>
+
+<div class="prototypes">
+<pre>
+
+class HttpXmlNml : protected NML
+{
+public:
+  HttpXmlNml(NML_FORMAT_PTR f_ptr, const char *url);
+
+  NMLmsg *readMsg();
+  
+  . . .
+
+</pre>
+</div>
+
+<p>Each call to readMsg will attempt to read the url that was provided in the constructor and expect that to be XML which the format function can convert into an NML message.</p>
+
+<div class="example">
+<pre>
+
+#include &quot;clock.hh&quot;
+#include &quot;clock_n_codegen_protos.hh&quot;
+
+#include &quot;httpnml.hh&quot;
+
+int main(int argc, const char **argv)
+{
+  HttpXmlNml hxn(MY_CLOCK_format,&quot;http://localhost:8090/clock_buf.xml&quot;);
+
+  while(1)
+    {
+      MY_CLOCK *clk = (MY_CLOCK *) hxn.readMsg();
+      if(clk)
+	{
+	  printf(&quot;%02d:%02d:%02.0f\n&quot;,clk-&gt;now.hours,clk-&gt;now.minutes,clk-&gt;now.seconds);
+	}
+      sleep(1);
+   }
+}
+
+</pre>
+</div>
+
+<h2><a name="NML_HEADERS_AND_CODEGEN">NML C++ Headers and the Code Generation Tool</a></h2>
+
+
+<h3><a name="BUILDING">Building an NML/XML application.</a></h3>
+
+<p>Building an application that uses XML and NML can be similar to the process as is used for building any other NML Application. It is illustrated in the
+diagram below:</p>
+
+<p><img src="NMLbuild3.png" alt="Diagram of NML build process: A pale yellow rectangle labeled 'User  Written C++ Header, defining NML messages(*.hh)' is above an arrow pointing to a pale green oval labeled 'NML CodeGen'. This oval is above arrows pointing to a pale blue box labeled 'Automatically Generated C++ header  with prototypes  for init and format  functions.(*n_codegen_prototypes.hh)', another labeled 'Automatically Generated C++ file with update, init and format functions.(*_n.hh)' and a group labeled 'Java Files').Below the pale blue boxes just described and on the left is a pale yellow box labeled 'User Written C++ Application with main() and calls to high level NML functions'. To the right of this is an orange oval labeled 'C++ Compiler and Linker'. Arrows go from the pale blue box above labeled 'Automatically Generated C++ file with update, init and format functions.(*_n.hh)' and from the the pale yellow box to the left labeled 'User Written C++ Application with main() and calls to high level NML functions' to the orange oval labeled 'C++ Compiler and Linker'. The orange oval is above an arrow pointing to a pale blue box labeled 'NML C++ Application'. To the left of this pale blue box are arrows going both from and to a group of grey boxes labeld 'XML files'. To the right of the last blue box are arrows going both from and to a group of grey boxes labeled 'NML Shared Memory Buffers'." /></p>
+
+
+
+
+<p>NML messages are defined in C++ header files as classes or structures. In order to convert back and forth from the raw binary format specific to the current operating system and processor to a neutral format such as XDR or comma delimited ascii that can be passed between different platforms it is necessary to create some functions that are specific to the user defined classes. In the context of NML I call these the &quot;update&quot; and &quot;format&quot; functions described in <a href="NMLcpp.html">The NML Programmer's Guide (C++ Version)</a>. The simple update and format functions described there unfortunately do not work well with XML because there is a great deal more information needed than just the type, order and current value of the variables being updated. The XML generating and parsing routines need information about tag and attribute names, which strings correspond with which enumeration values etc.So for example instead of calling <i>cms->update(x);</i> the code needs to call <i>cms->update_with_name(&quot;x&quot;,x);</i>. The new update_with_name functions will still generate or parse XDR the same as the old update function but can also generate or parse readable XML. Just like the update functions were, the update_with_name functions are overloaded to handle all the basic C data types.</p>
+<p>The CodeGen tool has been modified to generate the newer style update 
+functions, but for backwards compatibility only does this if run from 
+the command line with the option &quot;update_with_name=true&quot;. There is also a new command line only version of CodeGen called either CodeGenCmdLine.jar or nml_codegen which works the same except the default is changed so one needs to add &quot;update_with_name=false&quot; to force the use of the older functions.
+</p>
+
+<p>
+<b>CodeGen.jar is now deprecated. -- modified 2008-05-13.</b>
+</p>
+
+<p>
+<b>The option generate_symbol_lookups=true is required for all XML operations.
+ -- added 2008-05-13</b>
+</p>
+
+<p>The following code should be in nml_xml1.hh:</p>
+
+<div class="example">
+<pre>
+
+#include &quot;rcs.hh&quot;
+
+#define A_TYPE 10001
+
+class A : public NMLmsg
+{
+public:
+  A();
+  void update(CMS *);
+
+  char href[40]; 
+  char label[40];
+};
+
+</pre>
+</div>
+
+<p>The following command will generate the code for nml_xml1.hh:</p>
+
+<pre>
+
+java -jar <i>pathtorcslib</i>/plat/java/lib/CodeGenCmdLine.jar generate_symbol_lookups=true nml_xml1.hh
+
+</pre>
+
+<p>The following code was generated which uses update_with_name and can be used for both XML and XDR in the file:</p>
+
+<div class="example">
+<pre>
+
+/*
+*	New C++ File starts here.
+*	This file should be named nml_xml1.cc
+*/
+
+// Include all NML, CMS, and RCS classes and functions
+#include &quot;rcs.hh&quot;
+
+// Include command and status message definitions
+#include &quot;nml_xml1.hh&quot;
+
+// Include externally supplied prototypes
+#include &quot;nml_xml1_n_codegen_protos.hh&quot;
+
+
+
+#ifndef MAX_NML_XML1_NAME_LENGTH
+#define MAX_NML_XML1_NAME_LENGTH 2
+#endif
+#ifndef NML_XML1_NAME_LIST_LENGTH
+#define NML_XML1_NAME_LIST_LENGTH 2
+#endif
+
+
+/* This list must be in alphabetical order and the three lists must correspond. */
+const char nml_xml1_name_list[NML_XML1_NAME_LIST_LENGTH][MAX_NML_XML1_NAME_LENGTH]= {
+	&quot;A&quot;, /* 0,10001 */
+	&quot;&quot;};
+const NMLTYPE nml_xml1_id_list[NML_XML1_NAME_LIST_LENGTH]= {
+	A_TYPE, /* 0,10001 */
+	-1};
+const size_t nml_xml1_size_list[NML_XML1_NAME_LIST_LENGTH]= {
+	sizeof(A),
+	0};
+const char *nml_xml1_symbol_lookup(long type);
+
+
+// Enumerated Type Constants
+
+/*
+*	NML/CMS Format function : nml_xml1_format
+*	Automatically generated by NML CodeGen Java Applet.
+*	on Thu Jul 03 08:42:17 GMT-05:00 2003
+*/
+int nml_xml1_format(NMLTYPE type, void *buffer, CMS *cms)
+{
+
+	type = cms-&gt;check_type_info(type,buffer,&quot;nml_xml1&quot;,
+		(cms_symbol_lookup_function_t) nml_xml1_symbol_lookup,
+		(const char **)nml_xml1_name_list,
+		nml_xml1_id_list,nml_xml1_size_list,
+		NML_XML1_NAME_LIST_LENGTH,
+		MAX_NML_XML1_NAME_LENGTH);
+
+	switch(type)
+	{
+	case A_TYPE:
+		((A *) buffer)-&gt;update(cms);
+		break;
+
+	default:
+		return(0);
+	}
+	return 1;
+}
+
+
+// NML Symbol Lookup Function
+const char *nml_xml1_symbol_lookup(long type)
+{
+	switch(type)
+	{
+	case A_TYPE:
+		return &quot;A&quot;;
+	default:
+		return&quot;UNKNOWN&quot;;
+		break;
+	}
+	return(NULL);
+}
+
+/*
+*	NML/CMS Update function for A
+*	Automatically generated by NML CodeGen Java Applet.
+*	on Thu Jul 03 08:42:18 GMT-05:00 2003
+*/
+void A::update(CMS *cms)
+{
+
+	cms-&gt;beginClass(&quot;A&quot;,&quot;NMLmsg&quot;);
+	cms-&gt;update_with_name(&quot;href&quot;,href,40);
+	cms-&gt;update_with_name(&quot;label&quot;,label,40);
+
+	cms-&gt;endClass(&quot;A&quot;,&quot;NMLmsg&quot;);
+
+}
+
+/*
+*	Constructor for A
+*	Automatically generated by NML CodeGen Java Applet.
+*	on Thu Jul 03 08:42:19 GMT-05:00 2003
+*/
+A::A()
+	: NMLmsg(A_TYPE,sizeof(A))
+{
+	for(int i_href=0; i_href&lt; 40; i_href++)
+	{
+		((char*)href)[i_href]  = (char) 0;
+	}
+	for(int i_label=0; i_label&lt; 40; i_label++)
+	{
+		((char*)label)[i_label]  = (char) 0;
+	}
+
+}
+
+</pre>
+</div>
+
+
+<p>The following is simultaneously produced in nml_xml1_n_codegen_protos.hh</p>
+
+<div class="example">
+<pre>
+
+/*
+*	New C++ Header  File starts here.
+*	This file should be named nml_xml1_n_codegen_protos.hh
+*/
+
+#ifndef nml_xml1_n_codegen_protos_hh_included
+#define nml_xml1_n_codegen_protos_hh_included
+
+// Include all NML, CMS, and RCS classes and functions
+#include &quot;rcs.hh&quot;
+
+// Include command and status message definitions
+#include &quot;nml_xml1.hh&quot;
+
+// Forward Function Prototypes
+
+
+#ifndef MAX_NML_XML1_NAME_LENGTH
+#define MAX_NML_XML1_NAME_LENGTH 2
+#endif
+#ifndef NML_XML1_NAME_LIST_LENGTH
+#define NML_XML1_NAME_LIST_LENGTH 2
+#endif
+
+
+/* This list must be in alphabetical order and the three lists must correspond. */
+extern const char nml_xml1_name_list[NML_XML1_NAME_LIST_LENGTH][MAX_NML_XML1_NAME_LENGTH];
+extern const NMLTYPE nml_xml1_id_list[NML_XML1_NAME_LIST_LENGTH];
+extern const size_t nml_xml1_size_list[NML_XML1_NAME_LIST_LENGTH];
+extern const char *nml_xml1_symbol_lookup(long type);
+
+
+// Enumerated Type Constants
+
+extern int nml_xml1_format(NMLTYPE type, void *buffer, CMS *cms);
+
+#endif
+	/* # endif nml_xml1_n_codegen_protos_hh_included */ 
+
+</pre>
+</div>
+
+
+<p>Any of the following commands will produce much simpler shorter output that will work only with XDR:</p>
+
+<pre>
+
+nml_codegen nml_xml1.hh update_with_name=false
+
+java -jar <i>pathtorcslib</i>/plat/java/lib/CodeGenCmdLine.jar nml_xml1.hh update_with_name=false
+
+java -jar <i>pathtorcslib</i>/plat/java/lib/CodeGen.jar nml_xml1.hh display_on=false
+
+</pre>
+
+<p>The following code was produced in <a href="update_without_name/nml_xml1_n.cc">nml_xml1_n.cc</a>:</p>
+
+<div class="example">
+<pre>
+
+/*
+*	New C++ File starts here.
+*	This file should be named nml_xml1.cpp
+*/
+
+// Include all NML, CMS, and RCS classes and functions
+#include &quot;rcs.hh&quot;
+
+// Include command and status message definitions
+#include &quot;nml_xml1.hh&quot;
+
+// Include externally supplied prototypes
+#include &quot;nml_xml1_n_codegen_protos.hh&quot;
+
+
+/*
+*	NML/CMS Format function : nml_xml1_format
+*	Automatically generated by NML CodeGen Java Applet.
+*	on Thu Jul 03 07:24:12 GMT-05:00 2003
+*/
+int nml_xml1_format(NMLTYPE type, void *buffer, CMS *cms)
+{
+	switch(type)
+	{
+	case A_TYPE:
+		((A *) buffer)-&gt;update(cms);
+		break;
+
+	default:
+		return(0);
+	}
+	return 1;
+}
+
+
+// NML Symbol Lookup Function
+const char *nml_xml1_symbol_lookup(long type)
+{
+	switch(type)
+	{
+	case A_TYPE:
+		return &quot;A&quot;;
+	default:
+		return&quot;UNKNOWN&quot;;
+		break;
+	}
+	return(NULL);
+}
+
+/*
+*	NML/CMS Update function for A
+*	Automatically generated by NML CodeGen Java Applet.
+*	on Thu Jul 03 07:24:14 GMT-05:00 2003
+*/
+void A::update(CMS *cms)
+{
+	cms-&gt;update(href,40);
+	cms-&gt;update(label,40);
+
+}
+
+/*
+*	Constructor for A
+*	Automatically generated by NML CodeGen Java Applet.
+*	on Thu Jul 03 07:24:15 GMT-05:00 2003
+*/
+A::A()
+	: NMLmsg(A_TYPE,sizeof(A))
+{
+	for(int i_href=0; i_href&lt; 40; i_href++)
+	{
+		((char*)href)[i_href]  = (char) 0;
+	}
+	for(int i_label=0; i_label&lt; 40; i_label++)
+	{
+		((char*)label)[i_label]  = (char) 0;
+	}
+
+}
+
+</pre>
+</div>
+
+<p>The following is simultaneously produced in <a href="update_without_name/nml_xml1_n_codegen_protos.hh">nml_xml1_n_codegen_protos.hh</a>:</p>
+
+<div class="example">
+<pre>
+
+/*
+*	New C++ Header  File starts here.
+*	This file should be named nml_xml1_n_codegen_protos.hh
+*/
+
+#ifndef nml_xml1_n_codegen_protos_hh_included
+#define nml_xml1_n_codegen_protos_hh_included
+
+// Include all NML, CMS, and RCS classes and functions
+#include &quot;rcs.hh&quot;
+
+// Include command and status message definitions
+#include &quot;nml_xml1.hh&quot;
+
+// Forward Function Prototypes
+
+extern int nml_xml1_format(NMLTYPE type, void *buffer, CMS *cms);
+
+#endif
+	/* # endif nml_xml1_n_codegen_protos_hh_included */ 
+
+</pre>
+</div>
+
+<p>The main differences between the two syles are as follows:</p>
+<ul>
+<li>The new version creates three arrays nml_xml1_name_list, nml_xml1_id_list, and nml_xml1_size_list that are used when decoding XML in order to associate a unique integer with each  possible global XML tag. (The tags will by default match class names although one could override this.) The size is used to check pointer references and to allow possible subsequent copies or moves of the data structure within NML to copy only the necessary number of bytes. The name list is put into alphabetical order so that it can be searched more quickly and the id list and size list are ordered so as to correspond with the name list.</li>
+<li>The first line of the format function makes a call to <i>cms->check_type_info</i> which either looks up the tag name from the integer id or the id from the tag name, depending on whether we are generating or parsing xml. Looking up the tag name from the integer is done with nml_xml1_symbol_lookup function. For XDR, it simply returns the integer it was passed.</li>
+<li>Each update function begins and ends with a call to <i>cms->beginClass</i> and <i>cms->endClass</i>. The tag names are expected to correspond with tag names and these functions are added to ensure that for every start tag there is a corresponding end tag. For XDR, these functions return immediately without doing anything.</li>
+<li>Each call to update a variable uses update_with_name and passes a tag name.</li>
+<li>There are a number of other differences that only become apparent when more complicated structures are used that contain enum's, union's NML_UNBOUNDED_ARRAYS, arrays of structures etc.</li>
+</ul>
+
+<h3><a name="TAGNAME">Changing the Tag Name</a></h3>
+
+<p> It is sometimes useful to make the XML tag name be some string which could not be a legal C++ class name or variable name.ie &lt;my-tag/&gt;. One could edit the generated code, but if you need to repeatedly edit the code it would probably be easier to add the special comment &quot;//name=<i>my-tag</i>&quot; the code generator recognizes to the header file. The alternative tagname begins after the &quot;=&quot; sign and ends just before the first space, carriage-return, new line, asterick, slash or comma character.</p>
+ 
+<div class="example">
+<pre>
+
+        char label[40]; //name=my-label
+
+</pre>
+</div>
+
+<p>produces :</p>
+
+<div class="example">
+<pre>
+
+	cms-&gt;update_with_name(&quot;my-label&quot;,label,40);
+
+</pre>
+</div>
+
+
+<p>This will mean XML similar to &lt;my-label&gt; . . .&lt;/my-label&gt; would be produced or expected.</p>
+
+<p>If name is set to the empty string by placing a newline directly after the &quot;=&quot;. then that variable will get or set the content of the class tag that contains it.</p>
+
+<h3><a name="ATTRIBUTES">Using attributes</a></h3>
+
+<p>XML lets data be stored either in either elements or attributes. NML uses elements by default but will update or expect the code to be
+in attributes instead if update_attribute_with_name is called. The comment  &quot;//attribute&quot; in the header file is recognized by the code generator for this purpose. Only character arrays and non array variables of standard C++ data types (int,float,double ..) can be attributes. Structures, unions and arrays of non character types must be elements not attributes.</p>
+
+
+<div class="example">
+<pre>
+
+        char href[40]; //attribute
+
+</pre>
+</div>
+
+
+<p>produces :</p>
+
+<div class="example">
+<pre>
+
+	cms-&gt;update_attribute_with_name(&quot;href&quot;,href,40);
+
+</pre>
+</div>
+
+
+<p>This will then produce or expect XML with the href embedded in the start tag of the class which contains it. ie &lt;A href=&quot;...&quot;&gt; ... &lt;/A&gt;. </p>
+
+<h3><a name="DEFAULT">Default Values</a></h3>
+
+<p>XML allows some elements and attributes to be missing. It is fairly useful to be able to specify a value that will 
+be used when the corresponding element or attribute is missing. The comment &quot;//default=<i>value</i>&quot; is recognized by the code generator.</p>
+<p>The code generator will make two changes to the code created.</p>
+
+<ol>
+<li>If a constructor or initialize function is created,  it will set the variable to that value.</li>
+<li>A call to cms->next_update_default(&quot;<i>value</i>&quot;) will be added before the call to update that variable.</li>
+</ol>
+
+
+<div class="example">
+<pre>
+
+        char href[40]; //attribute,default=http://www.nist.gov
+
+</pre>
+</div>
+
+
+<p>produces :</p>
+
+<div class="example">
+<pre>
+
+        cms-&gt;next_update_default(&quot;http://www.nist.gov&quot;);
+	cms-&gt;update_attribute_with_name(&quot;href&quot;,href,40);
+
+</pre>
+</div>
+
+
+<p>and</p>
+
+<div class="example">
+<pre>
+
+A::A()
+	: NMLmsg(A_TYPE,sizeof(A))
+{
+	href[0]='h';
+	href[1]='t';
+	href[2]='t';
+	href[3]='p';
+	href[4]=':';
+	href[5]='/';
+	href[6]='/';
+	href[7]='w';
+	href[8]='w';
+	href[9]='w';
+	href[10]='.';
+	href[11]='n';
+	href[12]='i';
+	href[13]='s';
+	href[14]='t';
+	href[15]='.';
+	href[16]='g';
+	href[17]='o';
+	href[18]='v';
+	href[19]=0;
+ . . .
+
+</pre>
+</div>
+
+
+<p>This does not precisely correspond to the way the XML Schema default attribute works at least for elements. According to <a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.w3.org/TR/xmlschema-0/">XML Schema Part 0: Primer</a>  on the World Wide Web Consortium (W3C) website:</p>
+
+<blockquote><p>Default values of both attributes and elements are declared using the default attribute, although this attribute has a slightly different consequence in each case. When an attribute is declared with a default value, the value of the attribute is whatever value appears as the attribute's value in an instance document; if the attribute does not appear in the instance document, the schema processor provides the attribute with a value equal to that of the  default attribute. Note that default values for attributes only make sense if the attributes themselves are optional, and so it is an error to specify both a default value and anything other than a value of optional for  use.</p></blockquote>
+
+<blockquote><p>The schema processor treats defaulted elements slightly differently. When an element is declared with a default value, the value of the element is whatever value appears as the element's content in the instance document; if the element appears without any content, the schema processor provides the element with a value equal to that of the default attribute. However, if the element does not appear in the instance document, the schema processor does not provide the element at all. In summary, the differences between element and attribute defaults can be stated as: Default attribute values apply when attributes are missing, and default element values apply when elements are empty.</p></blockquote>
+
+<p>Currently NML is treating both attributes and elements in the same way. If an empty tag such as &lt;mytag/&gt; were read during the update of a character array the first character will be set to zero, while only if the tag does not occur at all will the default be copied into the array. If the variable is not a character array the empty tag will be considered invalid data and an error printed. Perhaps a future version of NML will address this inconsistancy.</p>
+
+
+<h3><a name="UNBOUNDED">NML_UNBOUNDED_ARRAY</a></h3>
+
+<p>NML does not usually allow pointer types. The reason is that if one copies a data structure containing pointer(s) in C++ the object(s) pointed to are not copied, so now there are two pointers to the same object. That might be what you want in some cases, but if one of those pointers is then accessed by another process you will depending on the operating system either halt with some kind of memory access violation or access the object with no mutual exclusion protection. This means that one process might be using it while another changes it and that usually causes very difficult to diagnose problems.</p>
+<p>XML often contains tags that can occur and unbounded number of times. The only way to store these is to use a pointer that can be used to dynamically allocate however much memory is required.</p>
+<p>The following macro is defined in nmlmsg.hh ( which is included by rcs.hh):</p>
+<div class="prototypes">
+<pre>
+
+#define DECLARE_NML_UNBOUNDED_ARRAY(type, name) int name##_length; type *name; int name##_size_allocated;
+
+</pre>
+</div>
+
+<p>The use of this macro acts both as a signal to the code generator and as a way of defining three variables on one 
+line reusing the name.</p>
+<p>This can then be used to create three variables to correspond to each unbounded array. A pointer to either NULL or an area of memory allocated for the array, the length or the number of items on the array that are intended to be sent with the next write or were received in the most recent read, and the size_allocated or the number of items that could be stored without needing to allocate a bigger array.</p>
+<p>Dealing with this requires some special care. Before writing a message that contains unbounded you should allocate the amount of space needed and set both the corresponding _length and size_allocated. Be aware that if you read a message that contains an unbounded that the memory may be freed during the next read or write on that channel, so you may need to allocate space for a separate copy to keep before making another call to NML::read or NML::write. If you receive multiple types of messages from the same channel you need to free the unboundeds each time to avoid a memory leak. Whenever you free an unbounded you should set the length and size_allocated to zero and the pointer to NULL, to prevent a subsequent NML read or write from accessing that memory. In the configuration file, neutral must be set to one and the encoding method must be &quot;xml&quot;. The size of the buffer set in the configuration file is still finite and needs to be made big enough to accommodate the xml encoded data.</p>
+
+<p>For unbounded arrays of characters the macro SET_NML_UNBOUNDED_STRING also defined in nmlmsg.hh included by rcs.hh will conveniently set the pointer and update both the length and size_allocated variables.</p>
+
+<div class="prototypes">
+<pre>
+
+#define SET_NML_UNBOUNDED_STRING(name, string)  name=strdup(string); name##_length = strlen(name); name##_size_allocated=name##_length+1;
+
+</pre>
+</div>
+
+<p>The following example uses unbouded arrays.</p>
+
+<div class="example">
+<pre>
+
+#include &quot;rcs.hh&quot;
+
+#define A_TYPE               10001
+#define LIST_OF_ANCHORS_TYPE 10002
+
+class A : public NMLmsg
+{
+public:
+  A();
+  void update(CMS *);
+
+  DECLARE_NML_UNBOUNDED_ARRAY(char,href); //attribute,default=http://www.nist.gov
+  DECLARE_NML_UNBOUNDED_ARRAY(char,label); //name=
+};
+
+class LIST_OF_ANCHORS : public NMLmsg
+{
+public:
+  LIST_OF_ANCHORS();
+  void update(CMS *);
+
+  DECLARE_NML_UNBOUNDED_ARRAY(A,alist);
+};
+
+</pre>
+</div>
+
+
+<p> produces </p>
+
+<div class="example">
+<pre>
+
+void A::update(CMS *cms)
+{
+
+	cms-&gt;beginClass(&quot;A&quot;,&quot;NMLmsg&quot;);
+	cms-&gt;next_update_default(&quot;http://www.nist.gov&quot;);
+	cms-&gt;update_unbounded_attribute_with_name(&quot;href&quot;,&amp;href,href_length,href_size_allocated);
+	cms-&gt;update_unbounded_with_name(&quot;&quot;,&amp;label,label_length,label_size_allocated);
+
+	cms-&gt;endClass(&quot;A&quot;,&quot;NMLmsg&quot;);
+
+}
+
+</pre>
+</div>
+
+
+<p> . . .  </p>
+
+<div class="example">
+<pre>
+
+void LIST_OF_ANCHORS::update(CMS *cms)
+{
+
+	cms-&gt;beginClass(&quot;LIST_OF_ANCHORS&quot;,&quot;NMLmsg&quot;);
+	cms-&gt;beginStructUnboundedArray(&quot;alist&quot;,((void **) &amp;alist),alist_length,alist_size_allocated,sizeof(A));
+	if(0 != alist)
+	{
+		for(int i_alist=0; i_alist &lt; alist_length &amp;&amp; i_alist &lt; alist_size_allocated ; i_alist++)
+		{
+			cms-&gt;beginStructArrayElem(&quot;alist&quot;, i_alist);
+			alist[i_alist].update(cms);
+			cms-&gt;endStructArrayElem(&quot;alist&quot;, i_alist);
+		}
+	}
+	cms-&gt;endStructUnboundedArray(&quot;alist&quot;,((void **) &amp;alist),alist_length,alist_size_allocated,sizeof(A));
+
+	cms-&gt;endClass(&quot;LIST_OF_ANCHORS&quot;,&quot;NMLmsg&quot;);
+
+}
+
+</pre>
+</div>
+
+
+
+<p> . . . </p>
+
+<div class="example">
+<pre>
+
+A::A()
+	: NMLmsg(A_TYPE,sizeof(A))
+{
+	SET_NML_UNBOUNDED_STRING(	href,&quot;http://www.nist.gov&quot;);
+	label=0;
+	label_length=0;
+	label_size_allocated=0;
+}
+
+</pre>
+</div>
+
+
+<p>  . . .  </p>
+
+<div class="example">
+<pre>
+
+LIST_OF_ANCHORS::LIST_OF_ANCHORS()
+	: NMLmsg(LIST_OF_ANCHORS_TYPE,sizeof(LIST_OF_ANCHORS))
+{
+	alist=0;
+	alist_length=0;
+	alist_size_allocated=0;
+
+}
+
+</pre>
+</div>
+
+
+<p>Updating simple types like character arrays only requires changing 
+the cms->update_with_name to cms->update_unbounded_with_name and adding an additional parameter. For arrays of data structures, several steps are required. The data structure is allocated or checked for size in beginStructUnboundedArray. Then each element of the array is updated and those updates are surrounded by calls to cms->beginStructArrayElem and cms->endStructArrayElem. The constructors force unbounded arrays without default values to zero or NULL, indicating no memory is allocated for it. Memory is allocated in the constructor and the size_allocated and length values set appropriately for unbounded character arrays that have default values.</p>
+
+<h3><a name="ARRAY_INDEXES">Array Indexes</a></h3>
+
+<p>There are several ways arrays could be represented in XML. Consider the array:</p>
+
+<div class="example">
+<pre>
+
+    int i[5];
+
+</pre>
+</div>
+
+
+<p>Assume that i[0] = 0, i[1] = 1, etc.One way to represent the array which would correspond to a list in XML schema. Enclose the entire array in a single set of tags and use a delimiter such as a space between the elements.</p>
+
+<div class="example">
+<pre>
+
+     &lt;i&gt;0 1 2 3 4&lt;/i&gt;
+
+</pre>
+</div>
+
+
+<p>There are a couple of problems with this method. If the list is very large,while the position of each element is perfectly clear to programs parsing the data it is hard for a human looking only at the text to find for example element number 152. It is more difficult to send only part of an array this way. For example if only element number 152 needs to be changed one still needs to send the preceding 151 elements just so the element we want to send is in the correct position. Another problem is that we can not handle arrays of data structures this way.This method is not currently supported by NML, but could perhaps be added in the future using alternative update functions and a hot comment similar to the way attributes are handled.</p>
+
+<p>What NML will do by default is to use separate start and end tags for each element and  add -<i>array_index</i> to each tag name so that the following would result:</p>
+
+<div class="example">
+<pre>
+
+    &lt;i-0&gt;0&lt;/i-0&gt;&lt;i-1&gt;1&lt;/i-1&gt;&lt;i-2&gt;2&lt;/i-2&gt;&lt;i-3&gt;3&lt;/i-3&gt;&lt;i-4&gt;4&lt;/i-4&gt;
+
+</pre>
+</div>
+
+
+<p>While this looks rather ugly, it allows one to find any element without counting the preceding elements and it allows the use of the configuration option &quot;xmldiff&quot; where only elements that change are sent.</p>
+
+<p>In order to be compatible with some externally generated schemas there is an option of not using  the array indexes. If the header file contains the line:</p>
+<div class="example">
+<pre>
+
+#define DO_NOT_ADD_INDEXES_TO_ARRAY_NAMES 1
+
+</pre>
+</div>
+
+
+<p>Then the code generator will add the following line to the beginning of the
+format function:</p>
+
+<div class="example">
+<pre>
+
+	cms-&gt;add_array_indexes_to_name=false;
+
+</pre>
+</div>
+
+ 
+<p>The output of the previous example would then be:</p>
+
+<div class="example">
+<pre>
+
+    &lt;i&gt;0&lt;/i&gt;&lt;i&gt;1&lt;/i&gt;&lt;i&gt;2&lt;/i&gt;&lt;i&gt;3&lt;/i&gt;&lt;i&gt;4&lt;/i&gt;
+
+</pre>
+</div>
+
+
+<p>In this case the position and order of the elements again becomes critical. &quot;xmldiff&quot; can not be used with this option.</p>
+
+<p>Another option which I considered but have not yet implemented would be to use an attribute as the array index. This would look something like this:</p>
+
+<div class="example">
+<pre>
+
+    &lt;i index=&quot;0&quot;&gt;0&lt;/i&gt;&lt;i index=&quot;1&quot;&gt;1&lt;/i&gt;&lt;i index=&quot;2&quot;&gt;2&lt;/i&gt;&lt;i index=&quot;3&quot;&gt;3&lt;/i&gt;&lt;i index=&quot;4&quot;&gt;4&lt;/i&gt;
+
+</pre>
+</div>
+
+
+<p>The two downsides to this approach are that it is the most verbose and that since all the end tags are identical it can be somewhat more difficult to see which start tag matches which end tag when just looking at the output in a text editor.</p>
+
+<h3><a name="DATE">Dates and Times</a></h3>
+
+<p>XML defines several special formats for dates and times. CMS defines in cms.hh (which is included by rcs.hh) several structures for dates and times including:</p>
+
+<div class="prototypes">
+<pre>
+
+struct CMS_DURATION
+{
+  long years;
+  long months;
+  long days;
+  long hours;
+  long minutes;
+  double seconds;
+};
+
+struct CMS_DATE_TIME
+{
+  long years;
+  long months;
+  long days;
+  long hours;
+  long minutes;
+  double seconds;
+  int timezoneoffsethours;
+};
+
+struct CMS_TIME 
+{
+  int hours;
+  int minutes;
+  double seconds;
+  int timezoneoffsethours;
+};
+
+struct CMS_DATE 
+{
+  long years;
+  long months;
+  long days;
+};
+
+</pre>
+</div>
+
+<p>The update functions for these classes have been overloaded to generate and 
+expect date and time formats correspondig to the XML schema types time,date,datetime, and duration.</p>
+
+<p>The following functions may be convenient for setting the structures to the current date and/or time.</p>
+
+<div class="prototypes">
+<pre>
+
+     void get_current_cms_date_time(struct CMS_DATE_TIME *dt);
+     void get_current_cms_time(struct CMS_TIME  *t);
+     void get_current_cms_date(struct CMS_DATE *d);
+
+</pre>
+</div>
+
+<h2><a name="JAVA">Java Support</a></h2>
+
+<p>Whenever the code generator is used a series of java class files will also be generated. The classes generated can be configured to use XML with the same configuration file options the  C++ code responds to. In addition the class rcs.nml.XMLFormatConverter can be used on its own to read a URL and parse XML for NML messages.</p>
+
+<div class="prototypes">
+<pre>
+
+package rcs.nml;
+
+public class XMLFormatConverter extends NMLFormatConverterBase
+{
+
+  public void SetMessageDictionary(NMLMessageDictionary new_dict)
+  {
+      . . .
+  }
+
+  public NMLmsg readXmlFromURL(java.net.URL url)
+  { 
+     . . .
+  }
+ 
+. . .
+}
+
+</pre>
+</div>
+
+<p>The following code should run with the previous clock server to print the
+time over and over on the command line. The rcs.jar file needs to be on the 
+classpath both to compile and to run. The class clock_MsgDict  is created by the code generator and provides the XMLFormatConverter with information about the 
+particular NML classes that might be used in this application.</p>
+
+<div class="example">
+<pre>
+
+public class clockread
+{
+    public static void main(String args[])
+    {
+	try
+	    {
+		clock_MsgDict cmd = new clock_MsgDict();
+		rcs.nml.XMLFormatConverter xfc = new rcs.nml.XMLFormatConverter();
+		xfc.SetMessageDictionary(cmd);
+		java.net.URL url = new java.net.URL(&quot;http://localhost:8090/clock_buf.xml&quot;);
+		while(true)
+		    {
+			MY_CLOCK clk = (MY_CLOCK) xfc.readXmlFromURL(url);
+			if(null != clk)
+			    {
+				System.out.println(clk.now.hours+":"+clk.now.minutes+":"+clk.now.seconds);
+			    }
+		    }
+	    }
+	catch(Exception e)
+	    {
+		e.printStackTrace();
+	    }
+    }
+}
+
+</pre>
+</div>
+
+
+<hr />
+ 
+<p>Last Modified:  28-Jul-2003</p>
+
+<p>If you have questions or comments regarding this page  please
+contact  <a href="http://www.isd.mel.nist.gov/personnel/shackleford/">Will Shackleford</a> at <i><a href="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</a></i></p>
+
+</body>
+</html>
+

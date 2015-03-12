@@ -1,0 +1,5 @@
+java.lang.NumberFormatException: For input string: "false"
+	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
+	at java.lang.Integer.parseInt(Integer.java:481)
+	at java.lang.Integer.valueOf(Integer.java:570)
+	at nml_test_java_read.main(nml_test_java_read.java:58)

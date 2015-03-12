@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: rcslib
+Description: Real-Time Control Systems Library, which includes Neutral Messaging Language(NML) for configurable platform independant communications as well as other utilities needed in Real-Time Control Systems such as posemath, timers, and diagnostic tools.
+Version: @VERSION@
+Libs: -L${libdir} -lrcs -lposemath @LIBS@
+Cflags: -I${includedir}

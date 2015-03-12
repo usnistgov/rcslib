@@ -1,0 +1,155 @@
+<html>
+<head>
+<title>NML Subdivisions</title>
+</head>
+<body  BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="551A8B" ALINK="#FF0000" >
+<H1>NML Subdivisions</H2>
+
+<H2>Introduction</H2>
+<P>While most NML applications need only a couple of undivided NML buffers for communications a few applications might need a large number of NML buffers if they could not be subdivided. NML subdivisions were aimed at two types of applications.</p>
+
+<UL>
+<LI>Applications that need to share large amounts of data that can be subdivided into sections that do not need to be syncrhonized which each other.</LI>
+<LI>Applications that need to provide a query/reply service where many programs can query the service and get replies unique to their query.</LI>
+</UL>
+
+<P>An additional layer of software described in <A HREF="nmlqr.html">The NML Query/Reply Service</a> builds on NML subdivisions to provide an easier to use interface for applications desiring to create/use a query/reply service. So the remainder of this document will focus on the first type of application. </p>
+
+<H2>NML Configuration File Changes</H2>
+
+<P>To use subdivisions just add &quot;subdiv=&lt;# of subdivisions&gt;&quot; at the end of the buffer line. You may also need to increase the buffer size since the area allocated for each subdivision will be the buffer size minus some overhead divided by the number of subdivisions. Currently, subdivisions cannot be used with STCP,RPC, subscriptions or broadcast options.</p>
+
+<H2>NML API Extensions</H2>
+
+<P>The NML API is essentially the same as before except that several alternate  functions that end with &quot;_subdivision&quot; and take an additional integer to specify which subdivision should be used. The subdivision number should be between 0 and 1 less than the number of subdivisions established in the configuration file.</p>
+
+<P>Here are the C++ prototypes for these functions:</p>
+
+<pre>
+  int     NML::write_subdivision(int subdiv, NMLmsg  &nml_msg); 
+  int     NML::write_subdivision(int subdiv,NMLmsg  *nml_msg); 
+  int     NML::write_if_read_subdivision(int subdiv,NMLmsg  &nml_msg); 
+  int      NML::write_if_read_subdivision(int subdiv,NMLmsg  *nml_msg); 
+  NMLTYPE  NML::read_subdivision(int subdiv);
+  NMLTYPE NML:: blocking_read_subdivision(int subdiv, double timeout); 
+  NMLTYPE  NML::peek_subdivision(int subdiv);	
+  NMLmsg * NML::get_address_subdivision(int subdiv);
+</pre>
+
+<p>For more information on what each function does refer to their non subdivision counterparts in <A HREF="NMLcpp.html">NML Programmers Guide(C++ Version)</a>.</p>
+
+<P>One additional function was also added to allow users to determine how many
+subdivisions are available for a particular buffer. Here is it's C++ prototype.</p>
+
+<pre>
+  int NML::get_total_subdivisions();
+</pre>
+
+<P>The Java versions of these functions are not yet available.</p>
+
+<H2>Example</H2>
+
+<p>The example described in this section consists of a writer that sends out a large array and a reader that is only interested in one particular element of the array.</p>
+
+<p>Here is the configuration file used:</p>
+
+<pre>
+# buffers:
+# name		type	host		size	neut    RPC# 	buffer#	 max_proc [type-spec]
+#		SHMEM	host		size	neut    RPC# 	buffer#	 max_proc key
+
+B subdiv_buf1	SHMEM	localhost 		20000	0 0x20001050	 1       12 	1001 TCP=6001 subdiv=100
+
+
+# processes:
+# name		buffer	       type	host 		ops	server 	timeout	master 	c_num
+P subdiv_reader	subdiv_buf1	LOCAL	localhost 	R	0	INF 	1	0
+P subdiv_writer	subdiv_buf1	LOCAL	localhost 	W	0	INF 	0	1
+
+</pre>
+
+<p>Here is the code for the writer.</p>
+
+<pre>
+#include "rcs.hh"
+#include "nml_ex1.hh"
+
+
+main()
+{
+  NML example_nml(ex_format, "subdiv_buf1", "subdiv_writer", "ex_cfg.nml");
+  EXAMPLE_MSG example_msg[100];
+  int count;
+  while(1)
+    {
+      count ++;
+      for(int i = 0; i < 100; i++)
+	{
+	  example_msg[i].i = i;
+	  example_msg[i].f = etime();
+	  example_msg[i].c = 'a' +count%26;
+
+	  example_nml.write_subdivision(i,example_msg[i]);
+	}
+      rcs_print("%d\r",count);
+      esleep(0.1);
+    }
+}
+
+</pre>
+
+<P>Here is the C++ code for the reader.</p>
+
+<pre>
+#include "rcs.hh"
+#include "nml_ex1.hh"
+
+main()
+{
+	RCS_TIMER timer(0.1);
+	NML example_nml(ex_format, "subdiv_buf1", "subdiv_reader", "ex_cfg.nml");
+	EXAMPLE_MSG *example_msg_ptr;
+	int quit=0;
+
+	while(!quit)
+	{
+		switch(example_nml.read_subdivision(3))
+		{
+		case -1:
+			rcs_print( "A communications error occurred.\n");
+			quit = 1;
+			break;
+
+		case 0:
+			/* The buffer contains the same message */
+			/* you read last time. */
+			break;
+
+		case EXAMPLE_MSG_TYPE:
+			example_msg_ptr = (EXAMPLE_MSG *)example_nml.get_address_subdivision(3);
+			rcs_print(" We have a new example message. \n");
+			rcs_print(" The value of its members are:\n ");
+			rcs_print(" f=%f, c=%c, i=%d\n ", 
+				example_msg_ptr->f,
+				example_msg_ptr->c,
+				example_msg_ptr->i);
+			break;
+		}
+		timer.wait();
+	}
+}
+</pre>
+
+<HR>
+ 
+<p>Last Modified:  March 17,1999</p>
+<UL>
+<LI><A HREF="index.html">See other RCS Library Documents.</A></LI>
+</UL>
+
+<P>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email, please
+contact  <A HREF="http://isd.cme.nist.gov/staff/shackleford/"
+>Will Shackleford</A> at <I><A HREF="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</A></I></P>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+
+PRINT_OBJS := \
+	rcs_prnt.o \
+	sepwords.o
+
+
+LIBRCS_OBJS :=	$(LIBRCS_OBJS) \
+	$(PRINT_OBJS)
+
+PRINT_HEADERS = rcs_prnt.hh \
+	win_prnt.hh
+

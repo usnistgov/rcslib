@@ -1,0 +1,53 @@
+
+ifneq ($(findstring vxworks, $(PLAT)), )
+
+POSEMATH_OBJS := \
+	_posemath.o \
+	_mathprnt.o \
+	posemath.o \
+	sincos.o
+
+
+else
+
+ifeq (rtlinux, $(findstring rtlinux,$(PLAT)))
+
+
+POSEMATH_OBJS := \
+	_posemath.o \
+	sincos.o
+
+else
+
+ifeq (rtai, $(PLAT))
+
+
+POSEMATH_OBJS := \
+	_posemath.o \
+	sincos.o
+
+else
+
+POSEMATH_OBJS := \
+	_posemath.o \
+	_mathprnt.o \
+	mathprnt.o \
+	posemath.o \
+	sincos.o
+     
+endif
+
+endif
+
+endif
+
+
+
+LIBRCS_OBJS := $(LIBRCS_OBJS) \
+	$(POSEMATH_OBJS)
+
+
+POSEMATH_HEADERS = \
+	mathprnt.h \
+	posemath.h \
+	sincos.h

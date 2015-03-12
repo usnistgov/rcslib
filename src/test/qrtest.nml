@@ -1,0 +1,24 @@
+# buffers:
+# name		type	host	  size	neut    RPC# 	buffer#	 max_proc [type-spec]
+
+B echoQuery	SHMEM	127.0.0.1 20000	1 	0	 1       12 	101 TCP=6001 bsem=201 queue packed max_message_size=2000
+B echoReply	SHMEM	127.0.0.1 2000	1 	0	 2       12 	102 TCP=6001 bsem=202 subdiv=10 packed
+B echoID	SHMEM	127.0.0.1 20000	0 	0	 3       12 	103 TCP=6001 bsem=203 queue packed max_message_size=2000
+
+# processes:
+# name		buffer	       type	host 		ops	server 	timeout	master 	c_num
+P local_echoclnt 	echoQuery      LOCAL	127.0.0.1 	W	0	INF 	0	0  waitformaster
+P local_echoclnt 	echoReply      LOCAL	127.0.0.1 	R	0	INF 	0	0  waitformaster
+P local_echoclnt 	echoID	       LOCAL	127.0.0.1 	R	0	INF 	0	0  waitformaster
+
+P remote_echoclnt 	echoQuery      REMOTE	REMOTEhost 	W	0	INF 	0	0
+P remote_echoclnt 	echoReply      REMOTE	REMOTEhost 	R	0	INF 	0	0
+P remote_echoclnt 	echoID	       REMOTE	REMOTEhost 	R	0	INF 	0	0
+
+P echosvr 	echoQuery      LOCAL	127.0.0.1 	R	0	INF 	0	1
+P echosvr 	echoReply      LOCAL	127.0.0.1 	W	0	INF 	0	1
+P echosvr 	echoID	       LOCAL	127.0.0.1 	W	0	INF 	0	1
+
+P echo_nml_svr 	echoQuery      LOCAL	127.0.0.1 	R	1	INF 	1	2
+P echo_nml_svr 	echoReply      LOCAL	127.0.0.1 	W	1	INF 	1	2
+P echo_nml_svr 	echoID	       LOCAL	127.0.0.1 	W	1	INF 	1	2

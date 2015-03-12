@@ -1,0 +1,35 @@
+#! /bin/sh
+
+
+corefiles=`find . -type f -user ${USER} -name core\*`
+if [ ${#corefiles} -gt 0 ] ; then
+    echo "Remove core files :" ${corefiles} " ? (y/n)"
+    read confirm
+    if [ x${confirm} = xy ] ; then
+	chmod u+w ${corefiles}
+	\rm -f ${corefiles}
+    fi
+fi
+
+poundfiles=`find . -type f -user ${USER}  -name \#\*`
+if [ ${#poundfiles} -gt 0 ] ; then
+    echo "Remove pound files :" ${poundfiles} " ? (y/n)"
+    read confirm
+    if [ x${confirm} = xy ] ; then
+	chmod u+w ${poundfiles}
+	\rm -f ${poundfiles}
+    fi
+fi
+
+
+tildefiles=`find . -type f -user ${USER}  -name \*.~\*`
+if [ ${#tildefiles} -gt 0 ] ; then
+    echo "Remove tilde files :" ${tildefiles} " ? (y/n)"
+    read confirm
+    if [ x${confirm} = xy ] ; then
+	chmod u+w ${tildefiles}
+	\rm -f ${tildefiles}
+    fi
+fi
+
+

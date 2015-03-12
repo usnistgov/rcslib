@@ -1,0 +1,9 @@
+
+STG_CLSS_OBJS := \
+	linklist.o
+
+LIBRCS_OBJS := $(LIBRCS_OBJS) \
+	$(STG_CLSS_OBJS)
+
+STG_CLSS_HEADERS := \
+	linklist.hh

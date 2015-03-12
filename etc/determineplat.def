@@ -1,0 +1,134 @@
+
+ifdef DEBUG_RCS_MAKE
+$(warning DETERMINE_PLAT_DEF_INCLUDED=$(DETERMINE_PLAT_DEF_INCLUDED) )
+endif
+
+ifndef DETERMINE_PLAT_DEF_INCLUDED
+DETERMINE_PLAT_DEF_INCLUDED=1
+
+# Set default RCS directory
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR := $(shell if test -d ../rcslib ; then cd ../rcslib; pwd ; \
+	elif test -d ../../rcslib ; then cd ../../rcslib; pwd ; \
+	elif test -d ../../../rcslib ; then cd ../../../rcslib ; pwd;  \
+	elif test -d ../../../../rcslib ; then cd ../../../../rcslib ; pwd; \
+	elif test -d ../rcslib-2004.2 ; then cd ../rcslib-2004.2; pwd ; \
+	elif test -d ../../rcslib-2004.2 ; then cd ../../rcslib-2004.2; pwd ; \
+	elif test -d ../../../rcslib-2004.2 ; then cd ../../../rcslib-2004.2 ; pwd;  \
+	elif test -d ../../../../rcslib-2004.2 ; then cd ../../../../rcslib-2004.2 ; pwd; \
+	fi )
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning RCSLIB_MAIN_DIR=$(RCSLIB_MAIN_DIR) )
+endif
+
+ifndef MAKEFILES_DIR
+MAKEFILES_DIR:=$(shell cd $(RCSLIB_MAIN_DIR)/etc >/dev/null 2>/dev/null; pwd)
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning MAKEFILES_DIR=$(MAKEFILES_DIR) )
+endif
+
+ifdef RTLINUX
+ifndef RTLPLAT
+RTLPLAT := $(shell $(RCSLIB_MAIN_DIR)/etc/rtlplatname )
+endif
+PLAT := $(RTLPLAT)
+else
+ifndef PLAT
+ifneq (java, $(findstring java,$(PLAT)))
+COMPUTED_PLAT := $(shell $(RCSLIB_MAIN_DIR)/etc/platname )
+else
+RESET_PLAT=0
+endif
+PLAT:=$(COMPUTED_PLAT)
+endif
+ifeq ($(PLAT),)
+ifneq (java, $(findstring java,$(PLAT)))
+COMPUTED_PLAT := $(shell $(RCSLIB_MAIN_DIR)/etc/platname )
+else
+RESET_PLAT=0
+endif
+PLAT:=$(COMPUTED_PLAT)
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning PLAT=$(PLAT) )
+$(warning RTLINUX=$(RTLINUX) )
+$(warning RTLPLAT=$(RTLPLAT) )
+$(warning COMPUTED_PLAT=$(COMPUTED_PLAT) )
+$(warning RESET_PLAT=$(RESET_PLAT) )
+endif
+
+ifdef USER_DIR
+ifndef USER_PLAT
+ifeq (~, $(findstring ~,$(USER_DIR)))
+USER_PLAT := $(shell ( \
+	if test -d $(USER_DIR) -a ! -d $(USER_DIR)/plat  ; then \
+	mkdir $(USER_DIR)/plat; \
+	fi; \
+	if test -d $(USER_DIR)/plat -a ! -d $(USER_DIR)/plat/$(PLAT)  ; then \
+	mkdir $(USER_DIR)/plat/$(PLAT); \
+	fi; \
+	cd $(USER_DIR)/plat/$(PLAT) >/dev/null 2>/dev/null; pwd))
+else
+ifeq (../, $(findstring ../,$(USER_DIR)))
+USER_PLAT := $(shell ( \
+	if test -d $(USER_DIR) -a ! -d $(USER_DIR)/plat  ; then \
+	mkdir $(USER_DIR)/plat; \
+	fi; \
+	if test -d $(USER_DIR)/plat -a ! -d $(USER_DIR)/plat/$(PLAT)  ; then \
+	mkdir $(USER_DIR)/plat/$(PLAT); \
+	fi; \
+	cd $(USER_DIR)/plat/$(PLAT) >/dev/null 2>/dev/null; pwd))
+else
+USER_PLAT := $(USER_DIR)/plat/$(PLAT)
+endif
+endif
+endif
+
+ifdef USE_TMP
+DEVP_DIR = /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)
+else
+DEVP_DIR = $(USER_PLAT)
+endif
+
+# end of ifdef USER_DIR
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning PLAT=$(PLAT) )
+$(warning MAKEFILES_DIR=$(MAKEFILES_DIR) )
+$(warning USER_DIR=$(USER_DIR) )
+$(warning DEVP_DIR=$(DEVP_DIR) )
+$(warning USER_PLAT=$(USER_PLAT) )
+endif
+
+ifneq ($(PLAT),)
+ifneq ($(PLAT),java)
+ifndef PLAT_DEF_INCLUDED
+ifdef MAKEFILES_DIR
+default : all
+
+include $(MAKEFILES_DIR)/$(PLAT).def
+else
+include $(PLAT).def
+endif
+PLAT_DEF_INCLUDED=1
+endif
+endif
+endif
+endif
+
+endif
+
+ifndef PLAT
+$(error PLAT undefined.);
+endif
+
+ifeq ($(PLAT),)
+$(error PLAT not set.)
+endif
+

@@ -1,0 +1,57 @@
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../..
+endif
+
+
+PLAT = java
+
+include ../Makefile.rcs
+
+clean: remove_jars
+
+
+remove_jars:
+	-\rm -f $(DEVP_DIR)/lib/*.jar
+
+.PHONY: remove_jars
+
+
+ifdef COMPILE_TOGETHER
+
+documentation  clean all:
+	-( cd rcs; $(MAKE) -k PLAT=$(PLAT) $@ COMPILE_TOGETHER=1;)
+	-( cd diagapplet; $(MAKE) -k  PLAT=$(PLAT) $@ COMPILE_TOGETHER=1;)
+	-( cd rcsdesign; $(MAKE) -k  PLAT=$(PLAT) $@ COMPILE_TOGETHER=1;)
+
+
+install:
+	-( cd rcs; $(MAKE) -k PLAT=$(PLAT) $@ COMPILE_TOGETHER=1;)
+	-( cd diagapplet; $(MAKE) -k  PLAT=$(PLAT) $@ COMPILE_TOGETHER=1;)
+	-( cd rcsdesign; $(MAKE) -k  PLAT=$(PLAT) $@ COMPILE_TOGETHER=1;)
+	-( cp $(DEVP_DIR)/lib/*.jar $(RELEASE_DIR)/lib )
+
+else
+
+documentation  clean all:
+	-( cd rcs; $(MAKE) -k PLAT=$(PLAT) $@;)
+	-( cd diagapplet; $(MAKE) -k  PLAT=$(PLAT) $@;)
+	-( cd rcsdesign; $(MAKE) -k  PLAT=$(PLAT) $@;)
+
+
+install:
+	-( cd rcs; $(MAKE) -k PLAT=$(PLAT) $@;)
+	-( cd diagapplet; $(MAKE) -k  PLAT=$(PLAT) $@;)
+	-( cd rcsdesign; $(MAKE) -k  PLAT=$(PLAT) $@;)
+	-( cp $(DEVP_DIR)/lib/*.jar $(RELEASE_DIR)/lib; )
+
+#	-( cd rcs; $(MAKE) PLAT=$(PLAT) -k update_rcs_version classes;)
+
+endif
+
+rcs_documentation:
+	-(javadoc -public -author -classpath $(CLASSPATH) -d $(DOC_DIR) rcs rcs.nml rcs.utils;)
+
+.PHONY: classes documentation default rcs_documentation
+
+

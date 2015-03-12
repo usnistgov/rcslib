@@ -1,0 +1,137 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    linux
+
+# Use "g++ -M" instead of makedepend.
+USE_GPP_M=1
+
+# The C compiler.
+ifndef CC
+CC =    gcc
+endif
+
+ifndef CXX
+CXX = g++
+endif
+
+# The C++ compiler.
+ifndef CPLUSPLUS
+CPLUSPLUS =   $(CXX)
+endif
+CPLUSPLUS_EXTENSION = cc
+
+KERNEL_DIR:=$(shell $(RCSLIB_MAIN_DIR)/etc/linuxkerneldir)
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O2
+endif
+endif
+
+ifndef NO_DEBUG
+ifndef DEGUG_FLAG
+DEBUG_FLAG = -g
+endif
+endif
+
+WARN_FLAG=
+
+ifdef WARN_MAX
+WARN_FLAG=-Wall
+endif
+
+ifdef NO_WARN
+WARN_FLAG=-w
+endif
+
+NO_RTL=1
+
+#RT Linux header files are needed by the non-realtime linux apps sometimes
+# primarily for mbuff and rtfifo definitions.
+RTAI_DIR := $(shell $(RCSLIB_MAIN_DIR)/etc/rtaidir )
+
+RTAI_INCLUDE = -I$(RTAI_DIR)/include
+
+
+SEARCH_PATH_FLAG = -Xlinker -rpath -Xlinker
+
+RCS_LIB_SEARCH_PATH=$(RCS_PLATLIB)
+
+XML_INC=
+XML_LINK=
+
+ifdef USE_LIBXML2
+XML_INC = -I/usr/include/libxml2  -DUSE_LIBXML2
+XML_LINK = -lxml2
+endif
+
+ifdef USE_XML
+OPT_XML_INC=$(XML_INC) -DUSE_XML
+OPT_XML_LINK=$(XML_LINK)
+endif
+
+ifdef DEBUG_MEMORY
+DEBUG_MEMORY_FLAG=-DDEBUG_MEMORY
+endif
+
+
+CFLAGS  = $(DEBUG_FLAG) $(OPTIMIZE_FLAG) $(WARN_FLAG)  -I$(KERNEL_DIR)/include -D$(PLAT) -DPLATNAME=\"$(PLAT)\" $(RTAI_INCLUDE) -Dlinux -DHAVE_LIBDL  -DLINUX_KERNEL_2_4 -fstrict-aliasing  -DNO_RTL -DHAVE_RTAI $(OPT_XML_INC) $(DEBUG_MEMORY_FLAG) -DHAVE_FSYNC
+
+ifdef DEBUG_LINKING
+CLINK = -Xlinker --verbose --Xlinker -ldl -lrt -lpthread $(OPT_XML_LINK)
+else
+CLINK = -ldl -lrt -lpthread  $(OPT_XML_LINK)
+endif
+
+ifndef CPLUSPLUSLINK
+CPLUSPLUSLINK=$(CLINK)
+endif
+
+
+# Flags for compiling and linking X Windows apps
+XINC = -I/usr/include
+XLINK = -L/usr/X11/lib -L/usr/X11R6/lib -lXaw
+
+# Flags for compiling and linking Tcl apps
+TCL_INC=$(strip $(shell $(RCSLIB_MAIN_DIR)/etc/tcltkincflags.sh))
+TCL_LINK=$(shell $(RCSLIB_MAIN_DIR)/etc/tcltklibflags.sh )
+TK_LINK=
+
+
+# makedepend must be run from a sun. (Preferably one with a cross-compiler.)
+MAKEDEPEND = /usr/X11R6/bin/makedepend
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        ranlib
+
+# The assembler.
+AS =    as
+
+LD =    ld
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+DYNAMIC_LINK_FLAG = -shared
+DYNAMIC_LIB_BUILD_TOOL=gcc
+
+COPY_SOURCE_COMMAND = cp
+RCSLIB_LIBRARY_NAME = librcs.a
+STRIP = strip
+
+# disable SCCS make rule for Linux       
+% : SCCS/s.%
+	@true
+
+% ::    RCS/%,v
+	co $@
+
+
+
+
+
+
+
+
+

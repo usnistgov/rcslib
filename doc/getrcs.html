@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                        "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html lang="en">
+<head>
+<title>RCS Library Installation Instructions</title>
+<link REL="stylesheet" href="../../mel2.css" TYPE="text/css">
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+</head>
+<body bgcolor="#FFFFFF" text="#000000" link="#990066" alink="#FF3300" vlink="#660099">
+<center>
+<H1>Instructions for getting and making the <BR>Real-time Control Systems(RCS) Library.</H1>
+</center>
+<hr>
+<!--RCS_VERSION= 2014.05.14 -->
+<ol> 
+<li>Get the source at 
+    <a href="http://www.isd.mel.nist.gov/projects/rcslib/rcslib-2014.05.14.tar.gz">
+      http://www.isd.mel.nist.gov/projects/rcslib/rcslib-2014.05.14.tar.gz</a>
+    </a> 
+</li>
+<li>Extract files from rcslib-2014.05.14.tar.gz</li>
+<ol>
+<li>Uncompress the file by using 
+&quot;<a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.gnu.org/directory/gzip.html">gunzip</a> rcslib-2014.05.14.tar.gz
+<li>Extract all of the files from the tar file by using &quot;
+<a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.gnu.org/directory/tar.html">tar</a> -xf rcslib-2014.05.14.tar
+<p>With newer versions of GNU tar one can uncompress and extract with one
+command.&quot;tar -xzf rcslib-2014.05.14.tar&quot;
+</p></li>
+</ol>
+<li>Build the RCS library.
+<ul>
+<li>To build using the autoconf/automake generated build system:
+<ul>
+<li>
+<pre>
+<p>cd rcslib-2014.05.14
+./configure
+make
+# The make check is optional, but gives a little more confidence that
+# everything will work, or if there is an option/function to stay away from.
+make check
+make install
+</pre>
+</li>
+<li>There are lots of features that can be enabled or disabled by
+configure. Run &quot;./configure &ndash;&ndash;help&quot; for a list. For example to build the smallest possible library use &quot;&ndash;&ndash;disable-ALL&quot; and then enable only the features you actually need. ( ./configure &ndash;&ndash;disable-ALL &ndash;&ndash;enable-shmem ) Setting the environment variables CC,CXX,CFLAGS,CXXFLAGS,CPPFLAGS or LDFLAGS can be useful too.
+</li>
+<li>The command &quot;make install&quot; may require root or administrator
+access. If this is a problem set prefix=<i>directory</i> to a directory you have write access to.</li>
+<li>If you want to build for multiple platforms and use the same
+source directory, use the command etc/multiplatbuild.sh. Each time it is
+run the library will be installed into a platform specific subdirectory of
+.multiplatinstalls and symbolic links set up for lib include and bin in
+the top level directory. This should also eliminate the need for root access.
+</li>
+</ul>
+</li>
+<li>To build with the older static Makefiles:
+<ul>
+<li>
+<pre>
+<p>
+<p>cd rcslib-2014.05.14
+make USE_OLD_RCSLIB_MAKEFILES=1
+</pre>
+</li>
+<li>
+<p>The &quot;<a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.gnu.org/directory/make.html">make</a>&quot; program needs to be GNU make. You can use the following command to check:</p>
+<pre>
+make -v
+</pre>
+<p>There are similar programs also called &quot;make&quot; from other sources that generally do not work. Sometimes GNU make is installed on your system under the name &quot;gmake&quot; or &quot;gnumake&quot;.</p>
+</li>
+<li>
+<p>If you do not specify a platform the script rcslib/etc/platname will be run
+to guess the platform name. If it fails or guesses incorrectly you should either set the environment variable &quot;PLAT&quot; or set it on the make command line. To set the environment variable  use either
+ &quot;setenv PLAT <i>platname</i>&quot; or
+ &quot;PLAT=<i>platname</i>; export PLAT&quot; depending on the
+type of shell you have. To set the platform on the command line run:
+&quot;make PLAT=<i>platname</i>&quot;
+The string to use for <i>platname</i> should match the base of one of the .def
+files in the rcslib/etc directory. For example setting PLAT=sunos5 would
+use the definitions in rcslib/etc/sunos5.def.</p>
+<p>If no .def file exists for your platform you should copy one of the other .def files and edit it with a text editor as necessary.</p>
+</li>
+</ul>
+</li>
+<li> For Windows:
+<ul>
+<li>Use MinGW:
+<p> Download and install first MinGW and then MSYS from <a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.mingw.org">http://www.mingw.org</a>.Be sure to save the rcslib  tar file under the &quot;root&quot; directory of MSYS ie &quot;C:\msys\1.0\&quot; or a sub-directory of this. Then, from within the MSYS tool either run:</p>
+<pre>
+tar -xzf rcslib-2014.05.14.tar
+<p>
+<p>cd rcslib-2014.05.14
+./configure 
+make
+make install
+</pre>
+<p> or use the older makefiles :</p>
+<pre>
+<p>
+<p>cd rcslib-2014.05.14
+export PLAT=mingw32
+make PLAT=mingw32
+</pre>
+</li>
+<li>If you must use VC++, there is a solutions file in 
+  rcslib-2014.05.14/etc/win_vc_2010_express/rcs/rcs.sln.
+</li>
+</p>
+
+</li>
+</ul>
+</li>
+</ul></li>
+
+<li>To build your own applications:
+<p>If you built with the old static Makefile, 
+you need to add the following line to your compiler options
+where <i>pathtorcslib</i> and <i>platname</i> will depend on your system:<br>
+-I<i>pathtorcslib</i>/plat/<i>platname</i>/include</p>
+<p>The following also needs to be added to the linker options:<br>
+-L<i>pathtorcslib</i>/plat/<i>platname</i>/lib -lrcs</p>
+<p>For configure/autoconf based builds the flags will be different since the paths are different but typically only the -lrcs flag is needed since configure
+will install files in the default location expected by the compiler.</p>
+<p>Also depending on your platform you may need to add some additional libraries to the linker options. The libraries themselves are expected to be provided with your operating system or compiler but still need to be explicitly requested in the linker options. For example windows needs &quot;-lws2_32 -lwininet&quot; while Solaris needs &quot;-lrpcsvc -lsocket -lnsl -lintl -lm -lposix4 -ldl&quot; If you get undefined symbols you can check the CLINK variable of the platforms .def file or your operating systems documentation on the functions that
+were undefined to determine what libraries to add. configure will also print the LIBS it is using which are also generally needed for applications. Also, since RCS is a C++ library you generally will want to link with the C++ compiler rather than directly with ld or with the C compiler or you may end up missing the standard C++ libraries.</p>
+</li>
+<li>OPTIONAL: Build the java tools and jar files
+<p>While the precompiled version of the java code can be run on multiple platforms and therefore somewhat reduce the need for recompiling. The precompiled code might not be the latest.</p>
+<p>To build from source: Download and install a Developer's Kit for Java such as the SDK for Java 2 Standard Edition (J2SE) from <a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://java.sun.com/">http://java.sun.com/</a>.</p>
+<p>With the java bin directory on your PATH run:</p>
+<pre>
+cd <i>pathtorcslib</i>/src/java
+make PLAT=java
+</pre>
+Sometimes it is necessary to add JDK_DIR=<i>path_to_j2se_sdk</i> to the make command line if you have multiple java programs on your path. The compiled byte code will be placed in several jar files and subdirectories in <i>pathtorcslib</i>/plat/java/lib/.
+</li>
+</ol>
+
+<p>For the diagnostics tool or code generator,
+ download <a href="diag_NB.jar">diag_NB.jar</a> or <a href="CodeGenCmdLine.jar">CodeGenCmdLine.jar</a>, and a Java Runtime tool such as from <a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://java.sun.com/">http://java.sun.com/</a> and run with the command &quot;java -jar <i>&lt;jarfile&gt;</i>&quot;. (See
+the instructions for each tool.) The diagnotics tool now requires JDK or JRE 1.6 as well as <a href="plotter_NB.jar">plotter_NB.jar</a>,<a href="rcs.jar">rcs.jar</a>, <a href="CodeGenCmdLine.jar">CodeGenCmdLine.jar</a>, and <a href="swing-layout-1.0.jar">swing-layout-1.0.jar</a>. </p>
+<p>Alternatively run diag tool through Java WebStart with this link:</p>
+<p><a href="http://www.isd.mel.nist.gov/projects/rcslib/diag.jnlp">http://www.isd.mel.nist.gov/projects/rcslib/diag.jnlp</a></p>
+<p>or with all Java classes in one .Jar file here:</p>
+<p><a href="http://www.isd.mel.nist.gov/projects/rcslib/rcsjava.jar">http://www.isd.mel.nist.gov/projects/rcslib/rcsjava.jar</a></p>
+
+<HR>
+<p>Last Modified: 2014.05.14 </p>
+<ul>
+<li><a href="index.html">See other RCS Library Documents.</a></li>
+</ul>
+<p>If you have questions or comments regarding this page, please
+contact
+<a href="http://www.isd.mel.nist.gov/personnel/shackleford/">Will Shackleford</a> 
+at <address><a href="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</a></address>
+
+<HR SIZE=3>
+<FONT SIZE=4><B>Commercial Product Disclaimer</B></FONT>
+<BLOCKQUOTE>
+<FONT SIZE=2><B>DISCLAIMER: </B>Certain commercial equipment, instruments, or materials are identified in this paper to specify the experimental procedure adequately.  Such identification is not intended to imply recommendation or endorsement by the National Institute of Standards and Technology, nor is it intended to imply that the materials or equipment identified are necessarily the best available for the purpose.</FONT>
+</BLOCKQUOTE><p>
+
+<HR SIZE=3>
+<FONT SIZE=4><B>Software Disclaimer</B></FONT>
+<BLOCKQUOTE>
+<FONT SIZE=2><B>DISCLAIMER: </B>This software was produced by the National Institute of Standards and Technology (NIST), an agency of the U.S. government, and by statute is not subject to copyright in the United States.  Recipients of this software assume all responsibility associated with its operation, modification, maintenance, and subsequent redistribution.  
+<BR><I>See NIST Administration Manual 4.09.07 b and Appendix I</I></FONT>
+</BLOCKQUOTE><p>
+<HR>
+
+</body>
+</html>

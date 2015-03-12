@@ -1,0 +1,685 @@
+<!DOCTYPE HTML SYSTEM "html.dtd">
+<HTML>
+<HEAD>
+<TITLE>RCS Library Utilities Guide</TITLE>
+</HEAD>
+<BODY  BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="551A8B" ALINK="#FF0000" >
+<A NAME="TOP_OF_FILE"></A> 
+<H1>RCS Library Lower Level Utilities</H1>
+<UL>
+<LI><A HREF="index.html">See other RCS Library Documents.</A></LI>
+<LI><A HREF="utilstoc.html">Go To Table of Contents</A></LI>
+</UL>
+<HR> 
+<H2><A NAME="Intro_Header">Introduction</A></H2>
+<P>The Real-Time Control Systems(RCS) library includes several utilities that aid portability of 
+source code. The most significant
+utilities CMS/NML and the NODE class are described in separate documents.
+This guide will expose some of the lower level classes and functions
+which were used in constructing the higher level utilities but may also
+be useful on their own.   To use the utilities link with the RCS library
+and include &quot;rcs.hh&quot; just as you would to use CMS/NML or the NODE class.
+Some utilities are not
+available under all of the platforms. See the &quot;Platforms Supported&quot; line
+under each major heading.</p>
+<P> Most of the examples have corresponding text files which can be
+down loaded and compiled. (WWW Users: The examples are included both directly in this document for easy reading and as separate text-only files which are ready to be compiled.) Unfortunately, given the variety of systems
+and compilers that are available it is impossible for me to give
+detailed compiling instructions here. However the following form should
+work on most systems.(All typed on one line.)</P>
+<PRE>[C++ Compiler] -I[Location of RCS Include Files] [Example C++ File(s)] [RCS Library for Platform]  -o [Executable File]</PRE>
+<P>For users of Sun4 computers on the NIST, ISD LAN the first example
+would be compiled like this.</P>
+<PRE>g++ -I/home/manta/rcslib/plat/sunos4/include utilex1.cc /home/manta/rcslib/plat/sunos4/lib/librcs.a  -o utilex1</PRE>
+<P>Since a working knowledge of C++ will be very helpful for
+understanding or using the RCS library utilities you may want to 
+ review <A HREF="quickC++.html">&quot;A Quick C++ Introduction for RCS Library Users&quot;</A>.</P>
+<H2><A NAME="RCS_TIMER_Header">The RCS_TIMER Class.</A></H2>
+<P>Platforms Supported: All</P>
+<P>Programmers can create RCS_TIMER objects to synchronize to the
+system clock or to some other event(s).</P>
+<P>To synchronize a cyclic process to the system clock:</P>
+<OL>
+<LI>Initialize the RCS_TIMER object with the cycle period. </LI>
+<LI>Call RCS_TIMER::wait() at the end of each cycle. </LI>
+</OL>
+<P>The cycle period will be rounded up to the resolution of the system
+clock or the most precise time measuring or sleeping function available for the
+given platform. RCS_TIMER::wait() will wait the remainder of the cycle
+period since the last call. The units for the cycle time are seconds.</P>
+<P>Example: <A HREF="utilex1.cc">utilex1.cc</A></P>
+<PRE>#include &quot;rcs.hh&quot;
+
+main()
+{
+	RCS_TIMER timer(0.02);/* Initialize timer for 20 millisecond cycles. */
+
+ 	while(1)
+ 	{
+		/* Do some processing. */
+		timer.wait();        /* Wait for the end of cycle. */
+	}
+}
+</PRE>
+<P>To synchronize to some other event(s):</P>
+<OL>
+<LI> Create a function that takes a (void *)  as an argument and
+returns an int. </LI>
+<LI> Initialize the RCS_TIMER object with a cycle period used only for
+diagnostics, the address of the function and a parameter for the
+function.</LI>
+<LI> Use RCS_TIMER::wait().</LI>
+</OL>
+<P>The user's function should return 0 when the event to synchronize to
+occurs or -1 if an error occurs. The argument passed to the users
+function will be whatever was passed as the third parameter to the
+constructor of the RCS_TIMER or NULL if no third argument is given. This
+argument could be used by the synchronizing function to know which timer
+is calling it if the synchronization function is called by more than one
+timer. Nothing will force the function to return within the cycle period
+but there are ways to check if the function took longer than the cycle
+period after it returns.</P>
+<P>Example:<A HREF="utilex2.cc">utilex2.cc</A></P>
+<PRE>#include &quot;rcs.hh&quot;
+#include &lt;stdio.h&gt; 
+
+int my_sync_func(void *arg)
+{
+	 getchar();
+	 return(0);
+}
+
+main()
+{
+	RCS_TIMER timer(0.02, my_sync_func, NULL);
+
+ 	while(1)
+	{
+		 /* Do some processing. */
+
+		timer.wait();
+	}
+}
+</PRE>
+<H3><A NAME="RCS_TIMER_Constructor">Constructor:</A></H3>
+<P>RCS_TIMER::RCS_TIMER(double <VAR>_interval</VAR>, RCS_TIMERFUNC <VAR>_function</VAR> = NULL,
+void *<VAR>_arg</VAR> = NULL);</P>
+<P>Initialize a new RCS_TIMER object. <VAR>_interval</VAR> is the cycle period.
+<VAR>_function</VAR> is an optional function for synchronizing to an event other
+than the  system clock. <VAR>_arg</VAR> is a parameter that will be passed to
+function. </P>
+<H3><A NAME="RCS_TIMER_wait_header">The wait Function</A></H3>
+<P>int RCS_TIMER::wait();</P>
+<P>Wait until the end of interval or until a user function returns.
+</P>
+<P>Returns: <BR>0 for success, the number of cycles missed if it
+missed some cycles, or <BR>-1 if some other error occurred.</P>
+<H3><A NAME="RCS_TIMER_load_header">The load Function</A></H3>
+<P>double RCS_TIMER::load();</P>
+<P>Returns the percentage of loading by the cyclic process. If the process
+spends all of its time waiting for the synchronizing event then it
+returns  0.0. If it spends all of its time doing something else before
+calling wait then it returns 1.0. The load percentage is the average load over
+all of the previous cycles.</P>
+<H3><A NAME="RCS_TIMER_sync_header">The sync Function</A></H3>
+<P>void RCS_TIMER::sync();</P>
+<P>Restart the wait interval now.</P> 
+<H2><A NAME="Other_Time_Functions_Header">Other Time Functions.</A></H2>
+<H3><A NAME="esleep_Header">The esleep Function</A></H3>
+<P>Platforms Supported: All</P>
+<P>void esleep(double <VAR>_secs</VAR>);</P>
+<P>Go to sleep for <VAR>_secs</VAR> seconds. The time will be rounded up to the
+resolution of the system clock or the most precise sleep or delay
+function available for the given platform.</P>
+<H3><A NAME="etime_header">The etime Function</A></H3>
+<P>double etime();</P>
+<P>Return the number of seconds from some event. The time will be
+rounded up to the resolution of the system clock or the most precise
+time measuring function available for the given platform. For the value
+returned to mean anything you need to be able to compare it with a value
+stored from a previous call to etime().</P>
+<H2><A NAME="RCS_SEMPAPHORE_Header">The RCS_SEMAPHORE Class.</A></H2>
+<P>Platforms Supported: All except DOS and Windows.</P>
+<P>RCS_SEMAPHORE objects can be used for mutual exclusion of resources
+shared by multiple processes on the same host.</P>
+<P>To use:</P>
+<OL>
+<LI>Create or attach to the semaphore by initializing the RCS_SEMAPHORE
+object. You will need an id agreed on by the all the processes using the
+semaphore and you must specify which process is responsible for creating
+the semaphore.</LI>
+<LI>Surround accesses to the shared resource with RCS_SEMAPHORE::wait()
+and RCS_SEMAPHORE::post()</LI>
+</OL>
+<P>Example: <A HREF="utilex3a.cc">utilex3a.cc</A>, <A HREF="utilex3b.cc">
+utilex3b.cc</A>, <A HREF="utilex3.hh">utilex3.hh</A></P>
+<P><A HREF="utilex3.hh">utilex3a.hh</A></P>
+<PRE>/* utilex3.hh */
+#ifndef UTILEX3_HH
+#define UTILEX3_HH
+
+#ifdef __cplusplus
+extern &quot;C&quot; {
+#endif
+#include &lt;sys/stat.h&gt;   /* defines the S_IXXXX permission flags */
+#ifdef __cplusplus
+} /* END of extern &quot;C&quot; */
+#endif
+
+/* ID that processes connecting to this semaphore must agree on. */
+#define MY_SEM_ID 101
+
+/* Permissions Mode for rw_rw_r__ */
+#define MY_SEM_MODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH) 
+
+#endif	/* end of UTILEX3_HH */
+</PRE>
+<P><A HREF="utilex3a.cc">utilex3a.cc</A></P>
+<PRE>/* utilex3a.cc */
+#include &quot;utilex3.hh&quot;
+#include &quot;rcs.hh&quot;
+
+ /* Process A */
+main()
+{
+	RCS_SEMAPHORE my_sem(MY_SEM_ID, /* Both processes must agree on id. */
+		RCS_SEMAPHORE_CREATE,   /* Create the semaphore. */ 
+		0.100,    /* timeout = 100 milliseconds */
+		MY_SEM_MODE,   /* Set permissions for semaphore */
+ 		1);          /* Initial State */
+
+	 if(-1 != my_sem.wait())
+	{
+		/* Access shared resource. */
+		my_sem.post();
+	} 
+}
+</PRE>
+<P><A HREF="utilex3b.cc">utilex3b.cc</A></P>
+<PRE>/* utilex3b.cc */
+#include &quot;utilex3.hh&quot;
+#include &quot;rcs.hh&quot;
+
+/* Process B */
+main()
+{
+	RCS_SEMAPHORE my_sem(MY_SEM_ID, /* Both processes must agree on id. */
+		RCS_SEMAPHORE_NOCREATE,   /* Do not Create the semaphore. */ 
+		0.100); /* timeout = 100 milliseconds */
+
+	if(-1 != my_sem.wait())
+	{
+	    /* Access shared resource. */
+	   my_sem.post();
+	}
+} 
+</PRE>
+<H3><A NAME="RCS_SEMAPHORE_Constructor">Constructor:</A></H3>
+<P>RCS_SEMAPHORE::RCS_SEMAPHORE(unsigned long int <VAR>_id</VAR>, int <VAR>_oflag</VAR>, double <VAR>_timeout</VAR>, int <VAR>_mode</VAR> = DEFAULT_SEM_MODE, int <VAR>_state</VAR> = 0);</P>
+<P>Initializes an RCS_SEMAPHORE object. If <VAR>_oflag</VAR> equals
+RCS_SEMAPHORE_CREATE a semaphore is created. If <VAR>_oflag</VAR> equals
+RCS_SEMAPHORE_NOCREATE the process will try to attach to a semaphore
+that must already have been created with the same <VAR>_id</VAR>. If <VAR>_timeout</VAR> is
+positive, then calls to RCS_SEMAPHORE::wait() will return -1 after
+timeout seconds. If <VAR>_timeout</VAR> is negative, then RCS_SEMAPHORE::wait() will
+wait indefinitely for the semaphore to be available. If <VAR>_timeout</VAR> is zero,
+then RCS_SEMAPHORE::wait() will return immediately with 0 if the
+semaphore was available or -1 if it was not. The <VAR>_mode</VAR> determines which
+users will have permission to use the semaphore. You can or together
+symbolic constants from sys/stat.h. The default value of <VAR>_mode</VAR>, DEFAULT_SEM_MODE,  allows read and write access to everyone. The <VAR>_mode</VAR> will be ignored if the
+process is not creating the semaphore. The <VAR>_state</VAR> should be 1 to make the
+semaphore immediately available. The <VAR>_state</VAR> will be ignored if the process is not creating the semaphore.</P>
+<H3><A NAME="RCS_SEMAPHORE_wait_header">The wait Function</A></H3>
+<P>int RCS_SEMAPHORE::wait();</P>
+<P>Wait for the semaphore to be available and then take it. See the
+constructors parameters for several options affecting its behavior.
+Returns 0 for success or -1 for failure.</P>
+<H3><A NAME="RCS_SEMAPHORE_trywait_header">The trywait Function</A></H3>
+<P>int RCS_SEMAPHORE::trywait();</P>
+<P>If the semaphore is available take it. Returns 0 for success or -1
+for failure.</P>
+<H3><A NAME="RCS_SEMAPHORE_post_header">The post Function</A></H3>
+<P>int RCS_SEMAPHORE::post();</P>
+<P>Release the semaphore. Returns 0 for success or -1 for failure.</P>
+<H3><A NAME="RCS_SEMAPHORE_getvalue_header">The getvalue Function</A></H3>
+<P>int RCS_SEMAPHORE::getvalue();</P>
+<P>Test to see if the semaphore is available but don't take it even if
+it is. Returns a positive integer if the semaphore is available or 0 if
+it is not.</P>
+<H2><A NAME="LINKED_LIST_Header">The RCS_LINKED_LIST Class.</A></H2>
+<P>Platforms Supported: All.</P>
+<P>RCS_LINKED_LIST objects can be used for a variety of linked list
+applications. It includes an internal pointer that keeps track of the
+current node.</P>
+<P>To use:</P>
+<OL>
+<LI>Initialize a linked list.</LI>
+<LI>Store some objects on the list.</LI>
+<LI>Perform some operations on the objects on the list.</LI>
+</OL>
+<P>Example: <A HREF="utilex4.cc">utilex4.cc</A></P>
+<PRE>
+#include &quot;rcs.hh&quot;
+
+class MY_STRUCT {
+  public:
+	 int count;
+};
+
+RCS_LINKED_LIST *my_list;
+int compute_total_count(RCS_LINKED_LIST *my_list);
+
+main()
+{
+	int totalCount;
+	MY_STRUCT S1, S2, S3;
+	my_list = new RCS_LINKED_LIST();   /* Initialize and create linked list. */
+	
+	/* Store S1 on the end of list. */
+	my_list-&gt;store_at_tail(&amp;S1, sizeof(MY_STRUCT), 0); 
+
+	/* Store S2 on the end of list. */
+	my_list-&gt;store_at_tail(&amp;S2, sizeof(MY_STRUCT), 0); 
+
+	/* Store S3 on the end of list. */
+	my_list-&gt;store_at_tail(&amp;S3, sizeof(MY_STRUCT), 0); 
+
+	totalCount = compute_total_count(my_list);
+}
+
+int compute_total_count(RCS_LINKED_LIST *my_list)
+{
+	MY_STRUCT *ptr_to_struct;
+	int total_count = 0;
+
+	/* Get first object and initialize the internal pointer to start of list. */
+	ptr_to_struct = (MY_STRUCT *) my_list-&gt;get_head(); 
+
+	while(NULL != ptr_to_struct)
+	{
+		total_count += ptr_to_struct-&gt;count;
+		ptr_to_struct = (MY_STRUCT *) my_list-&gt;get_next();
+	}
+	return(total_count);	
+}
+</PRE>
+<H3><A NAME="RCS_LINKED_LIST_Constructor_header">Constructor</A></H3>
+<P>RCS_LINKED_LIST::RCS_LINKED_LIST();</P>
+<P>Initializes the linked list.</P>
+<H3><A NAME="RCS_LINKED_LIST_store_at_head_header">The store_at_head
+Function</A></H3>
+<P>int RCS_LINKED_LIST::store_at_head(void *<VAR>_data</VAR>, size_t
+<VAR>_size</VAR>, int <VAR>_copy</VAR>);</P>
+<P>Creates a new node and places it at the beginning of the list. If
+<VAR>_copy</VAR> is nonzero then this function will malloc <VAR>_size</VAR>
+bytes and copy <VAR>_size</VAR> bytes from the address starting at
+<VAR>_data</VAR> there and the get functions will return a pointer to
+the copy of the object. If <VAR>_copy</VAR> is zero then the
+<VAR>_data</VAR> pointer will be stored and the get functions will
+return a pointer to the original object.</P>
+<P>Returns a positive integer id that can be used to select this node
+later if successful or -1 if an error occurred.</P>
+<H3><A NAME="RCS_LINKED_LIST_store_at_tail_header">The store_at_tail
+Function</A></H3>
+<P>int RCS_LINKED_LIST::store_at_tail(void *<VAR>_data</VAR>, size_t
+<VAR>_size</VAR>, int <VAR>_copy</VAR>);</P>
+<P>Creates a new node and places it at the end of the list. If <VAR>_copy</VAR>
+is nonzero then this function will malloc <VAR>_size</VAR> bytes and
+copy <VAR>_size</VAR> bytes from the address starting at <VAR>_data</VAR>
+there and the get functions will return a pointer to the copy of the
+object. If <VAR>_copy</VAR> is zero then the
+<VAR>_data</VAR> pointer will be stored and the get functions will
+return a pointer to the original object. </P>
+<P>Returns a positive integer id that can be used to select this node
+later if successful or -1 if an error occurred.</P> 
+<H3><A NAME="RCS_LINKED_LIST_store_before_current_node_header">The
+store_before_current_node Function</A></H3>
+<P>int RCS_LINKED_LIST::store_before_current_node(void *<VAR>_data</VAR>,
+size_t _size, int _copy);</P>
+<P>Creates a new node and places it before the current node. If <VAR>_copy</VAR>
+is nonzero then this function will malloc <VAR>_size</VAR> bytes and
+copy <VAR>_size</VAR> bytes from the address starting at <VAR>_data</VAR>
+there and the get functions will return a pointer to the copy of the
+object. If <VAR>_copy</VAR> is zero then the
+<VAR>_data</VAR> pointer will be stored and the get functions will
+return a pointer to the original object.</P>
+<P>Returns a positive integer id that can be used to select this node
+later if successful or -1 if an error occurred.</P>
+<H3><A NAME="RCS_LINKED_LIST_store_after_current_node_header">The
+store_after_current_node Function</A></H3>
+<P>int RCS_LINKED_LIST::store_after_current_node(void *<VAR>_data</VAR>,
+size_t
+<VAR>_size</VAR>, int <VAR>_copy</VAR>);</P>
+<P>Creates a new node and places it after the current node. If <VAR>_copy</VAR>
+is nonzero then this function will malloc <VAR>_size</VAR> bytes and
+copy <VAR>_size</VAR> bytes from the address starting at <VAR>_data</VAR>
+there and the get functions will return a pointer to the copy of the
+object. If <VAR>_copy</VAR> is zero then the
+<VAR>_data</VAR> pointer will be stored and the get functions will
+return a pointer to the original object.</P>
+<P>Returns a positive integer id that can be used to select this node
+later if successful or -1 if an error occurred.</P>
+<H3><A NAME="RCS_LINKED_LIST_get_head_header">The get_head Function</A></H3>
+<P>void *RCS_LINKED_LIST::get_head();</P>
+<P>Get the address of the first object on the list and set the current
+node to the beginning of the list.</P>
+<P>If the list is empty get_head returns null. Depending on how the object was stored the address this
+function returns may be the address of the original object or of a copy. </P>
+<H3><A NAME="RCS_LINKED_LIST_get_tail_header">The get_tail Function</A></H3>
+<P>void *RCS_LINKED_LIST::get_tail();</P>
+<P>Get the address of the object at the end of the list and set the
+current node to the end of the list. If the list is empty get_tail
+returns null. Depending on how the object was stored the address this
+function returns may be the address of the original object or of a copy.</P>
+<H3><A NAME="RCS_LINKED_LIST_get_next_header">The get_next Function</A></H3>
+<P>void *RCS_LINKED_LIST::get_next();</P>
+<P>Get the address of the next object on the list and move the current
+node one step closer to the tail.. If the list is empty get_tail returns
+null. Depending on how the object was stored the address this
+function returns may be the address of the original object or of a copy.</P>
+<H3><A NAME="RCS_LINKED_LIST_get_last_header">The get_last Function</A></H3>
+<P>void *RCS_LINKED_LIST::get_last();</P>
+<P>Get the address of the previous object on the list and move the
+current node one step closer to the head.. If the list is empty get_tail
+returns null. Depending on how the object was stored the address this
+function returns may be the address of the original object or of a copy.</P>
+<H3><A NAME="RCS_LINKED_LIST_delete_current_node_header">The
+delete_current_node Function</A></H3>
+<P>void RCS_LINKED_LIST::delete_current_node();</P>
+<P>Remove the current node from the list and free any memory associated
+with it. Some extra pointers keep track of the node that was before and
+after the deleted node so that the next call to get_next or get_last will return the same object as if the
+current node was not deleted.</P>
+<H3><A NAME="RCS_LINKED_LIST_delete_node_header">The delete_node
+Function</A></H3>
+<P>void RCS_LINKED_LIST::delete_node(int <VAR>id</VAR>);</P>
+<P>Delete the node with the associated <VAR>id</VAR>.</P>
+<H3><A NAME="RCS_LINKED_LIST_set_list_sizing_mode_header">The
+set_list_sizing_mode Function</A></H3>
+<P>void RCS_LINKED_LIST::set_list_sizing_mode(int <VAR>_maximum_size</VAR>,
+LIST_SIZING_MODE <VAR>_new_mode</VAR>);</P>
+<P>Sets a sizing mode and the maximum number of nodes allowed on the
+list. The sizing mode determines what happens when there is an attempt
+to add another node to the list after it has reached the <VAR>_maximum_size</VAR>.
+The following are the possible values for
+<VAR>_new_mode</VAR>:</P>
+<UL>
+<LI>DELETE_FROM_TAIL: Remove one node from the tail of the list to make
+room for the new node.</LI>
+<LI>DELETE_FROM_HEAD: Remove one node from the head of the list to make
+room for the new node.</LI>
+<LI>STOP_AT_MAX: Return -1 if an attempt is made to add a new node when
+the list is full.</LI>
+<LI>NO_MAXIMUM_SIZE: Allow the list to grow until all available memory
+is used up.</LI>
+</UL>
+<H3><A NAME="RCS_LINKED_LIST_destructor_header">Destructor</A></H3>
+<P>RCS_LINKED_LIST::~RCS_LINKED_LIST();</P>
+<P>Removes every node from the list and frees all the memory associated
+with the nodes or the list itself.</P>
+<H2><A NAME="RCS_Print_Header">RCS Print Functions.</A></H2>
+<P>Platforms Supported: All</P>
+<P>Although ANSI C provides input/output facilities such as printf
+these functions may not be appropriate under certain circumstances. For
+example, under Windows unless you compile with the EasyWin(Borland C++)
+or QuickWin(Visual C++) option there will be no window created to catch
+printf messages, and there are some limitations if you choose the
+EasyWin or QuickWin options. The RCS print functions work much like the
+ANSI C facilities but can more easily redirect their output. Controlling
+where the output of the RCS print functions goes also controls the error
+messages of CMS/NML and the debug messages of the NODE class.</P>
+<P>Example: <A HREF="roots.cc">roots.cc</A>, <A HREF="roots.hh">roots.hh</A>,
+ <A HREF="utilex5u.cc">utilex5u.cc</A>, <A HREF="utilex5u.cc">utilex5w.cc</A>
+</P>
+<P><A HREF="roots.hh">roots.hh</A></P>
+<PRE>/* roots.hh */
+#ifndef ROOTS_HH
+#define ROOTS_HH
+
+/* Function for computing the roots of a quadratic. */
+void compute_roots( double A, double B, double C, double &amp;root1, double &amp;root2);
+
+#endif /* end of ROOTS_HH */
+</PRE>
+<P><A HREF="roots.cc">roots.cc</A></P>
+<PRE>#include &quot;roots.hh&quot;
+#include &quot;rcs.hh&quot;
+#include &lt;math.h&gt;
+
+/* Function for computing the roots of a quadratic. */
+void compute_roots( double A, double B, double C, double &amp;root1, double &amp;root2)
+{
+	if(B*B-4*A*C &lt; 0)
+	{
+		rcs_print(&quot;compute_roots: Can't compute square root of %lf\n&quot;,
+			  B*B-4*A*C);
+		 return;
+	}
+	root1 = (-B+sqrt(B*B-4*A*C))/(2*A);
+	root2 = (-B-sqrt(B*B-4*A*C))/(2*A);
+}
+</PRE>
+<P><A HREF="utilex5u.cc">utilex5u.cc</A></P>
+<PRE>#include &quot;rcs.hh&quot;
+#include &quot;roots.hh&quot;
+
+/* A UNIX or DOS Application which uses compute_roots. */
+main()
+{
+	double r1, r2;
+	/* Send all the rcs_print messages to the standard output. */
+	set_rcs_print_destination(RCS_PRINT_TO_STDOUT);
+	
+	/* Try to compute the roots of a quadratic that will cause an error.*/
+	compute_roots(1, 1, 1, r1, r2);
+}
+</PRE>
+<P><A HREF="utilex5w.cpp">utilex5w.cpp</A></P>
+<PRE>#include &quot;rcs.hh&quot;
+#include &quot;roots.hh&quot;
+#include &lt;windows.h&gt;
+
+/* A Windows Application which uses compute_roots. */
+int PASCAL WinMain( HANDLE hInstance, 
+		   HANDLE hPrevInstance, 
+		   LPSTR lpszCmdParam,
+			int nCmdShow)
+{
+	double r1, r2;
+	MSG msg;
+
+	/* Store all the rcs_print messages in a linked list 
+	   that a window can display later. */
+	set_rcs_print_destination(RCS_PRINT_TO_LIST);
+
+	/* Create a window to show rcs_print messages, 
+	   and display it as an icon to start.
+ 	It has no parent window. */
+	create_rcs_print_window(hInstance, SW_MINIMIZE, NULL); 
+
+	/* Compute the roots of a quadratic that will produce an error. */
+	compute_roots(1, 1, 1, r1, r2);
+
+	/* Wait for someone to kill this process. */
+	while(GetMessage(&amp;msg, NULL, 0, 0))
+	{
+	  TranslateMessage(&amp;msg);
+	  DispatchMessage(&amp;msg);
+	}
+	return(msg.wParam);
+}
+</PRE>
+<p>The Windows Application also uses the <A HREF="utils.html#create_rcs_print_window_header">create_rcs_print_window</a> function described under <A HREF="utils.html#Windows_Functions_Header">Windows Functions</a>.</p>
+<H3><A NAME="rcs_print_header">The rcs_print Function</A></H3>
+<P>int rcs_print(char *<VAR>_fmt</VAR>, . . .);</P>
+<P>Prints a message using the <VAR>_fmt</VAR> format string and
+optional additional arguments using the printf conventions.</P>
+<H3><A NAME="rcs_print_error_header">The rcs_print_error Function</A></H3>
+<P>int rcs_print_error(char *<VAR>_fmt</VAR>, . . .);</P>
+<P>Prints a message using the <VAR>_fmt</VAR> format string and
+optional additional arguments using the printf conventions if the
+PRINT_RCS_ERRORS flag is set. (See <A HREF="utils.html#set_rcs_print_flag_header">set_rcs_print_flag</A>().)</P>
+<H3><A NAME="rcs_print_debug_header">The rcs_print_debug Function</A></H3>
+<P>int rcs_print_debug(long <VAR>_flag_to_check</VAR>, char *<VAR>_fmt</VAR>,
+. . .);</P>
+<P>.Prints a message using the <VAR>_fmt</VAR> format string and
+optional additional arguments using the printf conventions if the
+corresponding flag to <VAR>_flag_to_check</VAR> is set. (See
+<A HREF="utils.html#set_rcs_print_flag_header">set_rcs_print_flag</A>().)</P>
+<H3><A NAME="rcs_vprint_header">The rcs_vprint Function.</a></H3>
+<P>int rcs_vprint(char *<VAR>_fmt</VAR>, va_list <VAR>_va_args</VAR>);</P>
+<P>Prints a message using the <VAR>_fmt</VAR> format string and the
+<VAR>_va_args</VAR> using the vprintf conventions.</P>
+<H3><A NAME="rcs_puts_header">The rcs_puts Function</A></H3>
+<P>int rcs_puts(char *<VAR>_str</VAR>); </P>
+<P>Prints the string <VAR>_str</VAR> and adds a new line character at
+the end following the puts convention.</P>
+<H3><A NAME="strip_control_characters_header">The
+strip_control_characters Function</A></H3>
+<P>char *strip_control_characters(char *<VAR>_dest</VAR>, char *<VAR>_src</VAR>);</P>
+<P>Removes new lines, carriage returns and tabs from the <VAR>_src</VAR>
+string and stores the result in the <VAR>_dest</VAR> string if the
+<VAR>_dest</VAR> pointer does not equal NULL. If the <VAR>_dest</VAR>
+pointer equals NULL the new string is stored in an internal array.</P>
+<P>Returns the dest pointer or the address of the internal array where
+the new string was stored.</P>
+<H3><A NAME="set_rcs_print_destination_header">The
+set_rcs_print_destination Function</A></H3>
+<P>void set_rcs_print_destination(RCS_PRINT_DESTINATION_TYPE <VAR>_type</VAR>);</P>
+<P>Changes where the output of the rcs_print functions is directed. The
+following choices are available:</P>
+<DL>
+<DT>RCS_PRINT_TO_STDOUT</DT>
+<DD>Print to stdout.</DD>
+<DT>RCS_PRINT_TO_LOGGER</DT>
+<DD>Currently prints to stdout, except under VxWorks where it uses the logMsg function, which is non-blocking.</DD>
+<DT>RCS_PRINT_TO_STDERR</DT>
+<DD>Print to stderr</DD>
+<DT>RCS_PRINT_TO_NULL</DT>
+<DD>Make all rcs_print functions return without doing anything.</DD>
+<DT>RCS_PRINT_TO_LIST</DT>
+<DD>Store all rcs_print messages in a linked list, so that later they
+can be displayed in a separate window, or used in some other way. The
+current list sizing mode defaults to a maximum size of 256 with excess nodes being deleted from the head.</DD>
+</DL>
+<H3><A NAME="set_rcs_print_flag_header">The set_rcs_print_flag
+Function</A></H3>
+<P>void set_rcs_print_flag(long flag_to_set);</P>
+<P>An internal 32 bit integer contains a set of flags that are checked
+whenever an rcs_print_debug or rcs_print_error occurs to determine if
+the message should be printed or not. Programmers can define their own
+flags in the most significant byte or turn on or off several NODE or
+CMS/NML debug messages.</P>
+<P>The current messages that can be turned on or off are:</P>
+<P><BR>/* Print MODE flags. */
+<BR> PRINT_RCS_ERRORS         /* ON by default.*/
+<BR> PRINT_NODE_CONSTRUCTORS
+<BR> PRINT_NODE_DESTRUCTORS
+<BR> PRINT_CMS_CONSTRUCTORS
+<BR> PRINT_CMS_DESTRUCTORS
+<BR> PRINT_NML_CONSTRUCTORS
+<BR> PRINT_NML_DESTRUCTORS
+<BR> PRINT_COMMANDS_RECIEVED
+<BR> PRINT_COMMANDS_SENT 
+<BR> PRINT_STATUS_RECIEVED 
+<BR> PRINT_STATUS_SENT    
+<BR> PRINT_NODE_CYCLES      
+<BR> PRINT_NODE_MISSED_CYCLES      
+<BR> PRINT_NODE_CYCLE_TIMES 
+<BR> PRINT_NODE_PROCESS_TIMES 
+<BR> PRINT_NEW_WM 
+<BR> PRINT_NODE_ABORT
+</P>
+<H3><A NAME="clear_rcs_print_flag_header">The clear_rcs_print_flag
+Function</A></H3>
+<P>void clear_rcs_print_flag(long flag_to_clear);</P>
+<P>Clears a flag set with set_rcs_print_flag.</P>
+<H3><A NAME="get_rcs_print_list_header">The get_rcs_print_list
+Function</A></H3>
+<P>RCS_LINKED_LIST *get_rcs_print_list();</P>
+<P>Returns the address of the linked list where messages may have been
+stored.</P>
+<H3><A NAME="clean_rcs_print_list_header">The clean_rcs_print_list Function</A></H3>
+<P>void clean_print_list();</P>
+<P>Deletes the linked list where messages may have been stored.</P>
+<H3><A NAME="set_rcs_print_list_sizing_mode_header">The
+set_rcs_print_list_sizing_mode Function</A></H3>
+<P>void set_rcs_print_list_sizing_mode(int max_size, LIST_SIZING_MODE
+mode);</P>
+<P>The print list will have a default maximum size of 256 and it will
+delete nodes from the head of the list to make room for new nodes. To
+change these settings it is preferable to use this function rather than
+getting the print list and using RCS_LINKED_LIST::set_list_sizing_mode()
+since it works regardless of whether the print list has been initialized
+yet.</P>
+<H2><A NAME="Windows_Functions_Header"> Windows Functions</A></H2>
+<P>Platforms Supported: MS-Windows 3.11, Windows 95, and Windows NT
+with Borland C++ or Microsoft Visual C++ <P> After the messages from
+rcs_print have been stored in the linked list, Windows programs can go
+through the list themselves or create a special window to display these
+messages automatically.</P>
+<P>To create a window for the rcs_print messages:</P>
+<OL>
+<LI>Call create_rcs_print_window().</LI>
+</OL>
+<H3><A NAME="create_rcs_print_window_header">The
+create_rcs_print_window Function</A></H3>
+<P>HWND create_rcs_print_window(HANDLE hInstance, int nCmdShow, HWND
+hwndParent);</P>
+<P>Creates a window to display rcs_print messages. It will be updated
+automatically when the rcs_print function is called or when one of its
+windows controls are used. The hInstance parameter should equal the first
+parameter passed to WinMain. The nCmdShow will be passed to ShowWindow.
+See the Windows API for ShowWindows options. The two most common values
+of nCmdShow are SW_MINIMIZE to start the window as an icon or
+SW_SHOWNORMAL to open the window immediately. You can create the window
+as a child of hwndParent or set hwndParent to NULL to make the window
+independent.
+</P>
+<H3><A NAME="remove_rcs_print_window_header">The
+remove_rcs_print_window Function</A></H3>
+<P>void remove_rcs_print_window();</P>
+<P>Send the WM_DESTROY message to the rcs print window.</P>
+
+
+<H2><A NAME="Internet_Functions_Header">Internet Functions</A></H2>
+
+The RCS library includes a simple inteface for reading text files
+over the internet which is similar to the C functions in stdio.h.
+These functions sit on top of either the library from the <A HREF="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.w3.org">World Wide Web Consortium</a> or the Internet API (Application Programmer`s Interface) in the 
+ActiveX SDK (Software Developer's Kit) included with <A HREF="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.microsoft.com/visualc/">Microsoft Visual C++ Version 4.2 and later</a>.</p>
+
+Here are the functions:<p>
+
+<pre>
+int inet_file_init(char *agent_name, char *version, int debug);
+INET_FILE *inet_file_open(char *url, char *type);
+char *inet_file_gets(char *buf, int maxlen, INET_FILE *fp);
+int inet_file_eof(INET_FILE *fp);
+int inet_file_close(INET_FILE *fp);
+int inet_file_exit();
+</pre>
+
+inet_file_init can be called before any calls to the other functions to set 
+the agent_name, and version and to turn on debugging. The agent_name and version string are supplied to any HTTP servers you connect to  mostly just for logging statistics about which browser is more popular. If debug is nonzero 
+several diagnostics messages will be printed to stdout. If you never call inet_file_init it will be called with the first inet_file_open with a default agent_name, and version string and debugging off. The url passed to inet_file_open can be any valid URL or file name on your local system. For local filenames it
+is NOT necessary to use &quot;file:\\&quot; at the beginning. The type should always be &quot;r&quot; for read-only. inet_file_gets stores one line up to 
+maxlen bytes in the buffer buf. inet_file_eof returns zero if there is more of 
+the file to read and nonzero otherwise.  inet_file_close should be used to 
+close each INET_FILE handle and inet_file_exit should be called only just before the application exits to free up some memory/resources. <p>
+
+
+
+<HR> 
+<P>Last Modified: 03/23/00</P>
+<UL>
+<LI><A HREF="index.html">See other RCS Library Documents.</A></LI>
+<LI><A HREF="utilstoc.html">Go To Table of Contents</A></LI>
+<LI><A HREF="utils.html#TOP_OF_FILE">Go back to the top of this file.</A></LI>
+</UL>
+<P>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email, please
+contact  <A HREF="http://isd.cme.nist.gov/staff/shackleford/"
+>Will Shackleford</A> at <I><A HREF="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</A></I></P>
+
+</BODY>
+</HTML>

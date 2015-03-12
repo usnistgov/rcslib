@@ -1,0 +1,14 @@
+
+ifeq ($(PLAT),mingw32)
+LIBRCS_NT_XDR_OBJS = xdr_floa.o \
+	xdr_rec.o \
+	xdr_stdi.o \
+	xdr.o \
+	xdr_arra.o \
+	xdr_mem.o \
+	xdr_refe.o
+
+LIBRCS_OBJS := $(LIBRCS_OBJS) \
+	$(LIBRCS_NT_XDR_OBJS)
+
+endif

@@ -1,0 +1,253 @@
+<html>
+<head>
+<title>RCS/NML Diagnostics Tool</title>
+<link REL="stylesheet" HREF="../../mel2.css" TYPE="text/css">
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+</head>
+<body bgcolor="#FFFFFF" text="#000000" link="#990066" alink="#FF3300" vlink="#660099">
+<H1>The RCS/NML Diagnostics Tool Instructions</H1>
+
+<h2>Introduction</h2>
+
+<p> The diagnostic tool allows programmers to see the current  command 
+and status of every module in his controller and to send commands to any 
+module. The tool determines which commands each module will accept and 
+the parameters of each status and command message  using
+some of the C++ header files the application is expected to be built 
+with and an architecture file to provide information on how the controller
+fits together.
+</p>
+
+<p>The applet can be viewed in an offline mode <A HREF="diagapplet">here</a>.
+To see it connected to a running controller you will need to contact 
+<A HREF="http://www.isd.mel.nist.gov/personnel/shackleford">Will Shackleford</a>
+to start one of our controllers.
+</p>
+
+<p>Please also check out the intstructional videos at 
+<a href="http://www.isd.mel.nist.gov/projects/rcslib/rcs_diag_videos/">
+http://www.isd.mel.nist.gov/projects/rcslib/rcs_diag_videos/</a>.
+</p>
+
+<h2>Creating the Architecture File</h2>
+
+<p>The architecture file is a simple text file that provides information
+on where the header files are how the modules are connected. The following are
+sample architecture files. </p>
+
+<DL>
+<DT><A HREF="diagapplet/emc.arc">emc.arc</a></DT>
+<DD>The Enhanced Machine Controller Architecture</DD>
+<DT><A HREF="diagapplet/ngis.arc">ngis.arc</a></DT>
+<DD>The Next Generation Inspection System Architecture (incomplete) </DD>
+</DL>
+
+<p>The files consist of a series of module blocks ( one for each module 
+in the controller). Each module block has a module name followed by 
+a series of module attributes separated by semi-colons and surrounded by braces. </p>
+
+<pre>
+<i>MODULE_NAME</i>{
+	<i>MODULE_ATTRIBUTE</i>=<i>value</i>;	
+	<i>MODULE_ATTRIBUTE</i>=<i>value</i>;	
+	<i>MODULE_ATTRIBUTE</i>=<i>value</i>;
+}
+</pre>
+
+<p>
+The following are the currently defined module attributes.
+</p>
+
+<h3>child</h3>
+Each module can have multiple children. The child modules are modules that
+this module sends commands to and/or reads the status of.
+
+<h3>cmd_buffer_name</h3>
+The name of the buffer in the NML configuration file with command information
+for this module.
+
+<h3>cmd_configuration_file</h3>
+The file name of an NML configuration file with the command port and buffer 
+number in it.
+
+<h3>cmd_port</h3>
+The cmd_port is the TCP port where commands for this module should be sent. This value should be taken from the NML configuration file. If a cmd_configuration_file is specified the data in that file will supercede this.
+
+<h3>cmd_buffer_number</h3>
+The buffer number of the command buffer for this module. This value should be taken from the NML configuration file.
+
+<h3>cmd_types_file</h3>
+The C++ header file which contains the NMLmsg definitions for the commands that this module accepts.
+
+<h3>stat_buffer_name</h3>
+The name of the buffer in the NML configuration file with status information
+for this module.
+
+<h3>stat_configuration_file</h3>
+The file name of an NML configuration file with the status port and buffer 
+number in it.
+
+<h3>stat_port</h3>
+The stat_port is the TCP port where status for this module can be read. This value should be taken from the NML configuration file. If a stat_configuration_file is specified that data will supercede this.
+
+<h3>stat_buffer_number</h3>
+The buffer number of the status buffer for this module. This value should be taken from the NML configuration file.If a stat_configuration_file is specified that data will supercede this.
+
+<h3>stat_types_file</h3>
+The C++ header file which contains the NMLmsg definitions for the status messages that this module may send out. You can use the same file for command and status if you prefer, in which case set the cmd_types_file attribute and omit this one.
+
+
+<h3>stat_types_file</h3>
+The C++ header file which contains the NMLmsg definitions for the status messages that this module may send out. You can use the same file for command and status if you prefer, in which case set the cmd_types_file attribute and omit this one.
+
+<h3>predefined_types_file</h3>
+Each module can have multiple predefined types files. These are C++ header files that should be read for struct, class and/or enum definitions that will be used
+inside either command or status messages. It is necessary to include these
+here because the tool ignores #include directives within the header file.
+
+<h3>SourceCodeDirectory</h3>
+This optional attribute allows the user to specify a directory other than the "current directory" to look for source code files to be displayed in the State-Table View.
+
+<H2>Special Rules for the Header Files</h2>
+
+The purpose of using C++ header files to provide the type information is to 
+make adding variables to command and status messages or adding new commands and status messages as simple and painless as possible. However the tool is not 
+a C++ compiler and so there are some issues to be aware of.
+
+<OL>
+<LI>#include directives are ignored. Use the predefined_types_file attribute
+in the architecture file instead.</LI>
+<LI>#if directives are considered false unless JAVA_DIAG_APPLET_FORCE_TRUE is 
+defined.</LI>
+<LI>Only one variable should be defined on a line.</LI>
+<LI>Surround things that should not be parsed by the tool with 
+#ifndef JAVA_DIAG_APPLET  and #endif. This includes:</LI>
+<UL>
+<LI>Multiple line functions and macros. (Most functions don't belong in
+the header file any way.)</LI>
+<LI>Variables included in the message but not updated in the NML update function.</LI>
+<LI>Large classes which will never be sent as NML messages and will just 
+slow down the tool and eat up more memory to include.</LI>
+</UL>
+<LI>The order of variables in their declaration should match the order in 
+the update functions.</LI>
+<LI>Each NML message should have a #define in the same header file 
+	giving the message type id formed by adding _TYPE to the
+	class name. For example for class NML_TASKEX_INIT  there
+	should be a <nobr>#define NML_TASKEX_INIT_TYPE 101</nobr>
+</LI>
+<LI>Enumerated data types cause a problem for the NML update function but
+the diagnostics tool can use them. So you may want to do something like this, 
+which will make the communications work as before but make the tool display
+WMSA_MANUAL instead of 2.:
+<pre>
+enum WMSA_MODE
+{
+	WMSA_AUTO,
+	WMSA_MDI,
+	WMSA_MANUAL
+};
+
+class NML_WMSA_WM: public NMLmsg
+{
+. . .
+#ifdef JAVA_DIAG_APPLET
+ WMSA_MODE mode;
+#else
+ int mode;
+#endif
+. . .
+</pre>
+</OL>
+
+<A NAME="USING"><H2>Using the Diagnostics Tool</h2></a>
+
+<p>To use the diagnostics tool you will need a Web browser that supports
+Java. If the browser has a Just-In Time (JIT) Compiler, the applet will run 
+much faster. 
+
+When you start the applet, depending on some parameters that are set in 
+the HTML page that includes it, it may automatically load an architecture file
+and then it may connect to a running controller. Otherwise you would enter the
+name or URL of an architecture file, to load it and click the checkbox next 
+to &quot;NOT CONNECTED&quot; to connect to the corresponding controller. If the controller is running the checkbox will eventually say &quot;CONNECTED (n out of m)&quot;. (n is the number of modules which successfully connected and 
+m is the total number of modules. -- You can check the Java Console or log file for some explanation of why a module didn't connect.)</p>
+
+<p>Here is a screen dump of the top part of the applet:</p>
+
+<IMG SRC="diagapplet/diagtop.jpg" alt="screen dump of top"></IMG>
+
+<p>Under the heading of modules is the list of modules that were loaded. If you
+select one of the modules the commands that  module accepts will be displayed
+in the list next to it under available commands. Selecting one of the available
+commands shows the parameters for that command under the command to send. After editing the commands by selecting them and entering appropriate values 
+in the text box below you can send the command by pressing the send button.
+The current command and status are displayed below that in with all of 
+their parameters. Next there is a checkbox for specifying whether to read the 
+error log. The error log is a special NML buffer that any module can write. The text of messages written there will be appended to the text area beneath the 
+checkbox. Also a special NML_DISPLAY message can be sent to cause the 
+browser showing the applet to automatically jump to a certain URL. This has 
+been used for providing special instructions to an operator. Instead of telling
+the operator to load tool X with just text it can jump him/her to a page 
+with a picture of the tool and formatted instructions on how to load it.</p>
+
+<p>The hierarchy itself is shown at the bottom of the applet:</p>
+
+<IMG SRC="diagapplet/diagbot.jpg" alt="screen dump of bottom"></IMG>
+
+<p>Each module lists its current command followed by its status. The modules are color coded.</p>
+
+<DL>
+<DT>WHITE=DONE</DT>
+<DD>The module has completed all the commands it was given, or the 
+status was unknown.</DD>
+<DT>GREEN=EXECUTING</DT>
+<DD>The module is still working on the current command.</DD>
+<DT>RED=ERROR</DT>
+<DD>The module is reporting some internal error.</DD>
+<DT>GREY=NOT CONNECTED</DT>
+<DD>The tool is unable to communicate with this module.</DD>
+</DL>
+
+<H2>Handling Some Browser Security Restrictions</h2>
+
+<p>Most browsers do not allow applets to connect to hosts other than the one 
+the applet was loaded from. This is a problem since usually the computer
+running the controller is not a web server. There are 2 work arounds for this 
+problem. 
+</p>
+
+<ol>
+<LI>Use a browser that allows you to disable the Java Security Manager. 
+Usually these are made for Java developers, such as appletviewer which comes
+with the Java Developer's Kit (JDK) or by running Internet Explorer from
+within Visual J++.</LI>
+<LI>Use tcpproxy to temporarily turn your host into a Web server. The tcpproxy 
+server allows some port on the remote machine accept requests and respond to
+replies on a port the machine it is running on. <br>
+<pre>
+tcpproxy [local_port] [remote_host] [remote_port] 
+</pre>
+So if I am on the machine cosmos I could run:<br>
+<pre>
+tcpproxy 3000 www.isd.mel.nist.gov 80 
+</pre>
+Now if I go to web pages starting with &quot;http://cosmos:3000/&quot; I will see the same web pages I would see at &quot;http://www.isd.mel.nist.gov/&quot but my
+browser will believe it loaded the applet from cosmos and allow the tool to
+connect directly to the controller on cosmos.
+</LI>
+
+<LI>
+Use a browser that accepts the Digital-Signature and then gives the user the option of relaxing security. Currently Internet Explorer 3.0 and later and Netscape 4.0 or later accept digital-signatures.
+</OL>
+
+<HR>
+
+<p>Last Modified: October 1, 2009</p>
+<P>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email, please
+contact  <A HREF="http://www.isd.mel.nist.gov/personnel/shackleford/"
+>Will Shackleford</A> at <I><A HREF="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</A></I></P>
+
+</body>
+</html>
+

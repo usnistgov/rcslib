@@ -1,0 +1,13 @@
+force_final_pass
+load timetracker.hh
+clear
+select_from_file timetracker.hh
+no_enums
+no_swig
+no_format
+generate c++ update >timetracker_n.cc
+generate c protos >timetracker_c_n.h
+generate c update >timetracker_c_n.c
+
+
+

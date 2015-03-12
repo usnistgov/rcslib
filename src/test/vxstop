@@ -1,0 +1,3 @@
+set_vx_nml_test_write_quit_flag 1
+set_vx_nml_test_read_quit_flag 1
+vxhStop

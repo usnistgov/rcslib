@@ -1,0 +1,303 @@
+<html>
+<head>
+<title>NML Query/Reply Service</title>
+</head>
+<body  BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="551A8B" ALINK="#FF0000" >
+<H1>NML  Query/Reply Service</H1>
+
+<H2>Introduction</H2>
+
+<P>NML was originally designed for applications that would post data to  
+buffers without any concern for which processes would read the buffer or send commands to buffers to be read by a process which would have no need to be concerned with which process sent the message. However some applications are built around the notion of returning reply messages only to the process that originally sent a corresponding query message. There are several ways to accomplish this using the original NML API however these extensions hopefully make building such systems easier.</p>
+
+<H3>NML Configuration File Options</H3>
+
+<P>Each query/reply service requires 3 NML buffers. A queued channel that to send queries to the server, a subdivided channel for replies and another queued channel used to establish unique ids for each client. The names of those buffers must end with &quot;Query&quot;, &quot;Reply&quot; and &quot;ID&quot; and begin with the same base. (echoQuery, echoReply, and echoID are the buffer names from the example below.) The number of subdivisions for the reply buffer will determine how many clients the service will support at the same time.</p>
+
+<P>To use subdivisions just add &quot;subdiv=&lt;# of subdivisions&gt;&quot; at the end of the buffer line. You may also need to increase the buffer size since the area allocated for each subdivision will be the buffer size minus some overhead divided by the number of subdivisions. Currently, subdivisions cannot be used with STCP,RPC, subscriptions or broadcast options.</p>
+
+<H3>NML API Extensions</H3>
+
+<P>There are 2 classes for providing or using the service: NML_QR_SERVER and NML_QR_CLIENT. The same program might use the NML_QR_SERVER for one service and the NML_QR_CLIENT for another service. For each service, there can be many clients but only 1 server.</p>
+
+<P>The NML_QR_SERVER class provides the interface to be used by programs that will accept queries and return replies. Here is it's C++ definition.</p>
+
+<pre>
+
+class NML_QR_SERVER
+{
+public:
+
+// Constructor	
+  NML_QR_SERVER(NML_FORMAT_PTR f_ptr, char *qr_name, char *process_name,
+		char *config_file);
+
+// Destructor
+  ~NML_QR_SERVER();
+
+// Read the next query or return 0 if there are no new queries.
+  NMLTYPE readQuery();
+
+// Wait for the next query and read it unless the timeout expires
+  NMLTYPE waitForQuery(double timeout);
+
+// Return the address where queries are stored.
+  NMLmsg *getQueryAddress();
+
+// Send a reply to the last query.
+  int replyToLastQuery(NMLmsg *message_to_send);
+
+// Check to see if this server and all its internal NML buffers were properly constructed.
+  int valid();
+
+// Delete and reconstruct each of the internal NML buffers.
+  int reset();
+};
+
+</pre>
+
+<P>The constructor takes arguments similiar to an NML object except that the qr_name is used to create three seperate buffer names by adding &quot;Query&quot;,&quot;Reply&quot; and &quot;ID&quot; to it. The format function passed in the first argument must handle both the query and reply message types. readQuery performs and NML::read on the query buffer and also checks for clients connecting or disconnecting. waitForQuery performs an NML::blocking_read on the query buffer and also checks for clients connecting or disconnecting. getQueryAddress returns the NML::get_address() value for the query buffer. replyToLastQuery writes the message given into the subdivision of the reply buffer indicated by the last query message recieved. valid checks to see that all the query, reply and id channels are all valid. reset will delete all the NML buffers and recreate them. reset is typically called only after valid returned 0, if the reset is successful it will return a non-zero value and the return value of valid should also become nonzero.</p>
+
+<p>It is important to call readQuery() or waitForQuery() periodically or new
+clients will not be able to connect.</p>
+
+P>The NML_QR_CLIENT  class provides the interface to be used by programs that will send queries and expect replies in return. Here is it's C++ definition.</p>
+
+<pre>
+
+class NML_QR_CLIENT
+{
+public:
+
+// Constructor
+  NML_QR_CLIENT(NML_FORMAT_PTR f_ptr, char *qr_name, char *process_name,
+		char *config_file);
+
+// Destructor
+  ~NML_QR_CLIENT();
+  
+// send a query message to the server
+  int sendQuery(NML_QUERY_MSG *);
+
+// read the next reply or return 0 if no reply has been recieved.
+  NMLTYPE readReply();
+
+// wait for the next reply to be recieved or until the timeout occurs
+  NMLTYPE waitForReply(double timeout);
+
+// return the address where replies are recieved
+  NMLmsg *getReplyAddress();
+
+// Check to see that all the internal NML buffers were properly constructed
+// and that the server had not used up all the subdivisions.
+  int valid();
+
+// Delete and recreate all the internal NML buffers and retry the server for 
+// a valid connection.
+  int reset();
+};
+
+</pre>
+
+<P>The constructor takes arguments similiar to an NML object except that the qr_name is used to create three seperate buffer names by adding &quot;Query&quot;,&quot;Reply&quot; and &quot;ID&quot; to it. The format function passed in the first argument must handle both the query and reply message types. sendQuery performs and NML::write on the query buffer. readReply and waitForReply perform an NML::read and NML::blocking_read respectively on the subdivision of the reply buffer associated with this process.  getReplyAddress returns the NML::get_address() value for the reply buffer. valid checks to see that all the query, reply and id channels are all valid and that the id is valid. reset will delete all the NML buffers and recreate them and attempt to get a new id from the server. reset is typically called only after valid returned 0, if the reset is successful it will return a non-zero value and the return value of valid should also become nonzero.</p>
+
+<p>sendQuery takes a pointer to a NML_QUERY_MSG. NML_QUERY_MSG is derived from 
+NMLmsg but adds an id used to for replying to the query. All query messages must be derived from NML_QUERY_MSG.</p>
+
+<P>The Java versions of these classes are not yet available.</p>
+
+<H2>Example</H2>
+
+<P>The example below is similiar to the UNIX echo server for TCP. Multiple clients type a line at a time that is then sent to the server and the server sends back a message with a copy of that line. The server also prints the line and the client id associated with each message. Notice that if you run multiple instances of the client that although the source code and therefore process_name for each client is the same the id's will be unique.
+</p>
+
+
+
+<p>Here is the NML configuration file:</p>
+
+<pre>
+# buffers:
+# name		type	host		size	neut    RPC# 	buffer#	 max_proc [type-spec]
+
+
+B echoQuery	SHMEM	localhost 10000	0 0x20001050	 1       12 	101 TCP=6001 bsem=201 queue
+B echoReply	SHMEM	localhost 20000	0 0x20001050	 2       12 	102 TCP=6001 bsem=202 subdiv=100
+B echoID	SHMEM	localhost 10000	0 0x20001050	 3       12 	103 TCP=6001 bsem=203 queue
+
+# processes:
+# name		buffer	       type	host 		ops	server 	timeout	master 	c_num
+P echoclnt 	echoQuery	REMOTE	REMOTEhost 	W	0	INF 	0	0
+P echoclnt 	echoReply	REMOTE	REMOTEhost 	R	0	INF 	0	0
+P echoclnt 	echoID		REMOTE	REMOTEhost 	R	0	INF 	0	0
+
+P echosvr 	echoQuery	LOCAL	localhost 	R	2	INF 	1	1
+P echosvr 	echoReply	LOCAL	localhost 	W	2	INF 	1	1
+P echosvr 	echoID		LOCAL	localhost 	W	2	INF 	1	1
+
+
+</pre>
+
+
+<P> Here is the header file defining the NML messages.</p>
+
+<pre>
+
+#ifndef ECHO_TYPES_HH
+#define ECHO_TYPES_HH
+
+#include &quot;rcs.hh&quot;
+
+#define ECHO_QUERY_TYPE 101
+#define ECHO_REPLY_TYPE 102
+
+class ECHO_QUERY: public NML_QUERY_MSG
+{
+public:
+  ECHO_QUERY();
+  void update(CMS *);
+  char line[80];
+};
+
+class ECHO_REPLY: public NMLmsg
+{
+public:
+  ECHO_REPLY();
+  void update(CMS *);
+  char line[80];
+};
+
+extern int ECHO_format(NMLTYPE type, void *buffer, CMS *cms);
+
+#endif
+
+</pre>
+
+<P> Here is the server C++  code:</p>
+
+<pre>
+
+
+#include &quot;rcs.hh&quot;
+
+#include &lt;signal.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+#include &quot;echo_types.hh&quot;
+
+int echo_svr_quit = 0;
+
+void sigint_handler(int sig)
+{
+  echo_svr_quit = 1;
+}
+  
+
+int main()
+{
+  signal(SIGINT,sigint_handler);
+  
+  NML_QR_SERVER echoQrServer(ECHO_format, &quot;echo&quot;,&quot;echosvr&quot;,&quot;ex_cfg.nml&quot;);
+  nml_start();
+  printf(&quot;echosvr started . . .\n&quot;);
+  ECHO_QUERY *eqMsg;
+  ECHO_REPLY erMsg;
+
+  while(!echo_svr_quit)
+    {
+      switch(echoQrServer.waitForQuery(NML_NO_TIMEOUT))
+	{
+	case ECHO_QUERY_TYPE:
+	  eqMsg = (ECHO_QUERY *) echoQrServer.getQueryAddress();
+	  printf(&quot;Client %d sent %s\n&quot;,eqMsg-&gt;subdiv_for_reply, eqMsg-&gt;line);
+	  strncpy(erMsg.line, eqMsg-&gt;line, 80);
+	  echoQrServer.replyToLastQuery(&erMsg);
+	  break;
+	  
+	case 0:
+	  // no query
+	  break;
+
+	case -1:
+	default:
+	  // error 
+	  echo_svr_quit = 1;
+	  break;
+	  
+	}
+    }
+}
+
+</pre>
+
+
+<P>Here is the client C++ code:</p>
+
+<pre>
+
+#include &quot;rcs.hh&quot;
+
+#include &lt;signal.h>
+#include &lt;stdio.h>
+
+#include &quot;echo_types.hh&quot;
+
+int echo_clnt_quit = 0;
+
+void sigint_handler(int sig)
+{
+  echo_clnt_quit = 1;
+}
+  
+
+int main()
+{
+  signal(SIGINT,sigint_handler);
+  
+  NML_QR_CLIENT echoQrClient(ECHO_format, &quot;echo&quot;,&quot;echoclnt&quot;,&quot;ex_cfg.nml&quot;);
+  printf(&quot;echoclnt started . . .\n&quot;);
+  while(!echo_clnt_quit)
+    {
+      ECHO_QUERY eqMsg;
+      ECHO_REPLY *erMsg;
+      fgets(eqMsg.line,80,stdin);
+      echoQrClient.sendQuery(&eqMsg);
+      switch(echoQrClient.waitForReply(NML_NO_TIMEOUT))
+	{
+	case ECHO_REPLY_TYPE:
+	  erMsg = (ECHO_REPLY *) echoQrClient.getReplyAddress();
+	  printf(&quot;Server sent back %s\n&quot;,erMsg->line);
+	  break;
+	  
+	case 0:
+	  // no query
+	  break;
+
+	case -1:
+	default:
+	  // error 
+	  echo_clnt_quit = 1;
+	  break;
+	  
+	}
+    }
+}
+
+</pre>
+
+<HR>
+ 
+<p>Last Modified:  March 17,1999</p>
+<UL>
+<LI><A HREF="index.html">See other RCS Library Documents.</A></LI>
+</UL>
+
+<P>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email, please
+contact  <A HREF="http://isd.cme.nist.gov/staff/shackleford/"
+>Will Shackleford</A> at <I><A HREF="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</A></I></P>
+
+</body>
+</html>
+
+

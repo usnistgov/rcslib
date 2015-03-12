@@ -1,0 +1,14 @@
+# ub.nml
+ 
+
+# Buffers:
+#       name 	   type  	      host 	size 	neut 	0 	buf# 	max_proc 	. . .
+B     ub_buf 	SHMEM    	galactica-220.mxnet.mel.nist.gov 	20096 	1 	* 	1 	* 	50701 	TCP=25700  packed
+ 
+
+# Processes: 
+#       Name 	    Buffer 	      type 	      host 	       ops 	server 	timeout 	master 	c_num  	 . . .
+P        svr 	   default 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+P remoteProc 	   default 	    REMOTE 	 localhost 	        RW 	0 	INF     	0 	1 	
+P    default 	   default 	      AUTO 	 localhost 	        RW 	0 	INF     	1 	2 	
+

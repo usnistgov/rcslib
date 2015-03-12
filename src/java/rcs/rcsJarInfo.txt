@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Main-Class: rcs.RCS_VERSION
+
+Name: rcs
+Specification-Title: "RCS-Library Classes"
+Specification-Version: "1.0"
+Specification-Vendor: "National Institute of Standards and Technology (Will Shackleford)"
+Implementation-Title: "rcs"
+Implementation-Version: "RCS_VERSION_STRING"
+Implementation-Vendor: National Institute of Standards and Technology (Will Shackleford)"
+Package-Title: "rcs"
+Package-Version: "RCS_VERSION_STRING"
+Package-Vendor: National Institute of Standards and Technology (Will Shackleford)"
+Sealed: true

@@ -1,0 +1,698 @@
+# ;; -*- mode: makefile; -*-
+
+ifndef JAVAC
+JAVAC=javac
+endif
+
+ifndef JAVA
+JAVA=java
+endif
+
+
+ifndef RCSLIB_DIR
+ifdef RCSLIB_MAIN_DIR
+RCSLIB_DIR=$(RCSLIB_MAIN_DIR)
+else
+RCSLIB_DIR=../..
+endif
+endif
+
+
+ifndef CODEGEN_JAR
+CODEGEN_JAR=$(shell \
+	cp $(RCSLIB_DIR)/plat/java/lib/CodeGenCmdLine.jar . ; \
+	echo CodeGenCmdLine.jar; \
+	)
+
+endif
+
+ifndef CODEGEN_JAVA_ARG
+CODEGEN_JAVA_ARG= -jar $(CODEGEN_JAR) generate_for_all_langs=true 
+endif
+
+ifndef CODEGEN_COMMAND
+CODEGEN_COMMAND=$(JAVA) $(CODEGEN_JAVA_ARG)
+endif
+
+ifndef NO_MULTIPLAT_BUILD_WARN
+ifndef NO_MAKE_WARN
+
+$(warning CODEGEN_COMMAND=$(CODEGEN_COMMAND) )
+
+endif
+endif
+
+ifndef JAR
+JAR=jar
+endif
+
+ifndef RCS_JAR
+RCS_JAR=$(shell \
+	cp $(RCSLIB_DIR)/plat/java/lib/rcs.jar  . ; \
+	$(JAR) -xf rcs.jar ; \
+	echo rcs.jar; )
+
+endif
+
+ifdef PLAT
+ifndef RCSLIB_LIB_DIR
+RCSLIB_LIB_DIR=$(RCSLIB_DIR)/plat/$(PLAT)/lib
+endif
+ifndef RCSLIB_INCLUDE_DIR
+RCSLIB_INCLUDE_DIR=$(RCSLIB_DIR)/plat/$(PLAT)/include
+endif
+else
+ifndef RCSLIB_LIB_DIR
+RCSLIB_LIB_DIR=$(RCSLIB_DIR)/lib
+endif
+ifndef RCSLIB_INCLUDE_DIR
+RCSLIB_INCLUDE_DIR=$(RCSLIB_DIR)/include
+endif
+endif
+
+ifndef RCSLIB_INCLUDE_PATH
+ifndef USE_SRC_PATH
+RCSLIB_INCLUDE_PATH=-I$(RCSLIB_INCLUDE_DIR) -I.
+else
+RCSLIB_INCLUDE_PATH=-I$(RCSLIB_DIR)/src/  -I$(RCSLIB_DIR)/src/os_intf -I$(RCSLIB_DIR)/src/cms -I$(RCSLIB_DIR)/src/posemath -I$(RCSLIB_DIR)/src/stg_clss -I$(RCSLIB_DIR)/src/print -I$(RCSLIB_DIR)/src/node -I.
+endif
+endif
+
+ifndef NO_MULTIPLAT_BUILD_WARN
+ifndef NO_MAKE_WARN
+
+$(warning RCSLIB_DIR=$(RCSLIB_DIR) )
+$(warning RCSLIB_INCLUDE_PATH=$(RCSLIB_INCLUDE_PATH) )
+$(warning MAKEFLAGS=$(MAKEFLAGS) )
+$(warning CPPFLAGS=$(CPPFLAGS) )
+
+endif
+endif
+
+CPPFLAGS += $(RCSLIB_INCLUDE_PATH)
+
+ifndef NO_MULTIPLAT_BUILD_WARN
+ifndef NO_MAKE_WARN
+
+$(warning CPPFLAGS=$(CPPFLAGS) )
+$(warning CXXFLAGS=$(CXXFLAGS) )
+$(warning TEST_CXXFLAGS=$(TEST_CXXFLAGS) )
+
+endif
+endif
+
+CXXFLAGS += -g $(TEST_CXXFLAGS)
+
+ifndef NO_MULTIPLAT_BUILD_WARN
+ifndef NO_MAKE_WARN
+
+$(warning CXXFLAGS=$(CXXFLAGS) )
+$(warning CFLAGS=$(CFLAGS) )
+$(warning TEST_CFLAGS=$(TEST_CFLAGS) )
+
+endif
+endif
+
+CFLAGS += -g $(TEST_CFLAGS)
+
+ifndef NO_MULTIPLAT_BUILD_WARN
+ifndef NO_MAKE_WARN
+
+$(warning CFLAGS=$(CFLAGS) )
+$(warning RCSLIB_LIB_DIR=$(RCSLIB_LIB_DIR) )
+$(warning LINK_FLAGS=$(LINK_FLAGS) )
+$(warning OS_LIBS=$(OS_LIBS) )
+
+endif
+endif
+
+LINK_FLAGS += -lrcs -L$(RCSLIB_LIB_DIR) -L$(RCSLIB_DIR) -L$(RCSLIB_DIR)/lib $(OS_LIBS)
+
+ifndef NO_MULTIPLAT_BUILD_WARN
+ifndef NO_MAKE_WARN
+
+$(warning LINK_FLAGS=$(LINK_FLAGS) )
+endif
+endif
+
+ifdef ADD_RPATH
+LINK_FLAGS += -Xlinker -rpath -Xlinker $(RCSLIB_LIB_DIR) 
+endif
+
+ifndef NO_MULTIPLAT_BUILD_WARN
+ifndef NO_MAKE_WARN
+
+$(warning LINK_FLAGS=$(LINK_FLAGS) )
+
+endif
+endif
+
+ifndef LIBTOOL
+LIBTOOL=libtool
+endif
+
+ifndef CXX_LINK_COMMAND
+ifdef USE_LIBTOOL
+CXX_LINK_COMMAND=$(LIBTOOL) --mode=link $(CXX)
+else
+CXX_LINK_COMMAND=$(CXX)
+endif
+endif
+
+ifndef C_LINK_COMMAND
+ifdef USE_LIBTOOL
+ifeq ($(CC),cc)
+CC=gcc
+endif
+C_LINK_COMMAND=$(LIBTOOL) --mode=link $(CC)
+else
+C_LINK_COMMAND=$(CC)
+endif
+endif
+
+ifndef OBJEXT
+OBJEXT=.o
+endif
+
+ifndef EXEEXT
+EXEEXT=
+endif
+
+ifndef NO_MULTIPLAT_BUILD_WARN
+ifndef NO_MAKE_WARN
+
+$(warning ADA_LINK_COMMAND=$(ADA_LINK_COMMAND) )
+
+endif
+endif
+
+ifndef ADA_LINK_COMMAND
+ADA_LINK_COMMAND=gnatmake
+endif
+
+ifndef NO_MULTIPLAT_BUILD_WARN
+ifndef NO_MAKE_WARN
+
+$(warning ADA_LINK_COMMAND=$(ADA_LINK_COMMAND) )
+$(warning RCSLIB_ADA_DIR=$(RCSLIB_ADA_DIR) )
+
+endif
+endif
+
+ifndef RCSLIB_ADA_DIR
+RCSLIB_ADA_DIR=$(RCSLIB_DIR)/src/ada
+endif
+
+ifndef NO_MULTIPLAT_BUILD_WARN
+ifndef NO_MAKE_WARN
+
+$(warning RCSLIB_ADA_DIR=$(RCSLIB_ADA_DIR) )
+$(warning ADA_LINK_FLAGS=$(ADA_LINK_FLAGS) )
+
+endif
+endif
+
+ifndef ADA_LINK_FLAGS
+ADA_LINK_FLAGS=-L$(RCSLIB_LIB_DIR) -I$(RCSLIB_ADA_DIR) -L$(RCSLIB_DIR) -L$(RCSLIB_DIR)/lib $(OS_LIBS)  -cargs -g -largs -g
+endif
+
+ifndef NO_MULTIPLAT_BUILD_WARN
+ifndef NO_MAKE_WARN
+
+$(warning ADA_LINK_FLAGS=$(ADA_LINK_FLAGS) )
+
+endif
+endif
+
+%$(OBJEXT):%.cc
+	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+
+%$(OBJEXT):%.c
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
+
+
+TEST_LIB_DIR=.
+TEST_BIN_DIR=.
+
+all:\
+	$(TEST_BIN_DIR)/print_test_sizes$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_print$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_read_c$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_write_c$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_getvar$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_server_c$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_nmlset$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_write$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_unbounded_write$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_unbounded_read$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_single_process_queue_test$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_get_type$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_check_if_read$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_peek_errlog$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_read_errlog$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_read$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_dl_write$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_dl_write_packed_file$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_dl_read$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_dl_read_packed_file$(EXEEXT)\
+	$(TEST_BIN_DIR)/nml_test_blocking_read$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_wait_for_read$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_wait_for_write$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_wait_for_queue_length_over$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_wait_for_queue_length_under$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_clear$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_wait_for_clear$(EXEEXT) \
+	$(TEST_BIN_DIR)/etime_print$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_get_queue_length$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_get_space_available$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_get_msg_count$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_get_msg_type$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_get_type$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_check_if_read$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_peek_errlog$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_read_errlog$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_get_read_count$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_get_is_clear$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_server$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_unbounded_server$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_sizes$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_server_ada$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_dl_read_ada$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_dl_write_ada$(EXEEXT) \
+	nml_test_java_get_single_var_log.class \
+	nml_test_java_read.class \
+	nml_test_java_dl_read.class \
+	nml_test_java_get_msg_type.class \
+	nml_test_java_dl_write.class
+
+ifdef ENABLE_QR
+
+all: \
+	$(TEST_BIN_DIR)/nml_test_qr_server$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_qr_nml_svr$(EXEEXT) \
+	$(TEST_BIN_DIR)/nml_test_qr_client$(EXEEXT)
+
+endif
+
+clean:	
+	-killall -INT nml_test_server
+	-killall -INT nml_test_read
+	-killall -INT nml_test_write
+	-killall -KILL nml_test_server
+	-killall -KILL nml_test_read
+	-killall -KILL nml_test_write
+	-../../etc/ipc-clear.sh
+	-\rm -f $(TEST_BIN_DIR)/*.running;
+	-\rm -f $(TEST_BIN_DIR)/nml_test_read_c$(OBJEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_write_c$(OBJEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_getvar$(OBJEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_server_c$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_write$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_unbounded_write$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_unbounded_read$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_unbounded_format_n$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/check_test_unbounded_msg$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_single_process_queue_test$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_read$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_nmlset$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_blocking_read$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_wait_for_read$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_wait_for_write$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_wait_for_queue_length_over$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_wait_for_queue_length_under$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_clear$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_wait_for_clear$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/etime_print$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_get_queue_length$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_get_space_available$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_get_msg_count$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_get_msg_type$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_get_type$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_check_if_read$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_peek_errog$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_get_read_count$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_get_is_clear$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_server$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_printing_server$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_unbounded_server$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_format_n_ada$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_sizes$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_dl_write$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_dl_write_packed_file$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/packed_file_to_text$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_dl_read$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_dl_read_packed_file$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_qr_server$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_qr_nml_svr$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_qr_client$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_server_ada$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/echo_types_n$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/otherheader_c_n$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/otherheader_n_ada$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/posemath_n_ada$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/cms$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_msg$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_peek_errlog$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_read_errlog$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_dl_write_ada$(OBJEXT)
+	-\rm -f $(TEST_LIB_DIR)/nml_test_dl_read_ada$(OBJEXT)
+	-\rm -f nml_test_format_c_n$(OBJEXT)
+	-\rm -f $(TEST_BIN_DIR)/print_test_sizes$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_read_c$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_write_c$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_getvar$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_server_c$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_nmlset$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_write$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_unbounded_write$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_unbounded_read$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_single_process_queue_test$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_read$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_blocking_read$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_wait_for_read$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_wait_for_write$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_wait_for_queue_length_over$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_wait_for_queue_length_under$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_clear$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_wait_for_clear$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/etime_print$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_get_queue_length$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_get_space_available$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_get_msg_count$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_get_msg_type$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_get_type$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_check_if_read$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_peek_errlog$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_read_errlog$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_get_read_count$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_get_is_clear$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_server$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_printing_server$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_unbounded_server$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_sizes$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_qr_server$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_qr_nml_svr$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_qr_client$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_server_ada$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_dl_packed_file$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_dl_read$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_dl_write$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_dl_read_ada$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_dl_write_ada$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_dl_read_packed_file$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_dl_write_packed_file$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/packed_file_to_text$(EXEEXT)
+	-\rm -f nml_test_java_get_single_var_log.class
+	-\rm -f nml_test_java_dl_read.class
+	-\rm -f nml_test_java_read.class
+	-\rm -f nml_test_java_dl_write.class
+	-\rm -f $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT)
+	-\rm -f nml_test_format_n.cc
+	-\rm -f echo_types_n.cc
+	-\rm -f echo_types_n_codegen_protos.hh
+	-\rm -f echo_types_c_n.c
+	-\rm -f echo_types_c_n.h
+	-\rm -f nml_test_format_c_n.h
+	-\rm -f nml_test_format_c_n.c
+	-\rm -f otherheader_c_n.c
+	-\rm -f nml_test_format_n_codegen_protos.hh
+	-\rm -f TEST_MESSAGE.java 
+	-\rm -f TEST_MESSAGE_BASE.java 
+	-\rm -f nml_test_format_MsgDict.java 
+	-\rm -f otherheader_MsgDict.java 
+	-\rm -f teststruct.java 
+	-\rm -f QTEST_MSG.java 
+	-\rm -f SIMPLER_MSG.java
+	-\rm -f struct_from_other_header.java
+	-\rm -f teststruct_td2.java
+	-\rm -f BOP_MSG.java
+	-\rm -f MyStat2.java
+	-\rm -f MyStat.java
+	-\rm -f c_struct.java
+	-\rm -f c_struct.java
+	-\rm -f c_struct2.java
+	-\rm -f fwLaserStruct.java
+	-\rm -f ECHO_QUERY.java
+	-\rm -f ECHO_REPLY.java
+	-\rm -f echo_types_MsgDict.java
+	-\rm -f TEST_MESSAGE.class 
+	-\rm -f TEST_MESSAGE_BASE.class 
+	-\rm -f nml_test_format_MsgDict.class 
+	-\rm -f otherheader_MsgDict.class 
+	-\rm -f teststruct.class 
+	-\rm -f QTEST_MSG.class 
+	-\rm -f SIMPLER_MSG.class
+	-\rm -f BOP_MSG.class
+	-\rm -f struct_from_other_header.class 
+	-\rm -f teststruct_td2.class 
+	-\rm -f MyStat2.class
+	-\rm -f MyStat.class
+	-\rm -f c_struct.class
+	-\rm -f c_struct2.class
+	-\rm -f ECHO_QUERY.class
+	-\rm -f ECHO_REPLY.class
+	-\rm -f fwLaserStruct.class
+	-\rm -f otherheader_n_ada.adb
+	-\rm -f otherheader_n_ada.ads
+	-\rm -f otherheader_n_ada.ali
+	-\rm -f posemath_n_ada.ali
+	-\rm -f nml_test_server_ada.ali
+	-\rm -f nml_test_format_n_ada.ali
+	-\rm -f nml_test_format_n_ada.adb
+	-\rm -f nml_test_format_n_ada.ads
+	-\rm -f echo_types_n_ada.ali
+	-\rm -f echo_types_n_ada.adb
+	-\rm -f echo_types_n_ada.ads
+	-\rm -f nml_test_dl_write_ada.ali
+	-\rm -f nml_test_dl_read_ada.ali
+	-\rm -f cms.ali
+	-\rm -f nml.ali
+	-\rm -f nml_msg.ali
+	-\rm -rf META-INF
+	-\rm -rf rcs
+	-\rm -f b~nml_test_*{$(OBJEXT),.ali,.ads,.adb}
+
+
+nml_test_unbounded_format_n_codegen_protos.hh nml_test_unbounded_format_n.cc TEST_UNBOUNDED_MSG.java nml_test_unbounded_format_MsgDict.java ntu_s1.java nml_test_format_unbounded_c_n.h nml_test_unbounded_format_c_n.c nml_test_unbounded_format_n_ada.adb nml_test_unbounded_format_n_ada.ads  : nml_test_unbounded_format.hh 
+	$(CODEGEN_COMMAND)  $<
+
+nml_test_format_n_codegen_protos.hh nml_test_format_n.cc TEST_MESSAGE.java nml_test_format_MsgDict.java  teststruct.java QTEST_MSG.java SIMPLER_MSG.java BOP_MSG.java nml_test_format_c_n.h nml_test_format_c_n.c nml_test_format_n_ada.adb nml_test_format_n_ada.ads  : nml_test_format.hh 
+	$(CODEGEN_COMMAND)  $<
+
+otherheader_n.cc struct_from_other_header.java otherheader_c_n.h otherheader_c_n.c otherheader_n_ada.adb otherheader_n_ada.ads : otherheader.hh 
+	$(CODEGEN_COMMAND)  $<
+
+echo_types_n.cc echo_types_format_n_codege_protos.hh : echo_types.hh
+	$(CODEGEN_COMMAND)  $<
+
+nml_ex1_n.cc nml_ex1_n_codegen_protos.hh: nml_ex1.hh
+	$(CODEGEN_COMMAND)  $<
+
+
+
+.PHONY:all clean
+
+$(TEST_LIB_DIR)/nml_test_read_c$(OBJEXT): nml_test_format_c_n.h otherheader_c_n.h
+
+$(TEST_LIB_DIR)/print_test_sizes$(OBJEXT): nml_test_format_c_n.h otherheader_c_n.h
+
+
+$(TEST_BIN_DIR)/nml_test_write_c$(EXEEXT): $(TEST_LIB_DIR)/nml_test_write_c$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_c_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_c_n$(OBJEXT)
+	-($(C_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@ || $(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@ )
+
+$(TEST_LIB_DIR)/print_test_sizes$(OBJEXT): nml_test_format.hh otherheader.hh
+
+$(TEST_BIN_DIR)/print_test_sizes$(EXEEXT): $(TEST_LIB_DIR)/print_test_sizes$(OBJEXT) 
+	-($(CXX_LINK_COMMAND) $^ -o $@ )
+
+$(TEST_BIN_DIR)/nml_test_read_c$(EXEEXT): $(TEST_LIB_DIR)/nml_test_read_c$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_c_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_c_n$(OBJEXT)
+	-($(C_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@ || $(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@ )
+
+$(TEST_BIN_DIR)/nml_test_server_c$(EXEEXT): $(TEST_LIB_DIR)/nml_test_server_c$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_c_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_c_n$(OBJEXT)
+	-$(C_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/nml_test_server$(OBJEXT): nml_test_format.hh otherheader.hh
+
+$(TEST_BIN_DIR)/nml_test_server$(EXEEXT): $(TEST_LIB_DIR)/nml_test_server$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/nml_ex1_n$(OBJEXT): nml_ex1.hh nml_ex1_n_codegen_protos.hh
+
+$(TEST_LIB_DIR)/nml_test_print$(OBJEXT): nml_ex1.hh
+
+$(TEST_BIN_DIR)/nml_test_print$(EXEEXT): $(TEST_LIB_DIR)/nml_test_print$(OBJEXT)  $(TEST_LIB_DIR)/nml_ex1_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/nml_printing_server$(OBJEXT): nml_test_format.hh otherheader.hh
+
+$(TEST_BIN_DIR)/nml_printing_server$(EXEEXT): $(TEST_LIB_DIR)/nml_printing_server$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/nml_test_unbounded_server$(OBJEXT): nml_test_unbounded_format.hh
+
+$(TEST_BIN_DIR)/nml_test_unbounded_server$(EXEEXT): $(TEST_LIB_DIR)/nml_test_unbounded_server$(OBJEXT) $(TEST_LIB_DIR)/nml_test_unbounded_format_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+
+$(TEST_BIN_DIR)/nml_test_getvar$(EXEEXT): $(TEST_LIB_DIR)/nml_test_getvar$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_sizes$(EXEEXT): $(TEST_LIB_DIR)/nml_test_sizes$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_nmlset$(EXEEXT): $(TEST_LIB_DIR)/nml_test_nmlset$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/nml_test_write$(OBJEXT): nml_test_format.hh otherheader.hh
+
+$(TEST_BIN_DIR)/nml_test_write$(EXEEXT): $(TEST_LIB_DIR)/nml_test_write$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/check_test_unbounded_msg$(OBJEXT): nml_test_unbounded_format.hh check_test_unbounded_msg.hh
+
+$(TEST_LIB_DIR)/nml_test_unbounded_write$(OBJEXT): nml_test_unbounded_format.hh check_test_unbounded_msg.hh
+
+$(TEST_BIN_DIR)/nml_test_unbounded_write$(EXEEXT): $(TEST_LIB_DIR)/nml_test_unbounded_write$(OBJEXT) $(TEST_LIB_DIR)/nml_test_unbounded_format_n$(OBJEXT) $(TEST_LIB_DIR)/check_test_unbounded_msg$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/nml_test_unbounded_read$(OBJEXT): nml_test_unbounded_format.hh check_test_unbounded_msg.hh
+
+$(TEST_BIN_DIR)/nml_test_unbounded_read$(EXEEXT): $(TEST_LIB_DIR)/nml_test_unbounded_read$(OBJEXT) $(TEST_LIB_DIR)/nml_test_unbounded_format_n$(OBJEXT) $(TEST_LIB_DIR)/check_test_unbounded_msg$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/nml_test_single_process_queue_test$(OBJEXT): nml_test_format.hh otherheader.hh
+
+$(TEST_BIN_DIR)/nml_test_single_process_queue_test$(EXEEXT): $(TEST_LIB_DIR)/nml_test_single_process_queue_test$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/nml_test_dl_read$(OBJEXT): nml_test_format.hh otherheader.hh
+
+$(TEST_BIN_DIR)/nml_test_dl_read$(EXEEXT): $(TEST_LIB_DIR)/nml_test_dl_read$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/nml_test_dl_read_packed_file$(OBJEXT): nml_test_format.hh otherheader.hh
+
+$(TEST_BIN_DIR)/nml_test_dl_read_packed_file$(EXEEXT): $(TEST_LIB_DIR)/nml_test_dl_read_packed_file$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/nml_test_dl_write$(OBJEXT): nml_test_format.hh otherheader.hh
+
+$(TEST_BIN_DIR)/nml_test_dl_write$(EXEEXT): $(TEST_LIB_DIR)/nml_test_dl_write$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_LIB_DIR)/nml_test_dl_write_packee_file$(OBJEXT): nml_test_format.hh otherheader.hh
+
+$(TEST_BIN_DIR)/nml_test_dl_write_packed_file$(EXEEXT): $(TEST_LIB_DIR)/nml_test_dl_write_packed_file$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/packed_file_to_text$(EXEEXT): $(TEST_LIB_DIR)/packed_file_to_text$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ -o $@
+
+
+$(TEST_LIB_DIR)/nml_test_read$(OBJEXT): nml_test_format.hh otherheader.hh
+
+$(TEST_BIN_DIR)/nml_test_read$(EXEEXT): $(TEST_LIB_DIR)/nml_test_read$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_blocking_read$(EXEEXT): $(TEST_LIB_DIR)/nml_test_blocking_read$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_wait_for_read$(EXEEXT): $(TEST_LIB_DIR)/nml_test_wait_for_read$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_wait_for_write$(EXEEXT): $(TEST_LIB_DIR)/nml_test_wait_for_write$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_wait_for_queue_length_over$(EXEEXT): $(TEST_LIB_DIR)/nml_test_wait_for_queue_length_over$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_wait_for_queue_length_under$(EXEEXT): $(TEST_LIB_DIR)/nml_test_wait_for_queue_length_under$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_get_diag$(EXEEXT): $(TEST_LIB_DIR)/nml_get_diag$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_get_type$(EXEEXT): $(TEST_LIB_DIR)/nml_get_type$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_check_if_read$(EXEEXT): $(TEST_LIB_DIR)/nml_check_if_read$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_peek_errlog$(EXEEXT): $(TEST_LIB_DIR)/nml_peek_errlog$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_read_errlog$(EXEEXT): $(TEST_LIB_DIR)/nml_read_errlog$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+
+$(TEST_BIN_DIR)/nml_test_wait_for_clear$(EXEEXT): $(TEST_LIB_DIR)/nml_test_wait_for_clear$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_clear$(EXEEXT): $(TEST_LIB_DIR)/nml_test_clear$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_get_queue_length$(EXEEXT): $(TEST_LIB_DIR)/nml_test_get_queue_length$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/etime_print$(EXEEXT): $(TEST_LIB_DIR)/etime_print$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_get_space_available$(EXEEXT): $(TEST_LIB_DIR)/nml_test_get_space_available$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_get_read_count$(EXEEXT): $(TEST_LIB_DIR)/nml_test_get_read_count$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_get_msg_count$(EXEEXT): $(TEST_LIB_DIR)/nml_test_get_msg_count$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_get_msg_type$(EXEEXT): $(TEST_LIB_DIR)/nml_test_get_msg_type$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+
+$(TEST_BIN_DIR)/nml_test_get_is_clear$(EXEEXT): $(TEST_LIB_DIR)/nml_test_get_is_clear$(OBJEXT) $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT) $(TEST_LIB_DIR)/otherheader_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_qr_server$(EXEEXT): $(TEST_LIB_DIR)/nml_test_qr_server$(OBJEXT) $(TEST_LIB_DIR)/echo_types_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_qr_nml_svr$(EXEEXT): $(TEST_LIB_DIR)/nml_test_qr_nml_svr$(OBJEXT) $(TEST_LIB_DIR)/echo_types_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+$(TEST_BIN_DIR)/nml_test_qr_client$(EXEEXT): $(TEST_LIB_DIR)/nml_test_qr_client$(OBJEXT) $(TEST_LIB_DIR)/echo_types_n$(OBJEXT)
+	$(CXX_LINK_COMMAND) $^ $(LINK_FLAGS) -o $@
+
+nml_test_java_get_single_var_log.class: nml_test_java_get_single_var_log.java TEST_MESSAGE.java nml_test_format_MsgDict.java teststruct.java QTEST_MSG.java SIMPLER_MSG.java BOP_MSG.java struct_from_other_header.java
+	-echo RCS_JAR=$(RCS_JAR)
+	-if test ! -f rcs/nml/NMLFormatConverter.class -a -f $(RCS_JAR) ; then $(JAR) -xf $(RCS_JAR) ; fi  
+	-$(JAVAC) $^
+
+nml_test_java_dl_read.class: nml_test_java_dl_read.java TEST_MESSAGE.java nml_test_format_MsgDict.java teststruct.java QTEST_MSG.java SIMPLER_MSG.java BOP_MSG.java struct_from_other_header.java
+	-if test ! -f rcs/nml/NMLFormatConverter.class -a -f $(RCS_JAR) ; then $(JAR) -xf $(RCS_JAR) ; fi  
+	-$(JAVAC) $^
+
+nml_test_java_get_msg_type.class: nml_test_java_get_msg_type.java
+	-if test ! -f rcs/nml/NMLFormatConverter.class -a -f $(RCS_JAR) ; then $(JAR) -xf $(RCS_JAR) ; fi  
+	-$(JAVAC) $^
+
+nml_test_java_read.class: nml_test_java_read.java TEST_MESSAGE.java nml_test_format_MsgDict.java teststruct.java QTEST_MSG.java SIMPLER_MSG.java BOP_MSG.java struct_from_other_header.java
+	-if test ! -f rcs/nml/NMLFormatConverter.class -a -f $(RCS_JAR) ; then $(JAR) -xf $(RCS_JAR) ; fi  
+	-$(JAVAC) $^
+
+nml_test_java_dl_write.class: nml_test_java_dl_write.java TEST_MESSAGE.java nml_test_format_MsgDict.java teststruct.java QTEST_MSG.java SIMPLER_MSG.java BOP_MSG.java struct_from_other_header.java
+	-if test ! -f rcs/nml/NMLFormatConverter.class -a -f $(RCS_JAR) ; then $(JAR) -xf $(RCS_JAR) ; fi  
+	-$(JAVAC) $^
+
+$(TEST_BIN_DIR)/nml_test_server_ada$(EXEEXT): nml_test_server_ada.adb nml_test_format_n_ada.adb nml_test_format_n_ada.ads otherheader_n_ada.adb otherheader_n_ada.ads
+	-$(ADA_LINK_COMMAND) nml_test_server_ada $(ADA_LINK_FLAGS)
+
+$(TEST_BIN_DIR)/nml_test_dl_write_ada$(EXEEXT): nml_test_dl_write_ada.adb nml_test_format_n_ada.adb nml_test_format_n_ada.ads otherheader_n_ada.adb otherheader_n_ada.ads
+	-$(ADA_LINK_COMMAND) nml_test_dl_write_ada $(ADA_LINK_FLAGS)
+
+$(TEST_BIN_DIR)/nml_test_dl_read_ada$(EXEEXT): nml_test_dl_read_ada.adb nml_test_format_n_ada.adb nml_test_format_n_ada.ads otherheader_n_ada.adb otherheader_n_ada.ads
+	-$(ADA_LINK_COMMAND) nml_test_dl_read_ada $(ADA_LINK_FLAGS)
+
+

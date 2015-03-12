@@ -1,0 +1,69 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    linux
+
+# The C compiler.
+CC =    gcc
+
+# The C++ compiler.
+CPLUSPLUS =     g++
+CPLUSPLUS_EXTENSION = cc
+
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O
+endif
+endif
+
+ifndef NO_DEBUG
+ifndef DEGUG_FLAG
+DEBUG_FLAG = -g
+endif
+endif
+
+# The C and C++ compilation flags to be used.
+CFLAGS  = $(DEBUG_FLAG) $(OPTIMIZE_FLAG) -DLINUX -D$(PLAT) -DPLATNAME=\"$(PLAT)\" -D__RT__
+CLINK =
+CPLUSPLUSFLAGS =        -D__CPLUSPLUS__ $(CFLAGS)
+CPLUSPLUSLINK =         $(CLINK)
+
+# Flags for compiling and linking X Windows apps
+XINC = -I/usr/include
+XLINK = -L/usr/X11/lib -lXaw
+
+# Flags for compiling and linking Tcl apps
+TCL_INC =
+TCL_LINK = -ltclx -ltcl -ldl
+
+# makedepend must be run from a sun. (Preferably one with a cross-compiler.)
+MAKEDEPEND = /usr/X11R6/bin/makedepend
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        ranlib
+
+# The assembler.
+AS =    as
+
+LD =    ld
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+DYNAMIC_LINK_FLAG = -dy -G
+
+
+COPY_SOURCE_COMMAND = cp
+RCSLIB_LIBRARY_NAME = librcs.a
+STRIP = strip
+
+# disable SCCS make rule for Linux
+% : SCCS/s.%
+	@true
+
+% ::    RCS/%,v
+	co $@
+
+
+

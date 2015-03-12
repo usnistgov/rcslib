@@ -1,0 +1,1346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en-US">
+<head>
+<title>NML Configuration Server</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://www.isd.mel.nist.gov/mel2.css" type="text/css" />
+
+<style type="text/css">
+  div.user{
+    width: 0
+    font-family: monospaced;
+    font-size: small;
+    background: rgb(235,235,255);
+    padding: 0.1em;
+    overflow: auto;
+    overflow-y: visible;
+  }
+  div.output{
+    width: 0
+    font-family: monospaced;
+    font-size: small;
+    background: rgb(235,255,235);
+    padding: 0.1em;
+    overflow: auto;
+    overflow-y: visible;
+  }
+  div.file{
+    width: 0
+    font-family: monospaced;
+    font-size: small;
+    background: rgb(255,235,235);
+    padding: 0.1em;
+    border: thin solid black;
+    overflow: auto;
+    overflow-y: visible;
+  }
+  em.var {
+    font-style: italic;
+    font-family: fantasy;
+    font-size: larger;
+   }
+  strong.bnfterminal {
+    font-weight:bolder;
+  }
+</style>
+</head>
+<body>
+<h1>NML Configuration Server</h1>
+
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#pseudo_filename">Pseudo File Name Syntax</a></li>
+<li><a href="#invoking_nmlcfgsvr">Invoking nmlcfgsvr</a></li>
+<li><a href="#nmlcfgsvr_protocol">The nmlcfgsvr Protocol</a></li>
+<li><a href="#config_file_extensions">Configuration File Extensions</a></li>
+</ul>
+
+<h2><a name="introduction">Introduction</a></h2>
+
+<p>The NML configuration server provides an alternative method of providing the kind of information normally placed in NML configuration files to NML applications. It can be used to provide NML servers and applications with information concerning how they should connect  and transmit data to each other but it is not directly involved in each transfer. It is contacted over a TCP connection whenever an NML channel is created, and sometimes when one is deleted and the name of the configuration file matches a particular syntax or the configuration file contains some new syntax. With each contact it not only provides the information that would have been stored in the configuration file, but updates its own internal memory model of what a virtual configuration file would contain, so that later requests for related information obtain corresponding information. This allows existing NML applications could use the configuration server without modification of the source code however the they will need to be linked with a new version of the RCS library.</p>
+
+<h3><a name="NOTATION">Notation</a></h3>
+
+<p>I like lots of examples.</p>
+
+<div class="user">
+<pre>
+
+     Commands users are expected to enter at a command prompt will look like this.
+
+</pre>
+</div>
+
+<div class="output">
+<pre>
+
+     Computer program generated example output will look like this.
+
+</pre>
+</div>
+
+<div class="file">
+<pre>
+
+Text files listed in line look like this.
+
+</pre>
+</div>
+
+
+<h2><a name="examples">Examples</a></h2>
+
+<p>It is convenient for testing to have a set of applications where the buffer name, process name and configuration file can be set from the command line. I do not expect most applications to be built this way but it allows us to experiment with a number of different scenarios without recompiling anything. To run the demonstrations you need four programs nmlcfgsvr which should have been built along with the RCS library and three programs just for testing: nml_test_server, nml_test_write and nml_test_read. The source for the three test programs includes:
+<a href="nml_test_server.cc">nml_test_server.cc</a>,
+<a href="nml_test_write.cc">nml_test_write.cc</a>,
+<a href="nml_test_read.cc">nml_test_read.cc</a>,
+<a href="nml_test_format.hh">nml_test_format.hh</a>,
+<a href="nml_test_format_n.cc">nml_test_format_n.cc</a>, and
+<a href="nml_test_format_n_codegen_protos.hh">nml_test_format_n_codegen_protos.hh</a>. They should be in the src/test directory of the expanded RCS library source archive or you can download them from the last set of links.</p>
+
+<h3>Compiling the test programs:</h3>
+
+<p>Exactly how you compile them depends on your operating system, compiler and
+how directories are laid out. This worked for me:</p>
+
+<div class="user">
+<pre>
+
+g++ -Ircslib_install_dir/include -Ircslib-2004.3/src/test  rcslib-2004.3/src/test/nml_test_server.cc rcslib-2004.3/src/test/nml_test_format_n.cc -Lrcslib_install_dir/lib -lrcs -o nml_test_server
+
+g++ -Ircslib_install_dir/include -Ircslib-2004.3/src/test  rcslib-2004.3/src/test/nml_test_write.cc rcslib-2004.3/src/test/nml_test_format_n.cc -Lrcslib_install_dir/lib -lrcs -o nml_test_write
+
+g++ -Ircslib_install_dir/include -Ircslib-2004.3/src/test  rcslib-2004.3/src/test/nml_test_read.cc rcslib-2004.3/src/test/nml_test_format_n.cc -Lrcslib_install_dir/lib -lrcs -o nml_test_read
+
+</pre>
+</div>
+
+<p>rcslib_install_dir is unique to my system. Generally that needs to be replaced in all commands with something appropriate to your system, or you could use a symbolic link to make that work.</p>
+<p>So did this:</p>
+
+<div class="user">
+<pre>
+
+make -C rcslib-2004.3/src/test/ -f Makefile.extra_tests clean nml_test_server nml_test_write nml_test_read
+
+</pre>
+</div>
+
+<h3>Running some demonstrations:</h3>
+
+<p>Start the nmlcfgsvr:</p>
+
+<div class="user">
+<pre>
+
+rcslib_install_dir/bin/nmlcfgsvr
+
+</pre>
+</div>
+
+<p>It produces the following output:</p>
+
+<div class="output">
+<pre>
+
+Registering server on TCP port 11671, my_hostname=fakehost.fakenet.com, my_ipstring=240.9.78.68.
+If you run other instances of nmlcfgsvr that could interact with processes run on this system or vice-versa, it would be safer to set --startkey to a value far enough away from the value used here 785482752(0x2ED18400) to avoid conflicts.
+
+</pre>
+</div>
+
+<p>Of Course your IP address and hostname will not be the same. If you are using DHCP and do not have a unique statically configured hostname, the information may be too generic to be useful, otherwise it will hopefully be a convenience for doing the remote tests. If the value of my_ipstring=127.0.0.1, then you will need to use the --localip option to set the string to something you will need to obtain from some system utility. The local tests should work regardless. 11671 is the current default, but it may be changed. It also warns about the fact that the shared memory starting key was not set. The keys need to be unique for each buffer. The nmlcfgsvr will start with the start key and just keep incrementing from there. If two different nmlcfgsvr's are connected to from the same host, then might cause conflicts by using the same key for different buffers. startkey is chosen if it is not given on the command line based on the hosts ip and the port number in a way that is intended to make these conflicts very unlikely. You may need to set the LD_LIBRARY_PATH environment variable to ensure librcs.so can be found.</p>
+
+<p>Start an NML server for buffer &quot;b1&quot;:</p>
+
+<div class="user">
+<pre>
+
+env NML_SET_TO_SERVER=1 nml_test_server b1 svr nmlcfgsvr: 
+
+</pre>
+</div>
+
+<p>The env command is a standard UNIX command that runs another program with
+a given environment variable(s) set to particular value(s). There are lots of other ways of accomplishing this. On some systems you will need to use setenv or export command. However the variable should not be set when running the other test programs, so a separate terminal or window might need to be used. Since there is no config file to tell the system that this process should act as a server, the environment variable NML_SET_TO_SERVER needs to be set. We could also eliminate the need for this by editing the nml_test_server.cc source code. nml_test_server is written to take its first argument an pass it as the buffer name, its second and pass it as the process name and and its third argument and pass it as the configuration file name. The NML constructors recognize a configuration file name that starts with &quot;nmlcfgsvr:&quot; to indicate that it should not read a configuration file at all but rather connect to an NML configuration server. With no hostname or port number appended the connection will be to the default port on the local system.</p>
+
+<p>The output should look something like this:</p>
+
+<div class="output">
+<pre>
+
+@(#)$Info: RCS_LIBRARY_VERSION 2004.3 Compiled on  Mar 10 2004 at 15:16:15 for the autoconf-i586-pc-linux-gnu platform with compiler version 3.2.2 20030222 (Red Hat Linux 3.2.2-5) $ .
+nml_ptr=0x804bf60
+Starting NML server(s) . . . 
+
+</pre>
+</div>
+
+<p>This is just some diagnostics output. You could edit nml_test_server.cc to get rid of it. If there had been ERROR or WARNING messages, I would look at those
+more carefully.</p>
+
+<p>Examine the virtual configuration file.</p>
+
+<div class="user">
+<pre>
+
+telnet 127.0.0.1 11671
+
+</pre>
+</div>
+
+<div class="output">
+<pre>
+
+Trying 127.0.0.1...
+Connected to localhost.localdomain (127.0.0.1).
+Escape character is '^]'.
+
+</pre>
+</div>
+
+<div class="user">
+<pre>
+
+list
+
+</pre>
+</div>
+
+<div class="output">
+<pre>
+
+#BEGIN_LIST
+B       b1      SHMEM   240.9.78.68     10240   0       0       2       64     785482768        TCP=59860 bsem=785482769  packed confirm_write nmlcfgsvr=240.9.78.68:11671
+#END_LIST
+
+</pre>
+</div>
+
+<div class="user">
+<pre>
+
+       [CONTROL-D]
+
+</pre>
+</div>
+
+<div class="output">
+<pre>
+
+Socket closed to host with IP address 127.0.0.1. (quit command received.)
+Connection closed by foreign host.
+
+</pre>
+</div>
+
+<p>The second argument to telnet changes the port it normally uses. &quot;list&quot; is one of a few commands that can be sent to the nmlcfgsvr. The output contains what could have been written into a configuration file and been used but is instead being generated by the server. The server has chosen a number of default values for options that may or may not be appropriate in every situation or they might just not be the most efficient choices. The buffer type was chosen as SHMEM. SHMEM is available for more platforms but GLOBMEM might have allowed faster more direct access to the data for the right kind of system. The buffer size was chosen as 10240 this was chosen to be somewhat larger than the maximum message size passed to CMS::check_type_info in the format function. A user might know that the largest message from the format function will never actually be sent to this buffer and the size is unnecessarily large. On the other hand if the message contained unbounded arrays the size could actually be too small. The data is to be stored in raw format (neutral=0). This is better for multiple local reader or writer processes most of the time, but it may be less efficient if the buffer is primarily accessed remotely or if dynamic length arrays are used. It also will not work at all if unbounded arrays are used. It will use TCP, which works for larger messages and for blocking operations, but UDP could have been a more efficient choice. The timeout chosen was infinity (INF). There are various ways to change these defaults, but these are some of the pitfalls of trying to use a computer program rather than a skilled human system integrator.</p>
+
+
+<p>Write some data into &quot;b1&quot;.</p>
+
+<div class="user">
+<pre>
+
+nml_test_write b1 writer nmlcfgsvr: 1
+
+</pre>
+</div>
+
+<p>There will be no output if everything goes well.
+The arguments to nml_test_write are the same as those for nml_test_server except that an additional fourth argument is an integer that will be used to set a variable in the test message to be sent. nml_test_read can then check to see that this is the number we expect an thus track writes correspond with which reads.
+</p>
+
+<p>Read the data from &quot;b1&quot;.</p>
+
+<div class="user">
+<pre>
+
+nml_test_read b1 reader nmlcfgsvr: 1
+
+</pre>
+</div>
+
+<p>There will be no output since the read is successful and contains the data
+we expect. However replacing the 1 with a 2 produces:</p>
+
+<div class="user">
+<pre>
+
+nml_test_read b1 reader nmlcfgsvr: 2
+
+</pre>
+</div>
+
+<div class="output">
+<pre>
+
+expected_last_var(2) != tst_msg->last_var(1)
+
+</pre>
+</div>
+
+<p>
+Launch a &quot;b2&quot; server and verify its data is independent of the &quot;b1&quot;.
+</p>
+
+<div class="user">
+<pre>
+
+env NML_SET_TO_SERVER=1 nml_test_server b2 svr2  nmlcfgsvr: &amp;
+nml_test_write b2 writer nmlcfgsvr: 2
+nml_test_read b2 reader nmlcfgsvr: 2
+nml_test_read b1 reader nmlcfgsvr: 1
+
+</pre>
+</div>
+
+<p>Except for some diagnostics output from the server there is no output. The lack of output from the last read verifies that despite writing a 2 into buffer b2, buffer b1 still has 1 in the lastvar variable.</p>
+
+<p>Run a parallel set of tests connected to a separate configuration server.</p>
+<div class="user">
+<pre>
+
+rcslib_install_dir/bin/nmlcfgsvr --port 50000
+env NML_SET_TO_SERVER=1 nml_test_server b1 svr nmlcfgsvr::50000 &amp;
+env NML_SET_TO_SERVER=1 nml_test_server b2 svr2 nmlcfgsvr::50000 &amp;
+nml_test_write b1 writer nmlcfgsvr::50000 11
+nml_test_write b2 writer nmlcfgsvr::50000 12
+nml_test_read b1 reader nmlcfgsvr::50000 11
+nml_test_read b2 reader nmlcfgsvr::50000 12
+nml_test_read b1 reader nmlcfgsvr: 1
+nml_test_read b2 reader nmlcfgsvr: 2
+
+</pre>
+</div>
+
+<p>Other than the diagnostics output from starting the servers there is no output, which means all the reads and writes succeed and the reads get what they expect. The buffers &quot;b1&quot; and &quot;b2&quot; created from configuration info from the configuration server on port 50000 are independent from each other and from the buffers of the same name created on the default 11671 port.</p>
+
+<p>To test remote connections, login to another system, and run: </p>
+
+<div class="user">
+<pre>
+
+nml_test_server b3 svr3 nmlcfgsvr:240.9.78.68        &amp;
+nml_test_server b3 svr3 nmlcfgsvr:240.9.78.68:50000  &amp;
+nml_test_read  b1 reader nmlcfgsvr:240.9.78.68 1
+nml_test_read  b2 reader nmlcfgsvr:240.9.78.68 2
+nml_test_read  b1 reader nmlcfgsvr:240.9.78.68:50000 11
+nml_test_read  b2 reader nmlcfgsvr:240.9.78.68:50000 12
+nml_test_write b1 writer nmlcfgsvr:240.9.78.68       1001
+nml_test_write b2 writer nmlcfgsvr:240.9.78.68       1002
+nml_test_write b3 writer nmlcfgsvr:240.9.78.68       1003
+nml_test_write b1 writer nmlcfgsvr:240.9.78.68:50000 101
+nml_test_write b2 writer nmlcfgsvr:240.9.78.68:50000 102
+nml_test_write b3 writer nmlcfgsvr:240.9.78.68:50000 103
+nml_test_read b1 reader nmlcfgsvr:240.9.78.68       1001
+nml_test_read b2 reader nmlcfgsvr:240.9.78.68       1002
+nml_test_read b3 reader nmlcfgsvr:240.9.78.68       1003
+nml_test_read b1 reader nmlcfgsvr:240.9.78.68:50000 101
+nml_test_read b2 reader nmlcfgsvr:240.9.78.68:50000 102
+nml_test_read b3 reader nmlcfgsvr:240.9.78.68:50000 103
+
+</pre>
+</div>
+
+<p>Again there was no output other than diagnostics output from starting the servers, which means all the reads and writes succeed and the reads get what they expect. The IP address &quot;240.9.78.68&quot; happened to be where I ran the nmlcfgsvr and the first set of tests. It will be different on your system. The IP address in these commands does not indicate where the data itself is stored, or from where it was read or written only where the information is about where and how it is stored. None of these test programs happen to be written to use more than one buffer. However since the config file parameter is passed to each new NML channel separately it is straight forward to create a single process that connects to several buffers using information from different nmlcfgsvr instances on different ports and/or hosts and perhaps some buffers using normal NML configuration files.</p>
+
+<p>A serious problem that exists with these types of systems is that it creates additional ways for the system to fail and makes building a robust system harder. If nmlcfgsvr was never started the other programs would hang forever during the NML constructor. This could be changed if the timeout were set, then the other programs would print an error message and exit. The test programs are written, to exit if NML::valid() returns 0. They could have been written to wait and try  again, or to try to continue running in some diminished capacity doing things that do not require accessing that buffer.</p>
+
+<p>Try this:</p>
+
+<div class="user">
+<pre>
+
+killall -INT nmlcfgsvr
+killall -INT nml_test_server
+env NML_SET_TO_SERVER=1 nml_test_server b1 svr  nmlcfgsvr: 
+
+</pre>
+</div>
+
+<p>The killall program sends a signal (usually intended to terminate) all the instances (aka tasks,threads or processes) of a particular program. If your system does not have killall the same thing can be accomplished in multiple steps using ps and kill or TaskManager or by pressing [CTRL][C] in the windows those programs are running in. The -INT option is optional but recommended since those programs are written to do some additional cleanup when they receive SIGINT or signal 2. The killall programs may or may not produce some output. nml_test_server will print:</p>
+
+<div class="output">
+<pre>
+
+@(#)$Info: RCS_LIBRARY_VERSION 2004.3 Compiled on  Mar 19 2004 at 07:56:52 for the autoconf-i586-pc-linux-gnu platform with compiler version 3.2.2 20030222 (Red Hat Linux 3.2.2-5) $ .
+
+</pre>
+</div>
+
+<p>Notice that it did not print the following which it printed in previous runs.This is because the test program is stuck in the NML constructor.</p>
+
+<div class="output">
+<pre>
+
+Starting NML server(s) . . . 
+
+</pre>
+</div>
+
+<p>After 10 seconds it should print:</p>
+
+<div class="output">
+<pre>
+
+(time=1315.0851,pid=6410): /local/shackle/rcslib/src/cms/sokintrf.c 1537: !WARNING! Connecting to 127.0.0.1:11671 has taken longer than 10 seconds. I am configured to wait forever. Check that the server is running or will run.
+
+</pre>
+</div>
+
+<p>In another window or terminal start the nmlcfgsvr program with:</p>
+
+<div class="user">
+<pre>
+
+rcslib_install_dir/bin/nmlcfgsvr
+
+</pre>
+</div>
+
+<p>In the first window  where nml_test_server was run, 
+there should finally be:</p>
+
+<div class="output">
+<pre>
+
+Starting NML server(s) . . . 
+
+</pre>
+</div>
+
+<p>This indicates the server has finally started and we should be able to go on and do things as before.</p>
+
+<p>Now try this:</p>
+
+<div class="user">
+<pre>
+
+killall -INT nmlcfgsvr
+killall -INT nml_test_server
+env NML_SET_TO_SERVER=1 nml_test_server b1 svr  nmlcfgsvr:::10.0 
+
+</pre>
+</div>
+
+<p>The program should output:</p>
+
+<div class="output">
+<pre>
+
+env NML_SET_TO_SERVER=1 nml_test_server b2 svr2 nmlcfgsvr:::10.0
+nml_test_server: rcslib-2004.3/src/test/nml_test_server.cc compiled on Mar 18 2004 at 15:55:49
+@(#)$Info: RCS_LIBRARY_VERSION 2004.3 Compiled on  Mar 19 2004 at 07:56:52 for the autoconf-i586-pc-linux-gnu platform with compiler version 3.2.2 20030222 (Red Hat Linux 3.2.2-5) $ .
+
+</pre>
+</div>
+
+<p>There should be a pause where it waits about 10 seconds. It will then print this:</p>
+
+<div class="output">
+<pre>
+
+(time=3287.9642,pid=6490): /local/shackle/rcslib/src/cms/sokintrf.c 1899: !ERROR! connect error: 111 -- Connection refused
+(time=3287.9646,pid=6490): /local/shackle/rcslib/src/cms/sokintrf.c 1901: !ERROR! Error trying to connect to TCP port 11671 of host 127.0.0.1.
+(time=3287.9648,pid=6490): /local/shackle/rcslib/src/cms/nmlcfgsvr_clntcalls.cc 196: !ERROR! nmlcfgsvr_connect(::10.0) failed.
+nml_ptr=0x804bf60
+nml_ptr->valid() check failed.
+
+</pre>
+</div>
+
+<p>Since a timeout was set for connecting to the nmlcfgsvr, the program quit rather than waiting forever. The application could try a different nmlcfgsvr on another host or port, however the application can not assume that information retrieved from another server would be the same as if the original configuration server had been contacted.</p>
+
+<p>What if instead of nmlcfgsvr not being started, nml_test_server was not started? </p>
+
+<p>Try this:</p>
+
+<div class="user">
+<pre>
+
+killall -INT nmlcfgsvr
+killall -INT nml_test_server
+rcslib_install_dir/bin/nmlcfgsvr &amp;
+nml_test_write b1 writer nmlcfgsvr: 1
+nml_test_read b1 reader nmlcfgsvr: 1
+
+
+</pre>
+</div>
+
+<p>The error that results is this:</p>
+
+<div class="output">
+<pre>
+
+nml->read() returned 0 when 101 was expected.
+
+</pre>
+</div>
+
+<p>What happened is that buffer b1 was created and deleted twice. The default rule is that if a buffer does not exist when it is asked for it will be created and if it does the process will just attach to the existing buffer. When the last process using the buffer exits the buffer should be deleted. So nml_test_write found that the buffer did not exist, created it , wrote a message into it, then deleted the buffer. nml_test_read found that the buffer no longer existed, created it, found it empty, considered that an error, printed the message,  deleted the buffer again and exited. Most NML applications might not consider an empty buffer to be an error and just check again later but nml_test_read does. 101 is just the type of the test message that nml_test_write writes and nml_test_read expects.</p>
+
+<p>Another way to run things would be to do this:</p>
+
+<div class="user">
+<pre>
+
+killall -INT nmlcfgsvr
+killall -INT nml_test_server
+rcslib_install_dir/bin/nmlcfgsvr &amp;
+nml_test_write b1 writer nmlcfgsvr::::create=wait 1
+
+</pre>
+</div>
+
+<p>The prompt should have never comeback after starting nml_test_write. It is now set not to create the buffer itself but to wait for another process to create it.Run the following in another window or terminal:</p>
+
+<div class="user">
+<pre>
+
+env NML_SET_TO_SERVER=1 nml_test_server b1 svr nmlcfgsvr: &amp;
+
+</pre>
+</div>
+
+<p>nml_test_write should have returned and finally with nml_test_server now running in the background, the following read should succeed and therefore have no output:</p>
+
+<div class="user">
+<pre>
+
+nml_test_read b1 readr nmlcfgsvr::::create=wait 1
+
+</pre>
+</div>
+
+<p>Another problem could occur if nmlcfgsvr were killed, or the system it was running on lost power while other NML applications continued to run based on its data. To simulate this run the following in separate windows.</p>
+
+<p>In one window ...</p>
+
+<div class="user">
+<pre>
+
+nml_test_write b1 writer nmlcfgsvr: 1 -1 0.5
+
+</pre>
+</div>
+
+<p>In another window ...</p>
+
+<div class="user">
+<pre>
+
+nml_test_read b1 readr nmlcfgsvr: 1 -1 0.5
+
+</pre>
+</div>
+
+<p>The output in the write window should look like this:</p>
+
+<div class="output">
+<pre>
+
+. . .
+tst_msg.i=346
+tst_msg.i=347
+tst_msg.i=348
+tst_msg.i=349
+tst_msg.i=350
+tst_msg.i=351
+tst_msg.i=352
+tst_msg.i=353
+tst_msg.i=354
+tst_msg.i=355
+. . .
+
+</pre>
+</div>
+
+<p>The two additional arguments to nml_test_write say to repeat the write (-1) times which for this test means forever every 0.5 seconds.The value of the variable i in the test message is incremented with every write. A stream of these messages should be continuously scrolling off the screen.</p>
+
+<p>The output from the nml_test_read window should look like this:</p>
+
+<div class="output">
+<pre>
+
+. . .
+tst_msg->i=1190
+nml->read() returned 101
+tst_msg->i=1191
+nml->read() returned 101
+tst_msg->i=1192
+nml->read() returned 101
+tst_msg->i=1193
+nml->read() returned 101
+tst_msg->i=1194
+nml->read() returned 101
+tst_msg->i=1195
+. . .
+
+</pre>
+</div>
+
+<p>The additional arguments to nml_test_read work the same as for nml_test_write. The read will be repeated (-1) times which means forever every 0.5 seconds. If a new message has been read it will print the value NML::read returned which is the type of the test message and the value of the <em class="var">i</em> variable in the test message which should correspond with the value nml_test_write printed. They do not correspond above because there was a substantial delay between copying and pasting from one window and from the other. There should be a stream of these messages slowly scrolling off the screen.</p>
+
+<p>If nml_test_write is killed, then the output of nml_test_read should change to:</p>
+
+<div class="output">
+<pre>
+
+. . .
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+. . .
+
+</pre>
+</div>
+
+<p>This output should again slowly scroll off the screen. With nmlcfgsvr running in the background, it should be possible to kill and restart nml_test_read and nml_test_write in any order and not see any problems other than the fact that nml_test_read prints a series of returned 0 when nml_test_write is not running. (If one of them were run remotely and the nml_test_server were not run then an error would occur when the one acting as server were killed, while the other continued to run. Both are written to exit after a single error. However they could have been written to continue and recover from this sort of error, independent of whether nmlcfgsvr was used.)</p>
+
+<p>Finally seeing the effect of nmlcfgsvr dying as the system runs is possible. With both nml_test_read and nml_test_write running, kill the nmlcfgsvr. The output from both nml_test_read and nml_test_write should be completely unaffected, by the nmlcfgsvr's death. Both continue to scroll out the same series of messages that they were before nmlcfgsvr's death.</p>
+
+<p>However there are still some hidden problems lurking in our system. To see this without restarting nmlcfgsvr, kill and restart nml_test_read. It will now hang. Despite the fact that the buffer nml_test_read wants to connect to exists and nml_test_write is merrily writing messages to it, nml_test_read can not find that out is therefore hung. Kill nml_test_read.</p>
+
+<p>Now with nml_test_write still running, try this:</p>
+
+<div class="user">
+<pre>
+
+rcslib_install_dir/bin/nmlcfgsvr &amp;
+nml_test_read b2 readr nmlcfgsvr: 1 
+
+</pre>
+</div>
+
+<p>The output should look like this:</p>
+
+<div class="output">
+<pre>
+
+Registering server on TCP port 11671, my_hostname=fakehost.fakenet.com, my_ipst
+ring=240.9.78.68.
+(time=1717.3069,pid=20728): /local/shackle/rcslib/src/cms/shmem.cc 466: !ERROR! 
+Shared memory buffers b2 and b1 conflict. (key=11673(0x2D99))
+(time=1717.3324,pid=20728): /local/shackle/rcslib/src/cms/cms_cfg.cc 1564: !ERRO
+R! cms_config: -11(CMS_RESOURCE_CONFLICT_ERROR: Two or more CMS buffers are tryi
+ng to use the same resource.) Error occurred during SHMEM create.
+(time=1717.3467,pid=20728): /local/shackle/rcslib/src/cms/nml.cc 511: !ERROR! NM
+L: cms_create_from_lines returned -1.
+
+**********************************************************
+* Current Directory = /local/shackle
+* @(#)$Info: RCS_LIBRARY_VERSION 2004.3 Compiled on  Mar 19 2004 at 15:18:06 for
+ the autoconf-i586-pc-linux-gnu platform with compiler version 3.2.2 20030222 (R
+ed Hat Linux 3.2.2-5) $ .
+
+**********************************************************
+* BufferName = b2
+* BufferType = 0
+* ProcessName = readr
+* Configuration File = nmlcfgsvr:
+* CMS Status = -11 (CMS_RESOURCE_CONFLICT_ERROR: Two or more CMS buffers are try
+ing to use the same resource.)
+* Recent errors repeated:
+
+Shared memory buffers b2 and b1 conflict. (key=11673(0x2D99))
+
+cms_config: -11(CMS_RESOURCE_CONFLICT_ERROR: Two or more CMS buffers are trying 
+to use the same res
+NML: cms_create_from_lines returned -1.
+
+* BufferLine: B         b2      SHMEM   240.9.78.68     10240   0       0      2
+        64      11673   TCP=11673 bsem=11674  packed nmlcfgsvr=240.9.78.68:11671
+* ProcessLine: P        readr   b2      LOCAL   127.0.0.1       RW      3      I
+NF      1       1
+* error_type = 0 (NML_NO_ERROR)
+************************************************************
+
+nml->valid() check failed.
+
+</pre>
+</div>
+
+<p>Notice that nml_test_read tried to connect to b2 rather than b1. Since nmlcfgsvr had died and was restarted since nml_test_write which was still running had started it did not know that b1 existed. It therefore allocated the same resource, a shared memory key, for b2 that was already being used for b1. A more complicated resource allocation method might have avoided this. If nmlcfgsvr had allocated the keys randomly rather than in sequence a conflict would have been much less likely. If nml_test_read had collected more information about the resources being used before connecting to nmlcfgsvr it could have forwarded that information and nmlcfgsvr could have avoided the keys in use. nml_test_read could also be written to respond to the error by informing nmlcfgsvr and requesting a new set of configuration data. Some or all of these approaches might have value and might be implemented in some future version of NML, however they will not solve the following problem:</p>
+
+<p>With nml_test_write still running, and the restarted nmlcfgsvr running, 
+restart nml_test_read to connect to b1.</p>
+
+<div class="user">
+<pre>
+
+nml_test_read b1 readr nmlcfgsvr: 1 -1 0.5
+
+</pre>
+</div>
+
+<p>The output should be:</p>
+
+<div class="output">
+<pre>
+
+nml->read() returned 0 when 101 was expected.
+
+</pre>
+</div>
+
+<p>The problem is that nmlcfgsvr still does not know that b1 exists. So when nml_test_read asks for it, they effectively create another independent b1 just as if another instance of nmlcfgsvr had been contacted on another host or port. This new b1 has never been written to. The first call to NML::read() returns 0 which nml_test_read considers an error.</p>
+
+<p>Both problems could be avoided by preserving the state of virtual configuration file within nmlcfgsvr as it is shutdown and restarted. I considered two methods of doing this but implemented only one. The more straight forward option would be to save to a file during shutdown and reread the file during startup. However since it is probably impossible to ensure that there will be time during shutdown to write the file the file must be written with each change, in fact the file must be written before the client is sent word of the status of any request that causes a change. nmlcfgsvr will close the file and use the operating system sync() function before sending a response to a client. Another approach that has not been implemented would be to send the data over a network to another instance of nmlcfgsvr. While this might eliminate the need to have nonvolatile writeable storage on the system nmlcfgsvr runs on, it seems to be extremely problematic.</p>
+
+<p>Kill all nml_test_write and restart the nmlcfgsvr with file synchronization on.</p>
+
+<div class="user">
+<pre>
+
+killall -INT nml_test_write
+killall -INT nml_test_read
+killall -INT nml_test_server
+killall -INT nmlcfgsvr
+rcslib_install_dir/bin/nmlcfgsvr --filesync &amp;
+
+</pre>
+</div>
+
+<p>The extra killalls may produce some output, but the main output should be:</p>
+<div class="output">
+<pre>
+
+Can't read either nmlcfgsvr_file_sync1.nml or nmlcfgsvr_file_sync2.nml
+Registering server on TCP port 11671, my_hostname=fakehost.fakenet.com, my_ipstring=240.9.78.68.
+
+</pre>
+</div>
+
+<p>The first message is output because this is the first time the --filesync option was used and therefore no NML files to reread are available. The reason it mentions two different files is that the nmlcfgsvr will alternate between writing one and the other so that if it were killed while writing one the other would still preserve the system state.</p>
+
+<p>Start nml_test_write and nml_test_read in separate windows with the 
+continuous repeat option as before.</p>
+
+<p>In one window ...</p>
+
+<div class="user">
+<pre>
+
+nml_test_write b1 writer nmlcfgsvr: 1 -1 0.5
+
+</pre>
+</div>
+
+<p>In another window ...</p>
+
+<div class="user">
+<pre>
+
+nml_test_read b1 readr nmlcfgsvr: 1 -1 0.5
+
+</pre>
+</div>
+
+<p>Now kill nmlcfgsvr and restart nmlcfgsvr.</p>
+
+<div class="user">
+<pre>
+
+killall -INT nmlcfgsvr
+rcslib_install_dir/bin/nmlcfgsvr --filesync &amp;
+
+</pre>
+</div>
+
+<p>nml_test_read and nml_test_write should continue scrolling out the same messages they were. This time the output from nmlcfgsvr does not mention not being able to read nmlcfgsvr_file_sync1.nml or nmlcfgsvr_file_sync2.nml, since they were created the last time.</p>
+
+<p>Repeat the test of accessing b2 first after restarting nmlcfgsvr.</p>
+
+<div class="user">
+<pre>
+
+env NML_SET_TO_SERVER=1 nml_test_server b2 svr2 nmlcfgsvr: &amp;
+nml_test_write b2 writer nmlcfgsvr::::create=wait 2
+nml_test_read b2 readr nmlcfgsvr:::::create=wait 2 
+
+</pre>
+</div>
+
+<p>This time there should be no resource conflict since b2 now gets a different set of resources, than b1 is using since nmlcfgsvr knows that b1 is using them.</p>
+
+<p>Start a new instance of nml_test_read.</p>
+
+<div class="user">
+<pre>
+
+nml_test_read b1 readr nmlcfgsvr: 1 -1 0.5
+
+</pre>
+</div>
+
+<p>It should start scrolling out the same set of messages nml_test_write is sending, indicating that it has connected to the existing buffer rather than creating a new independent one as occurred after doing the same thing after restarting nmlcfgsvr without --filesync.</p>
+
+<p>There is yet another problem however. What happens if the state of the system changes between killing nmlcfgsvr and restarting it? It is impossible for any new buffer to be created, since any process that tried to connect to the nmlcfgsvr to create one would either timeout or hang. However it is quite possible for a buffer to be deleted during this time. In fact if a process died even while the nmlcfgsvr were running it might die but be unable to report this to the nmlcfgsvr either due to the way it died or due to a missing network connection at the time. In either case the nmlcfgsvr, could enter a state where it believes a buffer exits that has since been deleted. nmlcfgsvr usually avoids entering this state when starting up by checking each buffer in the file sync file, by contacting the server that should be running for that buffer and sending a request to it to verify the buffer name matches the buffer number that was generated when the buffer was created. If they do not match or no reply is received after a timeout, nmlcfgsvr will consider the buffer deleted.</p>
+
+<p>Restart the nmlcfgsvr fresh by deleting the file synchronization files first.</p>
+
+<div class="user">
+<pre>
+
+killall -INT nml_test_write
+killall -INT nml_test_read
+killall -INT nml_test_server
+killall -INT nmlcfgsvr
+rm nmlcfgsvr_file_sync1.nml 
+rm nmlcfgsvr_file_sync2.nml
+rcslib_install_dir/bin/nmlcfgsvr --filesync &amp;
+
+</pre>
+</div>
+
+<p>Login to a remote system in a separate window, start nml_test_write, replacing &quot;240.9.78.68&quot; with IP address or hostname of the system nmlcfgsvr was started on.</p>
+
+<div class="user">
+<pre>
+
+nml_test_write b1 writer nmlcfgsvr:240.9.78.68 1 -1 0.5
+
+</pre>
+</div>
+
+<p>Now start nml_test_read with option to wait for nml_test_write to create b1.</p>
+
+<div class="user">
+<pre>
+
+nml_test_read b1 readr nmlcfgsvr: 1
+
+</pre>
+</div>
+
+<p>nml_test_read should have returned immediately, having finally received the configuration data from nmlcfgsvr. It then goes on th read the message it expects from the buffer with the value of last_var it expects and therefore exits silently.</p>
+
+<p>First kill nmlcfgsvr, then kill nml_test_write. The following output should 
+come from nml_test_write which is the indication that it was unable to contact the nmlcfgsvr which was killed first.</p>
+
+<div class="output">
+<pre>
+
+(time=1261.6826,pid=24275,thread=16384): /local/shackle/rcslib/src/cms/sokintrf.c 1899: !ERROR! connect error: 111 -- Connection refused
+(time=1261.6832,pid=24275,thread=16384): /local/shackle/rcslib/src/cms/sokintrf.c 1901: !ERROR! Error trying to connect to TCP port 11671 of host 127.0.0.1.
+(time=1261.6834,pid=24275,thread=16384): /local/shackle/rcslib/src/cms/nmlcfgsvr_clntcalls.cc 205: !ERROR! nmlcfgsvr_connect(240.9.78.68:11671) failed.
+(time=1266.7225,pid=24275,thread=16384): /local/shackle/rcslib/src/cms/sokintrf.c 1899: !ERROR! connect error: 111 -- Connection refused
+(time=1266.7228,pid=24275,thread=16384): /local/shackle/rcslib/src/cms/sokintrf.c 1901: !ERROR! Error trying to connect to TCP port 11671 of host 127.0.0.1.
+(time=1266.7229,pid=24275,thread=16384): /local/shackle/rcslib/src/cms/nmlcfgsvr_clntcalls.cc 205: !ERROR! nmlcfgsvr_connect(240.9.78.68:11671) failed.
+(time=1271.7625,pid=24275,thread=16384): /local/shackle/rcslib/src/cms/sokintrf.c 1899: !ERROR! connect error: 111 -- Connection refused
+(time=1271.7628,pid=24275,thread=16384): /local/shackle/rcslib/src/cms/sokintrf.c 1901: !ERROR! Error trying to connect to TCP port 11671 of host 127.0.0.1.
+(time=1271.7629,pid=24275,thread=16384): /local/shackle/rcslib/src/cms/nmlcfgsvr_clntcalls.cc 205: !ERROR! nmlcfgsvr_connect(240.9.78.68:11671) failed.
+
+</pre>
+</div>
+
+<p>Restart the nmlcfgsvr with checking the sync file disabled.</p>
+
+<div class="user">
+<pre>
+
+rcslib_install_dir/bin/nmlcfgsvr --filesync --nofsynccheck &amp;
+
+</pre>
+</div>
+
+<p>Restart the writer on a different system, than it was started on the first time.</p>
+
+<div class="user">
+<pre>
+
+nml_test_write b1 writer nmlcfgsvr:240.9.78.68: 1 -1 0.5
+
+</pre>
+</div>
+
+<p>nml_test_write hangs for about 10 seconds and then prints this:</p>
+
+<div class="output">
+<pre>
+
+(time=672.5194,pid=30415,thread=16384): /local/shackle/rcslib/src/cms/sokintrf.c 1537: !WARNING! Connecting to 240.9.78.214:1800 has taken longer than 10 seconds. I am configured to wait forever. Check that the server is running or will run.
+
+</pre>
+</div>
+
+<p>&quot;240.9.78.214&quot; happens to be the system I ran  nml_test_write on the last time. Since b1 was never deleted from the system. nmlcfgsvr is telling nml_test_write to connect to where the buffer used to be and nml_test_write is waiting forever for that system to respond. The default checking of the buffers as nmlcfgsvr  would normally eliminate this problem. Of course it is possible that the was only temporarily unavailable at the time the nmlcfgsvr starts and the buffer is therefore unnecessarily deleted. Another option would be to have one process connect with create=new, which indicates to nmlcfgsvr that it delete any existing buffer of that name and create new one without doing any extra checks. This means this process would normally have to be started first or the other processes connecting would need to connect with create=wait, or the other process could end up creating a buffer that later would be deleted.</p>
+
+<p>Passing the configuration file as a command line argument is convenient for testing and running these simple examples but existing NML applications are not generally written this way. If you needed to connect to several NML buffers with different options it becomes rather unweildy.</p>
+
+<p>The following is an example NML configuration file (<a href="redirect.nml">redirect.nml</a>) that redirects queries to nmlcfgsvr:</p>
+
+<div class="file">
+<pre>
+
+
+# Buffer lines
+
+# connect to one nmlcfgsvr if we are looking for b1
+B b1 nmlcfgsvr::50000
+
+#connect to a different nmlcfgsvr if we are looking for queued_buffer and set the option queue=10
+B queued_buffer nmlcfgsvr:240.9.78.68:::options=queue=10
+
+# Process lines
+
+# if this process is named "svr" use the new create type and set the server flag to 1
+P svr default nmlcfgsvr_options=create=new set_to_server=1
+
+# if this process is not named above but the buffer is
+#       then  use the checkwait createtype and set the timeout to 0.5
+P default  default nmlcfgsvr_options=create=checkwait timeout=0.5
+
+# If we read this far without finding a matching buffer line and process line connect to nmlcfgsvr.
+nmlcfgsvr:
+
+
+</pre>
+</div>
+
+<p>The IP address &quot;240.9.78.68&quot; will need to be edited to match your system.</p>
+
+<p>The following list of commands should exercize this configuration file.</p>
+
+<div class="user">
+<pre>
+
+killall -INT nml_test_write
+killall -INT nml_test_read
+killall -INT nml_test_server
+killall -INT nmlcfgsvr
+rcslib_install_dir/bin/nmlcfgsvr --port 50000 &
+
+</pre>
+</div>
+<div class="output">
+<pre>
+
+Registering server on TCP port 50000, my_hostname=feed.dmz.cme.nist.gov, my_ip_string=129.6.78.68.
+If you run other instances of nmlcfgsvr that could interact with processes run on this system or vice-versa,
+ it would be safer to set --startkey to a value far enough away from the value used here 1504838656(0x59B20400) to avoid conflicts
+
+</pre>
+</div>
+<div class="user">
+<pre>
+
+nml_test_server b1 svr redirect.nml &
+
+</pre>
+</div>
+<div class="output">
+<pre>
+
+@(#)$Info: RCS_LIBRARY_VERSION 2004.3 Compiled on  Mar 19 2004 at 15:18:06 for the autoconf-i586-pc-linux-gnu platform with compiler version 3.2.2 20030222 (Red Hat Linux 3.2.2-5) $ .
+nml_ptr=0x804b1d8
+Starting NML server(s) . . . 
+
+</pre>
+</div>
+<div class="user">
+<pre>
+
+nml_test_write b1 writer redirect.nml 77 
+nml_test_read b1 reader redirect.nml 77 
+
+</pre>
+</div>
+<div class="output">
+<pre>
+
+        
+
+</pre>
+</div>
+<p>Because the buffer name is &quot;b1&quot; nml_test_server, nml_test_write and nml_test_read connect to nmlcfgsvr on port 50000. nml_test_write and nml_test_read produce no output because everything goes as expected.</p>
+
+<div class="user">
+<pre>
+
+killall -INT nml_test_server
+killall -INT nmlcfgsvr
+rcslib_install_dir/bin/nmlcfgsvr &
+
+</pre>
+</div>
+<div class="output">
+<pre>
+
+Registering server on TCP port 11671, my_hostname=feed.dmz.cme.nist.gov, my_ip_string=129.6.78.68.
+If you run other instances of nmlcfgsvr that could interact with processes run on this system or vice-versa,
+ it would be safer to set --startkey to a value far enough away from the value used here 785482752(0x2ED18400) to avoid conflicts.
+
+</pre>
+</div>
+<div class="user">
+<pre>
+
+nml_test_server queued_buffer svr redirect.nml &
+
+</pre>
+</div>
+<div class="output">
+<pre>
+
+nml_test_server: rcslib-2004.3/src/test/nml_test_server.cc compiled on Mar 30 2004 at 10:39:07
+@(#)$Info: RCS_LIBRARY_VERSION 2004.3 Compiled on  Mar 19 2004 at 15:18:06 for the autoconf-i586-pc-linux-gnu platform with compiler version 3.2.2 20030222 (Red Hat Linux 3.2.2-5) $ .
+nml_ptr=0x804b1d8
+Starting NML server(s) . . . 
+
+</pre>
+</div>
+<div class="user">
+<pre>
+
+nml_test_write queued_buffer writer redirect.nml 1 20 0.5
+
+</pre>
+</div>
+
+<div class="output">
+<pre>
+
+tst_msg.i=0
+tst_msg.i=1
+tst_msg.i=2
+tst_msg.i=3
+tst_msg.i=4
+tst_msg.i=5
+tst_msg.i=6
+tst_msg.i=7
+tst_msg.i=8
+tst_msg.i=9
+tst_msg.i=10
+(time=2449.8462,pid=23705,thread=16384): /local/shackle/rcslib/src/cms/
+cms_in.cc 2283: !ERROR! CMS: queued_buffer message queue is full.
+(time=2449.8497,pid=23705,thread=16384): /local/shackle/rcslib/src/cms/
+cms_in.cc 2284: !ERROR! (continued) CMS: Message requires 8896 bytes bu
+t only 0 bytes are left.
+
+**********************************************************
+* Current Directory = /local/shackle
+* @(#)$Info: RCS_LIBRARY_VERSION 2004.3 Compiled on  Mar 19 2004 at 15:
+18:06 for the autoconf-i586-pc-linux-gnu platform with compiler version
+ 3.2.2 20030222 (Red Hat Linux 3.2.2-5) $ .
+
+**********************************************************
+* BufferName = queued_buffer
+* BufferType = 0
+* ProcessName = writer
+* Configuration File = redirect.nml
+* CMS Status = -7 (CMS_QUEUE_FULL:=  A write failed because queuing was
+ enabled but there was no room to add to the queue. )
+* Recent errors repeated:
+
+CMS: queued_buffer message queue is full.
+
+(continued) CMS: Message requires 8896 bytes but only 0 bytes are left.
+
+
+* BufferLine: B         queued_buffer   SHMEM   129.6.78.68     102400 
+0       0       2       64      785482752       TCP=39235 bsem=78548275
+3  queue packed confirm_write nmlcfgsvr=129.6.78.68:11671
+* ProcessLine: P        writer  queued_buffer   LOCAL   129.6.78.68   R
+W       0       0.500000        0       2 waitformaster
+* error_type = 8 (NML_QUEUE_FULL_ERROR)
+************************************************************
+
+nml->write() returned -1
+
+</pre>
+</div>
+<div class="user">
+<pre>
+
+nml_test_read queued_buffer reader redirect.nml 1 20 0.5
+
+</pre>
+</div>
+<div class="output">
+<pre>
+
+nml->read() returned 101
+tst_msg->i=0
+nml->read() returned 101
+tst_msg->i=1
+nml->read() returned 101
+tst_msg->i=2
+nml->read() returned 101
+tst_msg->i=3
+nml->read() returned 101
+tst_msg->i=4
+nml->read() returned 101
+tst_msg->i=5
+nml->read() returned 101
+tst_msg->i=6
+nml->read() returned 101
+tst_msg->i=7
+nml->read() returned 101
+tst_msg->i=8
+nml->read() returned 101
+tst_msg->i=9
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+
+</pre>
+</div>
+
+<p>Because the buffer name was &quot;queued_buffer&quot; nml_test_write, nml_test_read and nml_test_write connect the configuration server on 240.9.78.68 or whatever you replaced this with and the option &quot;queue=10&quot; is set. nml_test_write is passed arguments suggesting it try to write into the buffer twenty times.It is only able to do so ten times before an error occurs because the buffer is queued and there is only enough space for ten messages. It exits after getting the error. nml_test_read also tries to read twenty times, the first ten times it retrieves a message off the queue after that read returns zero since the queue is empty.</p>
+
+<div class="user">
+<pre>
+
+env NML_SET_TO_SERVER=1 nml_test_server b2 svr redirect.nml &
+
+</pre>
+</div>
+<div class="output">
+<pre>
+
+nml_test_server: rcslib-2004.3/src/test/nml_test_server.cc compiled on Mar 30 2004 at 10:39:07
+@(#)$Info: RCS_LIBRARY_VERSION 2004.3 Compiled on  Mar 19 2004 at 15:18:06 for the autoconf-i586-pc-linux-gnu platform with compiler version 3.2.2 20030222 (Red Hat Linux 3.2.2-5) $ .
+nml_ptr=0x804b1d8
+Starting NML server(s) . . . 
+
+</pre>
+</div>
+<div class="user">
+<pre>
+
+nml_test_write b2 writer redirect.nml 1 20 0.5 
+
+</pre>
+</div>
+<div class="output">
+<pre>
+
+tst_msg.i=0
+tst_msg.i=1
+tst_msg.i=2
+tst_msg.i=3
+tst_msg.i=4
+tst_msg.i=5
+tst_msg.i=6
+tst_msg.i=7
+tst_msg.i=8
+tst_msg.i=9
+tst_msg.i=10
+tst_msg.i=11
+tst_msg.i=12
+tst_msg.i=13
+tst_msg.i=14
+tst_msg.i=15
+tst_msg.i=16
+tst_msg.i=17
+tst_msg.i=18
+tst_msg.i=19
+
+</pre>
+</div>
+<div class="user">
+<pre>
+
+nml_test_read b2 reader redirect.nml 1 20 0.5
+
+</pre>
+</div>
+<div class="output">
+<pre>
+
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+nml->read() returned 0
+
+</pre>
+</div>
+
+<p>Buffer &quot;b2&quot; is never mentioned anywhere in the configuration file
+ redirect.nml but because the last line of that file begins with &quot;nmlcfgsvr:&quot; all three test programs contact the nmlcfgsvr just as if  &quot;nmlcfgsvr:&quot; had been passed to the NML constructors directly instead of redirect.nml. Because this buffer is not queued each write simply overwrites the previous one, so nml_test_write writes into the buffer 20 times without error. nml_test_read only gets a message the first time it reads. nml_test_read does not print the first read's return value so only returned 0 is printed.</p>
+
+<h2><a name="pseudo_filename">Pseudo File Name Syntax</a></h2>
+
+<p>The nmlcfgsvr can be contacted using the existing NML API, by passing a string to the as 
+the configuration file argument of the NML constructor. This string has the following syntax in
+partially expanded BNF.</p>
+
+<pre>
+
+pseudo_file := <strong class="bnfterminal">nmlcfgsvr:</strong>[[[&lt;ip_address&gt;|&lt;hostname&gt;]:[&lt;port&gt;]]:[&lt;create_timeout&gt;]][<strong class="bnfterminal">:create=</strong>&lt;createtype&gt;][<strong class="bnfterminal">:options=</strong>&lt;optionslist&gt;]
+
+createtype := <strong class="bnfterminal">get</strong> |
+              <strong class="bnfterminal">create</strong> |
+	      <strong class="bnfterminal">create_exclusive</strong> |
+	      <strong class="bnfterminal">wait</strong> |
+	      <strong class="bnfterminal">new</strong> |
+	      <strong class="bnfterminal">checkget</strong> |
+	      <strong class="bnfterminal">checkcreate</strong> | 
+	      <strong class="bnfterminal">checkcreate_exclusive</strong> | 
+	      <strong class="bnfterminal">checkwait</strong>
+
+optionslist := &lt;optionitem&gt; | 
+                &lt;optionslist&gt; &quot; &quot; &lt;optionitem&gt;
+
+optionitem := <strong class="bnfterminal">queue</strong>[=&lt;queuemultiplier&gt;] |
+              <strong class="bnfterminal">neutral=</strong>&lt;neutral_flag&lt; |
+              <strong class="bnfterminal">confirm_write=</strong>&lt;confirm_write_flag&lt; |
+              <strong class="bnfterminal">set_to_server=</strong>&lt;server_flag&lt; |
+	      <strong class="bnfterminal">size=</strong>&lt;buffer_size&gt; |
+	      <strong class="bnfterminal">remotetype=</strong>&lt;remotetype&gt;
+              <strong class="bnfterminal">timeout=</strong>&lt;timeout&gt; |
+	      <strong class="bnfterminal">plineadd=</strong>&lt;&quot;process_line_additions&quot;&gt; 
+
+</pre>
+
+<p>The <em class="var">ip_address</em> or <em class="var">hostname</em> and <em class="var">port</em> provide the location at which nmlcfgsvr can be contacted via TCP. The <em class="var">create_timeout</em> provides a timeout in seconds for the time to contact nmlcfgsvr. (Use a decimal point to get higher resolution. ie 0.05 = 50 milliseconds.) The <em class="var">queuemultiplier</em> increases the size so that the size of the buffer is sufficient to store 10 of the largest messages on the queue. (ie queue=10 size=200 is approximately the same as queue=1 size=2000). The queuemultiplier is mainly useful for specifying the maximum queue length when letting the size be chosen automatically. <em class="var">neutral_flag</em> can be set to either 0 or 1 to determine whether the data is stored in neutral format internally or in the processors native format. This does not affect remote communications which are neutrally encoded regardless.  <em class="var">confirm_write</em> can be set to either 0 or 1 to determine whether a remote writer will wait for confirmation before returning from the write function. Remote writes can be significantly faster with this set to 0 but some errors will not be detected and multiple messages could be queued within the network. <em class="var">server_flag</em> can be set to 0,1 or 2. This value is placed in the server field of the generated process line. By default it will be 3 if the buffer is new, indicating a server for this process should be spawned immediately and 0 otherwise.<em class="var">buffer_size</em> is the integer size of the shared memory area to be allocated. <em class="var">remotetype</em> sets the protocol for remote communications. Setting it to &quot;udp&quot; forces the use of UDP instead of the default TCP. <em class="var">timeout</em> changes the time before read and write operations return with an error code and is independant of the create_timeout. The <em class="var">plineadd</em> option allows arbitrary string to be attached to the end of the process line for setting unusual process specific options. The value of plineadd needs to be surrounded with quotation marks if it contains spaces. Only the timeout option and plineadd option have any effect when attaching to an existing buffer rather than creating a new one. </p>
+
+<p>The <em class="var">createtype</em> has the following possible values:</p>
+
+<dl>
+<dt><strong class="bnfterminal">get</strong></dt>
+<dd>If another process has created a buffer with the given name, attach to it otherwise
+fail immediately.</dd>
+<dt><strong class="bnfterminal">create</strong></dt>
+<dd>If another process has created a buffer with the given name, attach to it otherwise create 
+a new buffer with the given name.</dd>
+<dt><strong class="bnfterminal">create_exclusive</strong></dt>
+<dd>If another process has created a buffer with the given name fail immediately, otherwise 
+create a new buffer with the given name.</dd>
+<dt><strong class="bnfterminal">wait</strong></dt>
+<dd>If another process has created a buffer with the given name, attach to it otherwise wait
+until another process creates it or the create_timeout expires.</dd>
+<dt><strong class="bnfterminal">new</strong></dt>
+<dd>If another process has created a buffer with the given name, delete the information associated with it and create new buffer with the same name. If the buffer never existed in the first place create a new buffer with the given name</dd>
+<dt><strong class="bnfterminal">checkget</strong></dt>
+<dd>If another process has created a buffer with the given name, check it by sending a request to the server for this buffer asking for a verification of the buffer name and number. If the buffer exists and the response is correct attach to it, otherwise fail immediately.</dd>
+<dt><strong class="bnfterminal">checkcreate</strong></dt>
+<dd>If another process has created a buffer with the given name, check it by sending a request to the server for this buffer asking for a verification of the buffer name and number. If the buffer exists and the response is correct attach to it, otherwise if the buffer exists but the check fails delete the information associated with the existing buffer and create a new buffer with the given name. If the buffer never existed in the first place create a new buffer with the given name.</dd>
+<dt><strong class="bnfterminal">checkcreate_exclusive</strong></dt>
+<dd>If another process has created a buffer with the given name, check it by sending a request to the server for this buffer asking for a verification of the buffer name and number. If the buffer exists and the response is correct then fail immediately, otherwise if the buffer exists but the check fails delete the information associated with the existing buffer and create a new buffer with the given name. If the buffer never existed in the first place create a new buffer with the given name.</dd>
+<dt><strong class="bnfterminal">checkwait</strong></dt>
+<dd>If another process has created a buffer with the given name, check it by sending a request to the server for this buffer asking for a verification of the buffer name and number. If the buffer exists and the response is correct then attach to it, otherwise if the buffer exists but the check fails wait and repeat the check periodically until either the check succeeds or another process creates a new buffer with the given name or the timeout occurs. If the buffer never existed in the first place, wait until it is created or the create_timeout expires.</dd>
+</dl>
+
+
+<h2><a name="invoking_nmlcfgsvr">Invoking nmlcfgsvr</a></h2>
+
+<p>nmlcfssvr accepts the following command line arguments:</p>
+
+<div class="output">
+<pre>
+
+nmlcfgsvr usage: [--port &lt;port&gt;] [--localip &lt;Internet-Address&gt;] [--startfile &lt;startfile&gt;] [--check] [--debug] [--help] [--startkey &lt;startkey&gt;] [--filesync [&lt;filesyncprefix&gt;]] [--nofsynccheck] [--no_confirm_write_default] [--bsem_needed]
+
+</pre>
+</div>
+
+<dl>
+<dt>--port</dt>
+<dd><em class="var">port</em> is a TCP/IP port number that  the server will bind to and listen for requests on.</dd>
+<dt>--localport</dt>
+<dd><em class="var">Internet-Address</em> is an IP address in the standard numbers-and-dots notation that remote systems should use to contact processes that connected to the configuration server through the local loopback address. A reasonable value can usually be guessed on simple systems on a LAN with static IP addresses. This is printed as my_ipstring.</dd>
+<dt>--startfile</dt>
+<dd><em class="var">startfile</em> is a file that will be parsed on startup containing a series of commands that follow the <a href="nmlcfgsvr_protocol">nmlcfgsvr protocol</a> that can further configure nmlcfgsvr.</dd>
+<dt>--check</dt>
+<dd>Treat all requests as if they asked for the buffer to be checked first. The check involves requesting the NML server to verify the buffer name and number. If the checke fails the request proceeds and if the buffer did not previously exist.</dd>
+<dt>--debug</dt>
+<dd>Print a series of debug messages to stdout.</dd>
+<dt>--help</dt>
+<dd>Print the usage information.</dd>
+<dt>--startkey</dt>
+<dd>Each shared memory buffer needs a unique integer key. nmlcfgsvr begins issuing keys with a startkey and increments the key each time a buffer is created.  If multiple configuration servers are used from the same host the keys might conflict. To avoid this it might be necessary to explicitly set the <em class="var">startkey</em>.</dd>
+<dt>--filesync</dt>
+<dd>If the current state of the buffers needs to be preserved when nmlcfgsvr dies and is restarted, this can be accomplished by enabling file synchronization. When this is enabled a text file will be written each time the buffer states are modified, and read when nmlcfgsvr is restarted. The optional <em class="var">filesyncprefix</em> allows multiple independent nmlcfgsvr processes to be run on the same system, or to simply have the files saved and restored from a directory other than the current. The prefix replaces the default &quot;nmlcfgsvr_file_sync&quot; before &quot;1.nml&quot; and &quot;2.nml&quot; in the filenames that are saved and restored.</dd>
+<dt>--nofsynccheck</dt>
+<dd>By default when using &quot;--filesync&quot; each buffer is checked at startup. It is checked by sending a request to its server to verify the buffer name and number. If the check fails the 
+buffer is considered to have been deleted. This option inhibits the checks.</dd>
+<dt>--bsem_needed</dt>
+<dd>Assumes all new buffers created need blocking semaphores(bsems) by default.</dd>
+<dt>--no_confirm_write_default</dt>
+<dd>Disables adding &quot;confirm_write&quot; to buffers by default.</dd>
+
+</dl>
+
+<h2><a name="nmlcfgsvr_protocol">The nmlcfgsvr Protocol</a></h2>
+
+<p>The protocol used by nmlcfgsvr uses only ASCII printable and white-space characters. 
+It is compatible with telnet. It is also used in the startup file. Requests to nmlcfgsvr that are received can be terminated with either a new-line or a carriage-return character or both in either order. Empty lines in requests are ignored. The reply lines generated by nmlcfgsvr are always ended with carriage-return followed by a new-line character. No reply line can ever exceed 512 bytes.</p>
+
+<p>The following requests are available:</p>
+
+<pre>
+
+<strong class="bnfterminal">list</strong>
+<strong class="bnfterminal">get</strong>  &lt;buffername&gt; [&lt;processname&gt;] [&lt;optionslist&gt;]
+<strong class="bnfterminal">create</strong> &lt;buffername&gt; [&lt;processname&gt;] [&lt;optionslist&gt;]
+<strong class="bnfterminal">create_exclusive</strong> &lt;buffername&gt; [&lt;processname&gt;] [&lt;optionslist&gt;]
+<strong class="bnfterminal">wait</strong>  &lt;buffername&gt; [&lt;processname&gt;] [&lt;optionslist&gt;]
+<strong class="bnfterminal">new</strong>  &lt;buffername&gt; [&lt;processname&gt;] [&lt;optionslist&gt;]
+<strong class="bnfterminal">checkget</strong>  &lt;buffername&gt; [&lt;processname&gt;] [&lt;optionslist&gt;]
+<strong class="bnfterminal">checkcreate</strong> &lt;buffername&gt; [&lt;processname&gt;] [&lt;optionslist&gt;]
+<strong class="bnfterminal">checkcreate_exclusive</strong> &lt;buffername&gt; [&lt;processname&gt;] [&lt;optionslist&gt;]
+<strong class="bnfterminal">checkwait</strong>  &lt;buffername&gt; [&lt;processname&gt;] [&lt;optionslist&gt;]
+<strong class="bnfterminal">delete</strong> &lt;buffername&gt; [&lt;processname&gt;]
+
+</pre>
+
+<p>Nine of the commands : get,create,create_exclusive,wait,new,checkget,checkcreate,checkcreate_exclusive, and checkwait. Create the given buffer with the createtype described in the <a href="#pseudo_filename">Pseudo File Name Syntax</a> section. The <em class="var">buffername</em> is always required. The <em class="var">processname</em> is not required except it is needed as a placeholder if any options are added. The options available are the same as for the optionslist in the psuedo file name. If any of these commands succeed two lines are returned first a buffer line and then a process line with the same syntax as used in an NML configuration file, otherwise only &quot;NO&quot; is returned. The two additional commands are &quot;delete&quot; which deletes a buffer and &quot;list&quot; which lists all buffers. The list output begins with &quot;#BEGIN_LIST&quot; and ends with &quot;#END_LIST&quot; Between these buffers are listed in the same format as an NML configuration file. Even recently deleted buffers are listed. Recently deleted buffers have &quot;nmlcfgsvr-deleted=true&quot; appended to the end of the bufferline.</p>
+
+<h2><a name="config_file_extensions">Configuration File Extensions</a></h2>
+
+<p>There are three ways existing NML files can be modified to use
+the nmlcfgsvr.</p>
+
+<ol>
+<li>Set the buffer type on a buffer line to something following the
+<a href="#pseudo_filename">Pseudo File Name Syntax</a> form , redirects attempts to create that specific buffer to the nmlcfgsvr.</li>
+<li>If &quot;nmlcfgsvr_options=&quot; is on the process line the rest of the
+line is appended to the optionslist passed to nmlcfgsvr.</li>
+<li>If a line begins with something following the
+<a href="#pseudo_filename">Pseudo File Name Syntax</a> form, all attempts to create any buffer that does not have a bufferline above it will be redirected the the nmlcfgsvr.</li>
+</ol>
+
+<hr />
+
+<p>Last Modified: 31-Mar-2004</p>
+<p>If you have questions or comments regarding this page please
+contact  <a href="http://www.isd.mel.nist.gov/personnel/shackleford/index.htm"
+>Will Shackleford</a> at <i><a href="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</a></i></p>
+</body>
+</html>
+
+
+
+

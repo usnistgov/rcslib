@@ -1,0 +1,120 @@
+#!/bin/bash
+
+if test "x${RTAIDIR}" != "x" ; then
+    echo ${RTAIDIR}
+    exit 0
+fi
+
+FULL_UNAME=`uname -a | sed 'y# #_#' | sed 'y#/#_#' | sed 'y#-#_#' | sed 'y#:#_#' 2>/dev/null`_${CC} 2>/dev/null
+
+if test "x${FULL_UNAME}" != "x" ; then
+    if test -f ~/.rtaidir.${FULL_UNAME} ; then
+	RTAIDIR=`head -n 1 ~/.rtaidir.${FULL_UNAME} 2>/dev/null` 2>/dev/null
+	export RTAIDIR;
+    fi
+fi
+
+if test "x${RTAIDIR}" != "x" ; then 
+    echo ${RTAIDIR}
+    exit 0
+fi
+
+if test ! -f .rtaidir_guess_warn -a ! -f ~/.rtaidir_guess_warn ; then 
+    echo "Trying to guess RTAI directory." 1>&2
+    echo "Set the environment variable RTAIDIR to override this." 1>&2
+    touch  .rtaidir_guess_warn >/dev/null 2>/dev/null
+    touch  ~/.rtaidir_guess_warn >/dev/null 2>/dev/null
+fi
+
+rev=`uname -r`
+
+\rm -f /tmp/linktest* >/dev/null 2>/dev/null
+
+ ( cd /tmp ; touch linktestfile$$ ;  ln -s linktestfile$$ linktestfile$$.link ); >/dev/null 2>/dev/null
+
+#ls -l /tmp/link*
+
+if test -h /tmp/linktestfile$$.link -a '!' -h /tmp/linktestfile$$ ; then
+    LINK_FLAG=-h;
+else
+    LINK_FLAG=-L;
+fi
+
+\rm -f /tmp/linktest* >/dev/null 2>/dev/null
+
+if test ${LINK_FLAG} /usr/src/rtai ; then 
+    RTAIDIR=/usr/src/rtai
+    export RTAIDIR
+    if test "x${FULL_UNAME}" != "x" ; then
+       \rm -f ~/.rtaidir.* 2>/dev/null  ;
+       echo ${RTAIDIR} > ~/.rtaidir.${FULL_UNAME} 2>/dev/null ;
+    fi
+    echo ${RTAIDIR}
+    exit  0
+fi
+
+
+if ! /sbin/ksyms -a | grep rthal >/dev/null 2>/dev/null ; then
+    echo "RTAI does not appear to be installed." 1>&2
+    RTAIDIR=/usr/src/rtai
+    export RTAIDIR
+    if test "x${FULL_UNAME}" != "x" ; then
+	\rm -f ~/.rtaidir.* >/dev/null 2>/dev/null  ;
+    fi
+    echo ${RTAIDIR}
+    exit -1
+fi
+
+function search_list {
+    for i in $rtaifiles ; do
+	    if [ -f $i ] ; then 
+		iver=`objdump -s -j .modinfo $i | gawk '{printf("%s", $6)} END {printf("%s\n",$NF);}'| sed 's/[.]parm.*$//' | sed 's/kernel_version=//' | sed 's/[.]$//' | sed 's/.using_.*$//' | sed 's/.license.*$//'`
+		if [ "$iver" = "$rev" ] ; then
+			RTAIDIR=`echo $i | sed 's%/rtai$%%' | sed 's%/rtai.o$%%' | sed 's%/modules$%%' |sed 's%/rtaidir$%%'  `
+			if test ! -f ~/.rtaidir_printed ; then
+			    echo "RTAIDIR=${RTAIDIR}" 1>&2
+			    touch ~/.rtaidir_printed
+			fi
+			export RTAIDIR
+			echo $RTAIDIR
+			if test "x${FULL_UNAME}" != "x" ; then
+			    \rm -f ~/.rtaidir.* 2>/dev/null  ;
+			    echo ${RTAIDIR} > ~/.rtaidir.${FULL_UNAME} 2>/dev/null ;
+			fi
+			exit 0
+		fi
+	    fi
+    done
+}
+
+rtaifiles=`find /usr/src/rtai/ -maxdepth 3 -type f  '(' -name rtai.o -o -name rtai ')'`
+if test "x${rtaifiles}" != "x" ; then
+    search_list
+fi
+
+for i in /usr/src/rtai* ; do
+    if [ -d $i ] ; then
+	rtaifiles=`find $i -maxdepth 3 -type f  '(' -name rtai.o -o -name rtai ')'`
+	search_list
+    fi
+done
+
+if [ -x `which locate 2>/dev/null` ] ; then
+    rtaifiles="/usr/src/rtai/rtai `locate '*/rtai*/rtai'`"
+    search_list
+fi
+
+
+rtaifiles=/usr/src/rtai/rtai `find /usr/src/ -maxdepth 3 -type f '(' -name rtai -o -name rtai.o ')' 2>/dev/null`
+search_list
+
+RTAIDIR=/usr/src/rtai
+
+if test "x${FULL_UNAME}" != "x" ; then
+    \rm -f ~/.rtaidir.* >/dev/null  2>/dev/null  ;
+fi
+
+
+echo "Could not find RTAI directory under /usr/src, trying ${RTAIDIR} anyway" 1>&2	
+echo ${RTAIDIR}
+exit -1

@@ -1,0 +1,388 @@
+<html>
+<head>
+<title>Using generic.def for RCS Applications</title>
+<meta name=target content="makefile,makefiles, C,C++,compiler">
+</head>
+<BODY  BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="551A8B" ALINK="#FF0000" >
+<A NAME="TOP_OF_FILE">
+<CENTER>
+<H1>RCS Makefiles and Directory Structure</H1>
+<H2>Using generic.def and Other Programmer's Tools</H2>
+</CENTER>
+ <UL>
+<LI><A HREF="index.html">See other RCS Library Documents.</A></LI>
+ </UL>
+<HR SIZE=3>
+<H2><A NAME="INTRO">Introduction</a></h2>
+
+Makefiles are files that provide rules for compiling a particular application,
+which are applied by programs such as <A HREF="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.cl.cam.ac.uk/texinfodoc/make_toc.html">GNU Make</a>.
+Usually these rules are written for a specific application
+ and for a particular <A HREF="#PLATFORM">platform</A>. 
+generic.def (formerly called Makefile.generic)
+ is a make definitions file that provides 
+additional rules that are not application specific that are then
+included in application makefiles to provide these features:
+<OL>
+<LI>Allow the application to be easily compiled for multiple platforms.</LI>
+<LI>Provide each programmer with ability to develop and test modifications to
+the application without affecting other programmers working on the application
+or users.</LI>
+<LI>Allow information about the compilers and libraries available at a given 
+site for each platform to be centralized.</LI>
+<LI>Allow programmer's to more easily generate and
+ use automatically generated dependency rules for header files.</LI>
+<LI>Add's the directory for the RCS Library header files to the compiler's
+include path.</LI>
+</OL>
+
+In order for generic.def to work applications need to follow a particular
+directory structure, set certain Makefile variables, and follow some
+conventions for filenames. It is compatible with GNU Make but is 
+not compatible with some other make utilities like Microsoft's NMAKE.
+
+<h2><A NAME="DIRECTORY_STRUCTURE">Directory Structure</a></h2>
+
+Each application is expected to select one main application directory and
+to mirror the directory tree under this directory 
+ for each programmer working on the application. This allows
+each programmer to change the source code, re-compile and 
+test those changes in a private <A HREF="#WORKSPACE">workspace</a> 
+before releasing the changes to be used by the rest of the
+organization. 
+The main application release directory should contain the
+directory tree shown in the <A HREF="dirtable.html">Directory Tree Table</a>.
+Each programmer's copy follows the same structure except that the SCCS 
+directories are replaced with symbolic links to the corresponding SCCS 
+directory under the main application directory.
+
+
+<h2><A NAME="APPINCLUDE">The Application Include Makefile</A></h2>
+
+It is recommended that each application create a short makefile 
+to include some definitions to be used by makefiles throughout the 
+application. This file should be a very convenient place to  
+include generic.def and to define the <a HREF="#APPDIR">APPDIR</a> variable which 
+generic.def will use. APPDIR should be set to the full path to the main 
+application directory. This may also be a good place to set <a HREF="#LOCAL_CFLAGS">LOCAL_CFLAGS</a> or other <A HREF="#VARIABLES">variables</a> used by 
+generic.def. The following is an example file that will be called
+"Makefile.app" in later examples:
+
+<p>
+
+<PRE>
+#  Application Include Makefile for the application called `app'.
+
+# Add some C and C++ compilation flags for our application. ]
+#  (-g -- include debugging info, -pg -- include profiling support for <A HREF="http://cadsweb.colorado.edu/prof.html">gprof</a>)
+LOCAL_CFLAGS = -g -pg
+
+# Define APPDIR
+APPDIR = /home/manta/app
+
+# Include the generic Makefile definitions
+include /home/manta/rcslib/etc/generic.def
+</PRE>
+<p>
+ (To follow the Enhanced Machine Controller(EMC) convention,
+	Makefile.app should be placed in the top-level directory.)</p>
+<h2><A NAME="TOPMAKE">The Top-Level Makefile</a></h2>
+
+The primary purpose of the top-level makefile is to provide a convenient
+way to call for a make of the appropriate target(s) in each subdirectory.
+There are several <A HREF="#SPECIAL_TARGETS">targets</a> of importance 
+in generic.def that 
+can easily be passed to the subdirectories as the following example shows:
+
+<pre>
+
+# Top-Level Makefile for the application called `app'.
+
+# Include the Application Include Makefile
+include Makefile.app
+
+# To build any of these phony targets go to each subdirectory and run make.
+clean depend install all headers sources:
+	(cd src/sub_directory1; $(MAKE) -k $@)
+	(cd src/sub_directory2; $(MAKE) -k $@)
+	(cd src/sub_directory3; $(MAKE) -k $@)
+
+</pre>
+
+<h2><A NAME="SUBMAKE">Subdirectory Makefiles</a></h2>
+
+Each source subdirectory should have its own Makefile. Within this makefile
+programmers will need to define several variables, include the application
+include makefile, and provide rules for linking any binaries or libraries 
+together. The following example can be used as a template:
+
+<pre>
+# Makefile for sub_directory1 of the application called `app'.
+
+# Set the variables required by generic.def
+SOURCES = example1.cc example2.cc example3.cc
+OBJS = example1.o example2.o example3.o
+LIBS = 
+
+ifeq (vxworks,$(findstring vxworks,$(PLAT)))
+BINS = 
+else
+BINS = example_bin
+endif
+
+# Include the Application Include Makefile
+include ../../Makefile.app
+
+# Create rules to link together specific binaries.
+$(DEVP_PLAT_BIN)/example_bin: \	
+	$(DEVP_PLAT_LIB)/example1.o \
+	$(DEVP_PLAT_LIB)/example2.o \
+	$(DEVP_PLAT_LIB)/example1.o
+	($(COMPILER_SETUP); \
+	$(CPLUSPLUS) $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) $^ -o $@;)
+
+</pre>
+
+<h2><A NAME="VARIABLES">Variables used in generic.def</a></h2>
+
+Several variables are used within generic.def to control how
+your application is built. Other variables are set by generic.def or within one of the platform specific makefiles (of the form $(PLAT).def  such as Makefile.vxworksCC or Makefile.sunos4) to aid in the development of rules for specific binaries and libraries. In the table below the &quot;Where Set?&quot; column provides recommended locations for setting each variable, unless the location is $(PLAT).def or generic.def in which case the variable must be set there and should not be set anywhere else. The platform specific makefiles are automatically included by generic.def so there is no need to include them directly from application makefiles.<p>
+
+<TABLE BORDER=1>
+<tr BGCOLOR=FFFFFF>
+<th><FONT SIZE=5><B>VARIABLE</b></FONT></Th>
+<th><FONT SIZE=5><B>Where Set?</b></FONT></Th>
+<th><FONT SIZE=5><B>Meaning</b></FONT></Th>
+</TR>
+<TR BGCOLOR=FF6060>
+<TD><A NAME="APPDIR"><B>APPDIR</B></A></TD>
+<TD>Application Include Makefile</TD>
+<TD>Specifies the main application directory, 
+which is used in the INCLUDE path and for
+performing an install when the application is ready to be released.</TD>
+</TR>
+<TR BGCOLOR=80FF80>
+<TD><A NAME="AR"><B>AR</B></A></TD>
+<TD>$(PLAT).def</TD>
+<TD>Provides the name and path of the library archiver for the given 
+platform. (See the <A HREF="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://wsinwp01.win.tue.nl:1234/cgi-bin/man2html/usr/man/man1/ar.1v">ar</a> manpage.)
+
+</TD>
+</TR>
+<TR BGCOLOR=8080FF>
+<TD><A NAME="BINS"><B>BINS</B></A></TD>
+<TD>Subdirectory Makefile</TD>
+<TD>Lists the executable binary files that should be created by running make in 
+this subdirectory.
+Binaries will need to have a separate rule at the end of the makefile.
+</TD>
+</TR>
+<TR BGCOLOR=80FF80 >
+<TD><A NAME="CC"><B>CC</B></A></TD>
+<TD>$(PLAT).def</TD>
+<TD>Provides the name and path of the C compiler for the given platform.
+</TD>
+</TR>
+<TR BGCOLOR=80FF80>
+<TD><A NAME="CPLUSPLUS"><B>CPLUSPLUS</B></A></TD>
+<TD>$(PLAT).def</TD>
+<TD>Provides the name and path of the C++ compiler for the given platform.
+</TD>
+</TR>
+<TR BGCOLOR=80FF80>
+<TD><A NAME="COMPILER_SETUP"><B>COMPILER_SETUP</B></A></TD>
+<TD>$(PLAT).def</TD>
+<TD>Provides the command(s) required to setup the environment so the compiler 
+and related tools can be used. It should be used at the beginning of commands
+in rules for specific binaries and libraries.
+</TR>
+<TR>
+<TR BGCOLOR=e06060>
+<TD><A NAME="DEVP_PLAT_BIN"><B>DEVP_PLAT_BIN</B></A></TD>
+<TD>generic.def</TD>
+<TD>Provides the name of the directory where executable binary files should land within the programmer's workspace. It should be used to provide 
+rules for specific binaries.
+</TD>
+</TR>
+<TR BGCOLOR=e06060 >
+<TD><A NAME="DEVP_PLAT_LIB"><B>DEVP_PLAT_LIB</B></A></TD>
+<TD>generic.def</TD>
+<TD>Provides the name of the directory where object files and libraries should land within the programmer's workspace. It should be used to provide 
+rules for specific binaries and libraries.
+</TD>
+</TR>
+<TR  BGCOLOR=8080FF>
+<TD><A NAME="HEADERS"><B>HEADERS</B></A></TD>
+<TD>Subdirectory Makefile</TD>
+<TD>Lists the header files found in this directory 
+that should be copied to 
+the platform include directory so that they may be used from other directories
+or by other programmers.
+</TD>
+</TR>
+<TR BGCOLOR=8080FF >
+<TD><A NAME="LIBS"><B>LIBS</B></A></TD>
+<TD>Subdirectory Makefile</TD>
+<TD>Lists the library files that should be created by running make in this subdirectory.
+Libraries will need to have a separate rule at the end of the makefile.
+</TD>
+</TR>
+<TR BGCOLOR=FF6060>
+<TD><A NAME="LOCAL_CFLAGS"><B>LOCAL_CFLAGS</B></A></TD>
+<TD>Application Include Makefile</TD>
+<TD>Lists options that will be passed to the C or C++ compiler.
+</TD>
+</TR>
+<TR BGCOLOR=FF6060>
+<TD><A NAME="LOCAL_CPLUSPLUSFLAGS"><B>LOCAL_CPLUSPLUSFLAGS</B></A></TD>
+<TD>Application Include Makefile</TD>
+<TD>Lists options that will be passed to the C++ compiler. (not to a C compiler)
+</TD>
+</TR>
+<TR BGCOLOR=8080FF>
+<TD><A NAME="OBJS"><B>OBJS</B></A></TD>
+<TD>Subdirectory Makefile</TD>
+<TD>Lists the object files that should be compiled by running make in this subdirectory.
+</TD>
+</TR>
+</TR>
+<TR BGCOLOR=40C040>
+<TD><A NAME="PLAT"><B>PLAT</B></A></TD>
+<TD>Command Line</TD>
+<TD>Specifies which <A HREF="#PLATFORM">platform</a> to compile for. It is normally set on the command line so that  programmers can easily switch between
+multiple compilers and cross-compilers. It defaults to the value of the osrev
+environment variable.
+</TD>
+</TR>
+<TR  BGCOLOR=80FF80>
+<TD><A NAME="RANLIB"><B>RANLIB</B></A></TD>
+<TD>$(PLAT).def</TD>
+<TD>Provides the name and path of the ranlib utility for the given platform if
+one exists and is required, otherwise the variable contains some command that
+should have no effect. The ranlib utility converts archives to random libraries. (See the <a HREF="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://wsinwp01.win.tue.nl:1234/cgi-bin/man2html/usr/man/man1/ranlib.1">ranlib</a> manpage.)
+</TD>
+</TR>
+<TR BGCOLOR=e06060>
+<TD><A NAME="RCS_INCLUDE"><B>RCS_INCLUDE</B></A></TD>
+<TD>generic.def</TD>
+<TD>Provides the directory where header files for the RCS library are placed.
+</TD>
+</TR>
+<TR  BGCOLOR=e06060>
+<TD><A NAME="RCS_LIBRARY"><B>RCS_LIBRARY</B></A></TD>
+<TD>generic.def</TD>
+<TD>Provides the name and path of the RCS Library for the platform set with
+<!-- too close <A HREF="#PLAT"> -->PLAT<!-- too close </a> -->.
+</TD>
+</TR>
+<TR BGCOLOR=e06060>
+<TD><A NAME="RCS_PLATLIB"><B>RCS_PLATLIB</B></A></TD>
+<TD>generic.def</TD>
+<TD>Provides the  path to the RCS Library for the platform set with
+<!-- too close <A HREF="#PLAT"> -->PLAT<!-- too close </a> -->. This is 
+also the location of the pmac and pcio libraries if they exist for the platform.
+</TD>
+</TR>
+<TR  BGCOLOR=8080FF>
+<TD><A NAME="SOURCES"><B>SOURCES</B></A></TD>
+<TD>Subdirectory Makefile</TD>
+<TD>Lists the C and C++ files used from that subdirectory. 
+C files should have the .c extension and C++ files should have the .cc extension. Thie list is used 
+for creating automatic dependency lists and for storing archives of the source
+code during an install.  Do not list header files here.
+</TD>
+</TR>
+<TR BGCOLOR=40C040>
+<TD><A NAME="USER_DIR"><B>USER_DIR</B></A></TD>
+<TD>Programmer's Environment, Application Include Makefile, or command line</TD>
+<TD>Specifies the top-level directory in the programmer's workspace. It defaults to the name of the application under the programmer's home directory. It is recommended that the applications be set up so that the default can be used and USER_DIR need not be set. <br>For example: If APPDIR=/home/manta/emc and the programmer's login name was &quot;shackle&quot; then the workspace should be placed in  ~shackle/emc to match the default.
+</TD>
+</TR>
+</TABLE>
+<A NAME="SPECIAL_TARGETS"></a>
+<H2>Special Targets</h2>
+generic.def provides rules for creating several <A HREF="http://www.cl.cam.ac.uk/texinfodoc/make_4.html#SEC31">PHONY targets</a>. By specifying one of
+these targets on the command line, the programmer can have several useful
+tasks performed.
+
+<TABLE BORDER=1>
+<TR>
+<TH>Target Name</TH>
+<TH>Purpose</TH>
+</TR>
+<tr>
+<TD><A NAME="ALL_TARGET"><B>all</b></a></td>
+<td>Update everything within the programmer's workspace, including 
+copying header files to the include directory, compiling, linking and 
+archiving as necessary.</td>
+</tr>
+<tr>
+<TD><A NAME="CLEAN_TARGET"><B>clean</b></a></td>
+<td>Deletes object files and programs from the programmer's workspace. This
+is useful for example when a change in compiler options would not take effect
+unless the entire application is rebuilt.
+</td>
+</tr>
+<tr>
+<TD><A NAME="DEPEND_TARGET"><B>depend</b></a></td>
+<td>Generate lists of dependencies so that files will be recompiled
+whenever a header file they include directly or indirectly has changed (uses
+the <A HREF="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.cs.tu-berlin.de/cgi/rtfm/usr/X11/man/mann/makedepend.n">makedepend</a> utility).
+</td>
+</tr>
+<tr>
+<TD><A NAME="SOURCES_TARGET"><B>headers</b></a></td>
+<td>Copies the header files to the src and include subdirectory
+of the current platform directory. For Windows and DOS platforms the files are
+also converted with <A HREF="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://wsinwp01.win.tue.nl:1234/cgi-bin/man2html/usr/man/man1/unix2dos.1">unix2dos</a>.
+</td>
+</tr>
+<tr>
+<TD><A NAME="INSTALL_TARGET"><B>install</b></a></td>
+<td>Copy all the source, header, object files, libraries and programs
+from the programmer's workspace to the main application release  the main application directory.
+</td>
+</tr>
+<tr>
+<TD><A NAME="SOURCES_TARGET"><B>sources</b></a></td>
+<td>Copies the source and header files to the src and include subdirectories
+of the current platform directory. For Windows and DOS platforms the files are
+also converted with <A HREF="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://wsinwp01.win.tue.nl:1234/cgi-bin/man2html/usr/man/man1/unix2dos.1">unix2dos</a> and the .cc extension is replaced with .cpp.
+</td>
+</tr>
+</TABLE>
+
+
+<h2><A NAME="TERMS">Terminology</A></h2>
+<DL>
+<DT><A NAME="PLATFORM"><B>Platform</B></a></DT>
+<DD>Each platform specifies a particular compiler, CPU type, operating 
+system and sometimes certain compiler options, such as whether to compile
+a Windows program as a 16 or 32 bit application. For each platform there will be a subdirectory in both the programmer's workspace directory and in the 
+application release directory. The PLAT variable should be set the name of
+this subdirectory. The <A HREF="plattable.html">Platforms Tested Table</A> 
+for the RCS Library also lists the names of the platforms as used by 
+generic.def. </DD>
+<DT><A NAME="WORKSPACE"><B>WorkSpace</b></A></DT>
+<DD>Each programmer will have a separate workspace directory which mirrors 
+the main application directory except that the SCCS directories are replaced
+with symbolic links to their counterparts in the main application directory.
+</DD>
+</DL>
+<HR>
+ 
+<p>Last Modified: 04/02/98 </p>
+
+<UL>
+<LI><A HREF="index.html">See other RCS Library Documents.</A></LI>
+
+<LI><A HREF="#TOP_OF_FILE">Go to the top of this document.</a></LI>
+
+</UL>
+
+<P>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email, please
+contact  <A HREF="http://www.isd.mel.nist.gov/personnel/shackleford/"
+>Will Shackleford</A> at <I><A HREF="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</A></I></P>
+</BODY>
+</HTML>
+

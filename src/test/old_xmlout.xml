@@ -1,0 +1,2465 @@
+<?xml version="1.0"?>
+<EXAMPLE_MESSAGE i_attribute="10" c_attribute="0" f_attribute="0.000000" d_attribute="0.000000" ca_attribute="">
+	<!--EXAMPLE_MESSAGE EXAMPLE_MESSAGE-->
+	<is>
+		<!--INSIDE_STATUS EXAMPLE_MESSAGE/is-->
+				<command_type>-1</command_type>
+				<echo_serial_number>-1</echo_serial_number>
+				<status>UNINITIALIZED_STATUS</status>
+				<state>-1</state>
+				<line>-1</line>
+				<source_line>-1</source_line>
+				<source_file/>
+			<inside_status_base_int>0</inside_status_base_int>
+		<inside_status_int>0</inside_status_int>
+	</is>
+	<i>99</i>
+	<c>99</c>
+	<f>123.456001</f>
+	<d>1213802044.31504201889</d>
+	<ia>0</ia>
+	<ia>0</ia>
+	<ia>0</ia>
+	<ca/>
+	<hexdata>00FF01FE00FF01FE0000</hexdata>
+	<name>Will&#xDD;newline(&#x0A;),cr(&#x0D;)&amp;&quot;&apos;</name>
+	<enumtestvar>b</enumtestvar>
+	<rcsstatus>RCS_EXEC</rcsstatus>
+	<enumtestvar_array>b</enumtestvar_array>
+	<enumtestvar_array>b</enumtestvar_array>
+	<enumtestvar_array>b</enumtestvar_array>
+	<enumtestvar_array>b</enumtestvar_array>
+	<enumtestvar_array>b</enumtestvar_array>
+	<enumtest_dla>b</enumtest_dla>
+	<enumtest_dla>b</enumtest_dla>
+	<fa>5.0</fa>
+	<fa>5.0</fa>
+	<fa>5.0</fa>
+	<da>0.0</da>
+	<da>0.0</da>
+	<da>0.0</da>
+	<cart>
+		<!--PM_CARTESIAN EXAMPLE_MESSAGE/cart-->
+		<x>0.0</x>
+		<y>0.0</y>
+		<z>0.0</z>
+	</cart>
+	<cart_array>
+		<!--PM_CARTESIAN EXAMPLE_MESSAGE/cart_array-->
+		<x>0.0</x>
+		<y>0.0</y>
+		<z>0.0</z>
+	</cart_array>
+	<cart_array>
+		<!--PM_CARTESIAN EXAMPLE_MESSAGE/cart_array-->
+		<x>0.0</x>
+		<y>0.0</y>
+		<z>0.0</z>
+	</cart_array>
+	<cart_array>
+		<!--PM_CARTESIAN EXAMPLE_MESSAGE/cart_array-->
+		<x>0.0</x>
+		<y>0.0</y>
+		<z>0.0</z>
+	</cart_array>
+	<homo>
+		<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/homo-->
+		<tran>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo/tran-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</tran>
+		<rot>
+			<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/homo/rot-->
+			<x>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo/rot/x-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</x>
+			<y>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo/rot/y-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</y>
+			<z>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo/rot/z-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</z>
+		</rot>
+	</homo>
+	<homo_array>
+		<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/homo_array-->
+		<tran>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/tran-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</tran>
+		<rot>
+			<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/homo_array/rot-->
+			<x>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/rot/x-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</x>
+			<y>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/rot/y-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</y>
+			<z>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/rot/z-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</z>
+		</rot>
+	</homo_array>
+	<homo_array>
+		<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/homo_array-->
+		<tran>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/tran-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</tran>
+		<rot>
+			<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/homo_array/rot-->
+			<x>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/rot/x-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</x>
+			<y>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/rot/y-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</y>
+			<z>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/rot/z-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</z>
+		</rot>
+	</homo_array>
+	<homo_array>
+		<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/homo_array-->
+		<tran>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/tran-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</tran>
+		<rot>
+			<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/homo_array/rot-->
+			<x>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/rot/x-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</x>
+			<y>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/rot/y-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</y>
+			<z>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_array/rot/z-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</z>
+		</rot>
+	</homo_array>
+	<cda/>
+	<ida>0</ida>
+	<ida>0</ida>
+	<fda>0.0</fda>
+	<fda>0.0</fda>
+	<dda>0.0</dda>
+	<dda>0.0</dda>
+	<cart_dynamic_array>
+		<!--PM_CARTESIAN EXAMPLE_MESSAGE/cart_dynamic_array-->
+		<x>0.0</x>
+		<y>0.0</y>
+		<z>0.0</z>
+	</cart_dynamic_array>
+	<cart_dynamic_array>
+		<!--PM_CARTESIAN EXAMPLE_MESSAGE/cart_dynamic_array-->
+		<x>0.0</x>
+		<y>0.0</y>
+		<z>0.0</z>
+	</cart_dynamic_array>
+	<homo_dynamic_array>
+		<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/homo_dynamic_array-->
+		<tran>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_dynamic_array/tran-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</tran>
+		<rot>
+			<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/homo_dynamic_array/rot-->
+			<x>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_dynamic_array/rot/x-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</x>
+			<y>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_dynamic_array/rot/y-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</y>
+			<z>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_dynamic_array/rot/z-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</z>
+		</rot>
+	</homo_dynamic_array>
+	<homo_dynamic_array>
+		<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/homo_dynamic_array-->
+		<tran>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_dynamic_array/tran-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</tran>
+		<rot>
+			<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/homo_dynamic_array/rot-->
+			<x>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_dynamic_array/rot/x-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</x>
+			<y>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_dynamic_array/rot/y-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</y>
+			<z>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/homo_dynamic_array/rot/z-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</z>
+		</rot>
+	</homo_dynamic_array>
+	<ic_dynamic_array>
+		<!--INSIDE_COMMAND EXAMPLE_MESSAGE/ic_dynamic_array-->
+				<serial_number>0</serial_number>
+			<inside_command_base_int>0</inside_command_base_int>
+		<inside_command_int>0</inside_command_int>
+	</ic_dynamic_array>
+	<ic_dynamic_array>
+		<!--INSIDE_COMMAND EXAMPLE_MESSAGE/ic_dynamic_array-->
+				<serial_number>0</serial_number>
+			<inside_command_base_int>0</inside_command_base_int>
+		<inside_command_int>0</inside_command_int>
+	</ic_dynamic_array>
+	<cda_unbounded>string_for_cda_unbounded</cda_unbounded>
+	<ida_unbounded>0</ida_unbounded>
+	<ida_unbounded>1</ida_unbounded>
+	<ida_unbounded>2</ida_unbounded>
+	<ida_unbounded>3</ida_unbounded>
+	<ida_unbounded>4</ida_unbounded>
+	<ida_unbounded>5</ida_unbounded>
+	<ida_unbounded>6</ida_unbounded>
+	<ida_unbounded>7</ida_unbounded>
+	<ida_unbounded>8</ida_unbounded>
+	<ida_unbounded>9</ida_unbounded>
+	<fda_unbounded>0.0</fda_unbounded>
+	<fda_unbounded>0.0</fda_unbounded>
+	<dda_unbounded>0.0</dda_unbounded>
+	<dda_unbounded>0.0</dda_unbounded>
+	<ic_unbounded_array>
+		<!--INSIDE_COMMAND EXAMPLE_MESSAGE/ic_unbounded_array-->
+				<serial_number>0</serial_number>
+			<inside_command_base_int>0</inside_command_base_int>
+		<inside_command_int>0</inside_command_int>
+	</ic_unbounded_array>
+	<ic_unbounded_array>
+		<!--INSIDE_COMMAND EXAMPLE_MESSAGE/ic_unbounded_array-->
+				<serial_number>0</serial_number>
+			<inside_command_base_int>0</inside_command_base_int>
+		<inside_command_int>0</inside_command_int>
+	</ic_unbounded_array>
+	<s i_attribute="10" c_attribute="0" f_attribute="0.000000" d_attribute="0.000000" ca_attribute="">
+		<!--mystruct EXAMPLE_MESSAGE/s-->
+		<is>
+			<!--INSIDE_STATUS EXAMPLE_MESSAGE/s/is-->
+					<command_type>-1</command_type>
+					<echo_serial_number>-1</echo_serial_number>
+					<status>UNINITIALIZED_STATUS</status>
+					<state>-1</state>
+					<line>-1</line>
+					<source_line>-1</source_line>
+					<source_file/>
+				<inside_status_base_int>0</inside_status_base_int>
+			<inside_status_int>0</inside_status_int>
+		</is>
+		<i>10</i>
+		<c>0</c>
+		<f>0.0</f>
+		<d>0.0</d>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ca/>
+		<hexdata>00000000000000000000</hexdata>
+		<name/>
+		<enumtestvar>b</enumtestvar>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtest_dla>b</enumtest_dla>
+		<enumtest_dla>b</enumtest_dla>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<da>0.0</da>
+		<da>0.0</da>
+		<da>0.0</da>
+		<cart>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/cart-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<homo>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/s/homo-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/s/homo/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/s/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/s/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/s/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/s/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/s/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/s/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<cda/>
+		<ida>0</ida>
+		<ida>0</ida>
+		<fda>0.0</fda>
+		<fda>0.0</fda>
+		<dda>0.0</dda>
+		<dda>0.0</dda>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/s/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/s/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/s/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/s/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/s/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<initialized_cda_unbounded>foobar</initialized_cda_unbounded>
+		<cda_unbounded/>
+		<ida_unbounded>0</ida_unbounded>
+		<ida_unbounded>0</ida_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+	</s>
+	<sa i_attribute="10" c_attribute="0" f_attribute="0.000000" d_attribute="0.000000" ca_attribute="">
+		<!--mystruct EXAMPLE_MESSAGE/sa-->
+		<is>
+			<!--INSIDE_STATUS EXAMPLE_MESSAGE/sa/is-->
+					<command_type>-1</command_type>
+					<echo_serial_number>-1</echo_serial_number>
+					<status>UNINITIALIZED_STATUS</status>
+					<state>-1</state>
+					<line>-1</line>
+					<source_line>-1</source_line>
+					<source_file/>
+				<inside_status_base_int>0</inside_status_base_int>
+			<inside_status_int>0</inside_status_int>
+		</is>
+		<i>10</i>
+		<c>0</c>
+		<f>0.0</f>
+		<d>0.0</d>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ca/>
+		<hexdata>00000000000000000000</hexdata>
+		<name/>
+		<enumtestvar>b</enumtestvar>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtest_dla>b</enumtest_dla>
+		<enumtest_dla>b</enumtest_dla>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<da>0.0</da>
+		<da>0.0</da>
+		<da>0.0</da>
+		<cart>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<homo>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<cda/>
+		<ida>0</ida>
+		<ida>0</ida>
+		<fda>0.0</fda>
+		<fda>0.0</fda>
+		<dda>0.0</dda>
+		<dda>0.0</dda>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<initialized_cda_unbounded>foobar</initialized_cda_unbounded>
+		<cda_unbounded/>
+		<ida_unbounded>0</ida_unbounded>
+		<ida_unbounded>0</ida_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+	</sa>
+	<sa i_attribute="10" c_attribute="0" f_attribute="0.000000" d_attribute="0.000000" ca_attribute="">
+		<!--mystruct EXAMPLE_MESSAGE/sa-->
+		<is>
+			<!--INSIDE_STATUS EXAMPLE_MESSAGE/sa/is-->
+					<command_type>-1</command_type>
+					<echo_serial_number>-1</echo_serial_number>
+					<status>UNINITIALIZED_STATUS</status>
+					<state>-1</state>
+					<line>-1</line>
+					<source_line>-1</source_line>
+					<source_file/>
+				<inside_status_base_int>0</inside_status_base_int>
+			<inside_status_int>0</inside_status_int>
+		</is>
+		<i>10</i>
+		<c>0</c>
+		<f>0.0</f>
+		<d>0.0</d>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ca/>
+		<hexdata>00000000000000000000</hexdata>
+		<name/>
+		<enumtestvar>b</enumtestvar>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtest_dla>b</enumtest_dla>
+		<enumtest_dla>b</enumtest_dla>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<da>0.0</da>
+		<da>0.0</da>
+		<da>0.0</da>
+		<cart>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<homo>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<cda/>
+		<ida>0</ida>
+		<ida>0</ida>
+		<fda>0.0</fda>
+		<fda>0.0</fda>
+		<dda>0.0</dda>
+		<dda>0.0</dda>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<initialized_cda_unbounded>foobar</initialized_cda_unbounded>
+		<cda_unbounded/>
+		<ida_unbounded>0</ida_unbounded>
+		<ida_unbounded>0</ida_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+	</sa>
+	<sa i_attribute="10" c_attribute="0" f_attribute="0.000000" d_attribute="0.000000" ca_attribute="">
+		<!--mystruct EXAMPLE_MESSAGE/sa-->
+		<is>
+			<!--INSIDE_STATUS EXAMPLE_MESSAGE/sa/is-->
+					<command_type>-1</command_type>
+					<echo_serial_number>-1</echo_serial_number>
+					<status>UNINITIALIZED_STATUS</status>
+					<state>-1</state>
+					<line>-1</line>
+					<source_line>-1</source_line>
+					<source_file/>
+				<inside_status_base_int>0</inside_status_base_int>
+			<inside_status_int>0</inside_status_int>
+		</is>
+		<i>10</i>
+		<c>0</c>
+		<f>0.0</f>
+		<d>0.0</d>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ca/>
+		<hexdata>00000000000000000000</hexdata>
+		<name/>
+		<enumtestvar>b</enumtestvar>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtest_dla>b</enumtest_dla>
+		<enumtest_dla>b</enumtest_dla>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<da>0.0</da>
+		<da>0.0</da>
+		<da>0.0</da>
+		<cart>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<homo>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<cda/>
+		<ida>0</ida>
+		<ida>0</ida>
+		<fda>0.0</fda>
+		<fda>0.0</fda>
+		<dda>0.0</dda>
+		<dda>0.0</dda>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sa/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sa/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<initialized_cda_unbounded>foobar</initialized_cda_unbounded>
+		<cda_unbounded/>
+		<ida_unbounded>0</ida_unbounded>
+		<ida_unbounded>0</ida_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+	</sa>
+	<sda i_attribute="10" c_attribute="0" f_attribute="0.000000" d_attribute="0.000000" ca_attribute="">
+		<!--mystruct EXAMPLE_MESSAGE/sda-->
+		<is>
+			<!--INSIDE_STATUS EXAMPLE_MESSAGE/sda/is-->
+					<command_type>-1</command_type>
+					<echo_serial_number>-1</echo_serial_number>
+					<status>UNINITIALIZED_STATUS</status>
+					<state>-1</state>
+					<line>-1</line>
+					<source_line>-1</source_line>
+					<source_file/>
+				<inside_status_base_int>0</inside_status_base_int>
+			<inside_status_int>0</inside_status_int>
+		</is>
+		<i>10</i>
+		<c>0</c>
+		<f>0.0</f>
+		<d>0.0</d>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ca/>
+		<hexdata>00000000000000000000</hexdata>
+		<name/>
+		<enumtestvar>b</enumtestvar>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtest_dla>b</enumtest_dla>
+		<enumtest_dla>b</enumtest_dla>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<da>0.0</da>
+		<da>0.0</da>
+		<da>0.0</da>
+		<cart>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<homo>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<cda/>
+		<ida>0</ida>
+		<ida>0</ida>
+		<fda>0.0</fda>
+		<fda>0.0</fda>
+		<dda>0.0</dda>
+		<dda>0.0</dda>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<initialized_cda_unbounded>foobar</initialized_cda_unbounded>
+		<cda_unbounded/>
+		<ida_unbounded>0</ida_unbounded>
+		<ida_unbounded>0</ida_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+	</sda>
+	<sda i_attribute="10" c_attribute="0" f_attribute="0.000000" d_attribute="0.000000" ca_attribute="">
+		<!--mystruct EXAMPLE_MESSAGE/sda-->
+		<is>
+			<!--INSIDE_STATUS EXAMPLE_MESSAGE/sda/is-->
+					<command_type>-1</command_type>
+					<echo_serial_number>-1</echo_serial_number>
+					<status>UNINITIALIZED_STATUS</status>
+					<state>-1</state>
+					<line>-1</line>
+					<source_line>-1</source_line>
+					<source_file/>
+				<inside_status_base_int>0</inside_status_base_int>
+			<inside_status_int>0</inside_status_int>
+		</is>
+		<i>10</i>
+		<c>0</c>
+		<f>0.0</f>
+		<d>0.0</d>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ca/>
+		<hexdata>00000000000000000000</hexdata>
+		<name/>
+		<enumtestvar>b</enumtestvar>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtest_dla>b</enumtest_dla>
+		<enumtest_dla>b</enumtest_dla>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<da>0.0</da>
+		<da>0.0</da>
+		<da>0.0</da>
+		<cart>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<homo>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<cda/>
+		<ida>0</ida>
+		<ida>0</ida>
+		<fda>0.0</fda>
+		<fda>0.0</fda>
+		<dda>0.0</dda>
+		<dda>0.0</dda>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<initialized_cda_unbounded>foobar</initialized_cda_unbounded>
+		<cda_unbounded/>
+		<ida_unbounded>0</ida_unbounded>
+		<ida_unbounded>0</ida_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+	</sda>
+	<sda_unbounded i_attribute="10" c_attribute="0" f_attribute="0.000000" d_attribute="0.000000" ca_attribute="">
+		<!--mystruct EXAMPLE_MESSAGE/sda_unbounded-->
+		<is>
+			<!--INSIDE_STATUS EXAMPLE_MESSAGE/sda_unbounded/is-->
+					<command_type>-1</command_type>
+					<echo_serial_number>-1</echo_serial_number>
+					<status>UNINITIALIZED_STATUS</status>
+					<state>-1</state>
+					<line>-1</line>
+					<source_line>-1</source_line>
+					<source_file/>
+				<inside_status_base_int>0</inside_status_base_int>
+			<inside_status_int>0</inside_status_int>
+		</is>
+		<i>10</i>
+		<c>0</c>
+		<f>0.0</f>
+		<d>0.0</d>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ca/>
+		<hexdata>00000000000000000000</hexdata>
+		<name/>
+		<enumtestvar>b</enumtestvar>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtest_dla>b</enumtest_dla>
+		<enumtest_dla>b</enumtest_dla>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<da>0.0</da>
+		<da>0.0</da>
+		<da>0.0</da>
+		<cart>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<homo>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<cda/>
+		<ida>0</ida>
+		<ida>0</ida>
+		<fda>0.0</fda>
+		<fda>0.0</fda>
+		<dda>0.0</dda>
+		<dda>0.0</dda>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<initialized_cda_unbounded>foobar</initialized_cda_unbounded>
+		<cda_unbounded/>
+		<ida_unbounded>0</ida_unbounded>
+		<ida_unbounded>0</ida_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+	</sda_unbounded>
+	<sda_unbounded i_attribute="10" c_attribute="0" f_attribute="0.000000" d_attribute="0.000000" ca_attribute="">
+		<!--mystruct EXAMPLE_MESSAGE/sda_unbounded-->
+		<is>
+			<!--INSIDE_STATUS EXAMPLE_MESSAGE/sda_unbounded/is-->
+					<command_type>-1</command_type>
+					<echo_serial_number>-1</echo_serial_number>
+					<status>UNINITIALIZED_STATUS</status>
+					<state>-1</state>
+					<line>-1</line>
+					<source_line>-1</source_line>
+					<source_file/>
+				<inside_status_base_int>0</inside_status_base_int>
+			<inside_status_int>0</inside_status_int>
+		</is>
+		<i>10</i>
+		<c>0</c>
+		<f>0.0</f>
+		<d>0.0</d>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ia>0</ia>
+		<ca/>
+		<hexdata>00000000000000000000</hexdata>
+		<name/>
+		<enumtestvar>b</enumtestvar>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtestvar_array>b</enumtestvar_array>
+		<enumtest_dla>b</enumtest_dla>
+		<enumtest_dla>b</enumtest_dla>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<fa>0.0</fa>
+		<da>0.0</da>
+		<da>0.0</da>
+		<da>0.0</da>
+		<cart>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<cart_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_array>
+		<homo>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<homo_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_array>
+		<cda/>
+		<ida>0</ida>
+		<ida>0</ida>
+		<fda>0.0</fda>
+		<fda>0.0</fda>
+		<dda>0.0</dda>
+		<dda>0.0</dda>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<cart_dynamic_array>
+			<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/cart_dynamic_array-->
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</cart_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<homo_dynamic_array>
+			<!--PM_HOMOGENEOUS EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array-->
+			<tran>
+				<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/tran-->
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</tran>
+			<rot>
+				<!--PM_ROTATION_MATRIX EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot-->
+				<x>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/x-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</x>
+				<y>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/y-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</y>
+				<z>
+					<!--PM_CARTESIAN EXAMPLE_MESSAGE/sda_unbounded/homo_dynamic_array/rot/z-->
+					<x>0.0</x>
+					<y>0.0</y>
+					<z>0.0</z>
+				</z>
+			</rot>
+		</homo_dynamic_array>
+		<initialized_cda_unbounded>foobar</initialized_cda_unbounded>
+		<cda_unbounded/>
+		<ida_unbounded>0</ida_unbounded>
+		<ida_unbounded>0</ida_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<fda_unbounded>0.0</fda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+		<dda_unbounded>0.0</dda_unbounded>
+	</sda_unbounded>
+	<lastvar>602044</lastvar>
+
+</EXAMPLE_MESSAGE>

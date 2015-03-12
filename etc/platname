@@ -1,0 +1,769 @@
+#!/bin/sh
+#set -x
+
+# 20-Jun-2003 WPS moved this to the front and add warning message
+# This allows this script to be more or less manually bypassed
+if test "x${PLAT}" != "x" ; then 
+    echo ${PLAT}
+    exit 0
+fi
+
+FULL_UNAME_LONG=`uname -a  | sed 'y# #_#' | sed 'y#/#_#' | sed 'y#-#_#' | sed 'y#:#_#' 2>/dev/null`_${CC} 2>/dev/null
+
+FULL_UNAME=`echo ${FULL_UNAME_LONG} | awk '{printf("%.60s",$1);}'`
+
+if test "x${FULL_UNAME}" != "x" ; then
+    if test -f ~/.platname.${FULL_UNAME} ; then
+	PLAT=`head -n 1 ~/.platname.${FULL_UNAME} 2>/dev/null` 2>/dev/null
+	export PLAT;
+    fi
+fi
+
+if test "x${PLAT}" != "x" ; then 
+    echo ${PLAT}
+    exit 0
+fi
+
+unalias -a 2>/dev/null >/dev/null
+
+if test "x${platname_safe_mode}" != "xyes" ; then 
+
+if test "x${test_cmd}" = "x" ; then
+    test_cmd=test;
+fi
+
+if test "x${mv_cmd}" = "x" ; then
+    mv_cmd=mv;
+fi
+
+if test "x${cp_cmd}" = "x" ; then
+    cp_cmd=cp;
+fi
+
+if test "x${ln_cmd}" = "x" ; then
+    ln_cmd=ln;
+fi
+
+if test "x${rm_cmd}" = "x" ; then
+    rm_cmd=rm;
+fi
+
+if test "x${mkdir_cmd}" = "x" ; then
+    mkdir_cmd=mkdir;
+fi
+
+if test "x${touch_cmd}" = "x" ; then
+    touch_cmd=mkdir;
+fi
+
+else
+
+if test "x${test_cmd}" = "x" ; then
+    test_cmd=test;
+fi
+
+if test "x${rm_cmd}" = "x" ; then
+    rm_cmd=true;
+fi
+
+if test "x${mv_cmd}" = "x" ; then
+    mv_cmd=true;
+fi
+
+if test "x${cp_cmd}" = "x" ; then
+    cp_cmd=true;
+fi
+
+if test "x${ln_cmd}" = "x" ; then
+    ln_cmd=true;
+fi
+
+if test "x${mkdir_cmd}" = "x" ; then
+    mkdir_cmd=true;
+fi
+
+if test "x${touch_cmd}" = "x" ; then
+    touch_cmd=true;
+fi
+
+# safe_mode
+fi
+
+
+if ${test_cmd} ! -f .platname_guess_warn -a ! -f ~/.platname_guess_warn ; then
+
+    echo "Platform name is being guessed. Set the environment variable PLAT to override." 1>&2
+    # Touch the platname_guess_warn files so we don't have to see this warning 
+    # too many times.
+    touch .platname_guess_warn >/dev/null 2>/dev/null
+    touch ~/.platname_guess_warn >/dev/null 2>/dev/null
+
+fi
+
+
+# 18JUN03 MGS made some additions to this file so that it would work on the 2.18 BDI
+# Hopefully, it won't break anything else...
+
+# Uncomment the next line to aid in troubleshooting this script
+#set -x
+
+# Save the original path and working directory
+ORIGINAL_PATH=$PATH
+ORIGINAL_DIR=`pwd`
+
+# Change to the directory containing this script
+# cd ${0}/.. doesn't work with bash 2.05 and relative path names, so 
+# if ${0} ends up evaluating to ../etc/platname then cd ../etc/platname/.. produces# this error ../etc/platname: line 14: cd: ../etc/platname/..: No such file or directory
+
+if echo ${0} | grep platname  >/dev/null 2>/dev/null ; then
+
+    cd0dir1=`echo ${0} | sed s#/platname## | sed s#platname##`
+    cd0dir2=
+    if echo "$cd0dir1" | grep etc >/dev/null 2>/dev/null ; then
+	if ${test_cmd} -d "$cd0dir1" ; then
+	    cd0dir2=`(cd "$cd0dir1" ; pwd )`
+	fi
+    fi
+
+    if ${test_cmd} -d "${cd0dir2}" -a "x" != "x${cd0dir2}" -a "x${ORIGINAL_DIR}" != "x${cd0dir2}" ; then
+	cd "${cd0dir2}";
+    fi
+fi
+
+
+# Add this directory to the PATH environment variable
+# so the the which `$PROGRAM_NAME...` command doesn't fail
+# We'll restore the original path at the end of the file
+PATH=$PATH:`pwd`
+
+if ${test_cmd}  "x${which_cmd}" = "x" ; then
+    which_cmd=which
+    if ${test_cmd} -x /usr/bin/which ; then
+	which_cmd=/usr/bin/which;
+    fi
+fi
+
+if ${test_cmd}  "x${mkdir_cmd}" = "x" ; then
+    mkdir_cmd=mkdir
+fi
+
+# Change back to the original directory
+cd $ORIGINAL_DIR
+
+if ${test_cmd} "0${HOME}" = 0 ; then
+    HOME=`(cd ~ ; pwd)`;
+    export HOME
+fi
+
+if ${test_cmd} -f $HOME/.debug_scripts ; then
+    set -x
+fi
+
+${rm_cmd}  -r -f /tmp/platnametestfile$$  >/dev/null 2>/dev/null
+touch /tmp/platnametestfile$$
+
+ ( cd /tmp ; ${ln_cmd} -s platnametestfile$$ platnametestfile$$.link );
+
+#ls -l /tmp/platname*
+
+if ${test_cmd} -h /tmp/platnametestfile$$.link -a '!' -h /tmp/platnametest$$ ; then
+    LINK_FLAG=-h;
+else
+    LINK_FLAG=-L;
+fi
+
+${rm_cmd}  -r -f /tmp/platnametestfile$$.link  >/dev/null 2>/dev/null
+${rm_cmd}  -r -f /tmp/platnametestfile$$  >/dev/null 2>/dev/null
+
+if ${test_cmd} -x rcslib/etc/platname ; then
+    RCSLIB_ETC_DIR=`(cd rcslib/etc >/dev/null 2>/dev/null; pwd)`
+elif ${test_cmd} -x ../rcslib/etc/platname ; then
+    RCSLIB_ETC_DIR=`(cd ../rcslib/etc >/dev/null 2>/dev/null; pwd)`
+elif ${test_cmd} -x ../../rcslib/etc/platname ; then
+    RCSLIB_ETC_DIR=`(cd ../../rcslib/etc >/dev/null 2>/dev/null; pwd)`
+elif ${test_cmd} -x etc/platname ; then
+    RCSLIB_ETC_DIR=`(cd etc >/dev/null 2>/dev/null; pwd)`
+elif ${test_cmd} -x ../etc/platname ; then
+    RCSLIB_ETC_DIR=`(cd ../etc >/dev/null 2>/dev/null; pwd)`
+elif ${test_cmd} -x ../../etc/platname ; then
+    RCSLIB_ETC_DIR=`(cd ../../etc >/dev/null 2>/dev/null; pwd)`
+fi
+
+if ${test_cmd} "x${RCSLIB_ETC_DIR}" = "x" ; then 
+
+    if echo ${0} | grep platname >/dev/null 2>/dev/null ; then
+	PROGRAM_NAME=${0}
+    else
+	PROGRAM_NAME=platname
+    fi
+
+    RCSLIB_ETC_DIR=`(${which_cmd} ${PROGRAM_NAME} | sed s#/platname## | sed s#platname##) 2>/dev/null`
+fi
+
+if ${test_cmd} -x $RCSLIB_ETC_DIR/platname ; then
+    RCSLIB_ETC_DIR=`(cd ${RCSLIB_ETC_DIR} ; pwd)`
+fi
+
+if ${test_cmd} ! -x $RCSLIB_ETC_DIR/platname ; then
+    if ${test_cmd} -x ./etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ./etc ; pwd)`
+    elif  ${test_cmd} -x ../etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ../etc ; pwd)`
+    elif  ${test_cmd} -x ../../etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ../../etc ; pwd)`
+    elif  ${test_cmd} -x ../../../etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ../../../etc ; pwd)`
+    elif  ${test_cmd} -x ../../../../etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ../../../../etc ; pwd)`
+    elif  ${test_cmd} -x ../../../../../etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ../../../../../etc ; pwd)`
+    elif ${test_cmd} -x ./rcslib/etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ./rcslib/etc ; pwd)`
+    elif  ${test_cmd} -x ../rcslib/etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ../rcslib/etc ; pwd)`
+    elif  ${test_cmd} -x ../../rcslib/etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ../../rcslib/etc ; pwd)`
+    elif  ${test_cmd} -x ../../../rcslib/etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ../../../rcslib/etc ; pwd)`
+    elif  ${test_cmd} -x ../../../../rcslib/etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ../../../../rcslib/etc ; pwd)`
+    elif  ${test_cmd} -x ../../../../../rcslib/etc/platname ; then
+	RCSLIB_ETC_DIR=`(cd ../../../../../rcslib/etc ; pwd)`
+    fi
+fi
+
+
+GAWKCMD=gawk
+if ${test_cmd} ! -x /usr/bin/gawk -a ! -x /bin/gawk -a ! -x /itl/links/generic/bin/gawk -a '(' -x /usr/bin/awk  -o  -x /bin/awk ')'  ; then
+    GAWKCMD=awk
+fi
+
+PLATBASE=`uname -s | $GAWKCMD '{print(tolower($1))}'`
+
+PLAT=`uname -srm | sed 'y/ /_/' | sed 'y/./_/'  | sed 'y/-/_/'  | $GAWKCMD '{ print (tolower ( $1 ) ) }'`
+
+if ${test_cmd} -f ~/.no_rtl -o -f ./.no_rtl ; then
+    NO_RTL=1
+    export NO_RTL;
+    NO_REALTIME=1;
+    export NO_REALTIME;
+fi
+
+if ${test_cmd} -f ~/.no_rtai -o -f ./.no_rtai ; then
+    NO_RTAI=1;
+    export NO_RTAI;
+    NO_REALTIME=1;
+    export NO_REALTIME;
+fi
+
+if ${test_cmd} -f ~/.no_realtime -o -f ./.no_realtime ; then
+    NO_REALTIME=1
+    export NO_REALTIME;
+fi
+
+if ${test_cmd} "x${NO_RTL}" != "x" ;  then
+    NO_REALTIME=1;
+    export NO_REALTIME;
+fi  
+
+if ${test_cmd} "x${NO_RTAI}" != "x" ;  then
+    NO_REALTIME=1;
+    export NO_REALTIME;
+fi  
+
+if ${test_cmd} ${LINK_FLAG} ${RCSLIB_ETC_DIR}/${PLAT}.def -a -w ${RCSLIB_ETC_DIR} -a -d ${RCSLIB_ETC_DIR} ; then
+    ${rm_cmd}   ${RCSLIB_ETC_DIR}/${PLAT}.def >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ./plat/${PLAT} -a -w ./plat/${PLAT} -a -d ./plat ; then
+    ${rm_cmd}   ./plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ../plat/${PLAT} -a -w ../plat/${PLAT} -a -d ../plat ; then
+    ${rm_cmd}   ../plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ../../plat/${PLAT} -a -w ../../plat/${PLAT} -a -d ../../plat ; then
+    ${rm_cmd}   ../../plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+
+
+if ${test_cmd} $PLATBASE = "linux" ; then
+    if ${test_cmd} "x${NO_REALTIME}" = "x" ;  then
+	HAVERTLINUX=`$RCSLIB_ETC_DIR/havertlinux.sh`
+	if echo $HAVERTLINUX | grep  YES >/dev/null 2>/dev/null ; then
+	    PLAT_END=`echo $PLAT | sed s/linux_//`
+	    PLAT=`echo "linux_rtl_"$PLAT_END`
+	    PLATBASE=linux_rtl
+	fi
+	HAVERTAI=`$RCSLIB_ETC_DIR/havertai.sh`
+	if echo $HAVERTAI | grep  YES >/dev/null 2>/dev/null ; then
+#cat /proc/ksyms 2>/dev/null | grep rthal > /dev/null 2>/dev/null ; then 
+	    PLAT_END=`echo $PLAT | sed s/linux_//`
+	    PLAT=`echo "linux_rtai_"$PLAT_END`
+	    PLATBASE=linux_rtai
+	fi
+    fi
+fi
+
+if ${test_cmd} ${LINK_FLAG} ${RCSLIB_ETC_DIR}/${PLAT}.def -a -w ${RCSLIB_ETC_DIR} -a -d ${RCSLIB_ETC_DIR} ; then
+    ${rm_cmd}   ${RCSLIB_ETC_DIR}/${PLAT}.def >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ./plat/${PLAT} -a -w ./plat/${PLAT} -a -d ./plat ; then
+    ${rm_cmd}   ./plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ../plat/${PLAT} -a -w ../plat/${PLAT} -a -d ../plat ; then
+    ${rm_cmd}   ../plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ../../plat/${PLAT} -a -w ../../plat/${PLAT} -a -d ../../plat ; then
+    ${rm_cmd}   ../../plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+
+OLD_PLAT=`uname -sr | sed 'y/ /_/' | sed 'y/./_/' | sed s/-rtl.\*\$// | sed 'y/-/_/' | $GAWKCMD '{ printf ( "%s",tolower ( $1 ) ) }'`
+
+if ${test_cmd} ${LINK_FLAG} ${RCSLIB_ETC_DIR}/${OLD_PLAT}.def -a -w ${RCSLIB_ETC_DIR} -a -d ${RCSLIB_ETC_DIR} ; then
+    ${rm_cmd}   ${RCSLIB_ETC_DIR}/${OLD_PLAT}.def >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ./plat/${OLD_PLAT} -a -w ./plat/${OLD_PLAT} -a -d ./plat ; then
+    ${rm_cmd}   ./plat/${OLD_PLAT} >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ../plat/${OLD_PLAT} -a -w ../plat/${OLD_PLAT} -a -d ../plat ; then
+    ${rm_cmd}   ../plat/${OLD_PLAT} >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ../../plat/${OLD_PLAT} -a -w ../../plat/${OLD_PLAT} -a -d ../../plat ; then
+    ${rm_cmd}   ../../plat/${OLD_PLAT} >/dev/null 2>/dev/null;
+fi
+
+
+if ${test_cmd} -f /usr/include/features.h ; then
+    if grep _GLIBC /usr/include/features.h >/dev/null 2>/dev/null ; then
+	GLIBC_MAJOR_VERSION=`grep __GLIBC__  /usr/include/features.h | grep '#define'  | grep -v PREREQ | head -n 1 | awk '{printf("%s",$3);}'`
+	GLIBC_MINOR_VERSION=`grep __GLIBC_MINOR__  /usr/include/features.h | grep '#define' | grep -v PREREQ | head -n 1 | awk '{printf("%s",$3);}'`
+	PLAT=`echo $PLAT"_glibc_"$GLIBC_MAJOR_VERSION"_"$GLIBC_MINOR_VERSION`
+    fi
+fi
+
+if ${test_cmd} "x${CC}" != "x" ; then
+    C_COMPILER=${CC}
+fi
+
+
+if ${test_cmd} "0$C_COMPILER" = "0" ; then
+    if ${which_cmd} gcc >/dev/null 2>/dev/null ; then 
+	C_COMPILER=gcc;
+	export C_COMPILER;
+    elif ${which_cmd} cc >/dev/null 2>/dev/null ; then 
+	C_COMPILER=cc;
+	exprot C_COMPILER;
+    fi
+fi
+
+if ${which_cmd} $C_COMPILER >/dev/null 2>/dev/null ; then
+    C_COMPILER_VERSION=`$C_COMPILER -v 2>&1  | grep version | awk '{print $3}'`
+    PLAT=`echo $PLAT"_"$C_COMPILER"_"$C_COMPILER_VERSION | sed 'y/ /_/' | sed 'y/./_/'  | sed 'y/-/_/' | $GAWKCMD '{ print (tolower ( $1 ) ) }'`
+fi
+
+PLAT=`echo ${PLAT} | sed 's#/.*$##' | sed 'y#., ()-:;/|!?*&<>{}#__________________#' | sed 'y|#|_|'`
+	
+ORIG_PLAT=$PLAT
+
+if ${test_cmd} ${LINK_FLAG} ./plat/${PLAT} -a -w ./plat/${PLAT} -a -d ./plat ; then
+    ${rm_cmd}   ./plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ../plat/${PLAT} -a -w ../plat/${PLAT} -a -d ../plat ; then
+    ${rm_cmd}   ../plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ../../plat/${PLAT} -a -w ../../plat/${PLAT} -a -d ../../plat ; then
+    ${rm_cmd}   ../../plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd}  -d $RCSLIB_ETC_DIR ; then 
+
+    while ( ${test_cmd} "!" -f ${RCSLIB_ETC_DIR}/${PLAT}.def -a "!" ${LINK_FLAG} ${RCSLIB_ETC_DIR}/${PLAT}.def -a  "0${PLAT}" != 0 ) && ( echo ${PLAT} | grep _  ) ; do
+	if ${test_cmd} ${LINK_FLAG} ${RCSLIB_ETC_DIR}/${PLAT}.def -a -w ${RCSLIB_ETC_DIR}; then
+	    ${rm_cmd}   ${RCSLIB_ETC_DIR}/${PLAT}.def >/dev/null 2>/dev/null;
+	fi
+	PLAT=`echo $PLAT | sed 's/_[^_]*$//'`
+    done   
+fi
+
+if ${test_cmd} "!" -f ${RCSLIB_ETC_DIR}/${PLAT}.def -a "!" ${LINK_FLAG} ${RCSLIB_ETC_DIR}/${PLAT}.def ; then
+    PLAT=unknown
+    echo ${PLAT}
+    exit 0
+fi
+
+
+if ${test_cmd} ${LINK_FLAG} ./plat/${PLAT} -a -w ./plat/${PLAT} -a -d ./plat ; then
+    ${rm_cmd}   ./plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ../plat/${PLAT} -a -w ../plat/${PLAT} -a -d ../plat ; then
+    ${rm_cmd}   ../plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+
+if ${test_cmd} ${LINK_FLAG} ../../plat/${PLAT} -a -w ../../plat/${PLAT} -a -d ../../plat ; then
+    ${rm_cmd}   ../../plat/${PLAT} >/dev/null 2>/dev/null;
+fi
+   
+if ${test_cmd} ${LINK_FLAG} $RCSLIB_ETC_DIR/$PLAT.def ; then 
+	NEWPLAT=`ls -l $RCSLIB_ETC_DIR/$PLAT.def | sed 's/^.*-> //' | sed 's#^.*/##' | sed 's/[.]def//' | sed 'y/ /_/' | sed 'y/./_/'  | sed 'y/-/_/' | $GAWKCMD '{ print (tolower ( $1 ) ) }' `
+	if ${test_cmd} 0$NEWPLAT != 0 ; then
+	    PLAT=$NEWPLAT
+	fi
+fi
+
+
+if test "x${platname_safe_mode}" = "xyes" ; then 
+
+    PLAT=`echo ${PLAT} | sed 's#/.*$##' | sed 'y#., ()-:;/|!?*&<>{}#__________________#' | sed 'y|#|_|'`
+    
+    export PLAT
+    echo $PLAT
+    exit 0
+fi
+
+
+if ${test_cmd} -w ./plat -a -d ./plat -a !  -d ./plat/$ORIG_PLAT ; then
+    ( cd plat; ${mkdir_cmd} $ORIG_PLAT; cd  $ORIG_PLAT; ${mkdir_cmd} lib src include bin;);
+fi
+if ${test_cmd} -w ../plat -a -d ../plat -a ! -d ../plat/$ORIG_PLAT ; then
+    ( cd ../plat; ${mkdir_cmd} $ORIG_PLAT; cd  $ORIG_PLAT; ${mkdir_cmd} lib src include bin  );
+fi
+if ${test_cmd} -w ../../plat -a -d ../../plat -a ! -d ../../plat/$ORIG_PLAT ; then
+    ( cd ../../plat; ${mkdir_cmd} $ORIG_PLAT; cd  $ORIG_PLAT; ${mkdir_cmd} lib src include bin  );
+fi
+
+if ${test_cmd} 0$ORIG_PLAT != 0$PLAT ; then
+
+
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ${LINK_FLAG} $RCSLIB_ETC_DIR/$ORIG_PLAT.def ; then 
+	( cd $RCSLIB_ETC_DIR; ${rm_cmd}  -f $ORIG_PLAT.def; );
+    fi
+
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ! -f $RCSLIB_ETC_DIR/$ORIG_PLAT.def ; then 
+	(cd $RCSLIB_ETC_DIR ; ${ln_cmd} -s $PLAT.def $ORIG_PLAT.def; );
+    fi
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a -d ./plat/$PLAT -a '!' ${LINK_FLAG} ./plat/$PLAT ; then
+	( cd plat; ${mv_cmd} $PLAT old_dir_$PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a -d ../plat/$PLAT -a '!' ${LINK_FLAG} ../plat/$PLAT ; then
+	( cd ../plat; ${mv_cmd} $PLAT old_dir_$PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a -d ../../plat/$PLAT  -a '!' ${LINK_FLAG} ../../plat/$PLAT ; then
+	( cd ../../plat; ${mv_cmd} $PLAT old_dir_$PLAT; );
+    fi
+
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a ${LINK_FLAG} ./plat/$PLAT ; then
+	( cd plat; ${rm_cmd}  -f $PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ${LINK_FLAG} ../plat/$PLAT ; then
+	( cd ../plat; ${rm_cmd}  -f $PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ${LINK_FLAG} ../../plat/$PLAT ; then
+	( cd ../../plat; ${rm_cmd}  -f $PLAT; );
+    fi
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a !  -d ./plat/$PLAT ; then
+	( cd plat; ${ln_cmd} -s $ORIG_PLAT $PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ! -d ../plat/$PLAT ; then
+	( cd ../plat; ${ln_cmd} -s $ORIG_PLAT $PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ! -d ../../plat/$PLAT ; then
+	( cd ../../plat; ${ln_cmd} -s $ORIG_PLAT $PLAT; );
+    fi
+fi
+
+if ${test_cmd} -f /etc/redhat-release ; then
+
+# /etc/redhat_relaese on a 2.18 BDI contains the following lines:
+#   Realtime Linux for EMC
+#   Based on RH 6.0 6.1, and 6.2 Linux
+# MGS added an extra sed operation at the end of this line
+# to remove the comma at the end of the fifth element - "6.1,".
+    REDHAT_VERSION=`cat /etc/redhat-release | awk '{print $5}'  | sed 'y/./_/'  | sed 'y/-/_/'  | sed 's/,//'`
+# MGS also added an extra sed operation at the end of this line
+# to remove the space between "redhat_" and "6_1".
+    REDHAT_PLAT=`echo "redhat_"$REDHAT_VERSION | sed 's/ //'`
+# Uncomment these echo statements to see the result of the variable assignments:
+#echo $REDHAT_VERSION
+#echo $REDHAT_PLAT
+
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ${LINK_FLAG} $RCSLIB_ETC_DIR/$REDHAT_PLAT.def ; then 
+	( cd $RCSLIB_ETC_DIR; ${rm_cmd}  -f $REDHAT_PLAT.def; );
+    fi
+
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ! -f $RCSLIB_ETC_DIR/$REDHAT_PLAT.def ; then 
+	( cd $RCSLIB_ETC_DIR ; ${ln_cmd} -s $ORIG_PLAT.def $REDHAT_PLAT.def; );
+    fi
+
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a ${LINK_FLAG} ./plat/$REDHAT_PLAT ; then
+	( cd plat; ${rm_cmd}  -f $REDHAT_PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ${LINK_FLAG} ../plat/$REDHAT_PLAT ; then
+	( cd ../plat; ${rm_cmd}  -f $REDHAT_PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ${LINK_FLAG} ../../plat/$REDHAT_PLAT ; then
+	( cd ../../plat; ${rm_cmd}  -f $REDHAT_PLAT; );
+    fi
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a !  -d ./plat/$REDHAT_PLAT ; then
+	    ( cd plat; ${ln_cmd} -s $ORIG_PLAT $REDHAT_PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ! -d ../plat/$REDHAT_PLAT ; then
+	( cd ../plat; ${ln_cmd} -s $ORIG_PLAT $REDHAT_PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ! -d ../../plat/$REDHAT_PLAT ; then
+	( cd ../../plat; ${ln_cmd} -s $ORIG_PLAT $REDHAT_PLAT; );
+    fi
+	
+fi
+
+if ${test_cmd} 0$PLATBASE != 0$ORIG_PLAT ; then
+
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ${LINK_FLAG} $RCSLIB_ETC_DIR/$PLATBASE.def ; then 
+	( cd $RCSLIB_ETC_DIR; ${rm_cmd}  -f $PLATBASE.def; );
+    fi
+
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ! -f $RCSLIB_ETC_DIR/$PLATBASE.def ; then 
+	( cd $RCSLIB_ETC_DIR ; ${ln_cmd} -s $ORIG_PLAT.def $PLATBASE.def; );
+    fi
+
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a -d ./plat/$PLATBASE -a '!' ${LINK_FLAG} ./plat/$PLATBASE ; then
+	( cd plat; ${mv_cmd} $PLATBASE old_dir_$PLATBASE; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a -d ../plat/$PLATBASE -a '!' ${LINK_FLAG} ../plat/$PLATBASE ; then
+	( cd ../plat; ${mv_cmd} $PLATBASE old_dir_$PLATBASE; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a -d ../../plat/$PLATBASE -a '!' ${LINK_FLAG} ../../plat/$PLATBASE  ; then
+	( cd ../../plat; ${mv_cmd} $PLATBASE old_dir_$PLATBASE; );
+    fi
+
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a ${LINK_FLAG} ./plat/$PLATBASE ; then
+	( cd plat; ${rm_cmd}  -f $PLATBASE; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ${LINK_FLAG} ../plat/$PLATBASE ; then
+	( cd ../plat; ${rm_cmd}  -f $PLATBASE; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ${LINK_FLAG} ../../plat/$PLATBASE ; then
+	( cd ../../plat; ${rm_cmd}  -f $PLATBASE; );
+    fi
+
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a !  -d ./plat/$PLATBASE ; then
+	    ( cd plat; ${ln_cmd} -s $ORIG_PLAT $PLATBASE; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ! -d ../plat/$PLATBASE ; then
+	( cd ../plat; ${ln_cmd} -s $ORIG_PLAT $PLATBASE; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ! -d ../../plat/$PLATBASE ; then
+	( cd ../../plat; ${ln_cmd} -s $ORIG_PLAT $PLATBASE; );
+    fi
+fi
+
+if ${test_cmd} 0$OLD_PLAT != 0$ORIG_PLAT ; then
+
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ${LINK_FLAG} $RCSLIB_ETC_DIR/$OLD_PLAT.def ; then 
+	( cd $RCSLIB_ETC_DIR; ${rm_cmd}  -f $OLD_PLAT.def; );
+    fi
+
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ! -f $RCSLIB_ETC_DIR/$OLD_PLAT.def ; then 
+	( cd $RCSLIB_ETC_DIR ; ${ln_cmd} -s $ORIG_PLAT.def $OLD_PLAT.def; );
+    fi
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a ${LINK_FLAG} ./plat/$OLD_PLAT ; then
+	( cd plat; ${rm_cmd}  -f $OLD_PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ${LINK_FLAG} ../plat/$OLD_PLAT ; then
+	( cd ../plat; ${rm_cmd}  -f $OLD_PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ${LINK_FLAG} ../../plat/$OLD_PLAT ; then
+	( cd ../../plat; ${rm_cmd}  -f $OLD_PLAT; );
+    fi
+
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a -d ./plat/$OLD_PLAT -a '!' ${LINK_FLAG} ./plat/$OLD_PLAT  ; then
+	( cd plat; ${mv_cmd} $OLD_PLAT old_dir_$OLD_PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a -d ../plat/$OLD_PLAT -a '!' ${LINK_FLAG} ../plat/$OLD_PLAT ; then
+	( cd ../plat; ${mv_cmd} $OLD_PLAT old_dir_$OLD_PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a -d ../../plat/$OLD_PLAT -a '!' ${LINK_FLAG} ../../plat/$OLD_PLAT ; then
+	( cd ../../plat; ${mv_cmd} $OLD_PLAT old_dir_$OLD_PLAT; );
+    fi
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a !  -d ./plat/$OLD_PLAT ; then
+	    ( cd plat; ${ln_cmd} -s $ORIG_PLAT $OLD_PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ! -d ../plat/$OLD_PLAT ; then
+	( cd ../plat; ${ln_cmd} -s $ORIG_PLAT $OLD_PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ! -d ../../plat/$OLD_PLAT ; then
+	( cd ../../plat; ${ln_cmd} -s $ORIG_PLAT $OLD_PLAT; );
+    fi
+fi
+
+if ${test_cmd} 0$PLAT_IS_REALTIME != 01 ; then
+    if ${test_cmd} -w ./plat -a -d ./plat -a  ${LINK_FLAG} ./plat/nonrealtime  ; then
+	    ( cd plat; ${rm_cmd}  -f  nonrealtime; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a  ${LINK_FLAG} ../plat/nonrealtime   ; then
+	( cd ../plat; ${rm_cmd}  -f nonrealtime; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ${LINK_FLAG} ../../plat/nonrealtime  ; then
+	( cd ../../plat; ${rm_cmd}  -f nonrealtime; );
+    fi
+
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a  -d ./plat/nonrealtime -a '!' ${LINK_FLAG} ./plat/nonrealtime ; then
+	    ( cd plat; ${mv_cmd}  nonrealtime old_dir_nonrealtime; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a  -d ../plat/nonrealtime   -a '!' ${LINK_FLAG} ../plat/nonrealtime ; then
+	( cd ../plat; ${mv_cmd} nonrealtime old_dir_nonrealtime; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a -d ../../plat/nonrealtime  -a '!' ${LINK_FLAG} ../../plat/nonrealtime  ; then
+	( cd ../../plat; ${mv_cmd}  nonrealtime old_dir_nonrealtime; );
+    fi
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a !  -d ./plat/nonrealtime -a ! ${LINK_FLAG} ./plat/nonrealtime  ; then
+	    ( cd plat; ${ln_cmd} -s $ORIG_PLAT nonrealtime; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ! -d ../plat/nonrealtime -a ! ${LINK_FLAG} ../plat/nonrealtime   ; then
+	( cd ../plat; ${ln_cmd} -s $ORIG_PLAT nonrealtime; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ! -d ../../plat/nonrealtime  -a ! ${LINK_FLAG} ../../plat/nonrealtime  ; then
+	( cd ../../plat; ${ln_cmd} -s $ORIG_PLAT nonrealtime; );
+    fi
+
+else
+    if ${test_cmd} -w ./plat -a -d ./plat -a  ${LINK_FLAG} ./plat/realtime  ; then
+	    ( cd plat; ${rm_cmd}  -f  realtime; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a  ${LINK_FLAG} ../plat/realtime   ; then
+	( cd ../plat; ${rm_cmd}  -f realtime; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ${LINK_FLAG} ../../plat/realtime  ; then
+	( cd ../../plat; ${rm_cmd}  -f realtime; );
+    fi
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a !  -d ./plat/realtime ; then
+	    ( cd plat; ${ln_cmd} -s $ORIG_PLAT realtime; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ! -d ../plat/realtime ; then
+	( cd ../plat; ${ln_cmd} -s $ORIG_PLAT realtime; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ! -d ../../plat/realtime ; then
+	( cd ../../plat; ${ln_cmd} -s $ORIG_PLAT realtime; );
+    fi
+fi
+
+if ${test_cmd} -f /etc/debian_version ; then
+    DEBIAN_VERSION=`cat /etc/debian_version  | sed "y/./_/"  | sed "y/-/_/" | sed "y#/#_#"`
+    DEBIAN_PLAT=`echo "debian_"$DEBIAN_VERSION`
+
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ${LINK_FLAG} $RCSLIB_ETC_DIR/$DEBIAN_PLAT.def ; then 
+	( cd $RCSLIB_ETC_DIR; ${rm_cmd}  -f $DEBIAN_PLAT.def; );
+    fi
+
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ! -f $RCSLIB_ETC_DIR/$DEBIAN_PLAT.def ; then 
+	( cd $RCSLIB_ETC_DIR ; ${ln_cmd} -s $ORIG_PLAT.def $DEBIAN_PLAT.def; );
+    fi
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a ${LINK_FLAG} ./plat/$DEBIAN_PLAT ; then
+	( cd plat; ${rm_cmd}  -f $DEBIAN_PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ${LINK_FLAG} ../plat/$DEBIAN_PLAT ; then
+	( cd ../plat; ${rm_cmd}  -f $DEBIAN_PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ${LINK_FLAG} ../../plat/$DEBIAN_PLAT ; then
+	( cd ../../plat; ${rm_cmd}  -f $DEBIAN_PLAT; );
+    fi
+
+
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a !  -d ./plat/$DEBIAN_PLAT ; then
+	    ( cd plat; ${ln_cmd} -s $ORIG_PLAT $DEBIAN_PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ! -d ../plat/$DEBIAN_PLAT ; then
+	( cd ../plat; ${ln_cmd} -s $ORIG_PLAT $DEBIAN_PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ! -d ../../plat/$DEBIAN_PLAT ; then
+	( cd ../../plat; ${ln_cmd} -s $ORIG_PLAT $DEBIAN_PLAT; );
+    fi
+	
+fi
+
+
+# This will add a link for Solaris version if we are running solaris.
+if ${test_cmd} -f /etc/release ; then 
+    ETC_RELEASE_NAME=`head -n 1 /etc/release  | awk '{print $1}'`
+    ETC_RELEASE_VERSION=`head -n 1 /etc/release  | awk '{print $2}'`
+    ETC_RELEASE_PLAT=`echo $ETC_RELEASE_NAME"_"$ETC_RELEASE_VERSION | sed "y/ /_/" | sed "y/./_/"  | sed "y/-/_/" | $GAWKCMD '{ print (tolower ( $1 ) ) }'`
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ! -f $RCSLIB_ETC_DIR/$ETC_RELEASE_PLAT.def ; then 
+	( cd $RCSLIB_ETC_DIR ; ${rm_cmd}  -f $ETC_RELEASE_PLAT.def; );
+    fi
+
+    if ${test_cmd} -w $RCSLIB_ETC_DIR -a -d $RCSLIB_ETC_DIR -a ! -f $RCSLIB_ETC_DIR/$ETC_RELEASE_PLAT.def ; then 
+	( cd $RCSLIB_ETC_DIR ; ${ln_cmd} -s $ORIG_PLAT.def $ETC_RELEASE_PLAT.def; );
+    fi
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a ! -d  ./plat/$ETC_RELEASE_PLAT ; then
+	( cd plat; ${rm_cmd}  -f $ETC_RELEASE_PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ! -d  ../plat/$ETC_RELEASE_PLAT ; then
+	( cd ../plat; ${rm_cmd}  -f $ETC_RELEASE_PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ! -d  ../../plat/$ETC_RELEASE_PLAT ; then
+	( cd ../../plat; ${rm_cmd}  -f $ETC_RELEASE_PLAT; );
+    fi
+
+
+
+    if ${test_cmd} -w ./plat -a -d ./plat -a !  -d ./plat/$ETC_RELEASE_PLAT ; then
+	    ( cd plat; ${ln_cmd} -s $ORIG_PLAT $ETC_RELEASE_PLAT; );
+    fi
+    if ${test_cmd} -w ../plat -a -d ../plat -a ! -d ../plat/$ETC_RELEASE_PLAT ; then
+	( cd ../plat; ${ln_cmd} -s $ORIG_PLAT $ETC_RELEASE_PLAT; );
+	fi
+    if ${test_cmd} -w ../../plat -a -d ../../plat -a ! -d ../../plat/$ETC_RELEASE_PLAT ;  then
+	( cd ../../plat; ${ln_cmd} -s $ORIG_PLAT $ETC_RELEASE_PLAT; );
+    fi
+fi
+
+# Here's where we restore the original path
+PATH=$ORIGINAL_PATH
+
+if ${test_cmd} "x${FULL_UNAME}" != "x" ; then
+    ${rm_cmd} -f ~/.platname.* >/dev/null 2>/dev/null ;
+    ( echo "${PLAT}" > "~/.platname.${FULL_UNAME}" 2>/dev/null ; ) 2>/dev/null
+fi
+
+PLAT=`echo ${PLAT} | sed 's#/.*$##' | sed 'y#., ()-:;/|!?*&<>{}#__________________#' | sed 'y|#|_|'`
+
+export PLAT
+echo $PLAT
+    
+
+
+
+
+
+
+
+
+
+

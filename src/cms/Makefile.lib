@@ -1,0 +1,466 @@
+
+
+# You can add and delete some features to make the library smaller
+# or bypass unneccessary features that might make the compile fail 
+# by commenting out the variables below, some require others.
+# Some are already commented out as they are used so rarely that it is not
+# worth building them.
+
+ENABLE_RCS_SHMEM=1
+# SHMEM required by most of the test programs and by EMC.
+#ENABLE_RCS_FILEMEM=1
+#ENABLE_RCS_LOCMEM=1
+#ENABLE_RCS_PHANTOM=1
+#ENABLE_RCS_RTLMEM=1
+ENABLE_RCS_TCP=1
+ENABLE_RCS_STCP=1
+ENABLE_RCS_UDP=1
+#ENABLE_RCS_GDRS_IM=1
+#ENABLE_RCS_HTTP=1
+#ENABLE_RCS_TTY=1
+ENABLE_RCS_SERVER=1
+ENABLE_RCS_SOKINTRF=1
+# SOKINTRF required by SUPPORT_SERVER, USE_TCP and USE_UDP
+ENABLE_RCS_XDR=1
+ENABLE_PACKED_UP=1
+#ENABLE_RCS_XML=1
+# ENABLE_RCS_XML required by ENABLE_RCS_HTTP
+ENABLE_RCS_DISP=1
+# DISP is required by STCP
+#ENABLE_RCS_CRYPT2=1
+#ENABLE_RCS_DIAG=1
+
+# Rashmi - added the enable below
+ENABLE_NMLCFGSVR=1
+
+ifeq ($(findstring vxworks, $(PLAT)),vxworks)
+ifneq ($(findstring vxworksSun, $(PLAT)),vxworksSun)
+ENABLE_RCS_GLOBMEM=1
+endif
+endif
+
+ifdef ENABLE_RCS_SHMEM
+LOCAL_CFLAGS += -DENABLE_RCS_SHMEM
+endif
+
+ifdef ENABLE_NMLCFGSVR
+LOCAL_CFLAGS += -DENABLE_NMLCFGSVR
+# Rashmi added
+LOCAL_CFLAGS += -DENABLE_RCS_NMLCFGSVR
+endif
+
+ifdef ENABLE_RCS_GLOBMEM
+LOCAL_CFLAGS += -DENABLE_RCS_GLOBMEM
+endif
+
+ifdef ENABLE_RCS_BBDMEM
+LOCAL_CFLAGS += -DENABLE_RCS_BBDMEM
+endif
+
+ifdef ENABLE_RCS_FILEMEM
+LOCAL_CFLAGS += -DENABLE_RCS_FILEMEM
+endif
+
+ifdef ENABLE_RCS_LOCMEM
+LOCAL_CFLAGS += -DENABLE_RCS_LOCMEM
+endif
+
+ifdef ENABLE_RCS_RTLMEM
+LOCAL_CFLAGS += -DENABLE_RCS_RTLMEM
+endif
+
+ifdef ENABLE_RCS_PHANTOM
+LOCAL_CFLAGS += -DENABLE_RCS_PHANTOM
+endif
+
+ifdef ENABLE_RCS_TCP
+LOCAL_CFLAGS += -DENABLE_RCS_TCP
+endif
+
+ifdef ENABLE_RCS_STCP
+LOCAL_CFLAGS += -DENABLE_RCS_STCP
+endif
+
+
+ifdef ENABLE_RCS_UDP
+LOCAL_CFLAGS += -DENABLE_RCS_UDP
+endif
+
+
+ifdef ENABLE_RCS_GDRS_IM
+LOCAL_CFLAGS += -DENABLE_RCS_GDRS_IM
+endif
+
+ifdef ENABLE_RCS_HTTP
+LOCAL_CFLAGS += -DENABLE_RCS_HTTP
+endif
+
+
+ifdef ENABLE_READLINE
+LOCAL_CFLAGS += -DENABLE_READLINE
+endif
+
+ifdef ENABLE_RCS_TTY
+LOCAL_CFLAGS += -DENABLE_RCS_TTY
+endif
+
+ifdef ENABLE_RCS_SERVER
+LOCAL_CFLAGS += -DENABLE_RCS_SERVER
+endif
+
+ifdef ENABLE_RCS_SOKINTRF
+LOCAL_CFLAGS += -DENABLE_RCS_SOKINTRF
+endif
+
+ifdef ENABLE_RCS_XDR
+LOCAL_CFLAGS += -DENABLE_RCS_XDR
+endif
+
+ifdef ENABLE_PACKED_UP
+LOCAL_CFLAGS += -DENABLE_PACKED_UP
+endif
+
+ifdef ENABLE_RCS_XML
+LOCAL_CFLAGS += -DENABLE_RCS_XML
+endif
+
+ifdef ENABLE_RCS_DISP
+LOCAL_CFLAGS += -DENABLE_RCS_DISP
+endif
+
+ifdef ENABLE_RCS_CRYPT2
+LOCAL_CFLAGS += -DENABLE_RCS_CRYPT2
+endif
+
+ifdef ENABLE_RCS_DIAG
+LOCAL_CFLAGS += -DENABLE_RCS_DIAG
+endif
+
+ifeq (rtlinux, $(findstring rtlinux, $(PLAT))) 
+
+CMS_OBJS = rtlnml.o \
+	rtlinux_kernel_api_implement.o
+
+CMS_OBJS_SET=1
+
+endif
+#rtlinux
+
+ifeq (rtai, $(PLAT))
+
+CMS_OBJS = rtlnml.o  \
+	rtai_kernel_api_implement.o
+
+CMS_OBJS_SET=1
+
+endif
+#rtai
+  
+ifndef CMS_OBJS_SET
+
+ALLPLATS_CMS_OBJS= 	cms.o \
+	cms_in.o \
+	cms_up.o \
+	cms_cfg.o \
+	nml.o \
+	nmlmsg.o \
+	physmem.o \
+	cms_pm.o \
+	cms_datetime.o \
+	nmlcms_c.o \
+	posemath_c_n.o
+
+
+ifdef ENABLE_NMLCFGSVR
+OPT_CMS_OBJS += \
+	nmlcfgsvr.o \
+	nmlcfgsvr_clntcalls.o 
+endif
+
+
+ifdef ENABLE_RCS_NMLQR
+OPT_CMS_OBJS += \
+	nmlqr.o
+endif
+
+
+ifdef ENABLE_RCS_SHMEM
+OPT_CMS_OBJS += \
+	shmem.o \
+	memsem.o \
+	autokey.o
+endif
+
+ifdef ENABLE_RCS_LOCMEM
+OPT_CMS_OBJS += \
+	locmem.o
+endif
+
+
+ifdef ENABLE_RCS_PHANTOM
+OPT_CMS_OBJS += \
+	phantom.o
+
+endif
+
+ifdef ENABLE_RCS_STCP
+OPT_CMS_OBJS += \
+	stcpopts.o \
+	stcpmem.o \
+	recvline.o \
+	sendline.o
+
+ifdef ENABLE_RCS_SERVER
+OPT_CMS_OBJS += \
+	stcpsvr.o
+endif
+endif
+
+
+
+ifdef ENABLE_RCS_TCP
+OPT_CMS_OBJS += \
+	tcpmem.o \
+	tcp_opts.o \
+	recvn.o \
+	sendn.o
+
+ifdef ENABLE_RCS_SERVER
+OPT_CMS_OBJS += \
+	tcp_srv.o
+endif
+endif
+
+ifdef ENABLE_RCS_UDP
+OPT_CMS_OBJS += \
+	udp_opts.o \
+	udpmem.o \
+	sendmsgt.o \
+	recvmsgt.o
+
+ifdef ENABLE_RCS_SERVER
+OPT_CMS_OBJS += \
+	udp_srv.o
+endif
+endif
+
+
+ifdef ENABLE_RCS_GDRS_IM
+OPT_CMS_OBJS += \
+	gdrs_im_clnt.o
+
+ifdef ENABLE_RCS_SERVER
+OPT_CMS_OBJS += \
+	gdrs_im_srv.o
+endif
+endif
+
+ifdef ENABLE_RCS_HTTP
+OPT_CMS_OBJS += \
+	httpnml.o
+
+ifdef ENABLE_RCS_SERVER
+OPT_CMS_OBJS += \
+	http_srv.o
+
+endif
+endif
+
+ifdef ENABLE_RCS_SOKINTRF
+OPT_CMS_OBJS += \
+	sokintrf.o
+endif
+
+ifdef ENABLE_RCS_DIAG
+OPT_CMS_OBJS += \
+	cmsdiag.o \
+	nmldiag.o
+endif
+
+ifdef ENABLE_RCS_XML
+OPT_CMS_OBJS += \
+	cms_xml_up.o
+endif
+
+ifdef ENABLE_RCS_XDR
+OPT_CMS_OBJS += \
+	cms_xup.o \
+	extxdrintf.o
+endif
+
+ifdef ENABLE_PACKED_UP
+OPT_CMS_OBJS += \
+	cms_pup.o
+endif
+
+ifdef ENABLE_RCS_DISP
+OPT_CMS_OBJS += \
+	cms_dup.o
+endif
+
+ifdef ENABLE_RCS_CRYPT2
+OPT_CMS_OBJS += \
+	crypt2.o
+endif
+
+
+ifdef ENABLE_RCS_SERVER
+OPT_CMS_OBJS += \
+	cms_srv.o \
+	nml_srv.o \
+	cmssvrp.o
+endif
+
+ifeq ($(findstring vxworks, $(PLAT)),vxworks)
+
+ifdef ENABLE_RCS_GLOBMEM
+CMS_VX_OBJS= \
+	globmem.o \
+	bus_lock.o \
+	dma.o
+
+endif
+
+else
+# ifeq ($(findstring vxworks, $(PLAT)),vxworks)
+
+ifdef ENABLE_RCS_TTY
+CMS_TTY_OBJS = \
+	ttyintf.o \
+	ttymem.o \
+	tty_srv.o
+endif
+
+ifdef ENABLE_RCS_FILEMEM
+CMS_FILEMEM_OBJS = \
+	filemem.o
+endif
+
+endif
+# vxworks
+
+
+CMS_OBJS :=	$(CMS_OBJS) \
+	$(ALLPLATS_CMS_OBJS) \
+	$(OPT_CMS_OBJS) \
+	$(CMS_VX_OBJS)
+
+
+ifdef ENABLE_RCS_RTLMEM
+ifeq (linux, $(findstring linux, $(PLAT)))
+
+ifeq ($(PLAT),linux_rtai)
+
+CMS_OBJS := $(CMS_OBJS) \
+	rtlmem.o \
+	rtlnml.o \
+	rtai_user_api_implement.o
+
+else
+#  ifeq ($(PLAT),linux_rtai)
+
+ifneq ($(NO_RTL),1)
+
+CMS_OBJS := $(CMS_OBJS) \
+	rtlmem.o \
+	rtlnml.o \
+	rtlinux_user_api_implement.o
+
+endif
+# ifneq ($(NO_RTL),1)
+
+endif
+#  ifeq ($(PLAT),linux_rtai)
+
+endif
+# ifeq (linux, $(findstring linux, $(PLAT)))
+
+endif
+# ifdef ENABLE_RCS_RTLMEM
+
+endif
+# ifndef CMS_OBJS_SET
+
+CMS_HEADERS :=  cms.hh \
+	cmsdiag.hh \
+	nmldiag.hh \
+	cms_cfg.hh \
+	autokey.h \
+	cms_user.hh \
+	cms_up.hh \
+	cms_xup.hh \
+	cms_pup.hh \
+	cms_aup.hh \
+	cms_xml_up.hh \
+	nml.hh \
+	httpnml.hh \
+	nmlmsg.hh \
+	globmem.hh \
+	spinlock.h \
+	shmem.hh \
+	memsem.hh \
+	cms_srv.hh \
+	nml_srv.hh \
+	phantom.hh \
+	perftype.hh \
+	_physmem.h \
+	physmem.hh \
+	rem_msg.hh \
+	tcp_srv.hh \
+	http_srv.hh \
+	tcpmem.hh \
+	stcpmem.hh \
+	tcp_opts.hh \
+	udp_opts.hh \
+	udpmem.hh \
+	udp_srv.hh \
+	sendmsgt.h \
+	recvmsgt.h \
+	recvn.h \
+	sendn.h \
+	msghdr.h \
+	sokintrf.h \
+	nmlperf.hh \
+	nmlwatch.h \
+	locmem.hh \
+	filemem.hh \
+	cms_dup.hh \
+	sendline.h \
+	recvline.h \
+	stcpsvr.hh \
+	stcpopts.hh \
+	crypt2.hh \
+	bbdmem.hh \
+	bbd.h \
+	bus_lock.h \
+	dma.h \
+	nmlqr.hh \
+	bd_types.h \
+	ttyintf.h \
+	ttymem.hh \
+	tty_srv.hh \
+	rtlmem.hh \
+	rtlnml.h \
+	extxdrintf.h \
+	cms_datetime.hh \
+	cms_types.hh \
+	nmlcms_c.h \
+	posemath_c_n.h \
+	nmlmacros.h \
+	cms_enum_info.h \
+	nmlcfgsvr_clntcalls.hh
+
+# Rashmi added the above nmlcfgsvr header
+
+LIBRCS_OBJS := $(LIBRCS_OBJS) \
+	$(CMS_OBJS)
+
+ifdef DEBUG_RCS_MAKE
+$(warning LOCAL_CFLAGS=$(LOCAL_CFLAGS) )
+$(warning LIBRCS_OBJS=$(LIBRCS_OBJS) )
+$(warning CMS_OBJS=$(CMS_OBJS) )
+$(warning CMS_HEADERS=$(CMS_HEADERS) )
+$(warning ALLPLATS_CMS_OBJS=$(ALLPLATS_CMS_OBJS) )
+$(warning OPT_CMS_OBJS=$(OPT_CMS_OBJS) )
+endif
+

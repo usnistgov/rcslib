@@ -1,0 +1,39 @@
+# Makefile Template
+
+
+# Include the application specific makefile here.
+#include Makefile.???
+
+
+#Define the Sources in this directory
+SRCS =
+
+#Define the headers in this directory
+HEADERS =
+
+#Define the Libraries to make
+LIBS =
+
+#Define the object (%.o) files to make
+OBJS =
+
+#Define the executable binaries to make
+BINS =
+
+
+
+#Include the generic Makefile definitions
+include /home/manta/prog_tools/makefiles/Makefile.generic
+
+# Add commands to phony targets to do any subdirectories
+all install clean depend:
+	(cd subdir1; $(MAKE) $@;)
+	(cd subdir2; $(MAKE) $@;)
+	(cd subdir3; $(MAKE) $@;)
+
+
+# Declare rules for specific binaries and libraries
+$(DEVP_BIN_DIR)/my_bin: $(OBJS:%=$(DEVP_LIB_DIR)/%)
+	$(CPLUSPLUS) $^ -o $@
+
+# End of Template

@@ -1,0 +1,6 @@
+--braces-on-if-line
+--braces-on-struct-decl-line
+--dont-break-procedure-type
+--cuddle-else
+--no-space-after-function-call-names
+--no-space-after-parentheses

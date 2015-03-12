@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+SplashScreen-Image: diagapplet/diag_splash.gif
+X-COMMENT: Main-Class will be added automatically by build

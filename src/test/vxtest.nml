@@ -1,0 +1,16 @@
+# vxtest.nml
+ 
+
+# Buffers:
+#       name 	   type  	      host 	size 	neut 	0 	buf# 	max_proc 	. . .
+B         b1 	GLOBMEM 	 localhost 	10112 	0 	0 	1 	5  	TCP=3201 vme_addr=0x4E00000  use_local_mutex semdelay=0 packed
+B         b2 	GLOBMEM 	 localhost 	10112 	0 	0 	2 	5  	TCP=3202 vme_addr=0x4E02780  use_local_mutex semdelay=0 packed
+ 
+
+# Processes: 
+#       Name 	    Buffer 	      type 	      host 	       ops 	server 	timeout 	master 	c_num  	 . . .
+P   squid0wr 	   default 	     LOCAL 	 localhost 	        RW 	0 	INF     	1 	0 	 read_timeout=0.008
+P   squid0rd 	   default 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	 read_timeout=0.008
+P   squid1wr 	   default 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	2 	 read_timeout=0.008
+P   squid1rd 	   default 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	3 	 local_mutex_master read_timeout=0.008
+

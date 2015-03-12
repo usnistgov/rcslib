@@ -1,0 +1,72 @@
+OE Configuration File
+Version 2.0
+
+---------------------------------------------------------------
+--                                                           --
+--                  System Configuration                     --
+--                                                           --
+---------------------------------------------------------------
+
+Start System_Partition
+
+	Data_Element OE_HOST
+		record
+			Host_Name         	=> "b1s"
+			Vendor            => "Vendor"
+			Precision         => 32
+			Protocol          => TCP_IP
+			IP_Address        => localhost
+			Port              => 17032
+			Maintain_Registry => True
+		end_record
+	End_Data_Element
+
+	Data_Element OE_HOST
+		record
+			Host_Name         	=> "lw"
+			Vendor            => "Vendor"
+			Precision         => 32
+			Protocol          => TCP_IP
+			IP_Address        => localhost
+			Port              => 17033
+			Maintain_Registry => True
+		end_record
+	End_Data_Element
+
+	Data_Element OE_HOST
+		record
+			Host_Name         	=> "lr"
+			Vendor            => "Vendor"
+			Precision         => 32
+			Protocol          => TCP_IP
+			IP_Address        => localhost
+			Port              => 17034
+			Maintain_Registry => True
+		end_record
+	End_Data_Element
+
+	Data_Element OE_HOST
+		record
+			Host_Name         	=> "rw"
+			Vendor            => "Vendor"
+			Precision         => 32
+			Protocol          => TCP_IP
+			IP_Address        => localhost
+			Port              => 17035
+			Maintain_Registry => True
+		end_record
+	End_Data_Element
+
+	Data_Element OE_HOST
+		record
+			Host_Name         	=> "rr"
+			Vendor            => "Vendor"
+			Precision         => 32
+			Protocol          => TCP_IP
+			IP_Address        => localhost
+			Port              => 17036
+			Maintain_Registry => True
+		end_record
+	End_Data_Element
+
+End_Partition

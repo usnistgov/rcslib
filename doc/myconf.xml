@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="myconf.xsl" type="text/xsl"?>
+<MY_CONF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="myconf.xsd" >
+	<!--MY_CONF MY_CONF-->
+	<p_gain>0.99</p_gain>
+	<i_gain>0.01</i_gain>
+	<d_gain>0.02</d_gain>
+
+</MY_CONF>

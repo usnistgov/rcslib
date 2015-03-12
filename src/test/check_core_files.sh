@@ -1,0 +1,1 @@
+../../etc/check_core_files.sh

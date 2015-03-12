@@ -1,0 +1,122 @@
+# NML Configuration file for the rcs_single_dir application
+
+# Buffers
+# Name             	Type  	Host             	size 	neut? 	RPC#           	buffer# 	MP 	. . .
+B bg_cmd           	SHMEM 	localhost        	2048	0    	100 	1        	100     	72460 TCP=6630  packedl64
+B bg_sts           	SHMEM 	localhost        	2048	0    	100 	2        	100     	72461 TCP=6630  packedl64
+B prim_cmd         	SHMEM 	localhost        	2048	0    	100 	3        	100     	72462 TCP=6630  packedl64
+B prim_sts         	SHMEM 	localhost        	25000	0    	100 	4        	100     	72463 TCP=6630  packedl64
+B robot_super_cmd  	SHMEM 	localhost        	2048	0    	100 	5        	100     	72464 TCP=6627  packedl64
+B robot_super_sts  	SHMEM 	localhost        	2048	0    	100 	6        	100     	72465 TCP=6627  packedl64
+B servo_cmd        	SHMEM 	localhost        	2048	0    	100 	7        	100     	72466 TCP=6630  packedl64
+B servo_sts        	SHMEM 	localhost        	2048	0    	100 	8        	100     	72467 TCP=6630  packedl64
+B sp_cmd           	SHMEM 	localhost        	2048	0    	100 	9        	100     	72468 TCP=6628  packedl64
+B sp_sts           	SHMEM 	localhost        	2048	0    	100 	10        	100     	72469 TCP=6628  packedl64
+B wm_cmd           	SHMEM 	localhost        	2048	0    	100 	11        	100     	72470 TCP=6629  packedl64
+B wm_sts           	SHMEM 	localhost        	2048	0    	100 	12        	100     	72471 TCP=6629  packedl64
+B errlog           	SHMEM 	localhost        	8192	0    	100 	13        	100     	72472 TCP=6630  packedl64 queue
+B pose_data        	SHMEM 	localhost        	2048	0    	100 	14        	100     	72490 TCP=6630  packedl64
+B sensor_data      	SHMEM 	localhost        	80000	0    	100 	15        	100     	61831 TCP=6546  packedl64
+B obstacle_map     	SHMEM 	localhost        	2048	0    	100 	16        	100     	72491 TCP=6629  packedl64
+B servo_cmd_set        	SHMEM 	localhost        	2048	0    	100 	17        	100     	72492 TCP=6630  packedl64
+B servo_stat_cfg        	SHMEM 	localhost        	2048	0    	100 	18        	100     	72493 TCP=6630  packedl64
+
+# Processes
+# Name             	Buffer           	Type    	Host             	Ops 	server? 	timeout 	master? 	cnum
+
+# bg(0)
+P bg               	bg_cmd           	LOCAL  	localhost        	RW   	0         	0.1     	0    	0
+P bg               	bg_sts           	LOCAL  	localhost        	RW   	0         	0.1     	0    	0
+P bg               	prim_cmd         	LOCAL  	localhost        	RW   	0         	0.1     	0    	0
+P bg               	prim_sts         	LOCAL  	localhost        	RW   	0         	0.1     	0    	0
+P bg 	pose_data 	LOCAL 	localhost 	R   	0         	0.1     	0     	0
+P bg 	obstacle_map 	LOCAL 	localhost 	R   	0         	0.1     	0     	0
+P bg               	errlog           	LOCAL  	localhost        	RW   	0         	0.1     	0    	0
+
+# prim(1)
+P prim             	prim_cmd         	LOCAL  	localhost        	RW   	0         	0.1     	0    	1
+P prim             	prim_sts         	LOCAL  	localhost        	RW   	0         	0.1     	0    	1
+P prim             	servo_cmd        	LOCAL  	localhost        	RW   	0         	0.1     	0    	1
+P prim             	servo_sts        	LOCAL  	localhost        	RW   	0         	0.1     	0    	1
+P prim 	pose_data 	LOCAL 	localhost 	R   	0         	0.1     	0     	1
+P prim             	errlog           	LOCAL  	localhost        	RW   	0         	0.1     	0    	1
+
+# robot_super(2)
+P robot_super      	robot_super_cmd  	LOCAL  	localhost        	RW   	0         	0.1     	0    	2
+P robot_super      	robot_super_sts  	LOCAL  	localhost        	RW   	0         	0.1     	0    	2
+P robot_super      	bg_cmd           	LOCAL  	localhost        	RW   	0         	0.1     	0    	2
+P robot_super      	bg_sts           	LOCAL  	localhost        	RW   	0         	0.1     	0    	2
+P robot_super      	sp_cmd           	LOCAL  	localhost        	RW   	0         	0.1     	0    	2
+P robot_super      	sp_sts           	LOCAL  	localhost        	RW   	0         	0.1     	0    	2
+P robot_super      	wm_cmd           	LOCAL  	localhost        	RW   	0         	0.1     	0    	2
+P robot_super      	wm_sts           	LOCAL  	localhost        	RW   	0         	0.1     	0    	2
+P robot_super 	pose_data 	LOCAL 	localhost 	R   	0         	0.1     	0     	2
+P robot_super      	errlog           	LOCAL  	localhost        	RW   	0         	0.1     	0    	2
+
+# servo(3)
+P servo            	servo_cmd        	LOCAL  	localhost        	RW   	0         	0.1     	0    	3
+P servo            	servo_sts        	LOCAL  	localhost        	RW   	0         	0.1     	0    	3
+P servo            	pose_data        	LOCAL  	localhost        	RW   	0         	0.1     	0    	3
+P servo            	errlog           	LOCAL  	localhost        	RW   	0         	0.1     	0    	3
+
+# sp(4)
+P sp               	sp_cmd           	LOCAL  	localhost        	RW   	0         	0.1     	0    	4
+P sp               	sp_sts           	LOCAL  	localhost        	RW   	0         	0.1     	0    	4
+P sp 	pose_data 	LOCAL 	localhost 	R   	0         	0.1     	0     	4
+P sp               	sensor_data      	LOCAL  	localhost        	RW   	0         	0.1     	0    	4
+P sp               	errlog           	LOCAL  	localhost        	RW   	0         	0.1     	0    	4
+
+# wm(5)
+P wm               	wm_cmd           	LOCAL  	localhost        	RW   	0         	0.1     	0    	5
+P wm               	wm_sts           	LOCAL  	localhost        	RW   	0         	0.1     	0    	5
+P wm 	sensor_data 	LOCAL 	localhost 	R   	0         	0.1     	0     	5
+P wm 	pose_data 	LOCAL 	localhost 	R   	0         	0.1     	0     	5
+P wm               	obstacle_map     	LOCAL  	localhost        	RW   	0         	0.1     	0    	5
+P wm               	errlog           	LOCAL  	localhost        	RW   	0         	0.1     	0    	5
+
+# bgprimservosvr(6)
+P bgprimservosvr   	bg_cmd           	LOCAL  	localhost        	RW   	1         	0.1     	1    	6
+P bgprimservosvr   	bg_sts           	LOCAL  	localhost        	RW   	1         	0.1     	1    	6
+P bgprimservosvr   	errlog           	LOCAL  	localhost        	RW   	1         	0.1     	1    	6
+P bgprimservosvr   	pose_data        	LOCAL  	localhost        	RW   	1         	0.1     	1    	6
+P bgprimservosvr   	prim_cmd         	LOCAL  	localhost        	RW   	1         	0.1     	1    	6
+P bgprimservosvr   	prim_sts         	LOCAL  	localhost        	RW   	1         	0.1     	1    	6
+P bgprimservosvr   	servo_cmd        	LOCAL  	localhost        	RW   	1         	0.1     	1    	6
+P bgprimservosvr   	servo_sts        	LOCAL  	localhost        	RW   	1         	0.1     	1    	6
+P bgprimservosvr   	servo_cmd_set        	LOCAL  	localhost        	RW   	1         	0.1     	1    	6
+P bgprimservosvr   	servo_stat_cfg        	LOCAL  	localhost        	RW   	1         	0.1     	1    	6
+
+# rcs_single_dirsvr(7)
+P rcs_single_dirsvr 	bg_cmd           	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	bg_sts           	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	prim_cmd         	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	prim_sts         	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	robot_super_cmd  	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	robot_super_sts  	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	servo_cmd        	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	servo_sts        	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	sp_cmd           	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	sp_sts           	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	wm_cmd           	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	wm_sts           	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	errlog           	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	pose_data        	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	obstacle_map     	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+P rcs_single_dirsvr 	sensor_data      	LOCAL  	localhost        	RW   	1         	0.1     	1    	7
+
+# robot_supersvr(8)
+P robot_supersvr   	robot_super_cmd  	LOCAL  	localhost        	RW   	1         	0.1     	1    	8
+P robot_supersvr   	robot_super_sts  	LOCAL  	localhost        	RW   	1         	0.1     	1    	8
+
+# spsvr(9)
+P spsvr            	sensor_data      	LOCAL  	localhost        	RW   	1         	0.1     	1    	9
+P spsvr            	sp_cmd           	LOCAL  	localhost        	RW   	1         	0.1     	1    	9
+P spsvr            	sp_sts           	LOCAL  	localhost        	RW   	1         	0.1     	1    	9
+
+# wmsvr(10)
+P wmsvr            	obstacle_map     	LOCAL  	localhost        	RW   	1         	0.1     	1    	10
+P wmsvr            	wm_cmd           	LOCAL  	localhost        	RW   	1         	0.1     	1    	10
+P wmsvr            	wm_sts           	LOCAL  	localhost        	RW   	1         	0.1     	1    	10
+
+
+

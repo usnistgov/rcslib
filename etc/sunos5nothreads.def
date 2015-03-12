@@ -1,0 +1,64 @@
+NO_THREADS=1
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    os5
+
+# The C compiler.
+CC =    gcc
+
+# The C++ compiler.
+CPLUSPLUS =     /depot/gnu/plat/bin/g++
+CPLUSPLUS_EXTENSION = cc
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O2
+endif
+endif
+
+ifndef NO_DEBUG
+ifndef DEGUG_FLAG
+DEBUG_FLAG = -g
+endif
+endif
+
+# The C and C++ compilation flags to be used.
+CFLAGS  = $(DEBUG_FLAG) $(OPTIMIZE_FLAG) -DSUN -DNO_THREADS -D$(PLAT) -D$(OS) -Dsparc -DPLATNAME=\"$(PLAT)\" -Dsunos5
+CLINK = -lrpcsvc -lsocket -lnsl -lintl -lm -lposix4
+CPLUSPLUSLINK =         -lrpcsvc -lsocket -lnsl -lposix4 -lintl -lm /depot/gnu/plat/lib/libg++.a
+
+#CLINK =        /lib/librpcsvc.a /lib/libsocket.a /lib/libnsl.a /lib/libdl.so.1 /lib/libintl.a /lib/libm.a
+CPLUSPLUSFLAGS = $(CFLAGS)      -D__CPLUSPLUS__
+
+MAKEDEPEND = /depot/x11r5/plat/bin/makedepend
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        echo ranlib not needed for
+
+# The assembler.
+AS =    as
+
+LD =    ld
+LINKER = ld
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+
+DYNAMIC_LINK_FLAG = -dy -G
+
+
+STRIP = strip
+
+COPY_SOURCE_COMMAND = cp
+
+RCSLIB_LIBRARY_NAME = librcs.a
+
+% ::    SCCS/s.%
+	sccs get $@
+
+% ::    RCS/%,v
+	co $@
+
+JDK_DIR=/depot/jdk

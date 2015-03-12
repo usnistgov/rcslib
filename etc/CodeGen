@@ -1,0 +1,50 @@
+#! /bin/sh 
+
+set -x;
+
+prog=`which $0 | grep $0`
+rcslib_etc_dir=${prog%/*}
+rcslib_dir=${rcslib_etc_dir%/*}
+
+echo rcslib_dir = $rcslib_dir
+
+if test "x${JAVA_COMMAND}" = "x" ; then
+	JAVA_COMMAND=java;
+fi
+
+if test '(' '!' -x `which ${JAVA_COMMAND}` ')'  -o '('  -d `which ${JAVA_COMMAND}` ')' ; then
+
+	if test "x${JDK_DIR}" = "x" ; then
+		JDK_DIR=`$rcslib_etc_dir/jdk_dir.sh`
+	fi
+
+	if test -x "${JDK_DIR}/bin/${JAVA_COMMAND}" ; then
+		JAVA_COMMAND="${JDK_DIR}/bin/${JAVA_COMMAND}";
+	fi
+fi
+
+if test -f "${rcslib_dir}/plat/java/lib/diagapplet/CodeGen/CodeGenCmdLine.class" ; then
+	CODEGEN_ARG="-classpath ${rcslib_dir}/plat/java/lib diagapplet.CodeGen.CodeGenCmdLine";
+elif test -f "${rcslib_dir}/plat/java/lib/diagapplet/CodeGen/CodeGen.class" ; then	
+	CODEGEN_ARG="-classpath ${rcslib_dir}/plat/java/lib diagapplet.CodeGen.CodeGen";
+elif test -f "${rcslib_dir}/plat/java/lib/CodeGenCmdLine.jar" ; then
+	CODEGEN_ARG="-jar ${rcslib_dir}/plat/java/lib/CodeGenCmdLine.jar";
+elif test -f "${rcslib_dir}/plat/java/lib/CodeGen.jar" ; then
+	CODEGEN_ARG="-jar ${rcslib_dir}/plat/java/lib/CodeGen.jar";
+elif test -f "${rcslib_dir}/CodeGenCmdLine.jar" ; then
+	CODEGEN_ARG="-jar ${rcslib_dir}/CodeGenCmdLine.jar";
+elif test -f "${rcslib_dir}/bin/CodeGenCmdLine.jar" ; then
+	CODEGEN_ARG="-jar ${rcslib_dir}/bin/CodeGenCmdLine.jar";
+fi
+
+export JAVA_COMMAND
+export JDK_DIR
+export CODEGEN_ARG
+
+echo ${JAVA_COMMAND} ${CODEGEN_ARG} $*
+${JAVA_COMMAND} ${CODEGEN_ARG} $*
+
+echo CodeGen exited.
+
+
+

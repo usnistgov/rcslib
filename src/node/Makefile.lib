@@ -1,0 +1,27 @@
+
+
+
+NODE_OBJS := \
+	cmd_msg.o \
+	stat_msg.o \
+	stat_msg_v2_n.o \
+	timetracker.o \
+	timetracker_n.o \
+	nml_oi.o \
+	nml_mod.o
+
+LIBRCS_OBJS :=	$(LIBRCS_OBJS) \
+	$(NODE_OBJS)
+
+
+NODE_HEADERS = cmd_msg.hh \
+	stat_msg.hh \
+	nml_mod.hh \
+	nml_oi.hh \
+	stat_msg_v2.hh \
+	stat_msg_v2_c_n.h \
+	timetracker.hh \
+	timetracker_c_n.h \
+	stat_msg_v2_n_codegen_protos.hh \
+	timetracker_n_codegen_protos.hh
+

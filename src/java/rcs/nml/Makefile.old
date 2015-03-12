@@ -1,0 +1,91 @@
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../../../..
+endif
+
+
+PACKAGE_NAME = rcs.nml
+
+
+#COMPILE_TOGETHER=1
+
+JAVA_SOURCES = \
+	NMLSingleVarLogItem.java \
+	NMLSingleVarLog.java \
+	NMLMessageDictionary.java \
+	NMLFormatConvertErrCallbackInterface.java \
+	NMLBufferConfigInfo.java \
+	NMLConfigInfo.java \
+	NMLConnectionInterface.java \
+	NMLConnectionCreatorInterface.java \
+	CMS_DATE.java \
+	CMS_TIME.java \
+	debugInfo.java \
+	NMLException.java \
+	NMLFormatConverter.java \
+	NMLmsg.java \
+	NMLFormatConverterBase.java \
+	DISPFormatConverter.java \
+	XDRFormatConverter.java \
+	PackedFormatConverter.java \
+	XMLFormatConverter.java \
+	NonBlockingDatagramSocket.java \
+	NMLConnection.java \
+	NMLConnectionCreator.java \
+	RCS_CMD_MSG.java \
+	RCS_STAT_MSG.java \
+	RCS_STAT_MSG_V2.java \
+	time_tracker.java \
+	NML_ERROR.java \
+	NML_TEXT.java \
+	NML_DISPLAY.java \
+	errlogMsgDict.java \
+	NML_PERFORMANCE_TEST_MSG.java \
+	perftypeMsgDict.java \
+	NML_ENUM_INFO.java \
+	nmlperf.java
+
+ifdef USE_GCJ
+
+LOCAL_GCJ_FLAGS=-I../..
+
+SRCS=$(JAVA_SOURCES)
+
+OBJS=$(JAVA_SOURCES:%.java=%.o)
+
+else
+
+PLAT=java
+
+endif
+
+
+include ../../../Makefile.rcs
+
+
+documentation: $(DOC_DIR)/$(PACKAGE_NAME).NMLConnection.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).PM_CARTESIAN.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).NMLFormatConverter.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).RCS_CMD_MSG.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).NMLFormatConverterBase.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).RCS_STAT_MSG.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).NMLMessageDictionary.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).XDRFormatConverter.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).NMLmsg.html \
+	$(DOC_DIR)/$(PACKAGE_NAME).DISPFormatConverter.html
+	$(DOC_DIR)/$(PACKAGE_NAME).NMLException.html
+
+
+NMLPERF_JAVA_SOURCES = 	NML_PERFORMANCE_TEST_MSG.java \
+	perftypeMsgDict.java \
+	nmlperf.java
+
+DEVP_NMLPERF_JAVA_SOURCES = $(NMLPERF_JAVA_SOURCES:%=$(DEVP_SRC_DIR)/%)
+
+DEVP_NMLPERF_CLASSES = $(NMLPERF_CLASSES:%=$(DEVP_LIB_DIR)/%)
+
+
+nmlperf: $(DEVP_NMLPERF_JAVA_SOURCES) $(DEVP_NMLPERF_CLASSES)
+
+.PHONY: nmlperf
+

@@ -1,0 +1,62 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    irix6
+
+# The C compiler.
+CC =    gcc
+
+# The C++ compiler.
+CPLUSPLUS = g++
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O2
+endif
+endif
+
+ifndef NO_DEBUG
+ifndef DEGUG_FLAG
+DEBUG_FLAG = -g
+endif
+endif
+
+
+# The C and C++ compilation flags to be used.
+CFLAGS  = $(OPTIMIZE_FLAG) $(DEBUG_FLAG) -o32 -D$(PLAT) -DSGI -D__SGI__ -DPLATNAME=\"$(PLAT)\"
+
+CLINK = -lm
+CPLUSPLUSFLAGS =        -D__CPLUSPLUS__
+CPLUSPLUSLINK = $(CLINK)
+MAKEDEPEND =  makedepend
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        echo ranlib not needed for
+
+# The assembler.
+AS =    as
+
+LD =    ld
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+COPY_SOURCE_COMMAND = cp
+CPLUSPLUS_EXTENSION = cc
+
+STRIP = strip
+
+COPY_SOURCE_COMMAND = cp
+
+RCSLIB_LIBRARY_NAME = librcs.a
+
+% ::    SCCS/s.%
+	sccs get $@
+
+% ::    RCS/%,v
+	co $@
+
+
+
+
+DYNAMIC_LINK_FLAG = -ignore_unresolved -shared -o32

@@ -1,0 +1,38 @@
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../..
+endif
+
+HEADERS= nml_test_format.hh \
+	otherheader.hh 
+
+SRCS=nml_test_format_n.cc \
+	otherheader_n.cc \
+	vx_nml_test_read.cc \
+	vx_nml_test_write.cc \
+	vx_test_cycle_high_priority.c
+
+OBJS=nml_test_format_n.o \
+	otherheader_n.o \
+	vx_nml_test_read.o \
+	vx_nml_test_write.o \
+	vx_test_cycle_high_priority.o
+
+
+BINS=
+LIBS=
+
+include ../Makefile.rcs
+
+all: vxtest.nml 
+
+clean: rm_vxtest_nml
+
+rm_vxtest_nml:
+	rm vxtest.nml
+
+.PHONY: rm_vxtest_nml
+
+vxtest.nml : vxtest.cfg
+	$(RCSLIB_MAIN_DIR)/bin/nmlcfg $^ -o $@
+	scp $@ walton.dmz:/tmp

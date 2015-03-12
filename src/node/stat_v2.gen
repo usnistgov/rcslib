@@ -1,0 +1,9 @@
+ignore stat_msg.hh
+load stat_msg_v2.hh
+clear
+select_from_file stat_msg_v2.hh
+generate c++ enum_info >stat_msg_v2_n.cc
+generate c++ update >stat_msg_v2_n.cc
+generate c++ constructor >stat_msg_v2_n.cc
+
+

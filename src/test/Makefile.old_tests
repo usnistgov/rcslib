@@ -1,0 +1,636 @@
+
+#
+# Makefile for NML test programs
+#
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../..
+endif
+
+DISABLE_DEFAULT_OPTIMIZE=1
+
+LOCAL_CFLAGS = -Itest_include
+
+
+HEADERS = nml_ex1.hh
+
+SRCS=nml_ex1.cc \
+	nml_ex2.cc \
+	nml_ex3.cc \
+	nml_ex4.cc \
+	nml_ex5.cc \
+	nml_ex6.cc \
+	nml_ex9.cc \
+	nml_ex10.cc \
+	bReader.cc \
+	bServer.cc \
+	bWriter.cc \
+	cgtestwrite.cc \
+	cgtestwriteifread.cc \
+	cgtestread.cc \
+	cgtestsvr1.cc \
+	cgtestsvr2.cc \
+	cgtester_n.cc \
+	xmlout.cc \
+	xmlschemaout.cc
+
+OBJS=nml_ex1.o  \
+	nml_ex2.o \
+	nml_ex3.o \
+	nml_ex4.o \
+	nml_ex5.o \
+	nml_ex9.o \
+	nml_ex10.o \
+	bReader.o \
+	bServer.o \
+	bWriter.o \
+	cgtester.o \
+	subdiv_writer.o \
+	subdiv_reader.o \
+	test_cfg.o \
+	cgtestwrite.o \
+	cgtestwriteifread.o \
+	cgtestread.o \
+	cgtestsvr1.o \
+	cgtestsvr2.o \
+	cgtester_n.o 
+
+BINS=nml_ex2$(EXE_EXT) \
+	nml_ex3$(EXE_EXT) \
+	nml_ex4$(EXE_EXT) \
+	nml_ex9$(EXE_EXT) \
+	bReader$(EXE_EXT) \
+	bWriter$(EXE_EXT) \
+	bServer$(EXE_EXT) \
+	cgtestsvr1$(EXE_EXT) \
+	cgtestsvr2$(EXE_EXT) \
+	cgtestread$(EXE_EXT) \
+	cgtestwrite$(EXE_EXT) \
+	cgtestwriteifread$(EXE_EXT)
+
+
+
+include ../Makefile.rcs
+
+svrcleanup: $(DEVP_BIN_DIR)/svrcleanup$(EXE_EXT)
+
+.PHONY: svrcleanup
+
+ifdef EXE_EXT
+ svrcleanup$(EXE_EXT):$(DEVP_BIN_DIR)/svrcleanup$(EXE_EXT)
+
+.PHONY: svrcleanup$(EXE_EXT)
+endif
+
+
+
+
+nml_ex2: $(DEVP_BIN_DIR)/nml_ex2$(EXE_EXT)
+
+.PHONY: nml_ex2
+
+ifdef EXE_EXT
+ nml_ex2$(EXE_EXT):$(DEVP_BIN_DIR)/nml_ex2$(EXE_EXT)
+
+.PHONY: nml_ex2$(EXE_EXT)
+endif
+
+
+
+
+cgtester: $(DEVP_LIB_DIR)/cgtester.o cgtester.cc
+
+ifndef NO_JAVA
+
+cgtester.cc: cgtester.hh cgtester.gen
+	java -jar $(RCSLIB_MAIN_DIR)/plat/java/lib/CodeGenCmdLine.jar script=cgtester.gen display_on=false
+
+endif
+
+.PHONY: cgtester
+
+ifdef EXE_EXT
+ cgtester$(EXE_EXT):$(DEVP_BIN_DIR)/cgtester$(EXE_EXT)
+
+.PHONY: cgtester$(EXE_EXT)
+endif
+
+
+
+
+ifndef NO_JAVA
+
+nml_ex1.cc: nml_ex1.hh nml_ex1.gen
+	java -jar $(RCSLIB_MAIN_DIR)/plat/java/lib/CodeGenCmdLine.jar script=nml_ex1.gen display_on=false
+
+endif
+
+nml_ex1: $(DEVP_LIB_DIR)/nml_ex1.o
+
+.PHONY: nml_ex1
+
+ifdef EXE_EXT
+ nml_ex1$(EXE_EXT):$(DEVP_BIN_DIR)/nml_ex1$(EXE_EXT)
+
+.PHONY: nml_ex1$(EXE_EXT)
+endif
+
+
+
+
+
+$(DEVP_BIN_DIR)/nml_ex2$(EXE_EXT): $(DEVP_LIB_DIR)/nml_ex2.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ $(RCS_LIBRARY) $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+$(DEVP_BIN_DIR)/bReader$(EXE_EXT): $(DEVP_LIB_DIR)/bReader.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o \
+	$(DEVP_LIB_DIR)/test_cfg.o	
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ $(RCS_LINK_FLAG) $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+bReader: $(DEVP_BIN_DIR)/bReader$(EXE_EXT)
+
+.PHONY: bReader
+
+ifdef EXE_EXT
+ bReader$(EXE_EXT):$(DEVP_BIN_DIR)/bReader$(EXE_EXT)
+
+.PHONY: bReader$(EXE_EXT)
+endif
+
+
+
+
+$(DEVP_BIN_DIR)/bReader.tc$(EXE_EXT): $(DEVP_LIB_DIR)/bReader.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o \
+	$(DEVP_LIB_DIR)/test_cfg.o	
+	$(COMPILER_SETUP); \
+	proof  $(CPLUSPLUS)  $^ $(RCS_LIB_DIR)/librcsd.a $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+bReader.tc: $(DEVP_BIN_DIR)/bReader.tc$(EXE_EXT)
+
+.PHONY: bReader.tc
+
+ifdef EXE_EXT
+ bReader.tc$(EXE_EXT):$(DEVP_BIN_DIR)/bReader.tc$(EXE_EXT)
+
+.PHONY: bReader.tc$(EXE_EXT)
+endif
+
+
+
+
+
+$(DEVP_BIN_DIR)/bWriter.tc$(EXE_EXT): $(DEVP_LIB_DIR)/bWriter.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o \
+	$(DEVP_LIB_DIR)/test_cfg.o	
+	$(COMPILER_SETUP); \
+	proof  $(CPLUSPLUS)  $^ $(RCS_LIB_DIR)/librcsd.a $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+#$(DEVP_BIN_DIR)/bWriter$(EXE_EXT): $(RCS_LIB_DIR)/librcsd.a
+#$(DEVP_BIN_DIR)/bReader$(EXE_EXT): $(RCS_LIB_DIR)/librcsd.a
+#$(DEVP_BIN_DIR)/bServer$(EXE_EXT): $(RCS_LIB_DIR)/librcsd.a
+
+bWriter.tc: $(DEVP_BIN_DIR)/bWriter.tc$(EXE_EXT)
+
+
+.PHONY: bReader.tc
+
+ifdef EXE_EXT
+ bReader.tc$(EXE_EXT):$(DEVP_BIN_DIR)/bReader.tc$(EXE_EXT)
+
+.PHONY: bReader.tc$(EXE_EXT)
+endif
+
+
+bReader.o: $(DEVP_LIB_DIR)/bReader.o
+
+.PHONY: bReader.o
+
+
+$(DEVP_BIN_DIR)/bServer$(EXE_EXT): $(DEVP_LIB_DIR)/bServer.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o \
+	$(DEVP_LIB_DIR)/test_cfg.o	
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -L$(RCS_LIB_DIR) -lrcs -lposemath -o $@;
+
+bServer: $(DEVP_BIN_DIR)/bServer$(EXE_EXT)
+
+$(DEVP_BIN_DIR)/cgtestsvr1$(EXE_EXT): $(DEVP_LIB_DIR)/cgtestsvr1.o \
+	$(DEVP_LIB_DIR)/cgtester_n.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -L$(RCS_LIB_DIR) -lrcs -lposemath -o $@;
+
+cgtestsvr1: $(DEVP_BIN_DIR)/cgtestsvr1$(EXE_EXT)
+.PHONY: cgtestsvr1
+
+ifdef EXE_EXT
+ cgtestsvr1$(EXE_EXT):$(DEVP_BIN_DIR)/cgtestsvr1$(EXE_EXT)
+
+.PHONY: cgtestsvr1$(EXE_EXT)
+endif
+
+
+
+
+$(DEVP_BIN_DIR)/cgtestsvr2$(EXE_EXT): $(DEVP_LIB_DIR)/cgtestsvr2.o \
+	$(DEVP_LIB_DIR)/cgtester_n.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^  $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -L$(RCS_LIB_DIR) -lrcs -lposemath -o $@;
+
+cgtestsvr2: $(DEVP_BIN_DIR)/cgtestsvr2$(EXE_EXT)
+.PHONY: cgtestsvr2
+
+ifdef EXE_EXT
+ cgtestsvr2$(EXE_EXT):$(DEVP_BIN_DIR)/cgtestsvr2$(EXE_EXT)
+
+.PHONY: cgtestsvr2$(EXE_EXT)
+endif
+
+
+
+
+$(DEVP_BIN_DIR)/cgtestread$(EXE_EXT): $(DEVP_LIB_DIR)/cgtestread.o \
+	$(DEVP_LIB_DIR)/cgtester_n.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^  $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -L$(RCS_LIB_DIR) -lrcs -lposemath -o $@;
+
+cgtestread: $(DEVP_BIN_DIR)/cgtestread$(EXE_EXT)
+
+.PHONY: cgtestread
+
+ifdef EXE_EXT
+ cgtestread$(EXE_EXT):$(DEVP_BIN_DIR)/cgtestread$(EXE_EXT)
+
+.PHONY: cgtestread$(EXE_EXT)
+endif
+
+
+
+
+
+$(DEVP_BIN_DIR)/cgtestwrite$(EXE_EXT): $(DEVP_LIB_DIR)/cgtestwrite.o \
+	$(DEVP_LIB_DIR)/cgtester_n.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^  $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -L$(RCS_LIB_DIR) -lrcs -lposemath -o $@;
+
+cgtestwrite: $(DEVP_BIN_DIR)/cgtestwrite$(EXE_EXT)
+.PHONY: cgtestwrite
+
+ifdef EXE_EXT
+ cgtestwrite$(EXE_EXT):$(DEVP_BIN_DIR)/cgtestwrite$(EXE_EXT)
+
+.PHONY: cgtestwrite$(EXE_EXT)
+endif
+
+
+
+
+$(DEVP_BIN_DIR)/cgtestwriteifread$(EXE_EXT): $(DEVP_LIB_DIR)/cgtestwriteifread.o \
+	$(DEVP_LIB_DIR)/cgtester_n.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^  $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -L$(RCS_LIB_DIR) -lrcs -lposemath -o $@;
+
+cgtestwriteifread: $(DEVP_BIN_DIR)/cgtestwriteifread$(EXE_EXT)
+.PHONY: cgtestwriteifread
+
+ifdef EXE_EXT
+ cgtestwriteifread$(EXE_EXT):$(DEVP_BIN_DIR)/cgtestwriteifread$(EXE_EXT)
+
+.PHONY: cgtestwriteifread$(EXE_EXT)
+endif
+
+
+
+
+$(DEVP_BIN_DIR)/xmlout$(EXE_EXT): $(DEVP_LIB_DIR)/xmlout.o \
+	$(DEVP_LIB_DIR)/cgtester_n.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+xmlout: $(DEVP_BIN_DIR)/xmlout$(EXE_EXT)
+.PHONY: xmlout
+
+ifdef EXE_EXT
+ xmlout$(EXE_EXT):$(DEVP_BIN_DIR)/xmlout$(EXE_EXT)
+
+.PHONY: xmlout$(EXE_EXT)
+endif
+
+
+
+$(DEVP_BIN_DIR)/xmlschemaout$(EXE_EXT): $(DEVP_LIB_DIR)/xmlschemaout.o \
+	$(DEVP_LIB_DIR)/cgtester_n.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^  $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -L$(RCS_LIB_DIR) -lrcs -lposemath -o $@;
+
+xmlschemaout: $(DEVP_BIN_DIR)/xmlschemaout$(EXE_EXT)
+
+.PHONY: xmlschemaout
+
+ifdef EXE_EXT
+ xmlschemaout$(EXE_EXT):$(DEVP_BIN_DIR)/xmlschemaout$(EXE_EXT)
+
+.PHONY: xmlschemaout$(EXE_EXT)
+endif
+
+
+
+
+depend: cgtester_n_codegen_protos.hh
+
+EXAMPLE_MESSAGE.java cgtester_MsgDict.java cgtester_n.cc cgtester_n_codegen_protos.hh : cgtester.hh
+	$(NML_CODEGEN) display_on=false update_with_name=true cgtester.hh
+	-\rm -f .depend* && $(MAKE) depend
+ 
+
+cleantestcodegen:
+	\rm -f EXAMPLE_MESSAGE.java cgtester_MsgDict.java cgtester_n.cc mystruct.java *.class
+	\rm -f $(DEVP_LIB_DIR)/cg*.o
+	\rm -f $(DEVP_BIN_DIR)/cg*
+
+.PHONY: cleantestcodegen
+
+ifdef EXE_EXT
+ cleantestcodegen$(EXE_EXT):$(DEVP_BIN_DIR)/cleantestcodegen$(EXE_EXT)
+
+.PHONY: cleantestcodegen$(EXE_EXT)
+endif
+
+
+
+
+
+exread.class: exread.java EXAMPLE_MESSAGE.java cgtester_MsgDict.java mystruct.java
+	javac -classpath $(USER_DIR)/plat/java/lib/rcs.jar $^
+
+exwrite.class: exwrite.java EXAMPLE_MESSAGE.java cgtester_MsgDict.java mystruct.java
+	javac -classpath $(USER_DIR)/plat/java/lib/rcs.jar $^
+
+testcodegen: 
+	$(MAKE) cgtestwrite cgtestread cgtestsvr1 cgtestsvr2 \
+	EXAMPLE_MESSAGE.java cgtester_MsgDict.java mystruct.java cgtester_n.cc exwrite.class exread.class
+
+.PHONY: testcodegen
+
+ifdef EXE_EXT
+ testcodegen$(EXE_EXT):$(DEVP_BIN_DIR)/testcodegen$(EXE_EXT)
+
+.PHONY: testcodegen$(EXE_EXT)
+endif
+
+
+
+
+.PHONY: bServer
+
+ifdef EXE_EXT
+ bServer$(EXE_EXT):$(DEVP_BIN_DIR)/bServer$(EXE_EXT)
+
+.PHONY: bServer$(EXE_EXT)
+endif
+
+
+
+
+bServer.o: $(DEVP_LIB_DIR)/bServer.o
+
+.PHONY: bServer.o
+
+
+
+
+
+$(DEVP_BIN_DIR)/bServer.tc: $(DEVP_LIB_DIR)/bServer.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o \
+	$(DEVP_LIB_DIR)/test_cfg.o	
+	$(COMPILER_SETUP); \
+	proof $(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+bServer.tc: $(DEVP_BIN_DIR)/bServer.tc$(EXE_EXT)
+
+.PHONY: bServer.tc
+
+
+
+$(DEVP_BIN_DIR)/bWriter: $(DEVP_LIB_DIR)/bWriter.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o \
+	$(DEVP_LIB_DIR)/test_cfg.o	
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -v -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+bWriter: $(DEVP_BIN_DIR)/bWriter$(EXE_EXT)
+
+.PHONY: bWriter
+
+esleepTest: $(DEVP_BIN_DIR)/esleepTest$(EXE_EXT)
+
+.PHONY: esleepTest
+
+$(DEVP_BIN_DIR)/esleepTest: $(DEVP_LIB_DIR)/esleepTest.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+esleepTest: $(DEVP_BIN_DIR)/esleepTest$(EXE_EXT)
+
+.PHONY: esleepTest
+
+bWriter.o: $(DEVP_LIB_DIR)/bWriter.o
+
+.PHONY: bWriter.o
+
+wr.o: $(DEVP_LIB_DIR)/wr.o
+
+.PHONY: wr.o
+
+nml_ex1.o: $(DEVP_LIB_DIR)/nml_ex1.o
+
+.PHONY: nml_ex1.o
+
+test_cfg.o: $(DEVP_LIB_DIR)/test_cfg.o
+
+.PHONY: test_cfg.o
+
+nml_ex9.o: $(DEVP_LIB_DIR)/nml_ex9.o
+
+.PHONY: nml_ex9.o
+
+
+$(DEVP_BIN_DIR)/nml_ex3: $(DEVP_LIB_DIR)/nml_ex3.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+nml_ex3: $(DEVP_BIN_DIR)/nml_ex3$(EXE_EXT)
+
+.PHONY: nml_ex3
+
+
+$(DEVP_BIN_DIR)/nml_ex4: $(DEVP_LIB_DIR)/nml_ex4.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+nml_ex4: $(DEVP_BIN_DIR)/nml_ex4$(EXE_EXT)
+
+.PHONY: nml_ex4
+
+nml_ex2: $(DEVP_BIN_DIR)/nml_ex2$(EXE_EXT)
+
+.PHONY: nml_ex2
+
+$(DEVP_BIN_DIR)/nml_ex9: $(DEVP_LIB_DIR)/nml_ex9.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+nml_ex9: $(DEVP_BIN_DIR)/nml_ex9$(EXE_EXT)
+
+.PHONY: nml_ex10
+
+$(DEVP_BIN_DIR)/nml_ex10: $(DEVP_LIB_DIR)/nml_ex10.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+nml_ex10: $(DEVP_BIN_DIR)/nml_ex10$(EXE_EXT)
+
+.PHONY: nml_ex10
+
+$(DEVP_BIN_DIR)/initest: $(DEVP_LIB_DIR)/initest.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+initest: $(DEVP_BIN_DIR)/initest$(EXE_EXT)
+
+.PHONY: initest
+
+
+
+$(DEVP_BIN_DIR)/dbsvr: $(DEVP_LIB_DIR)/dbsvr.o \
+	$(DEVP_LIB_DIR)/dbtypes.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+dbsvr: $(DEVP_BIN_DIR)/dbsvr$(EXE_EXT)
+
+.PHONY: dbsvr
+
+$(DEVP_BIN_DIR)/dbclnt: $(DEVP_LIB_DIR)/dbclnt.o \
+	$(DEVP_LIB_DIR)/dbtypes.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+dbclnt: $(DEVP_BIN_DIR)/dbclnt$(EXE_EXT)
+
+.PHONY: dbclnt
+
+$(DEVP_BIN_DIR)/echosvr: $(DEVP_LIB_DIR)/echosvr.o \
+	$(DEVP_LIB_DIR)/echo_types.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+echosvr: $(DEVP_BIN_DIR)/echosvr$(EXE_EXT)
+
+.PHONY: echosvr
+
+
+$(DEVP_BIN_DIR)/echoclnt: $(DEVP_LIB_DIR)/echoclnt.o \
+	$(DEVP_LIB_DIR)/echo_types.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+echoclnt: $(DEVP_BIN_DIR)/echoclnt$(EXE_EXT)
+
+
+$(DEVP_BIN_DIR)/subdiv_reader: $(DEVP_LIB_DIR)/subdiv_reader.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+subdiv_reader: $(DEVP_BIN_DIR)/subdiv_reader$(EXE_EXT)
+
+.PHONY: subdiv_reader
+
+
+$(DEVP_BIN_DIR)/subdiv_writer: $(DEVP_LIB_DIR)/subdiv_writer.o \
+	$(DEVP_LIB_DIR)/nml_ex1.o
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+
+subdiv_writer: $(DEVP_BIN_DIR)/subdiv_writer$(EXE_EXT)
+
+.PHONY: subdiv_writer
+
+
+cgtester.o: $(DEVP_LIB_DIR)/cgtester.o
+
+.PHONY: cgtester.o
+
+nml_test_blocking_read_SOURCES= \
+	nml_test_blocking_read.cc \
+	nml_test_format_n.cc
+
+$(DEVP_BIN_DIR)/nml_test_blocking_read: $(nml_test_blocking_read_SOURCES:%.cc=$(DEVP_LIB_DIR)/%.o)
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+nml_test_blocking_read : $(DEVP_BIN_DIR)/nml_test_blocking_read
+
+.PHONY: nml_test_blocking_read
+
+nml_test_write_SOURCES= \
+	nml_test_write.cc \
+	nml_test_format_n.cc
+
+$(DEVP_BIN_DIR)/nml_test_write: $(nml_test_write_SOURCES:%.cc=$(DEVP_LIB_DIR)/%.o)
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+nml_test_write : $(DEVP_BIN_DIR)/nml_test_write
+
+.PHONY: nml_test_write
+
+nml_test_read_SOURCES= \
+	nml_test_read.cc \
+	nml_test_format_n.cc
+
+$(DEVP_BIN_DIR)/nml_test_read: $(nml_test_read_SOURCES:%.cc=$(DEVP_LIB_DIR)/%.o)
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ -L$(RCS_LIB_DIR) -lrcs -lposemath $(CFLAGS) $(CPLUSPLUSFLAGS) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+nml_test_read : $(DEVP_BIN_DIR)/nml_test_read
+
+.PHONY: nml_test_read
+
+
+nml_test_server_SOURCES= \
+	nml_test_server.cc \
+	nml_test_format_n.cc
+
+$(DEVP_BIN_DIR)/nml_test_server: $(nml_test_server_SOURCES:%.cc=$(DEVP_LIB_DIR)/%.o)
+	$(COMPILER_SETUP); \
+	$(CPLUSPLUS) $^ $(CFLAGS) $(CPLUSPLUSFLAGS) $(RCS_LINK_FLAG) $(CLINK) $(CPLUSPLUSLINK) -o $@;
+
+nml_test_server : $(DEVP_BIN_DIR)/nml_test_server
+
+.PHONY: nml_test_server

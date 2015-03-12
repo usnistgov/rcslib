@@ -1,0 +1,12 @@
+# Friday, May 8, 2009 4:40:19 PM EDT
+# Name=MOAST_LOG_RECORD_SUPER_RECORD_PRIM_MOVE_WP
+# Id=54304
+# RCS_CMD_MSG<null:-1> -- int serial_number;
+# MOAST_LOG_RECORD_SUPER_RECORD_PRIM_MOVE_WP</home/shackle/c-crada_repos//nml_hh/moastLogRecordSuperCmd.hh:76> -- struct WaypointList waypoint_list;char label[64];
+# WaypointList</home/shackle/c-crada_repos//nml_hh/moastLogRecordSuperCmd.hh:59> -- int waypoints_length;NML_DYNAMIC_LENGTH_ARRAY Waypoint waypoints[25];
+#[WaypointList :Id=-2:HiddenInfo=int waypoints_length;NML_DYNAMIC_LENGTH_ARRAY double waypoints[25].p.x;NML_DYNAMIC_LENGTH_ARRAY double waypoints[25].p.y;NML_DYNAMIC_LENGTH_ARRAY double waypoints[25].p.z;NML_DYNAMIC_LENGTH_ARRAY double waypoints[25].neighborhood;NML_DYNAMIC_LENGTH_ARRAY double waypoints[25].speed;NML_DYNAMIC_LENGTH_ARRAY unsigned char waypoints[25].quality;
+# Waypoint</home/shackle/c-crada_repos/nml_hh/moastTypes.hh:245> -- PM_CARTESIAN p;double neighborhood;double speed;unsigned char quality;
+#[Waypoint :Id=-2:HiddenInfo=double p.x;double p.y;double p.z;double neighborhood;double speed;unsigned char quality;
+# PM_CARTESIAN<null:-1> -- double x;double y;double z;
+#[PM_CARTESIAN :Id=-2:HiddenInfo=double x;double y;double z;
+,72,4,3.25,13.0,0,0.5,0.5,0,3.25,10.5,0,0.5,0.5,0,0.5,10.5,0,0.5,0.5,0,-1.5,5.5,0,0.5,0.5,0,-2.55,10.1,0,0.5,0.4,0,-3.2,10.05,0,0.1,0.25,0,-3.4,9.1,0,0.1,0.25,0,-3.4,3.8,0,0.4,0.5,0,-3.4,1.5,0,0.5,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,vj_demo,0

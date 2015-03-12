@@ -1,0 +1,186 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    mingw32
+
+
+ifneq (,$(MINGW32_DIR))
+MINGW32_INCLUDE=-I$(MINGW32_DIR)/include
+MINGW32_BIN:=$(shell if test -d $(MINGW32_DIR)/bin/ ; then echo $(MINGW32_DIR)/bin/ ; fi)
+MINGW32_LINK_FLAG=-L$(MINGW32_DIR)/lib
+MINGW32_GCC_PREFIX_FLAG:=$(shell \
+	if test -d $(MINGW32_DIR)/lib/gcc-lib ; then \
+	echo -B$(MINGW32_BIN) -B$(MINGW32_DIR)/lib/gcc-lib ; \
+	elif  cd $(MINGW32_DIR) && cd .. && test -d  ./lib/gcc-lib ; then \
+	echo  -B$(MINGW32_BIN) -B`cd $(MINGW32_DIR) && cd .. && pwd`/lib/gcc-lib/ ; \
+	fi )
+endif
+
+
+
+
+# The C compiler.
+ifdef CC
+CC_ORIG:=$(CC)
+else
+CC_ORIG:=gcc
+endif
+
+CC:=$(shell \
+	if $(MINGW32_BIN)mingw32-gcc --version >/dev/null 2>/dev/null ; \
+	then echo $(MINGW32_BIN)mingw32-gcc ; \
+	elif mingw32-gcc --version >/dev/null 2>/dev/null; \
+	then echo mingw32-gcc ; \
+	elif $(MINGW32_BIN)$(CC_ORIG) --version >/dev/null 2>/dev/null; \
+	then echo $(MINGW32_BIN)$(CC_ORIG) ; \
+	else echo $(CC_ORIG) ; \
+	fi )
+
+
+# The C++ compiler.
+ifdef CXX
+CXX_ORIG:=$(CXX)
+else
+CXX_ORIG:=g++
+endif
+
+CXX:=$(shell \
+	if $(MINGW32_BIN)mingw32-g++ --version >/dev/null 2>/dev/null ; \
+	then echo $(MINGW32_BIN)mingw32-g++ ; \
+	elif mingw32-g++ --version >/dev/null 2>/dev/null; \
+	then echo mingw32-g++ ; \
+	elif $(MINGW32_BIN)$(CXX_ORIG) --version >/dev/null 2>/dev/null; \
+	then echo $(MINGW32_BIN)$(CXX_ORIG) ; \
+	else echo $(CXX_ORIG) ; \
+	fi )
+
+
+CPLUSPLUS:=$(CXX)
+CPLUSPLUS_EXTENSION = cc
+
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O2
+endif
+endif
+
+WARN_FLAG=
+
+ifdef WARN_MAX
+WARN_FLAG=-Wall
+endif
+
+ifdef NO_WARN
+WARN_FLAG=-w
+endif
+
+
+EXE_EXT=.exe
+
+# The C and C++ compilation flags to be used.
+CFLAGS  = $(DEBUG_FLAG) $(OPTIMIZE_FLAG) $(WARN_FLAG) -D$(PLAT) -DPLATNAME=\"$(PLAT)\" $(MINGW32_INCLUDE) $(MINGW32_GCC_PREFIX_FLAG) -DNO_VSNPRINTF -DHAVE__VSNPRINTF -DNO_SNPRINTF -DHAVE__SNPRINTF -DNO_DCE_RPC -DMULTITHREADED -DUSE_XML
+CLINK =
+CPLUSPLUSFLAGS =        -D__CPLUSPLUS__ $(CFLAGS)
+CPLUSPLUSLINK =         $(CLINK) $(MINGW32_LINK_FLAG) -lws2_32
+
+
+
+
+# makedepend must be run from a sun. (Preferably one with a cross-compiler.)
+#MAKEDEPEND = /usr/X11R6/bin/makedepend
+USE_GPP_M=1
+
+# The library archiver and ranlib programs.
+ifdef AR
+AR_ORIG:=$(AR)
+else
+AR_ORIG:=ar
+endif
+
+AR:=$(shell \
+	if $(MINGW32_BIN)mingw32-ar --version >/dev/null 2>/dev/null ; \
+	then echo $(MINGW32_BIN)mingw32-ar ; \
+	elif mingw32-ar --version >/dev/null 2>/dev/null; \
+	then echo mingw32-ar ; \
+	elif $(MINGW32_BIN)$(AR_ORIG) --version >/dev/null 2>/dev/null; \
+	then echo $(MINGW32_BIN)$(AR_ORIG) ; \
+	else echo $(AR_ORIG) ; \
+	fi )
+
+ifdef RANLIB
+RANLIB_ORIG:=$(RANLIB)
+else
+RANLIB_ORIG:=ranlib
+endif
+
+RANLIB:=$(shell \
+	if $(MINGW32_BIN)mingw32-ranlib --version >/dev/null 2>/dev/null ; \
+	then echo $(MINGW32_BIN)mingw32-ranlib ; \
+	elif mingw32-ranlib --version >/dev/null 2>/dev/null; \
+	then echo mingw32-ranlib ; \
+	elif $(MINGW32_BIN)$(RANLIB_ORIG) --version >/dev/null 2>/dev/null; \
+	then echo $(MINGW32_BIN)$(RANLIB_ORIG) ; \
+	else echo $(RANLIB_ORIG) ; \
+	fi )
+
+# The assembler.
+ifdef AS
+AS_ORIG:=$(AS)
+else
+AS_ORIG:=as
+endif
+
+AS:=$(shell \
+	if $(MINGW32_BIN)mingw32-as --version >/dev/null 2>/dev/null ; \
+	then echo $(MINGW32_BIN)mingw32-as ; \
+	elif mingw32-as --version >/dev/null 2>/dev/null; \
+	then echo mingw32-as ; \
+	elif $(MINGW32_BIN)$(AS_ORIG) --version >/dev/null 2>/dev/null; \
+	then echo $(MINGW32_BIN)$(AS_ORIG) ; \
+	else echo $(AS_ORIG) ; \
+	fi )
+
+ifdef LD
+LD_ORIG:=$(LD)
+else
+LD_ORIG:=ld
+endif
+
+LD:=$(shell \
+	if $(MINGW32_BIN)mingw32-ld --version >/dev/null 2>/dev/null ; \
+	then echo $(MINGW32_BIN)mingw32-ld ; \
+	elif mingw32-ld --version >/dev/null 2>/dev/null; \
+	then echo mingw32-ld ; \
+	elif $(MINGW32_BIN)$(LD_ORIG) --version >/dev/null 2>/dev/null; \
+	then echo $(MINGW32_BIN)$(LD_ORIG) ; \
+	else echo $(LD_ORIG) ; \
+	fi )
+
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+#DYNAMIC_LINK_FLAG = -shared
+#DYNAMIC_LIB_BUILD_TOOL=gcc
+
+COPY_SOURCE_COMMAND = cp
+RCSLIB_LIBRARY_NAME = rcs.lib
+# STRIP = mingw32-strip
+STRIP=echo
+
+# disable SCCS make rule for Linux
+% : SCCS/s.%
+	@true
+
+% ::    RCS/%,v
+	co $@
+
+
+all: make_dirs
+
+
+
+
+
+
+

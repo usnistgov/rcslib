@@ -1,0 +1,417 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>PM: Pose Mathematics for Path Planning</TITLE>
+</HEAD>
+<BODY>
+
+<B><FONT FACE="HELVETICA" SIZE=7><P>POSEMATH</P>
+</FONT><I><FONT FACE="HELVETICA" SIZE=6 COLOR="#808080"><P>Pose Mathematics</P>
+<P>for Path Planning</P>
+</FONT><P ALIGN="CENTER">POSEMATH: Pose Mathematics for Path Planning&#9;<DIR>
+
+</I><FONT SIZE=3><P><A HREF="#CodeOrganization">Code Organization&#9;</a></P>
+<P><A HREF="#NamingConventions">Naming Conventions&#9;</a></P>
+<P><A HREF="#Usage">Usage&#9;</a></P>
+<P><A HREF="#Units">Units&#9;</a></P>
+<P><A HREF="#TranslationalRepresentations">Translational Representations&#9;</a></P>
+<P><A HREF="#RotationalRepresentations">Rotational Representations&#9;</a></P>
+<P><A HREF="#CombinedRepresentations">Combined Representations&#9;</a></P>
+<P><A HREF="#FunctionsAndOperators">Functions and Operators&#9;</a></P>
+</B></FONT><FONT SIZE=2><P><A HREF="#TranslationalFunctions">Translational Functions&#9;</a></P>
+<P><A HREF="#RotationalFunctions">Rotational Functions&#9;</a></P>
+<P><A HREF="#CombinedFunctions">Combined Functions&#9;</a></P>
+</FONT><B><FONT SIZE=3><P><A HREF="#AutomaticConversions">Automatic Conversions in C++&#9;</a></P></DIR>
+
+
+</FONT><I><P><A HREF="#AppendixB">Appendix B: Programming Reference&#9;</a></P>
+</I><FONT FACE="HELVETICA" SIZE=4><P ALIGN="CENTER"></P>
+
+<P><A HREF="http://www.isd.cme.nist.gov/personnel/murphy/demoiii/posemath/posemath_examples.html">Karl Murphy's Posemath Examples</a></P>
+</I><FONT FACE="HELVETICA" SIZE=4><P ALIGN="CENTER"></P>
+</P>
+<P ALIGN="CENTER"><A NAME="_Toc391449703">POSEMATH: Pose Mathematics for Path Planning</A></P>
+</B></FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">POSEMATH is a library of software for representing and manipulating locations in three-dimensional space. POSEMATH can be used by either C or C++ programmers to define coordinate systems and the position and orientation of frames within coordinate systems, and to manipulate these frames to plan manipulator paths.</P>
+</FONT><h2><FONT FACE="HELVETICA"><P ALIGN="JUSTIFY"><A NAME="CodeOrganization">Code Organization</A></P>
+</h2></FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">The POSEMATH software consists of three modules: the pose math code proper, support for printed output and diagnostics, and a sine-cosine utility which enables using the single-instruction sine and cosine on some platforms for efficiency. Each module consists of a code (</FONT><FONT FACE="Courier">.c</FONT><FONT FACE="TIMES">) and header (</FONT><FONT FACE="Courier">.h</FONT><FONT FACE="TIMES">) file. The code is written so that it will compile in both the C and C++ languages, using the ANSI C++ built-in compiler symbol </FONT><FONT FACE="Courier">__cplusplus</FONT><FONT FACE="TIMES"> for selection. Debug output can be enabled with the </FONT><FONT FACE="Courier">PM_DEBUG</FONT><FONT FACE="TIMES"> symbol. Defining this as a compiler switch will enable diagnostic printing messages when errors are encountered. Leaving it undefined will disable diagnostic printing messages.</P>
+<P ALIGN="JUSTIFY">The code is compiled into four separate libraries, for C or C++, and with debug output enabled or disabled. Here are the details:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT>
+
+<FONT FACE="Courier"><P >_posemath.c</FONT><FONT FACE="TIMES">&#9;C implementation of pose math functions</P>
+</FONT><FONT FACE="Courier"><P >posemath.cc</FONT><FONT FACE="TIMES">&#9;C++ implementation of pose math functions</P>
+</FONT><FONT FACE="Courier"><P >posemath.h</FONT><FONT FACE="TIMES">&#9;Declarations for pose math code, for C and C++</P>
+</FONT><FONT FACE="Courier"><P >_mathprnt.c</FONT><FONT FACE="TIMES">&#9;Printed output code, for C</P>
+</FONT><FONT FACE="Courier"><P >mathprnt.cc</FONT><FONT FACE="TIMES">&#9;Printed output code, for C++</P>
+</FONT><FONT FACE="Courier"><P >mathprnt.h</FONT><FONT FACE="TIMES">&#9;Declarations for printed output code, for C and C++</P>
+</FONT><FONT FACE="Courier"><P >sincos.c</FONT><FONT FACE="TIMES">&#9;C implementation of processor-specific single-instruction sine and cosine functions</P>
+</FONT><FONT FACE="Courier"><P >sincos.h</FONT><FONT FACE="TIMES">&#9;Declarations for single-instruction sine and cosine, for C and C++</P>
+<P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">For Unix and related operating systems, compiled libraries are:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">libpm.a</FONT><FONT FACE="TIMES">&#9;All code compiled for C or C++ linkage, no diagnostics</P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">libpmdb.a</FONT><FONT FACE="TIMES"> &#9;All code compiled for C or C++ linkage, diagnostics included (</FONT><FONT FACE="Courier">PM_PRINT_ERROR</FONT><FONT FACE="TIMES"> defined)</P>
+<P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">For Microsoft Windows and related operating systems, compiled libraries are:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">libpm.a</FONT><FONT FACE="TIMES">&#9;All code compiled for C or C++ static linkage, no diagnostics</P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">pm.dll</FONT><FONT FACE="TIMES"> &#9;All code compiled for C or C++ dynamic linkage, no diagnostics</P>
+<P ALIGN="JUSTIFY"></P></DIR>
+</DIR>
+</DIR>
+</DIR>
+</DIR>
+</DIR>
+</DIR>
+</DIR>
+
+<P ALIGN="JUSTIFY">Note that there is no diagnostics support for Microsoft Windows applications, as there is no traditional console available for these messages.</P>
+<P ALIGN="JUSTIFY">Programmers need only include </FONT><FONT FACE="Courier">posemath.h</FONT><FONT FACE="TIMES"> in their code to use the basic POSEMATH library. If printed output is desired, programmers should include </FONT><FONT FACE="Courier">mathprnt.h</FONT><FONT FACE="TIMES">. This file declares the C++ </FONT><FONT FACE="Courier">iostream</FONT><FONT FACE="TIMES"> operators for output, and the C counterparts to the </FONT><FONT FACE="Courier">printf()</FONT><FONT FACE="TIMES"> functions.</P>
+</FONT><h2><FONT FACE="HELVETICA"><P ALIGN="JUSTIFY"><A NAME="NamingConventions">Naming Conventions</A></P>
+</h2></FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">C data types in POSEMATH are prefixed with Pm, and follow the case-change convention where the subsequent words in the descriptive name are concatenated with leading capitals, e.g., </FONT><FONT FACE="Courier">PmRotationVector</FONT><FONT FACE="TIMES">. C++ data types are prefixed with </FONT><FONT FACE="Courier">PM_</FONT><FONT FACE="TIMES"> , and are all capital letters with perhaps some additional underscores, e.g., </FONT><FONT FACE="Courier">PM_ROTATION_VECTOR</FONT><FONT FACE="TIMES">. In C, they are declared as structure types with </FONT><FONT FACE="Courier">typedef struct</FONT><FONT FACE="TIMES">. In C++, they are declared as classes. C functions begin with </FONT><FONT FACE="Courier">pm</FONT><FONT FACE="TIMES">, and are followed by the POSEMATH C abbreviations for each type. For example,</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PmCartesian</FONT><FONT FACE="TIMES">&#9;the C Cartesian data type</P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PM_CARTESIAN</FONT><FONT FACE="TIMES">&#9;the C++ Cartesian data type</P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">pmCartCartCross()</FONT><FONT FACE="TIMES">&#9;C function for cross product of two PmCartesian types</P>
+<P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">C++ versions of the C functions are implemented using operator overloading as much as possible. Where functions are required or more intuitive, these are implemented as overloaded functions and hence do not require a unique prefix. For example,</P>
+<P ALIGN="JUSTIFY"><A NAME="_Toc391449706"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">norm()</FONT><FONT FACE="TIMES">&#9;C++ normalization function for all C++ types</P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">isNorm()</FONT><FONT FACE="TIMES">&#9;C++ normalization predicate for all C++ types</P></a>
+<P ALIGN="JUSTIFY">&nbsp;</P>
+</FONT><h2><FONT FACE="HELVETICA"><P ALIGN="JUSTIFY"><A NAME="Usage">Usage</A></P>
+</h2></FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">POSEMATH is based in C, with C++ added to make coding easier and more intuitive. Functions that result in a data type take pointers to the result as their last argument, and return an integer error code. For example, the function that computes the cross product of two Cartesian vectors is declared as</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">int pmCartCartCross(PmCartesian v1, PmCartesian v2, &#9;PmCartesian * vout);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">C programmers must supply a pointer to existing storage for a PmCartesian for the result of the cross product of </FONT><FONT FACE="Courier">v1</FONT><FONT FACE="TIMES"> and </FONT><FONT FACE="Courier">v2</FONT><FONT FACE="TIMES">.</P>
+<P ALIGN="JUSTIFY">For some functions, such as the predicate </FONT><FONT FACE="Courier">pmCartCartCompare</FONT><FONT FACE="TIMES">, the return value is the only result, and no pointer to results need be passed.</P>
+<P ALIGN="JUSTIFY">For C++, additional syntactic interfaces make programs easier to read. This is accomplished through overloading of functions and operators. For example, the multiplication operator * is overloaded to take a scalar and a Cartesian vector, and results in a scaled Cartesian vector. In C, this looks like:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PmCartesian a, b;</P>
+<P ALIGN="JUSTIFY">double s;</P>
+<P ALIGN="JUSTIFY">int error;</P>
+<P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">error = pmCartScalMult(a, s, &amp;b);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">The error code can be checked to see if the result is valid (although in this case scalar-vector multiplies are always valid). In C++, the code looks like:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PM_CARTESIAN a, b;</P>
+<P ALIGN="JUSTIFY">double s;</P>
+<P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">b = a * s;</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">which is much more intuitive. However, since the return value is the vector itself, the programmer cannot check the result for validity as before. POSEMATH provides a global integer variable, </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES">, which is set to 0 when the result of a function or operation is valid, and to a non-zero error code if the function or operation is invalid. C++ programmers using the compact operator syntax should check </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES"> in place of the integer return code in the corresponding function.</P>
+<P ALIGN="JUSTIFY">The integer return code from the C functions and </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES"> are identical, and are declared in the header file posemath.h. These codes include:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PM_ERR</FONT><FONT FACE="TIMES">&#9;unspecified error</P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PM_IMPL_ERR</FONT><FONT FACE="TIMES">&#9;function not implemented</P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PM_NORM_ERR</FONT><FONT FACE="TIMES">&#9;argument should have been normalized</P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PM_DIV_ERR</FONT><FONT FACE="TIMES">&#9;divide by zero attempted</P>
+<P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">The use of a global variable </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES"> means that the C++ code is not thread-safe or reentrant. If this is a requirement, then the C functions must be used. This does not mean that the C <I>language</I> needs to be used: the C functions can be called from C++ code, but the programmer loses the syntactic compactness resulting from function- and operator overloading.</P>
+</FONT><h2><FONT FACE="HELVETICA"><P ALIGN="JUSTIFY"><A NAME="Units">Units</A></P>
+</h2></FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">Units are immaterial for translation quantities, and are assumed to be radians for angular quantities.</P>
+</FONT><h2><FONT FACE="HELVETICA"><P ALIGN="JUSTIFY"><A NAME="TranslationalRepresentations">Translational Representations</A></P>
+</h2></FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">In our three-dimensional universe, the location of a point in space is uniquely determined by three numbers. These numbers usually represent the coordinates of the point in each of three perpendicular axes, relative to some known origin. The numbers can be thought of as the distance along each axis that the point traversed (or <I>translated</I>) as it moved from the origin to its location.</P>
+<P ALIGN="JUSTIFY">Translation is often referred to as position. Common translational representations include Cartesian coordinates (X, Y, and Z) and spherical coordinates (azimuth, altitude, and range).</P>
+<P ALIGN="JUSTIFY">POSEMATH supports three translational representations: Cartesian, cylindrical, and spherical. These are defined as:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT>
+<CENTER>
+<TABLE>
+<TR><TD WIDTH=200>
+<U><FONT FACE="TIMES" SIZE=2>C</FONT><FONT FACE="Courier" SIZE=2> struct</U></FONT>
+</TD>
+<TD WIDTH=250>
+<FONT FACE="TIMES" SIZE=2><U>C++ </FONT><FONT FACE="Courier" SIZE=2>class</U></FONT>
+</TD>
+<TD  WIDTH=200>
+<FONT FACE="TIMES" SIZE=2><U>fields</U>
+</TD>
+<TD>
+<U>C abbreviation</U>
+</TD>
+</TR>
+<TR><TD>PmCartesian</TD><TD>PM_CARTESIAN</TD><TD>x, y, z</TD><TD>Cart</TD></TR>
+<TR><TD>PmCylindrical</TD><TD>PM_CYLINDRICAL</TD><TD>theta, r, z</TD><TD>Cyl</TD></TR>
+<TR><TD>PmSpherical</TD><TD>PM_SPHERICAL</TD><TD>theta, phi, r</TD><TD>Sph</TD></TR>
+</TABLE>
+</CENTER>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY"></P>
+
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">Fields are of type </FONT><FONT FACE="Courier">double</FONT><FONT FACE="TIMES">. Values for the fields of each type are unconstrained. For example, the values for the angular field</FONT><FONT FACE="TIMES">s is not required to lie in the range 0 to 2&#960;, or -&#960; to &#960;. However, if these types are returned or result from calculations, they may be normalized to lie within the range [0, 2&#960;) using the rotational equivalence that 0 equals 2&#960;, &#960; equals 3&#960;, etc.</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">All translational representations are equivalent, in the sense that a location in space expressed in one representation can be converted to any of the other representations. The numbers will in general be different, but the location they represent is the same. POSEMATH provides functions to convert between these representations. Using the POSEMATH naming conventions, these function declarations are:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">int pmCartCylConvert(PmCartesian, PmCylindrical *);</P>
+<P ALIGN="JUSTIFY">int pmCartSphConvert(PmCartesian, PmSpherical *);</P>
+<P ALIGN="JUSTIFY">int pmCylCartConvert(PmCylindrical, PmCartesian *);</P>
+<P ALIGN="JUSTIFY">int pmCylSphConvert(PmCylindrical, PmSpherical *);</P>
+<P ALIGN="JUSTIFY">int pmSphCartConvert(PmSpherical, PmCartesian *);</P>
+<P ALIGN="JUSTIFY">int pmSphCylConvert(PmSpherical, PmCylindrical *);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">The first argument is the type to be converted from. The second argument is a pointer to the object to be converted to. The integer return value is 0 if successful, </FONT><FONT FACE="Courier">PM_NORM_ERR</FONT><FONT FACE="TIMES"> if unsuccessful, or </FONT><FONT FACE="Courier">PM_IMPL_ERR</FONT><FONT FACE="TIMES"> if unimplemented. For example, converting from a </FONT><FONT FACE="Courier">PmCartesian v</FONT><FONT FACE="TIMES"> to a </FONT><FONT FACE="Courier">PmSpherical s</FONT><FONT FACE="TIMES"> looks like:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">pmCartCylConvert(v, &amp;s);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">For C++ programmers, converting between types can be done using the </FONT><FONT FACE="Courier">=</FONT><FONT FACE="TIMES"> operator, which has been overloaded to call these functions. Extending the above example, converting from a Cartesian to spherical coordinate representation in C++ looks like:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">s = v;</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">Since the return value of the </FONT><FONT FACE="Courier">=</FONT><FONT FACE="TIMES"> operator is the converted type, the programmer should check the value of </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES"> for proper conversion if desired.</P>
+</FONT><h2><FONT FACE="HELVETICA"><P ALIGN="JUSTIFY"><A NAME="RotationalRepresentations">Rotational Representations</A></h2></P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">In addition to a location in space, an object has an orientation. Like location, orientation requires three numbers to be uniquely specified. The numbers can be thought of as the angles that the object is inclined to with respect to some reference planes.</P>
+<P ALIGN="JUSTIFY">Rotational representations often use more than three numbers to specify orientation. This may be to make the representation more intuitive, or for computational efficiency.</P>
+<P ALIGN="JUSTIFY">POSEMATH supports six rotational representations: rotation vectors, rotation matrices, quaternions, ZYZ Euler angles, ZYX Euler angles, and roll-pitch-yaw. These are defined as:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT>
+<CENTER>
+<TABLE>
+<TR>
+<TABLE >
+<TR>
+<TD WIDTH=200>
+</FONT><U><FONT FACE="TIMES" SIZE=2>C</FONT><FONT FACE="Courier" SIZE=2> struct</U></FONT>
+</TD>
+<TD WIDTH=250>
+<FONT FACE="TIMES" SIZE=2><U>C++ </FONT><FONT FACE="Courier" SIZE=2>class</U></FONT>
+</TD>
+<TD  WIDTH=200>
+<FONT FACE="TIMES" SIZE=2><U>fields</U>
+</TD>
+<TD>
+<U>C abbreviation</U>
+</TD>
+</TR>
+<TR><TD>PmRotationVector</TD><TD>PM_ROTATION_VECTOR</TD><TD>s, x, y, z</TD><TD>Rot</TD></TR>
+<TR><TD>PmRotationMatrix</TD><TD>PM_ROTATION_MATRIX</TD><TD>PmCartesian x, y, z</TD><TD>Mat</TD></TR>
+<TR><TD>PmQuaternion</TD><TD>PM_QUATERNION</TD><TD>s, x, y, z</TD><TD>Quat</TD></TR>
+<TR><TD>PmEulerZyz</TD><TD>PM_EULER_ZYZ</TD><TD>z, y, zp</TD><TD>Zyz</TD></TR>
+<TR><TD>PmEulerZyx</TD><TD>PM_EULER_ZYX</TD><TD>z, y, x</TD><TD>Zyx</TD></TR>
+<TR><TD>PmRpy</TD><TD>PM_RPY</TD><TD>r, p, y</TD><TD>Rpy</TD></TR>
+</TABLE>
+</CENTER>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY"></P>
+
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">Fields are of type </FONT><FONT FACE="Courier">double</FONT><FONT FACE="TIMES">, except for a </FONT><FONT FACE="Courier">PmRotationMatrix</FONT><FONT FACE="TIMES">, whose fields are of type </FONT><FONT FACE="Courier">PmCartesian</FONT><FONT FACE="TIMES">. Values for the fields of each type may be constrained. For example, each </FONT><FONT FACE="Courier">PmCartesian</FONT><FONT FACE="TIMES"> element of a </FONT><FONT FACE="Courier">PmRotationMatrix</FONT><FONT FACE="TIMES"> must have a magnitude of 1.0 (each must be a unit vector), and they must be mutually perpendicular. Normalization functions are provided which take any of these rotational types as their first argument, a pointer to the same rotational type as their second argument, and place the normalization of the first into the second.</FONT><FONT FACE="Courier"> PM_NORM_ERR</FONT><FONT FACE="TIMES"> is returned if the normalization could not take place. This will occur if the first argument is entirely 0. For example, normalizing a </FONT><FONT FACE="Courier">PmQuaternion q</FONT><FONT FACE="TIMES"> looks like:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PmQuaternion q;</P>
+<P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">pmQuatNorm(q, &amp;q);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">C++ programmers can use the overloaded function </FONT><FONT FACE="Courier">norm()</FONT><FONT FACE="TIMES"> to accomplish the same thing in a cleaner way:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PM_QUATERNION q;</P>
+<P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">q = norm(q);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">Since the error code is not returned directly, C++ programmer should check </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES"> to make sure the conversion was successful.</P>
+<P ALIGN="JUSTIFY">All rotational representations are equivalent, in the sense that a rotation in space expressed in one representation can be converted to any of the other representations. The numbers will in general be different, but the rotation they represent is the same. POSEMATH provides functions to convert between these representations. Using the POSEMATH naming conventions, these function declarations are:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">int pmRotMatConvert(PmRotationVector, PmRotationMatrix *);</P>
+<P ALIGN="JUSTIFY">int pmQuatZyzConvert(PmQuaternion, PmEulerZyz *);</P>
+<P ALIGN="JUSTIFY">int pmZyxRpyConvert(PmEulerZyz, PmRpy *);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">(Not all of the functions are listed). The first argument is the type to be converted from. The second argument is a pointer to the object to be converted to. The integer return value is 0 if successful, </FONT><FONT FACE="Courier">PM_NORM_ERR</FONT><FONT FACE="TIMES"> if unsuccessful, or </FONT><FONT FACE="Courier">PM_IMPL_ERR</FONT><FONT FACE="TIMES"> if the function is unimplemented. For example, converting from a </FONT><FONT FACE="Courier">PmQuaternion q</FONT><FONT FACE="TIMES"> to a </FONT><FONT FACE="Courier">PmRotationMatrix m</FONT><FONT FACE="TIMES"> looks like:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">pmQuatMatConvert(q, &amp;m);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">For C++ programmers, converting between types can be done using the </FONT><FONT FACE="Courier">=</FONT><FONT FACE="TIMES"> operator, which has been overloaded to call these functions. Extending the above example, converting from a </FONT><FONT FACE="Courier">PM_QUATERNION q</FONT><FONT FACE="TIMES"> to a </FONT><FONT FACE="Courier">PM_ROTATION_MATRIX m</FONT><FONT FACE="TIMES"> in C++ looks like:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">m = q;</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">Since the return value of the </FONT><FONT FACE="Courier">=</FONT><FONT FACE="TIMES"> operator is the converted type, the programmer should check the value of </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES"> for proper conversion if desired.</P>
+<B><P ALIGN="JUSTIFY">Axis-Angle Representations</P>
+</B><P ALIGN="JUSTIFY">Another rotational type, the axis-angle, is provided for representing rotations about one of the principal Cartesian axes by a given angle. This type, </FONT><FONT FACE="Courier">PmAxis</FONT><FONT FACE="TIMES">, is the same for both C and C++ and may take the values </FONT><FONT FACE="Courier">PM_X</FONT><FONT FACE="TIMES">, </FONT><FONT FACE="Courier">PM_Y</FONT><FONT FACE="TIMES">, and </FONT><FONT FACE="Courier">PM_Z</FONT><FONT FACE="TIMES"> only, which represent rotations about the X, Y, and Z Cartesian axes, respectively. These functions are provided:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">int pmAxisAngleQuatConvert(PmAxis, double, PmQuaternion *);</P>
+<P ALIGN="JUSTIFY">int pmQuatAxisAngleMult(PmQuaternion, PmAxis, </P>
+<P ALIGN="JUSTIFY">&#9;double, PmQuaternion *);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">The first converts a rotation about the given axis by the given angle to a quaternion. The second computes the rotation resulting from an initial quaterion in the base frame, then a rotation by the given axis-angle in the quaternion frame.</P>
+</FONT><h2><FONT FACE="HELVETICA"><P ALIGN="JUSTIFY"><A NAME="CombinedRepresentations">Combined Representations</A></P>
+</h2></FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">The complete representation of an objectÆs location and orientation in space requires both translational and rotational representations. Of the many combinations of translational and rotational types possible, the two most common have been defined. These are the homogeneous transform and the pose.</P>
+<P ALIGN="JUSTIFY">The homogeneous transform uses a Cartesian translation representation and a rotation matrix for rotation. The pose uses a Cartesian translation representation and a quaternion. These are defined as:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT>
+<CENTER>
+<TABLE>
+<TR>
+<TABLE >
+<TR>
+<TD WIDTH=200>
+</FONT><U><FONT FACE="TIMES" SIZE=2>C</FONT><FONT FACE="Courier" SIZE=2> struct</U></FONT>
+</TD>
+<TD WIDTH=250>
+<FONT FACE="TIMES" SIZE=2><U>C++ </FONT><FONT FACE="Courier" SIZE=2>class</U></FONT>
+</TD>
+<TD  WIDTH=200>
+<FONT FACE="TIMES" SIZE=2><U>fields</U>
+</TD>
+<TD>
+<U>C abbreviation</U>
+</TD>
+</TR>
+<TR><TD>PmHomogeneous</TD><TD>PM_HOMOGENEOUS</TD><TD>PmCartesian tran, PmRotationMatrix rot</TD><TD>Hom</TD></TR>
+<TR><TD>PmPose</TD><TD>PM_POSE</TD><TD>PmCartesian tran,PmQuaternion rot</TD><TD>Pose</TD></TR>
+</TABLE>
+</CENTER>
+<p></p>
+
+<P ALIGN="JUSTIFY">Since these combined representations include elements which require normalization, normalization functions are provided which take any of these combined types as their first argument, a pointer to the same combined type as their second argument, and place the normalization of the first into the second.</FONT><FONT FACE="Courier"> PM_NORM_ERR</FONT><FONT FACE="TIMES"> is returned if the normalization could not take place. For example, normalizing a </FONT><FONT FACE="Courier">PmPose p</FONT><FONT FACE="TIMES"> looks like:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">pmPoseNorm(p, &amp;p);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">C++ programmers can use the overloaded function </FONT><FONT FACE="Courier">norm()</FONT><FONT FACE="TIMES"> to accomplish the same thing in a cleaner way:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PM_POSE p;</P>
+<P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">p = norm(p);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">Since the error code is not returned directly, C++ programmer should check </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES"> to make sure the conversion was successful.</P>
+<P ALIGN="JUSTIFY">All combined representations are equivalent, in the sense that a position and orientation in space expressed in one representation can be converted to any of the other representations. The numbers will in general be different, but the position and orientation they represent is the same. POSEMATH provides functions to convert between these representations. Using the POSEMATH naming conventions, these function declarations are:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">int pmPoseHomConvert(PmPose, PmHomogeneous *);</P>
+<P ALIGN="JUSTIFY">int pmHomPoseConvert(PmHomogeneous, PmPose *);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">The first argument is the type to be converted from. The second argument is a pointer to the object to be converted to. The integer return value is 0 if successful, </FONT><FONT FACE="Courier">PM_NORM_ERR</FONT><FONT FACE="TIMES"> if unsuccessful, or </FONT><FONT FACE="Courier">PM_IMPL_ERR</FONT><FONT FACE="TIMES"> if the function is unimplemented. For example, converting from a </FONT><FONT FACE="Courier">PmPose p</FONT><FONT FACE="TIMES"> to a </FONT><FONT FACE="Courier">PmHomogeneous h</FONT><FONT FACE="TIMES"> looks like:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">pmPoseHomConvert(p, &amp;h);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">For C++ programmers, converting between types can be done using the </FONT><FONT FACE="Courier">=</FONT><FONT FACE="TIMES"> operator, which has been overloaded to call these functions. Extending the above example, converting from a </FONT><FONT FACE="Courier">PM_POSE p</FONT><FONT FACE="TIMES"> to a </FONT><FONT FACE="Courier">PM_HOMOGENEOUS h</FONT><FONT FACE="TIMES"> in C++ looks like:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">h = p;</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">Since the return value of the </FONT><FONT FACE="Courier">=</FONT><FONT FACE="TIMES"> operator is the converted type, the programmer should check the value of </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES"> for proper conversion if desired.</P>
+</FONT><h2><FONT FACE="HELVETICA"><P ALIGN="JUSTIFY"><A NAME="FunctionsAndOperators">Functions and Operators</A></P>
+</h2></FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">Mathematical operations for translational and rotational types are provided to carry out calculations typical of manipulator path planning in three-space. In general, functions that work on a particular representation will also work on other equivalent representations.</P>
+<P ALIGN="JUSTIFY">Detailed descriptions of each function are found in Appendix B.</P>
+<h3><A NAME="TranslationalFunctions">Translational Functions</A></h3>
+<P ALIGN="JUSTIFY">The translational data representations are used to represent position vectors, and all the typical vector operations have been provided. These include comparison, the dot product, cross product, norm (unit vector), magnitude, sum, difference, magnitude of difference (displacement), scalar multiply and divide, and generalized inverse. </P>
+<P ALIGN="JUSTIFY">For C functions that take two arguments, the arguments must be the same type. For C++ overloaded functions or operators that take two arguments, they may be of different type. In this case, the constructors are called to do the conversions automatically.</P>
+<P ALIGN="JUSTIFY">Return values for all the C functions are integer error codes, with the exception of the predicate functions which return 1 if it is true or 0 if not.</P>
+<P ALIGN="JUSTIFY">Return values for all the C++ functions are the result that corresponds to the last argument of the C functions. The global variable </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES"> should be checked to see if the function was successful.</P>
+<P ALIGN="JUSTIFY">Following the POSEMATH naming conventions, these functions are prefixed with </FONT><FONT FACE="Courier">pm</FONT><FONT FACE="TIMES">, the abbreviated names of their arguments, and the operation. In the table below, </FONT><FONT FACE="Courier">X</FONT><FONT FACE="TIMES"> indicates any of the translation types (</FONT><FONT FACE="Courier">PmCartesian</FONT><FONT FACE="TIMES">, </FONT><FONT FACE="Courier">PmCylindrical</FONT><FONT FACE="TIMES">, or </FONT><FONT FACE="Courier">PmSpherical</FONT><FONT FACE="TIMES">), and </FONT><FONT FACE="Courier">s</FONT><FONT FACE="TIMES"> indicates a scalar </FONT><FONT FACE="Courier">double</FONT><FONT FACE="TIMES"> type.</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT>
+<CENTER>
+<TABLE>
+<TR><TD WIDTH=200><U><FONT FACE="TIMES" SIZE=2><P ALIGN="JUSTIFY">function</U></TD><TD WIDTH=200><U>C version</U></TD><TD><U>C++ version</U></TD></TR>
+
+<TR><TD>equality predicate</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXXCompare(X,X)</td><td>==, !=</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>type conversion</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXXConvert(X,X)</td><td>=</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>dot product</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXXDot(X,X,X*)</td><td>dot(X,X)</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>cross product</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXXCross(X,X,X*)</td><td>cross(X,X)</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>magnitude</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXMag(X,s*)</td><td>mag(X)</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>normalization (unit)</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXNorm(X,X*)</td><td>norm(X)</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>norm predicate</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXIsNorm(X)</td><td>isNorm(X)</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>displacement</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXXDisp(X,X,s*)</td><td>disp(X,X)</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>sum</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXXAdd(X,X,X*)</td><td>X+X</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>difference</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXXSub(X,X,X*)</td><td>X-X</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>scalar multiply</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXScalMult(X,s,X*)</td><td>X*s, s*X</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>scalar divide</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXScalDiv(X,s,X*)</td><td>X/s</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>additive inverse</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXNeg(X,X*)</td><td>-X</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>inverse (X dot X<SUP>-1</SUP> = 1)</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXInv(X,X*)</td><td>inv(X)</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>projection</FONT><FONT FACE="Courier" SIZE=2></td><td>pmXXProj(X,X,X*)</td><td>proj(X,X)</TD></TR>
+</TABLE>
+</CENTER>
+<P ALIGN="JUSTIFY">&nbsp;</P>
+</FONT>
+<h3><A NAME="RotationalFunctions">Rotational Functions</A></h3>
+
+<P ALIGN="JUSTIFY">The rotational data representations are used to represent rotations in space of one reference frame relative to another. Functions that operate on these rotational types and combinations of translational and rotational types include comparison, normalization into valid range, checking for normal range, inverse, multiplication by a scalar (scaling the rotation about the constant direction), vector multiply (resulting in a rotation of the vector), and rotational multiply (concatenation of several rotations).</P>
+<P ALIGN="JUSTIFY">For C functions that take two arguments, the arguments must be the same type. For C++ overloaded functions or operators that take two arguments, they may be of different type. In this case, the constructors are called to do the conversions automatically.</P>
+<P ALIGN="JUSTIFY">Return values for all the C functions are integer error codes, with the exception of the predicate functions which return 1 if it is true or 0 if not.</P>
+<P ALIGN="JUSTIFY">Return values for all the C++ functions are the result that corresponds to the last argument of the C functions. The global variable </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES"> should be checked to see if the function was successful.</P>
+<P ALIGN="JUSTIFY">Following the POSEMATH naming conventions, these functions are prefixed with </FONT><FONT FACE="Courier">pm</FONT><FONT FACE="TIMES">, the abbreviated names of their arguments, and the operation. In the table below, </FONT><FONT FACE="Courier">R</FONT><FONT FACE="TIMES"> indicates any of the rotation types (</FONT><FONT FACE="Courier">PmRotationVector</FONT><FONT FACE="TIMES">, </FONT><FONT FACE="Courier">PmRotationMatrix</FONT><FONT FACE="TIMES">, </FONT><FONT FACE="Courier">PmQuaternion</FONT><FONT FACE="TIMES">, </FONT><FONT FACE="Courier">PmEulerZyz</FONT><FONT FACE="TIMES">, </FONT><FONT FACE="Courier">PmEulerZyx</FONT><FONT FACE="TIMES">, or </FONT><FONT FACE="Courier">PmRpy</FONT><FONT FACE="TIMES">), </FONT><FONT FACE="Courier">X</FONT><FONT FACE="TIMES"> indicates any of the translation types (</FONT><FONT FACE="Courier">PmCartesian</FONT><FONT FACE="TIMES">, </FONT><FONT FACE="Courier">PmCylindrical</FONT><FONT FACE="TIMES">, or </FONT><FONT FACE="Courier">PmSpherical</FONT><FONT FACE="TIMES">), and </FONT><FONT FACE="Courier">s</FONT><FONT FACE="TIMES"> indicates a scalar </FONT><FONT FACE="Courier">double</FONT><FONT FACE="TIMES"> type.</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT>
+<CENTER>
+<TABLE>
+<TR><TD WIDTH=200><U><FONT FACE="TIMES" SIZE=2><P ALIGN="JUSTIFY">function</U></TD><TD WIDTH=200><U>C version</U></TD><TD><U>C++ version</U></TD></TR>
+
+<TR><TD>equality predicate</FONT><FONT FACE="Courier" SIZE=2></td><td>pmRRCompare(R,R)</td><td>==, !=</td></tr>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>type conversion</FONT><FONT FACE="Courier" SIZE=2></td><td>pmRRConvert(R,R)</td><td>=</td></tr>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>magnitude</FONT><FONT FACE="Courier" SIZE=2></td><td>pmRMag(R,s*)</td><td>mag(R)</td></tr>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>normalization</FONT><FONT FACE="Courier" SIZE=2></td><td>pmRNorm(R,R*)</td><td>norm(R)</td></tr>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>norm predicate</FONT><FONT FACE="Courier" SIZE=2></td><td>pmRIsNorm(R)</td><td>isNorm(R)</td></tr>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>scalar multiply</FONT><FONT FACE="Courier" SIZE=2></td><td>pmRScalMult(R,s,R*)</td><td>R*s, s*R</td></tr>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>scalar divide</FONT><FONT FACE="Courier" SIZE=2></td><td>pmRScalDiv(R,s,R*)</td><td>R/s</td></tr>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>vector multiply</FONT><FONT FACE="Courier" SIZE=2></td><td>pmRXMult(R,X,X*)</td><td>R*X, X*R</td></tr>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>rotation multiply</FONT><FONT FACE="Courier" SIZE=2></td><td>pmRRMult(R,R,R*)</td><td>R*R</td></tr>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>inverse</FONT><FONT FACE="Courier" SIZE=2></td><td>pmRInv(R,R*)</td><td>inv(R), -R</td></tr>
+</TABLE>
+</CENTER>
+<P ALIGN="JUSTIFY">&nbsp;</P>
+</FONT>
+<FONT FACE="TIMES">
+<h3><A NAME="CombinedFunctions">Combined Functions</A></h3>
+
+<P ALIGN="JUSTIFY">The combined representations are used to represent the position and orientation in space of one reference frame relative to another. In POSEMATH, the position and orientation of a reference frame is termed a <I>pose</I>. Although the </FONT><FONT FACE="Courier">PmPose</FONT><FONT FACE="TIMES"> type appears to have some preference as a pose representation, both </FONT><FONT FACE="Courier">PmPose</FONT><FONT FACE="TIMES"> and </FONT><FONT FACE="Courier">PmHomogeneous</FONT><FONT FACE="TIMES"> are pose types. Poses contain both translational and rotational representations. Functions which operate on poses manipulate individual poses, and convert vectors or poses in one reference frame into another. These functions include comparison, normalization into valid range, checking for normal range, inverse, and multiplications between poses and translations, rotations, and other poses.</P>
+<P ALIGN="JUSTIFY">For C functions which take two arguments, the arguments must be the same type. For C++ overloaded functions or operators which take two arguments, they may be of different type. In this case, the constructors are called to do the conversions automatically.</P>
+<P ALIGN="JUSTIFY">Return values for all the C functions are integer error codes, with the exception of the predicate functions which return 1 if it is true or 0 if not.</P>
+<P ALIGN="JUSTIFY">Return values for all the C++ functions are the result that corresponds to the last argument of the C functions. The global variable </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES"> should be checked to see if the function was successful.</P>
+<P ALIGN="JUSTIFY">Following the POSEMATH naming conventions, these functions are prefixed with </FONT><FONT FACE="Courier">pm</FONT><FONT FACE="TIMES">, the abbreviated names of their arguments, and the operation. In the table below, </FONT><FONT FACE="Courier">R</FONT><FONT FACE="TIMES"> indicates any of the translation types (</FONT><FONT FACE="Courier">PmCartesian</FONT><FONT FACE="TIMES">, </FONT><FONT FACE="Courier">PmCylindrical</FONT><FONT FACE="TIMES">, or </FONT><FONT FACE="Courier">PmSpherical</FONT><FONT FACE="TIMES">), </FONT><FONT FACE="Courier">X</FONT><FONT FACE="TIMES"> indicates any of the translation types (</FONT><FONT FACE="Courier">PmCartesian</FONT><FONT FACE="TIMES">, </FONT><FONT FACE="Courier">PmCylindrical</FONT><FONT FACE="TIMES">, or </FONT><FONT FACE="Courier">PmSpherical</FONT><FONT FACE="TIMES">), and </FONT><FONT FACE="Courier">s</FONT><FONT FACE="TIMES"> indicates a scalar </FONT><FONT FACE="Courier">double</FONT><FONT FACE="TIMES"> type.</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT>
+<center>
+<TABLE>
+<TR><TD WIDTH=200><U><FONT FACE="TIMES" SIZE=2><P ALIGN="JUSTIFY">function</U></TD><TD WIDTH=200><U>C version</U></TD><TD><U>C++ version</U></TD></TR>
+
+<TR><TD>equality predicate</FONT><FONT FACE="Courier" SIZE=2></TD><TD>pmPPCompare(P,P)</TD><TD>==, !=</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>normalization</FONT><FONT FACE="Courier" SIZE=2></TD><TD>pmPNorm(P,P*)</TD><TD>norm(P)</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>norm predicate</FONT><FONT FACE="Courier" SIZE=2></TD><TD>pmPIsNorm(R)</TD><TD>isNorm(P)</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>inverse</FONT><FONT FACE="Courier" SIZE=2></TD><TD>pmPInv(P,P*)</TD><TD>inv(P), -P</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>vector multiply</FONT><FONT FACE="Courier" SIZE=2></TD><TD>pmPVMult(R,X,X*)</TD><TD>R*X, X*R</TD></TR>
+</FONT><FONT FACE="TIMES" SIZE=2><TR><TD>rotation multiply</FONT><FONT FACE="Courier" SIZE=2></TD><TD>pmRRMult(R,R,R*)</TD><TD>R*R</TD></TR>
+</table>
+</center>
+<P ALIGN="JUSTIFY">&nbsp;</P>
+</FONT><h2><FONT FACE="HELVETICA"><P ALIGN="JUSTIFY"><A NAME="AutomaticConversions">Automatic Conversions in C++</A></P>
+</h2></FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">As of this writing, not all of the C conversion functions have been implemented. C programmers should check Appendix B for functions that they intend to use. Some functions whose existence is implied may be stubbed to return </FONT><FONT FACE="Courier">PM_IMPL_ERR</FONT><FONT FACE="TIMES">, or not exist at all. This apparent laziness is due to the combinatorics of the conversion functions, particularly among the rotational types.</P>
+<P ALIGN="JUSTIFY">For example, there is no C function </FONT><FONT FACE="Courier">pmZyzRpyConvert</FONT><FONT FACE="TIMES"> which converts a </FONT><FONT FACE="Courier">PmEulerZyz</FONT><FONT FACE="TIMES"> to a </FONT><FONT FACE="Courier">PmRpy</FONT><FONT FACE="TIMES">. The function may not exist, in which case the compiler will flag calls to it, or it may be stubbed to return PM_IMPL_ERR, in which case a run-time error will occur. Ultimately, all the C functions will be implemented in some fashion, but currently they are not. In this case, the C programmer must convert the ZYZ Euler to a rotation matrix, and from a rotation matrix to a roll-pitch-yaw representation, as shown below for the </FONT><FONT FACE="Courier">PmEulerZyz zyz</FONT><FONT FACE="TIMES"> and </FONT><FONT FACE="Courier">PmRpy rpy</FONT><FONT FACE="TIMES">:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">PmRotationMatrix mat;</P>
+<P ALIGN="JUSTIFY">pmZyzMatConvert(zyz, &amp;mat);</P>
+<P ALIGN="JUSTIFY">pmMatRpyConvert(mat, &amp;rpy);</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">C++ programmers are luckier. Each data representation class has constructors and assignment operators which initialize or assign its representation from any other representation. This may have been accomplished directly, if equivalent C conversion functions exist, or via conversion to some intermediate type. C++ programmers can use the </FONT><FONT FACE="Courier">=</FONT><FONT FACE="TIMES"> operator directly:</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><FONT FACE="Courier"><P ALIGN="JUSTIFY">rpy = zyz;</P>
+</FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY"></P>
+<P ALIGN="JUSTIFY">In this case, the POSEMATH implementation for </FONT><FONT FACE="Courier">PM_RPY::operator = (PM_EULER_ZYZ)</FONT><FONT FACE="TIMES"> does the conversion to the intermediate rotation matrix format and out again automatically.</P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><h2><FONT FACE="HELVETICA" SIZE=4><P ALIGN="CENTER"><A NAME="AppendixB">Appendix B: Programming Reference</A></P>
+</h2></FONT><FONT FACE="TIMES"><P ALIGN="JUSTIFY">C functions are intended be used by C programmers, since the arguments are of the C types. C++ programmers should use the C++ overloaded operators and functions.</P>
+<P ALIGN="JUSTIFY">C++ programmers can use the C functions by explicitly converting the C++ types to C types, and back again. </FONT><FONT FACE="Courier">toType(src, dst)</FONT><FONT FACE="TIMES"> macros have been provided to accomplish this, where </FONT><FONT FACE="Courier">Type</FONT><FONT FACE="TIMES"> is the C abbrevation (e.g., </FONT><FONT FACE="Courier">Cart</FONT><FONT FACE="TIMES">, </FONT><FONT FACE="Courier">Cyl</FONT><FONT FACE="TIMES">, </FONT><FONT FACE="Courier">Pose</FONT><FONT FACE="TIMES">), </FONT><FONT FACE="Courier">src</FONT><FONT FACE="TIMES"> is the source to be converted, and </FONT><FONT FACE="Courier">dst</FONT><FONT FACE="TIMES"> is the result. These exploit the fact that the fields for both the C and C++ data types have the same names.</P>
+<P ALIGN="JUSTIFY">Unless indicated otherwise, all functions return an integer error code, which is 0 upon success or one of the error codes defined in </FONT><FONT FACE="Courier">posemath.h</FONT><FONT FACE="TIMES">. This error code is also written to the global variable </FONT><FONT FACE="Courier">pmErrno</FONT><FONT FACE="TIMES">.</P>
+<P ALIGN="JUSTIFY">There is a bias in the POSEMATH implementation toward using </FONT><FONT FACE="Courier">PmCartesian</FONT><FONT FACE="TIMES"> for translation types, </FONT><FONT FACE="Courier">PmQuaternion</FONT><FONT FACE="TIMES"> for rotational types, and </FONT><FONT FACE="Courier">PmPose</FONT><FONT FACE="TIMES"> for pose types. This is primarily due to the computational efficiency of the quaternion, meaning that programs that use quaternion representations will execute faster than programs using, for example, rotation matrices or Euler angles. In the descriptions of the functions that follow, any translational type can be substituted for </FONT><FONT FACE="Courier">PmCartesian</FONT><FONT FACE="TIMES">, any rotational type can be substituted for </FONT><FONT FACE="Courier">PmQuaternion</FONT><FONT FACE="TIMES">, and any pose type can be substituted for </FONT><FONT FACE="Courier">PmPose</FONT><FONT FACE="TIMES">. </P>
+<P ALIGN="JUSTIFY"></P>
+</FONT><P ALIGN="JUSTIFY"><b>pmQuatCartMult</B>(PmQuaternion q, PmCartesian v, PmCartesian * vout);</P>
+<P ALIGN="JUSTIFY"></P><DIR>
+
+<P ALIGN="JUSTIFY">Sets vout to the vector resulting from a rotation of v specified by q. Corresponds to C++ operator *, q * v. Operator * is not commutative.</P>
+<P ALIGN="JUSTIFY"></P></DIR>
+
+<B><P ALIGN="JUSTIFY">pmQuatQuatMult</B>(PmQuaternion q1, PmQuaternion q2, PmCartesian * qout);</P>
+<P ALIGN="JUSTIFY"></P><DIR>
+
+<P ALIGN="JUSTIFY">Sets qout to the quaternion representing a rotation first by q2 in the base frame, then by q1 in the q2 frame. Corresponds to C++ operator *, which is not commutative: q1*q2 <FONT FACE="Symbol">&#185;</FONT>
+ q2*q1, in general.</P>
+<P ALIGN="JUSTIFY"></P></DIR>
+
+<B><P ALIGN="JUSTIFY">pmPoseCartMult</B>(PmPose p, PmCartesian v, PmCartesian vout);</P>
+<P ALIGN="JUSTIFY"></P><DIR>
+
+<P ALIGN="JUSTIFY">Sets vout to the vector representing a transformation by the pose p. Corresponds to C++ operator *, p * v. Operator * is not commutative (in fact, v * p yields p whose translation is added by v).</P>
+<P ALIGN="JUSTIFY"></P></DIR>
+
+<B><P ALIGN="JUSTIFY">pmPosePoseMult</B>(PmPose p1, PmPose p2, PmPose pout);</P>
+<P ALIGN="JUSTIFY"></P><DIR>
+
+<P ALIGN="JUSTIFY">Sets pout to the pose representating a transformation first by p1 in the base frame, then by p2 in the p1 frame. Corresponds to C++ operator *, which is not commutative: p1*p2 <FONT FACE="Symbol">&#185;</FONT>
+ p2*p1, in general.</P>
+<P ALIGN="JUSTIFY"></P></DIR>
+</FONT></BODY>
+</HTML>

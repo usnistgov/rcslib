@@ -1,0 +1,52 @@
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../../../..
+endif
+
+
+PACKAGE_NAME = diagapplet.plotter
+
+PLAT=java
+
+JAVA_SOURCES = \
+	PlotPoint.java \
+	PlotData.java \
+	PlotFrame.java \
+	PlotGraphScreenMap.java \
+	PlotGraph.java \
+	dplotter.java \
+	dplotterFrame.java
+
+include ../../../Makefile.rcs
+
+
+plotter.jar: $(DEVP_DIR)/lib/plotter.jar
+
+.PHONY: plotter.jar
+
+all: plotter.jar
+
+ADD_MANIFEST_INFO = 1
+
+ifdef ADD_MANIFEST_INFO
+
+$(DEVP_DIR)/lib/plotterJarInfo.txt: plotterJarInfo.txt
+	(cd ../../..; \
+	rcs_version=`rlog -l -h rcs.hh | grep head | awk '{print $$2}'`; \
+	echo $$rcs_version; \
+	cd java/diagapplet/plotter; \
+	cat < $^ | sed s/RCS_VERSION_STRING/$$rcs_version/ > $@;)
+
+
+
+$(DEVP_DIR)/lib/plotter.jar: $(DEVP_CLASSES) $(DEVP_DIR)/lib/plotterJarInfo.txt
+	(cd $(DEVP_DIR)/lib; $(JAR) -cmf0 plotterJarInfo.txt plotter.jar rcs/utils diagapplet/utils diagapplet/plotter;)
+
+
+else
+
+
+$(DEVP_DIR)/lib/plotter.jar: $(DEVP_CLASSES)
+	(cd $(DEVP_DIR)/lib; $(JAR) -cf0 plotter.jar rcs/utils diagapplet/utils diagapplet/plotter;)
+
+endif

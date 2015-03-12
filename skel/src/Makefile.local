@@ -1,0 +1,69 @@
+# local makefile for building NML C++ files from headers
+
+# build the NML source, and then run the "all" target in case there's
+# anything else to do
+nml : \
+	skelIntf.cc \
+	supIntf.cc \
+	subIntf.cc \
+	all
+
+# get RCSLIB_DIR, "all" et al, although we really only need RCSLIB_DIR
+include Makefile
+
+# check for java and generate code if we have it
+ifeq (x$(JAVA), x)
+
+# don't have java, so just print notice
+%.cc : %.hh
+	@ echo can\'t find java, so not generating $@
+
+else
+# have java, so generate code
+
+CODEGEN = $(RCSLIB_DIR)/bin/CodeGenCmdLine.jar
+TEMP_CODEGEN = temp.gen
+
+ifeq (x$(host_os), xcygwin)
+# on cygwin, so use Windows paths
+
+%.cc : %.hh
+	- \rm -f $(TEMP_CODEGEN)
+	echo load `cygpath -a -w skel.hh` >> $(TEMP_CODEGEN)
+	echo load `cygpath -a -w $<` >> $(TEMP_CODEGEN)
+	echo clear >> $(TEMP_CODEGEN)
+	echo select_from_file `cygpath -w $<` >> $(TEMP_CODEGEN)
+	echo set_format_function $(@:%.cc=%)_format >> $(TEMP_CODEGEN)
+	echo generate_symbol_lookups=true >> $(TEMP_CODEGEN)
+	echo generate C++ constructor \>$@ >> $(TEMP_CODEGEN)
+	echo generate C++ format \>$@ >> $(TEMP_CODEGEN)
+	echo generate C++ update \>$@ >> $(TEMP_CODEGEN)
+	echo exit >> $(TEMP_CODEGEN)
+	java -jar `cygpath -a -w $(CODEGEN)` script=`cygpath -a -w $(TEMP_CODEGEN)`
+#	- \rm -f $(TEMP_CODEGEN)
+
+else
+# not on cygwin, so use Unix paths
+
+%.cc : %.hh
+	- \rm -f $(TEMP_CODEGEN)
+	echo load skel.hh >> $(TEMP_CODEGEN)
+	echo load $< >> $(TEMP_CODEGEN)
+	echo clear >> $(TEMP_CODEGEN)
+	echo select_from_file $< >> $(TEMP_CODEGEN)
+	echo set_format_function $(@:%.cc=%)_format >> $(TEMP_CODEGEN)
+	echo generate_symbol_lookups=true >> $(TEMP_CODEGEN)
+	echo generate C++ constructor \>$@ >> $(TEMP_CODEGEN)
+	echo generate C++ format \>$@ >> $(TEMP_CODEGEN)
+	echo generate C++ update \>$@ >> $(TEMP_CODEGEN)
+	echo exit >> $(TEMP_CODEGEN)
+	java -jar $(CODEGEN) script=$(TEMP_CODEGEN)
+	- \rm -f $(TEMP_CODEGEN)
+
+endif 
+# ifeq (x$host_os, xcygwin)
+
+endif
+# ifeq (x$(JAVA), x)
+
+.PHONY : nml

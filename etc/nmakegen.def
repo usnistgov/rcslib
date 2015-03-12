@@ -1,0 +1,325 @@
+# Makefile.generic:
+# Makefile definitions to be !INCLUDEd in makefiles 
+#  for RCS Utilities and Applications
+#  (non-platform specific definitions only)
+# - compatible with GNU Make versions 3.55+
+
+
+#Prevent Multiple Inclusion Warnings
+#!IFNDEF GENERIC_MAKEFILE_ALREADY_INCLUDED
+GENERIC_MAKEFILE_ALREADY_INCLUDED = 1
+
+
+# Set default platform
+!IFNDEF PLAT
+PLAT=win32msc
+!ENDIF
+
+# Set default target 
+!IFNDEF DEFAULT_TARGET
+DEFAULT_TARGET = all
+!ENDIF
+
+default: $(DEFAULT_TARGET)
+
+# Set default RCS directory
+!IFNDEF RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR = c:\rcslib
+!ENDIF
+
+
+!IFNDEF MAKEFILES_DIR
+MAKEFILES_DIR = $(RCSLIB_MAIN_DIR)\etc
+!ENDIF
+
+echo_plat:  
+	echo $(MAKEFILES_DIR)
+
+.PHONY: echo_plat
+
+!IFNDEF RCS_LIBRARY_NAME
+RCS_LIBRARY_NAME = librcs.a
+!ENDIF
+
+!IFNDEF PHONY_INCLUDE_DIR
+PHONY_INCLUDE_DIR = $(MAKEFILES_DIR)\phony\include
+!ENDIF
+
+!IFNDEF PLAT
+PLAT = $(osrev)
+!ENDIF
+
+
+# Define variables for directories. 
+
+# The directory stucture under APPDIR or USER_DIR should look like:
+# APPDIR\
+#       src\                    \* Active Source Files *\
+#          
+#       plat\
+#               sunos4\ . . .
+#               sunos5\ . . .
+#               vxworks5.1\ . . .
+# where sunos4, sunos5, vxworks5.1 etc are  possible values for $(PLAT)
+# Each platform directory should have a directory structure under it like:
+# APP_PLAT\
+#               src\            /* Archived Source files. */
+#               lib\            /* Object and Library files. */
+#               bin\            /* Binaries and executables. */
+#               !INCLUDE\       /* .h and .hh files */
+
+RCS_INCLUDE = $(RCSLIB_MAIN_DIR)\plat\$(PLAT)\include
+RCS_PLATBIN  =  $(RCSLIB_MAIN_DIR)\plat\$(PLAT)\bin
+RCS_PLATLIB  = $(RCSLIB_MAIN_DIR)\plat\$(PLAT)\lib
+
+
+RCS_LIB_DIR = $(RCS_PLATLIB)
+RCS_BIN_DIR = $(RCS_PLATBIN)
+RCS_INCLUDE_DIR = $(RCS_INCLUDE)
+
+# Set default application directory.
+!IFNDEF APPDIR
+APPDIR = $(RCSDIR)
+!ENDIF
+
+# Set default user directory.
+!IFNDEF USER_DIR
+USER_DIR = $(HOME)\$(notdir $(APPDIR))
+!ENDIF
+
+# Set default compiler setup
+!IFNDEF COMPILER_SETUP
+COMPILER_SETUP = test
+!ENDIF
+
+APP_PLAT  =  $(APPDIR)\plat\$(PLAT)
+USER_PLAT = $(USER_DIR)\plat\$(PLAT)
+
+# Release Directories and Files
+
+RELEASE_DIR = $(APP_PLAT)
+RELEASE_INCLUDE_DIR = $(RELEASE_DIR)\include
+RELEASE_LIB_DIR = $(RELEASE_DIR)\lib
+RELEASE_BIN_DIR = $(RELEASE_DIR)\bin
+RELEASE_SRC_DIR  = $(RELEASE_DIR)\src
+
+!IFNDEF ARCHIVE_DIRECTORY
+ARCHIVE_DIRECTORY = $(APPDIR)\archive
+!ENDIF
+
+# Development Directories and Files
+
+DEVP_DIR = $(USER_PLAT)
+DEVP_INCLUDE_DIR = $(DEVP_DIR)\include
+DEVP_SRC_DIR  = $(DEVP_DIR)\src
+DEVP_LIB_DIR = $(DEVP_DIR)\lib
+DEVP_BIN_DIR = $(DEVP_DIR)\bin
+
+# Include the platform specific Makefile definitions.
+!INCLUDE $(MAKEFILES_DIR)\$(PLAT).def
+
+
+RCS_LIBRARY = $(RCS_PLATLIB)\rcs.lib
+
+!IFNDEF JAVA_RUNTIME
+
+!IFDEF JAVA_TOOLS_DIR
+JAVA_RUNTIME = $(JAVA_TOOLS_DIR)\java
+
+!ELSE
+
+JAVA_RUNTIME = java
+
+!ENDIF
+
+!ENDIF
+
+# Generic patterns
+
+# Pattern rules for C and C++ compilation 
+
+.IGNORE:
+
+.c{$(DEVP_LIB_DIR)}.obj:
+	$(CC)  /c $< $(LOCAL_CFLAGS)  \
+	 -I$(DEVP_INCLUDE_DIR) -I$(RELEASE_INCLUDE_DIR) -I$(RCS_INCLUDE) \
+	$(CFLAGS)  /Fo$@ 
+
+
+$(CPLUSPLUS_EXTENSION){$(DEVP_LIB_DIR)}.obj:
+	$(CPLUSPLUS)  /c $< $(LOCAL_CFLAGS)  $(LOCAL_CPLUSPLUSFLAGS)\
+	-I$(DEVP_INCLUDE_DIR) -I$(RELEASE_INCLUDE_DIR) -I$(RCS_INCLUDE) \
+	 $(CFLAGS) $(CPLUSPLUSFLAGS)  /Fo$@
+
+.c{$(DEVP_LIB_DIR)\$(SUB_LIB_DIR)}.obj:
+	$(CC) /c $< $(LOCAL_CFLAGS) -I$(DEVP_INCLUDE_DIR) \
+	 -I$(RCS_INCLUDE) $(CFLAGS)  /Fo$@ )
+
+
+.$(CPLUSPLUS_EXTENSION){$(DEVP_LIB_DIR)\$(SUB_LIB_DIR)}.obj:
+	$(CPLUSPLUS) /c $< $(LOCAL_CFLAGS)  $(LOCAL_CPLUSPLUSFLAGS)\
+	-I$(DEVP_INCLUDE_DIR) -I$(RCS_INCLUDE) \
+	 $(CFLAGS) $(CPLUSPLUSFLAGS)  /Fo$@ 
+
+
+
+# Phony Targets
+
+!IFDEF NO_COMPILING
+all: headers sources
+
+!ELSE 
+all: headers sources $(DEVP_OBJS) $(DEVP_LIBS) $(DEVP_BINS)
+
+!ENDIF
+
+sources: sources_commands
+
+sources_commands:  $(HEADERS)
+	copy *.$(CPLUSPLUS_EXTENSION) $(DEVP_SRC_DIR)
+	copy *.c $(DEVP_INCLUDE_DIR)
+
+
+headers: headers_commands
+
+
+headers_commands:  $(HEADERS)
+	copy *.hpp $(DEVP_INCLUDE_DIR)
+	copy *.hh $(DEVP_INCLUDE_DIR)
+	copy *.hxx $(DEVP_INCLUDE_DIR)
+	copy *.h $(DEVP_INCLUDE_DIR)
+
+
+clean_all: clean delete
+
+clean: clean_commands
+
+clean_commands:
+	-del  $(DEVP_OBJS)
+	-del  $(DEVP_LIBS)
+	-del  $(DEVP_BINS)
+	-del  $(DEVP_HEADERS)
+
+
+delete:  delete_commands
+
+delete_commands:
+	-del  $(RELEASE_OBJS)
+	-del  $(RELEASE_LIBS)
+	-del  $(RELEASE_SRCS)
+	-del  $(RELEASE_BINS)
+	-del  $(RELEASE_HEADERS)
+
+
+!IFDEF TOP_LEVEL
+install: all 
+	-copy *.$(CPLUSPLUS_EXTENSION) $(RELEASE_SRC_DIR)
+	-copy *.c $(RELEASE_SRC_DIR)
+	-copy *.h $(RELEASE_INCLUDE_DIR)
+	-copy *.hh $(RELEASE_INCLUDE_DIR)
+	-copy *.hpp $(RELEASE_INCLUDE_DIR)
+	-copy $(DEVP_BIN_DIR)\*.exe $(RELEASE_BIN_DIR)
+	-copy $(DEVP_BIN_DIR)\*.dll $(RELEASE_BIN_DIR)
+	-copy $(DEVP_BIN_DIR)\*.lib $(RELEASE_BIN_DIR)
+	-copy $(DEVP_BIN_DIR)\*.com $(RELEASE_BIN_DIR)
+	-copy $(DEVP_LIB_DIR)\*.lib $(RELEASE_LIB_DIR)
+
+!ELSE
+
+install: all 
+	-copy *.$(CPLUSPLUS_EXTENSION) $(RELEASE_SRC_DIR)
+	-copy *.c $(RELEASE_SRC_DIR)
+	-copy *.h $(RELEASE_INCLUDE_DIR)
+	-copy *.hh $(RELEASE_INCLUDE_DIR)
+	-copy *.hpp $(RELEASE_INCLUDE_DIR)
+
+!ENDIF
+
+
+print_variables:
+	-@echo OBJS = $(OBJS)
+	-@echo LIBS = $(LIBS)
+	-@echo BINS = $(BINS)
+	-@echo SRCS = $(SRCS)
+	-@echo HEADERS = $(HEADERS)
+	-@echo DEVP_OBJS = $(DEVP_OBJS)
+	-@echo DEVP_LIBS = $(DEVP_LIBS)
+	-@echo DEVP_BINS = $(DEVP_BINS)
+	-@echo DEVP_SRCS = $(DEVP_SRCS)
+	-@echo DEVP_HEADERS = $(DEVP_HEADERS)
+	-@echo RELEASE_OBJS = $(RELEASE_OBJS)
+	-@echo RELEASE_LIBS = $(RELEASE_LIBS)
+	-@echo RELEASE_BINS = $(RELEASE_BINS)
+	-@echo RELEASE_SRCS = $(RELEASE_SRCS)
+	-@echo RELEASE_HEADERS = $(RELEASE_HEADERS)
+
+
+# Declare PHONY targets to be PHONY 
+
+# load_source: $(OBJECT_CENTER_SRC_FILES) loadsource_message
+
+# load_source_message:
+#       echo $(OBJECT_CENTER_SRC_FILES)
+# .PHONY load_source load_source_message
+
+.PHONY: all install depend depend_commands force_install force_install_commands
+
+.PHONY: delete delete_commands sources headers
+
+.PHONY: clean clean_commands clean_all log_install_message sources_message
+
+#.PHONY: run_setup_script
+
+
+
+.PRECIOUS: $(SRCS) $(HEADERS) $(RELEASE_SRCS) $(RELEASE_HEADERS)
+
+
+#!ENDIF 
+# to match !IFNDEF MAKEFILE_GENERIC_ALREADY_INCLUDED
+#!ENDIF
+
+
+# Create a phony target for debug purposes.
+
+printenv: 
+	-@echo PLAT = $(PLAT)
+	-@echo RCS_INSTALL_DIRECTORY = $(RCS_INSTALL_DIRECTORY)
+	-@echo RCSLIB_MAIN_DIR = $(RCSLIB_MAIN_DIR)
+	-@echo GENERIC_MAKEFILE = $(GENERIC_MAKEFILE)
+	-@echo APPDIR = $(APPDIR)
+	-@echo USER_DIR = $(USER_DIR)
+	-@echo MAKEFILES_DIR = $(MAKEFILES_DIR)
+	-@echo RCS_LIBRARY_NAME = $(RCS_LIBRARY_NAME)
+	-@echo PHONY_INCLUDE_DIR = $(PHONY_INCLUDE_DIR)
+	-@echo RCS_INCLUDE = $(RCS_INCLUDE)
+	-@echo RCS_PLATBIN = $(RCS_PLATBIN)
+	-@echo RCS_PLATLIB = $(RCS_PLATLIB)
+	-@echo RCS_LIBRARY = $(RCS_LIBRARY)
+	-@echo ARCHIVE_DIRECTORY = $(ARCHIVE_DIRECTORY)
+	-@echo CFLAGS = $(CFLAGS)
+	-@echo LOCAL_CFLAGS = $(LOCAL_CFLAGS)
+	-@echo CPLUSPLUSFLAGS = $(CPLUSPLUSFLAGS)
+	-@echo LOCAL_CPLUSPLUSFLAGS = $(LOCAL_CPLUSPLUSFLAGS)
+	-@echo DEFAULT_TARGET = $(DEFAULT_TARGET)
+	-@echo RELEASE_DIR = $(RELEASE_DIR)
+	-@echo RELEASE_INCLUDE_DIR = $(RELEASE_INCLUDE_DIR)
+	-@echo RELEASE_LIB_DIR = $(RELEASE_LIB_DIR)
+	-@echo RELEASE_BIN_DIR = $(RELEASE_BIN_DIR)
+	-@echo RELEASE_SRC_DIR = $(RELEASE_SRC_DIR)
+	-@echo RELEASE_HEADERS = $(RELEASE_HEADERS)
+	-@echo RELEASE_LIBS = $(RELEASE_LIBS)
+	-@echo RELEASE_OBJS = $(RELEASE_OBJS)
+	-@echo RELEASE_BINS = $(RELEASE_BINS)
+	-@echo DEVP_DIR = $(DEVP_DIR)
+	-@echo DEVP_INCLUDE_DIR = $(DEVP_INCLUDE_DIR)
+	-@echo DEVP_LIB_DIR = $(DEVP_LIB_DIR)
+	-@echo DEVP_BIN_DIR = $(DEVP_BIN_DIR)
+	-@echo DEVP_SRC_DIR = $(DEVP_SRC_DIR)
+	-@echo DEVP_HEADERS = $(DEVP_HEADERS)
+	-@echo DEVP_LIBS = $(DEVP_LIBS)
+	-@echo DEVP_OBJS = $(DEVP_OBJS)
+	-@echo DEVP_BINS = $(DEVP_BINS)
+	-@printenv
+
+.PHONY: printenv

@@ -1,0 +1,333 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<TITLE>RCS-Tools-Walk-Through-UNIX-version</TITLE>
+</HEAD>
+BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="551A8B" ALINK="#FF0000" >
+<B><FONT FACE="Arial" SIZE=4><P>RCS Tools Walk-through (UNIX-Version)</P>
+</FONT><FONT FACE="Arial"><P>Introduction</P>
+</B></FONT><P>The Real-Time Control System (RCS) tools include C++ class libraries, Java Programs, scripts, and makefiles. This walk-through provides step by step instructions to build a sample application and test it using the RCS tools.  If you have any problems following these instructions, please contact <A HREF="mailto:shackle@cme.nist.gov">Will Shackleford</A>. The example will be a single axis machine tool controller. 
+You may also download the example controller instead of building it yourself at <A HREF="ftp://isdftp.cme.nist.gov/pub/emc/rcslib/rcs_ex.tar.Z">ftp://isdftp.cme.nist.gov/pub/emc/rcslib/rcs_ex.tar.Z</A></P>
+<OL>
+
+<LI>If you have not already done so, install the Java Developer's Kit and the RCS Library. The Java Developer's Kit can be obtained from <A HREF="http://www.javasoft.com/">http://www.javasoft.com/</A>. You will need both the C++ and Java versions of the RCS Library for this exercize. Go to <A HREF="http://isd.cme.nist.gov/proj/rcs_lib/getrcs.html">http://isd.cme.nist.gov/proj/rcs_lib/getrcs.html</A> for instructions on downloading and installing the RCS Library. ( NOTE for NIST ISD Staff: The RCS Library is installed in /proj/rcslib and the Java Developer's Kit is installed in /depot/jdk. )</LI>
+<LI>Make a  directory called rcs_ex and cd to it.</LI>
+
+<LI>Double Click on the RCS-Design shortcut, which should bring up this: <BR>
+<IMG SRC="Image1.gif" ></LI>
+<LI>This is the options screen of the RCS-Design tool. Under Java Command replace "java" with the complete path to the Java Runtime program. Under "Java Setup" add "SET CLASSPATH=" and the complete path to the classes.zip file. Switch to the Hierarchy Screen by selecting "Hierarchy" from the drop-down list in the upper-left corner which currently says "Options". The screen should look like this: <BR>
+<IMG SRC="Image3.gif" ></LI>
+<LI>In the text field under "Add Module", type "emove" and press enter. Do the same for prim and tool. Select the prim module, and add servo. When your done the hierarchy should look like this: <BR>
+<IMG SRC="Image4.gif" ></LI>
+<LI>In this example, we are building a controller for a machine tool. The emove level will accept commands to drill to a certain position or to change the drill bit. The tool controller will control the hardware necessary to change the drill bit once the position is moved back to zero. The prim controller will break down large moves from the emove level into small increments to send commanded positions to the servo module. The servo module will modify the output to a motor to make the actual position track the commanded position as closely as possible.</LI>
+<LI>Select the emove module. Select "Commands" from the drop-down list in the middle of the left side that currently says "Subordinates". Under "Add Command", type "goto" and press enter. Add the command "change_tool". The screen should look like this: <BR>
+<IMG SRC="Image5.gif" ></LI>
+<LI>Select the prim module and add the command "goto", select the tool module and add the command "change_tool", select the servo module and add the command "goto".</LI>
+<LI>Select "Loops" from the drop-down list in the upper left that currently says "Hierarchy". The screen should look like this: <BR>
+<IMG SRC="Image6.gif" ></LI>
+<LI>By default the tool assigns all the modules to the same loop at the same cycle time. However I want to run the servo module 5 times faster than the others, so I need to assign it to its own loop. Type "servo" under "Add Main Loop" and press enter. With rcs_ex selected under Main Loops click servo under "Modules In Loop" so that it will not be selected. Select servo under "Main Loops", then under "Modules In Loop" select servo. With servo selected under "Main Loops", enter 0.02 under "Cycle Time".</LI>
+<LI>To check that the last step was correct. Select "rcs_ex" under "Main Loops". Under "Modules In Loop", emove, tool, and prim should be selected but servo should not and the cycle time should be 0.1. The screen should look like this: <BR>
+<IMG SRC="Image7.gif" ></LI>
+<LI>Select "servo" under "Main Loops". Under "Modules In Loop" only servo should be selected. The cycle time should be 0.02. The screen should look like this: <BR>
+<IMG SRC="Image8.gif" ></LI>
+<LI>Press the button that says "Create Source" to create the first version of our controller. Wait until a dialog box says, "RCS Application Created" then click on OK.</LI>
+<LI>Select "Files" from the drop-down list in the upper-left. Select "src/intf/emoven.hpp" from the list of "Application Files". The screen should look like this: <BR>
+<IMG SRC="Image9.gif" ></LI>
+<LI>Emoven.hpp is a C++ header file that defines the messages that the emove module will accept as commands or provide as status. To add some variables to the status message emove provides to the rest of the world paste the <B>bold</B> lines into the text area on the right. (When I copied from Internet Explorer half the new lines were lost. If you have Netscape handy, you may want to switch to it.)</LI>
+<PRE>class EMOVE_STATUS : public RCS_STAT_MSG
+{
+public:
+
+&#9;//Constructor
+&#9;EMOVE_STATUS();
+
+&#9;// CMS Update Function
+&#9;void update(CMS *);
+
+&#9;// Place custom variables here.
+&#9;<B>int tool;
+&#9;double position;
+</B>};</PRE>
+<LI>Add the <B>bold</B> lines to the command messages so we will be able to tell the emove level where to go, or which tool to load.</LI>
+<PRE>class EMOVE_GOTO : public RCS_CMD_MSG
+{
+public:
+
+&#9;//Constructor
+&#9;EMOVE_GOTO();
+
+&#9;// CMS Update Function
+&#9;void update(CMS *);
+
+&#9;// Place custom variables here.
+<B>&#9;double position;
+</B>};
+
+class EMOVE_CHANGE_TOOL : public RCS_CMD_MSG
+{
+public:
+
+&#9;//Constructor
+&#9;EMOVE_CHANGE_TOOL();
+
+&#9;// CMS Update Function
+&#9;void update(CMS *);
+
+&#9;// Place custom variables here.
+<B>&#9;int tool;
+</B>};</PRE>
+<LI>Click the "Save" button to save your changes. </LI>
+<LI>Select the file "src/intf/primn.hpp" from the "Application Files" list and add the variable "double position;" to PRIM_STATUS and PRIM_GOTO. </LI>
+<LI>Select the file "src/intf/servon.hpp" from the "Application Files" list and add the variable "double position;" to SERVO_STATUS and SERVO_GOTO. </LI>
+<LI>Select the file "src/intf/tooln.hpp" from the "Application Files" list and add the variable "int tool;" to TOOL_STATUS and TOOL_GOTO. </LI>
+<LI>Select the file "src/emove/emove.cpp" from the "Application Files" list. Find the function EMOVE_MODULE::GOTO. This function will be called after the emove message recieves the EMOVE_GOTO command, and again every 100 milliseconds after that until the command is complete. Paste the <B>bold</B> text below into the function. This state table will send PRIM a PRIM_GOTO command and then wait for prim to be done before reporting that it is done. </LI>
+<PRE>
+void EMOVE_MODULE::GOTO(EMOVE_GOTO *cmd_in)
+{
+&#9;// Put state table for EMOVE_GOTO here.
+&#9;<B>PRIM_GOTO primGoToMsg;
+&#9;
+&#9;primGoToMsg.position = cmd_in-&gt;position;
+
+&#9;if(STATE_MATCH(NEW_COMMAND))
+&#9;{
+&#9;&#9;sendCommand(&amp;primGoToMsg, prim_sub_num);
+&#9;&#9;
+&#9;&#9;stateNext(S1);
+&#9;}
+&#9;else if(STATE_MATCH(S1,
+&#9;&#9;prim_status-&gt;status == RCS_DONE))
+&#9;{
+&#9;&#9;status = RCS_DONE;
+&#9;&#9;stateNext(S2);
+&#9;}
+&#9;else if(STATE_MATCH(S2))
+&#9;{
+&#9;&#9;// Idle State
+&#9;}
+</B>}</PRE>
+<LI>Find the function EMOVE_MODULE::CHANGE_TOOL. Paste the <B>bold</B> text below into the function. This state table will first send prim a PRIM_GOTO with position zero and then send TOOL_CHANGE_TOOL to the tool module. </LI>
+<PRE>
+void EMOVE_MODULE::CHANGE_TOOL(EMOVE_CHANGE_TOOL *cmd_in)
+{
+&#9;// Put state table for EMOVE_CHANGE_TOOL here.
+<B>
+&#9;PRIM_GOTO primGoToMsg;
+&#9;TOOL_CHANGE_TOOL toolChangeToolMsg;
+&#9;primGoToMsg.position = 0.0;
+&#9;toolChangeToolMsg.tool = cmd_in-&gt;tool;
+&#9;if(STATE_MATCH(NEW_COMMAND))
+&#9;{
+&#9;&#9;sendCommand(&amp;primGoToMsg, prim_sub_num);
+&#9;&#9;stateNext(S1);
+&#9;}
+&#9;else if(STATE_MATCH(S1,
+&#9;&#9;prim_status-&gt;status == RCS_DONE))
+&#9;{
+&#9;&#9;sendCommand(&amp;toolChangeToolMsg, tool_sub_num);
+&#9;&#9;stateNext(S2);
+&#9;}
+&#9;else if(STATE_MATCH(S2,
+&#9;&#9;tool_status-&gt;status == RCS_DONE))
+&#9;{
+&#9;&#9;status = RCS_DONE;
+&#9;&#9;stateNext(S3);
+&#9;}
+&#9;else if(STATE_MATCH(S3))
+&#9;{
+&#9;&#9;// Idle State
+&#9;}
+</B>}</PRE>
+<LI>Find the function EMOVE_MODULE::POST_PROCESS. The post process function is called every cycle (100 ms) after the command functions regardless of the current command or status. This will copy the status variables tool and position from the status messages of prim and tool. Paste the <B>bold</B> text below into the function.</LI>
+<PRE>
+void EMOVE_MODULE::POST_PROCESS()
+{
+&#9;// Post-Processing Code
+<B>&#9;emove_status.position  = prim_status-&gt;position;
+&#9;emove_status.tool = tool_status-&gt;tool;
+</B>}
+Save your changes to emove.cpp by clicking the "Save" button.
+Select "src/tool/tool.cpp" from the "Application Files" list. Find the function TOOL_MODULE::CHANGE_TOOL. Paste the <B>bold</B> text below into the function. This just simulates the rest of the tool changer by updating the status value to match the commanded tool.
+
+void TOOL_MODULE::CHANGE_TOOL(TOOL_CHANGE_TOOL *cmd_in)
+{
+&#9;// Put state table for TOOL_CHANGE_TOOL here.
+&#9;<B>if(STATE_MATCH(NEW_COMMAND))
+&#9;{
+&#9;&#9;tool_status.tool = cmd_in-&gt;tool;
+&#9;&#9;status = RCS_DONE;
+&#9;&#9;stateNext(S1);
+&#9;}
+&#9;else if(STATE_MATCH(S1))
+&#9;{
+&#9;&#9;// idle state
+&#9;}
+</B>}</PRE>
+<LI>Select "src/prim/prim.cpp" from the "Application Files" list Paste the <B>bold</B> text below into the appropriate functions. The PRIM_GOTO state table should keep sending SERVO_GOTO messages each one INCREMENT closer to the goal until servo is within INCREMENT and then it passes on the final position.</LI>
+<PRE>
+void PRIM_MODULE::GOTO(PRIM_GOTO *cmd_in)
+{
+&#9;// Put state table for PRIM_GOTO here.
+<B>&#9;SERVO_GOTO servoGoToMsg;
+&#9;const double INCREMENT = 0.1;
+&#9;
+&#9;if(STATE_MATCH(NEW_COMMAND))
+&#9;{
+&#9;&#9;if( cmd_in-&gt;position - servo_status-&gt;position &gt; INCREMENT)
+&#9;&#9;{
+&#9;&#9;&#9;servoGoToMsg.position = servo_status-&gt;position+INCREMENT;
+&#9;&#9;&#9;stateNext(S1);
+&#9;&#9;}
+&#9;&#9;else if( cmd_in-&gt;position - servo_status-&gt;position &lt; -INCREMENT)
+&#9;&#9;{
+&#9;&#9;&#9;servoGoToMsg.position = servo_status-&gt;position-INCREMENT;
+&#9;&#9;&#9;stateNext(S1);
+&#9;&#9;}
+&#9;&#9;else
+&#9;&#9;{
+&#9;&#9;&#9;servoGoToMsg.position = cmd_in-&gt;position;
+&#9;&#9;&#9;stateNext(S2);
+&#9;&#9;}
+&#9;&#9;sendCommand(&amp;servoGoToMsg, servo_sub_num);
+&#9;}
+&#9;else if(STATE_MATCH(S1, 
+&#9;&#9;servo_status-&gt;status  == RCS_DONE))
+&#9;{
+&#9;&#9;if( cmd_in-&gt;position - servo_status-&gt;position &gt; INCREMENT)
+&#9;&#9;{
+&#9;&#9;&#9;servoGoToMsg.position = servo_status-&gt;position+INCREMENT;
+&#9;&#9;}
+&#9;&#9;else if( cmd_in-&gt;position - servo_status-&gt;position &lt; -INCREMENT)
+&#9;&#9;{
+&#9;&#9;&#9;servoGoToMsg.position = servo_status-&gt;position-INCREMENT;
+&#9;&#9;}
+&#9;&#9;else
+&#9;&#9;{
+&#9;&#9;&#9;servoGoToMsg.position = cmd_in-&gt;position;
+&#9;&#9;&#9;stateNext(S2);
+&#9;&#9;}
+&#9;&#9;sendCommand(&amp;servoGoToMsg, servo_sub_num);
+&#9;}
+&#9;else if(STATE_MATCH(S2, 
+&#9;&#9;&#9;servo_status-&gt;status  == RCS_DONE))
+&#9;{
+&#9;&#9;status = RCS_DONE;&#9;
+&#9;&#9;stateNext(S3);
+&#9;}
+&#9;else if(STATE_MATCH(S3))
+&#9;{
+&#9;&#9;// idle state
+&#9;}
+</B>}
+// . . .
+void PRIM_MODULE::POST_PROCESS()
+{
+&#9;// Post-Processing Code
+<B>&#9;prim_status.position  = servo_status-&gt;position;
+</B>}
+Select "src/servo/servo.hpp" from the "Application Files" list. Paste the <B>bold</B> text below into the the SERVO_MODULE definition.  This adds some additional variables that will be preserved across mutiple cycles.
+
+class SERVO_MODULE: public NML_MODULE
+{
+&#9;// RCS-Design-MERGE-DISABLE Edits to the following area will NOT be preserved by the RCS-Design tool.
+
+public:
+
+&#9;SERVO_MODULE(); // Constructor
+
+&#9;// Overloaded Virtual Functions
+&#9;void PRE_PROCESS();
+&#9;void DECISION_PROCESS();
+&#9;void POST_PROCESS();
+
+&#9;// Command Functions
+&#9;void INIT(SERVO_INIT *);
+&#9;void HALT(SERVO_HALT *);
+&#9;void GOTO(SERVO_GOTO *);
+
+&#9;// Convenience Variables
+&#9;SERVO_STATUS servo_status;
+&#9;// RCS-Design-MERGE-ENABLE Edits after this line will be preserved by the RCS-Design tool.
+
+
+private:
+&#9;// Add custom variables and functions here.
+<B>&#9;int output;
+&#9;double velocity;
+&#9;double commanded_position;
+&#9;double actual_position;
+
+</B>};</PRE>
+<LI>Select "src/servo/servo.cpp" from the "Application Files" list. Paste the <B>bold</B> text below into the appropriate functions. The constructor is used to initialize everything to a known state. The plant is simulated in PRE_PROCESS by assuming the velocity is proportional to the output to the motor. The output to the motor is computed in POST_PROCESS. Add #include &lt;math.h&gt; near the top of the file with the other includes for the definition of the fabs function.</LI>
+<PRE>
+SERVO_MODULE::SERVO_MODULE()
+{
+
+&#9;// Set up NML Channels
+&#9;// RCS-Design-MERGE-DISABLE Edits to the following area will NOT be preserved by the RCS-Design tool.
+
+&#9;setErrorLogChannel(new NML(nmlErrorFormat, "errlog", "servo", "rcs_ex.nml"));
+&#9;setCmdChannel(new RCS_CMD_CHANNEL(servoFormat, "servo_cmd", "servo", "rcs_ex.nml"));
+&#9;setStatChannel(new RCS_STAT_CHANNEL(servoFormat, "servo_sts", "servo", "rcs_ex.nml"), &amp;servo_status);
+&#9;// RCS-Design-MERGE-ENABLE Edits after this line will be preserved by the RCS-Design tool.
+
+
+&#9;// Add additional code to initialize the module here.
+<B>&#9;output = 0;
+&#9;velocity = 0.0;
+&#9;commanded_position = 0.0;
+&#9;actual_position = 0.0;
+</B>
+}
+// . . .
+void SERVO_MODULE::PRE_PROCESS()
+{
+&#9;// Pre-Processing Code
+<B>&#9;velocity =  (double) output / 100.0;
+&#9;actual_position += (velocity*last_cycle_time);
+</B>}
+// . . .
+void SERVO_MODULE::POST_PROCESS()
+{
+&#9;// Post-Processing Code
+<B>&#9;output = (int) ((commanded_position - actual_position)*100.0);
+&#9;servo_status.position = actual_position;
+</B>}
+// . . .
+void SERVO_MODULE::GOTO(SERVO_GOTO *cmd_in)
+{
+&#9;// Put state table for SERVO_GOTO here.
+&#9;<B>const double INRANGE = 0.01;
+
+&#9;if(STATE_MATCH(NEW_COMMAND))
+&#9;{
+&#9;&#9;commanded_position = cmd_in-&gt;position;
+&#9;&#9;stateNext(S1);
+&#9;}
+&#9;else if(STATE_MATCH(S1, 
+&#9;&#9;fabs(commanded_position - actual_position) &lt; INRANGE))
+&#9;{
+&#9;&#9;commanded_position = actual_position;
+&#9;&#9;status = RCS_DONE;
+&#9;&#9;stateNext(S2);
+&#9;}
+&#9;else if(STATE_MATCH(S2))
+&#9;{
+&#9;&#9;// idle
+&#9;}
+</B>}</PRE>
+<LI>Open up a DOS Command Prompt. Change directories to c:\rcs_ex. Run NMAKE to compile everything. You could also click the "Make" button to accomplish the same thing.</LI>
+<LI>If everything compiled, run rcs_ex.bat to start the controller and the Diagnostics Program. You will need to press a key 3 times since the batch file pauses after starting each part of the controller.( A common problem is not having java on the PATH or not having classes.zip in the CLASSPATH, you may want to check this if the diagnostics program doesn't come up.) The screen should look like this: </LI><BR>
+<IMG SRC="Image10.gif" >
+<LI>Click the red checkbox that says "NOT CONNECTED" at the top. It should turn green and say connected 4 out of 4.</LI>
+<LI>This is the hierarchy screen. You can see the current command and status of every module from here. Hold down the mouse over the emove module. A list will appear. Select EMOVE_INIT and release the mouse. The modules should turn green for a fraction of a second, indicating they are executing. The outline of the modules will turn red for a second indicating they have a new command. (If you don't see these effects you may want to reduce the refresh time using the slider in the upper right.)</LI>
+<LI>Hold down the mouse over any of the modules and select HALT. That module and its subordinates should list a halt command as their current command.</LI>
+<LI>Select "Details" from the drop-down list in the upper-left that currently says "Hierarchy". The screen should look like this: </LI><br>
+<IMG SRC="Image11.gif" >
+<LI>Under "Commands Available" select EMOVE_GOTO. Under "Cmd To Send" select double position. Above the modify/clear buttons, enter 0.5 for the position and click "Modify". Click "Send". This will cause the emove module to start executing the goto command. Under "Current Status" you should see the position. Depending on your screen resolution you may need to click the "Down" button under this list to find the position variable. The position should increase over a couple of  seconds to about  4.9E-1. It doesn't quite get to 0.5 because our servo level considers a difference of 0.01 to be in-range.</LI>
+<LI>Send a CHANGE_TOOL command to emove after setting the tool parameter to 99. The position should count back to zero and just after it reaches zero the value of tool should change to 99.</LI>
+<LI>Select the position variable under "Current Status". Check the "Plot this Status Variable" checkbox under the list.  Send an  EMOVE_GOTO message to emove again with a position of 0.5.  Select "Graph" from the drop-down list in the upper-left that currently says "Details". Wait for the position to get almost to 0.5 and then click  "Stop All Plotting". Then  click "Fit to Graph".  You should see the following graph:</LI><br>
+<IMG SRC="Image12.gif" >
+<LI>Congratulations!!! You have built and tested an RCS controller.</LI></OL>
+</BODY>
+</HTML>

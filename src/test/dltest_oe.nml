@@ -1,0 +1,20 @@
+# dltest_oe.nml
+
+# Buffers:
+#       name 	   type  	      host 	size 	neut 	0 	buf# 	max_proc 	. . .
+B         b1 	  OEMEM 	 localhost 	160064 	1 	0 	1 	6 	 xdr
+ 
+
+# Processes: 
+#       Name 	    Buffer 	      type 	      host 	       ops 	server 	timeout 	master 	c_num  	 . . .
+P         lw 	        b1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	0 	
+ 
+P         lr 	        b1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+ 
+P         rw 	        b1 	    REMOTE 	 localhost 	        RW 	0 	INF     	0 	2 	
+ 
+P         rr 	        b1 	    REMOTE 	 localhost 	        RW 	0 	INF     	0 	3 	
+ 
+P        b1s 	        b1 	     LOCAL 	 localhost 	        RW 	1 	INF     	1	4 	
+ 
+

@@ -1,0 +1,48 @@
+# extra_test.nml
+
+
+# Buffers:
+#       name 	   type  	      host 	size 	neut 	0 	buf# 	max_proc 	. . .
+B         b1    SHMEM    	 localhost    16000 	1	0 	1	6 	10001 	TCP=30000 bsem=20001 xdr msg_type=TEST_MESSAGE format_name=nml_test
+B         b2 	SHMEM    	 localhost 	640000 	1	0 	2	6 	10002 	TCP=30002 bsem=20002 packedl64
+B         b3 	SHMEM    	 localhost 	640000 	1	0 	3	6 	10003 	TCP=30003 bsem=20003 xdr confirm_write
+B         b4 	SHMEM    	 localhost 	640000 	1	0 	4	6 	10004 	TCP=30004 bsem=20004 xml logxml
+B         b5 	SHMEM    	 localhost 	640000 	1	0 	5	6 	10005 	STCP=30005 bsem=20005 disp
+
+B         b6 	SHMEM    	 localhost 	640000 	0	0 	6	6 	10006 	TCP=30006 bsem=20006 packed
+B         b7 	SHMEM    	 localhost 	640000 	0	0 	7	6 	10007 	TCP=30007 bsem=20007 packedl64
+B         b8 	SHMEM    	 localhost 	640000 	0	0 	8	6 	10008 	TCP=30008 bsem=20008 xdr
+B         b9 	SHMEM    	 localhost 	640000 	0	0 	9	6 	10009 	TCP=30009 bsem=20009 xml logxml
+B         bA 	SHMEM    	 localhost 	640000 	0	0 	10	6 	10010 	STCP=30010 bsem=20010 disp
+
+B         bB 	SHMEM    	 localhost 	640000 	1	0 	11	6 	10011 	TCP=30011 bsem=20011 packed mutex=mao split
+B         bC 	SHMEM    	 localhost 	640000 	0	0 	12	6 	10012 	TCP=30012 bsem=20012 packed mutex=mao split
+
+
+# Processes: 
+#       Name 	    Buffer 	      type 	      host 	       ops 	server 	timeout 	master 	c_num  	 . . .
+P         lw 	        b1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	0 	waitformaster
+P         lr 	        b1 	     LOCAL 	 localhost 	        RW 	0 	INF     	0 	1 	
+P         rw 	        b1 	    REMOTE 	 localhost 	        RW 	0 	INF     	0 	2 	broadcast_to_svr=129.6.71.255
+P         rr 	        b1 	    REMOTE 	 localhost 	        RW 	0 	2.0     	0 	3
+P        b1s 	        b1 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	4 	
+P        svr 	        b1 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	4 	
+P        lm 	        b1 	     LOCAL 	 localhost 	        RW 	0 	INF     	1 	4 	
+
+
+P         lw 	        default 	     LOCAL 	 localhost 	        W 	0 	INF     	0 	0 	waitformaster
+P         lr 	        default 	     LOCAL 	 localhost 	        R 	0 	INF     	0 	1 	
+P         rw 	        default 	    REMOTE 	 localhost 	        W 	0 	INF     	0 	2 	
+P         rr 	        default 	    REMOTE 	 localhost 	        R 	0 	INF     	0 	3 	
+P        b1s 	        default 	     LOCAL 	 localhost  	        RW 	1 	INF     	1 	4 	
+P        lm 	        default 	     LOCAL 	 localhost 	        RW 	0 	INF     	1 	4 	
+P        default 	default 	     LOCAL 	 localhost  	        RW 	0 	INF     	1 	4 	
+
+
+
+# vme_addr=0x4e00000 vme_code=0x39
+#B         b1    SHMEM    	  ::1	320000 	1	0 	1	6 	10001 	TCP=30000 bsem=20001 packed
+#B         b1    SHMEM    	  ::ffff:192.168.0.6	320000 	1	0 	1	6 	10001 	TCP=30000 bsem=20001 packed
+#B         b1    SHMEM    	  fe80::203:6dff:fe14:6de4	320000 	1	0 	1	6 	10001 	TCP=30000 bsem=20001 packed
+#B         b1    SHMEM    	  fe80:0000:0000:0000:0203:93ff:fe43:15ae	320000 	1	0 	1	6 	10001 	TCP=30000 bsem=20001 packed
+#B         b1    SHMEM    	  3ffe:ffff:0:f101::1 320000 	1	0 	1	6 	10001 	TCP=30000 bsem=20001 packed use_ipv6

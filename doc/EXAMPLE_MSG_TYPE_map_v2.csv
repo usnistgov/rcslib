@@ -1,0 +1,15 @@
+type,name,size,offset,elsize,arraylen,offset_from,dla_maxlen,comment
+long,type,4,1,4,0,,0,
+long,size,4,5,4,0,,0,
+float,f,4,9,4,0,,0,
+char,c,1,13,1,0,,0,
+short,s,2,14,2,0,,0,
+int,i,4,16,4,0,,0,
+long,l,4,20,4,0,,0,
+uchar,uc,1,24,1,0,,0,
+ushort,us,2,25,2,0,,0,
+uint,ui,4,27,4,0,,0,
+ulong,ul,4,31,4,0,,0,
+int,da_length,4,35,4,0,,0,#dynamic_length
+double_array,da,8,39,0,20,,20,#dynamic_length_array
+char_array,name,10,0,1,10,name,0,

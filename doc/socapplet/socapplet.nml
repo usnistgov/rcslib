@@ -1,0 +1,18 @@
+#Buffers:
+# Name		Type	Host	size	neut?	RPC#  buffer# max_procs| key
+B timebuf	SHMEM 	dopey  0x100   0 	20001001 1	2 	1103 STCP=3005 disp
+
+B controlbuf	SHMEM 	dopey  0x100   0 	20001001 2	2 	1104 STCP=3006 disp
+
+
+#Processes:
+# Name		Buffer	  Type	Host 	Ops	server?	timeout master? c_num 
+
+P timer		timebuf	 LOCAL dopey	RW	0	INF   1      1 
+P timesvr 	timebuf	 LOCAL dopey	RW	1	INF   0	     0 
+
+P timer		controlbuf	 LOCAL dopey	RW	0	INF   1      1 
+P timesvr 	controlbuf	 LOCAL dopey	RW	1	INF   0	     0 
+
+	
+

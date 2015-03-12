@@ -1,0 +1,148 @@
+# ;; -*- mode: makefile; -*-
+
+
+# This file is included by all the makefiles in the Real-Time Control System
+# library src subdirectories.
+# USERS that down-load the source code from the ISD FTP server, MUST
+# set RCS_INSTALL_DIR to the directory, where the RCS library
+# was installed.
+# RCS_INSTALL_DIR =
+
+
+# Set the application name
+APPNAME=rcslib
+
+ifdef RCSLIB_USER_DIR
+USER_DIR:=$(RCSLIB_USER_DIR)
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning USER_DIR=$(USER_DIR) )
+$(warning RCSLIB_USER_DIR=$(RCSLIB_USER_DIR) )
+$(warning USER_PLAT=$(USER_PLAT) )
+$(warning RCS_INSTALL_DIR=$(RCS_INSTALL_DIR) )
+endif
+
+# Add any local CFLAGS for all platforms such as -pg here.
+
+#Set flags in generic.def to prevent accidental install
+COMPILING_RCSLIB=1
+
+# Alway optimize if the compiler allows it.
+ifndef DISABLE_DEFAULT_OPTIMIZE
+OPTIMIZE=1
+endif
+
+ifndef NO_XML
+USE_XML=1
+endif
+
+
+ifdef RCS_INSTALL_DIR
+
+# Set default RCS directory
+RCSLIB_MAIN_DIR = $(RCS_INSTALL_DIR)
+
+# set the path to the RCS master
+APPDIR = $(RCS_INSTALL_DIR)
+
+# set the USER dir to the RCS master
+ifndef USER_DIR
+USER_DIR = $(RCS_INSTALL_DIR)
+endif
+
+#set the location of the generic.def
+GENERIC_MAKEFILE = $(RCS_INSTALL_DIR)/etc/generic.def
+
+else
+
+# Set default RCS directory
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR := $(PWD)
+endif
+
+# set the path to the RCS master
+ifndef APPDIR
+APPDIR=$(RCSLIB_MAIN_DIR)
+endif
+
+ifndef USER_DIR
+USER_DIR=$(RCSLIB_MAIN_DIR)
+endif
+
+ifeq (install, $(findstring install,$(MAKECMDGOALS)))
+ENABLE_RCSLIB_INSTALL=1
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning PWD=$(PWD))
+$(warning RCSLIB_MAIN_DIR=$(RCSLIB_MAIN_DIR))
+$(warning APPDIR=$(APPDIR) )
+$(warning USER_DIR=$(USER_DIR) )
+endif
+
+#set the location of the generic.def
+ifndef GENERIC_MAKEFILE
+FULLY_EXPANDED_RCSLIB_MAIN_DIR:=$(shell cd $(RCSLIB_MAIN_DIR); pwd)
+GENERIC_MAKEFILE:=$(FULLY_EXPANDED_RCSLIB_MAIN_DIR)/etc/generic.def
+endif
+
+endif
+
+
+ifdef DEBUG_MEMORY
+DEBUG_MEMORY_CFLAGS = -DDEBUG_MEMORY
+endif
+
+ifndef WARN_FLAGS
+ifndef AT_NIST
+ifndef WARN_MAX
+NO_WARN=1
+endif
+endif
+# ;; -*- mode: makefile; -*-
+
+ifdef WARN
+ifndef WARN_MAX
+WARN_MAX=1
+endif
+endif
+endif
+
+ifdef DEBUG_MEMORY_CFLAGS
+LOCAL_CFLAGS += $(DEBUG_MEMORY_CFLAGS)
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning GENERIC_MAKEFILE=$(GENERIC_MAKEFILE) )
+$(warning RCSLIB_MAIN_DIR=$(RCSLIB_MAIN_DIR) )
+$(warning APPDIR=$(APPDIR) )
+$(warning USER_DIR=$(USER_DIR) )
+$(warning PLAT=$(PLAT) )
+$(warning LOCAL_CFLAGS=$(LOCAL_CFLAGS) )
+endif
+
+include $(GENERIC_MAKEFILE)
+
+ifeq ($(LOGNAME), shackle)
+RCS_ADMIN=1
+endif
+
+ifeq ($(LOGNAME), proctor)
+RCS_ADMIN=1
+endif
+
+
+MULTI_PLAT = 1
+
+
+
+
+% : remote/%
+	cp $^ $@
+
+
+
+
+
+

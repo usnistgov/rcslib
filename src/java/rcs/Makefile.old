@@ -1,0 +1,229 @@
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../../..
+endif
+
+PACKAGE_NAME = rcs
+
+
+JAVA_SOURCES = RCS_VERSION.java
+
+ifdef USE_GCJ
+
+SRCS=$(JAVA_SOURCES)
+
+OBJS=$(JAVA_SOURCES:%.java=%.o)
+
+LIBS=librcsforgcj.a
+
+LOCAL_GCJ_FLAGS=-I..
+
+else
+
+PLAT=java
+
+endif
+
+include ../../Makefile.rcs
+
+ifdef DEVP_DIR
+
+ifndef USE_GCj
+
+documentation clean install:
+	-( cd nml; $(MAKE) PLAT=$(PLAT) $@;)
+	-( cd utils; $(MAKE)  PLAT=$(PLAT) $@;)
+	-( cd posemath; $(MAKE)  PLAT=$(PLAT) $@;)
+
+
+ifdef COMPILE_TOGETHER
+
+do_sub_dirs: make_lib_dir  $(DEVP_LIB_DIR)/RCS_VERSION.class
+	-( cd utils; $(MAKE)  PLAT=$(PLAT) all COMPILE_TOGETHER=1;)
+	-( cd nml; $(MAKE) PLAT=$(PLAT) all COMPILE_TOGETHER=1;)
+	-( cd posemath; $(MAKE)  PLAT=$(PLAT) all COMPILE_TOGETHER=1;)
+	-($(MAKE) PLAT=$(PLAT) classes COMPILE_TOGETHER=1;)
+	-( cd nml; $(MAKE) PLAT=$(PLAT) nmlperf;)
+	-( $(MAKE) PLAT=$(PLAT) rcs.jar )
+
+else
+
+do_sub_dirs: make_lib_dir  $(DEVP_LIB_DIR)/RCS_VERSION.class
+	-( cd utils; $(MAKE)  PLAT=$(PLAT) all;)
+	-( cd nml; $(MAKE) PLAT=$(PLAT) all;)
+	-( cd posemath; $(MAKE)  PLAT=$(PLAT) all;)
+	-( cd nml; $(MAKE) PLAT=$(PLAT) nmlperf;)
+	-( $(MAKE) PLAT=$(PLAT) rcs.jar )
+
+endif
+
+rcs.jar: update_rcs_version $(DEVP_DIR)/lib/rcs.jar
+
+.PHONY: rcs.jar
+
+endif
+
+ifdef USE_GCJ
+all: librcsforgcj.a
+else
+
+all: rcs.jar
+endif
+
+
+$(DEVP_LIB_DIR)/RCS_VERSION.class : RCS_VERSION.java
+
+FORCE:
+
+update_rcs_version: FORCE
+	-(env DEVP_LIB_DIR=$(DEVP_LIB_DIR) ./update_ver || cp -f RCS_VERSION.java.perm RCS_VERSION.java; $(MAKE) PLAT=$(PLAT) $(DEVP_LIB_DIR)/RCS_VERSION.class;)
+
+
+.PHONY: update_rcs_version
+
+
+RCS_VERSION: $(DEVP_LIB_DIR)/RCS_VERSION.class
+
+.PHONY: RCS_VERSION
+
+
+RCS_VERSION.java: ../../rcsvers.hh
+	-( env DEVP_LIB_DIR=$(DEVP_LIB_DIR) ./update_ver || cp -f RCS_VERSION.java.perm RCS_VERSION.java )
+
+rcs.jar : $(DEVP_DIR)/lib/rcs.jar
+
+.PHONY:rcs.jar
+
+$(DEVP_DIR)/lib/rcs.jar:  $(DEVP_CLASSES)
+	(cd $(DEVP_DIR)/lib; $(JAR) -cf0 rcs.jar rcs;)
+
+librcsforgcj.a:  $(DEVP_DIR)/lib/librcsforgcj.a
+
+.PHONY: librcsforgcj.a
+
+
+NML_JAVA_SOURCES = \
+	NMLSingleVarLogItem.java \
+	NMLSingleVarLog.java \
+	NMLFormatConvertErrCallbackInterface.java \
+	NMLConnectionInterface.java \
+	NMLConnectionCreatorInterface.java \
+	debugInfo.java \
+	NMLException.java \
+	NMLFormatConverter.java \
+	NMLMessageDictionary.java \
+	NMLmsg.java \
+	NMLFormatConverterBase.java \
+	DISPFormatConverter.java \
+	XDRFormatConverter.java \
+	PackedFormatConverter.java \
+	XMLFormatConverter.java \
+	NonBlockingDatagramSocket.java \
+	NMLConnection.java \
+	RCS_CMD_MSG.java \
+	RCS_STAT_MSG.java \
+	RCS_STAT_MSG_V2.java \
+	time_tracker.java \
+	NML_ERROR.java \
+	NML_TEXT.java \
+	NML_DISPLAY.java \
+	errlogMsgDict.java \
+	NML_PERFORMANCE_TEST_MSG.java \
+	perftypeMsgDict.java \
+	NML_ENUM_INFO.java \
+	nmlperf.java
+
+UTILS_JAVA_SOURCES = jcrypt.java \
+	URL_and_FileLoader.java \
+	CorrectedPipeData.java \
+	CorrectedPipedInputStream.java \
+	CorrectedPipedOutputStream.java \
+	BrowserInfo.java \
+	StrToLong.java \
+	StrToInt.java \
+	SimpleFileFilter.java
+
+POSEMATH_JAVA_SOURCES = \
+	PmException.java \
+	PmCartesian.java \
+	PmCircle.java \
+	PmCylindrical.java \
+	PmEulerZyx.java \
+	PmEulerZyz.java \
+	PmHomogeneous.java \
+	PmLine.java \
+	PmPose.java \
+	PmQuaternion.java \
+	PmRotationMatrix.java \
+	PmRotationVector.java \
+	PmRpy.java \
+	PmSpherical.java \
+	PM_CARTESIAN.java \
+	PM_CYLINDRICAL.java \
+	PM_EULER_ZYX.java \
+	PM_EULER_ZYZ.java \
+	PM_HOMOGENEOUS.java \
+	PM_POSE.java \
+	PM_QUATERNION.java \
+	PM_ROTATION_MATRIX.java \
+	PM_ROTATION_VECTOR.java \
+	PM_RPY.java \
+	PM_SPHERICAL.java \
+	PM_LINE.java \
+	PM_CIRCLE.java \
+	Posemath.java
+
+
+$(DEVP_DIR)/lib/%.o : nml/%.java
+	$(MAKE) -C nml USE_GCJ=1 $@
+
+$(DEVP_DIR)/lib/%.o : posemath/%.java
+	$(MAKE) -C posemath USE_GCJ=1 $@
+
+$(DEVP_DIR)/lib/%.o : utils/%.java
+	$(MAKE) -C utils USE_GCJ=1 $@
+
+ifdef foober
+$(NML_JAVA_SOURCES:%.java=$(DEVP_DIR)/lib/%.o) : $(NML_JAVA_SOURCES:%=nml/%)
+	$(MAKE) -C nml USE_GCJ=1  $@
+
+$(POSEMATH_JAVA_SOURCES:%.java=$(DEVP_DIR)/lib/%.o) : $(POSEMATH_JAVA_SOURCES:%=posemath/%)
+	$(MAKE) -C posemath USE_GCJ=1
+
+$(UTILS_JAVA_SOURCES:%.java=$(DEVP_DIR)/lib/%.o) : $(UTILS_JAVA_SOURCES:%=utils/%)
+	$(MAKE) -C utils USE_GCJ=1
+
+endif
+
+$(DEVP_DIR)/lib/librcsforgcj.a: \
+	$(DEVP_OBJS) \
+	$(NML_JAVA_SOURCES:%.java=$(DEVP_DIR)/lib/%.o) \
+	$(POSEMATH_JAVA_SOURCES:%.java=$(DEVP_DIR)/lib/%.o) \
+	$(UTILS_JAVA_SOURCES:%.java=$(DEVP_DIR)/lib/%.o)
+	$(AR) cr  $@ $^
+
+
+ifdef USE_GCJ
+
+clean: myclean
+
+myclean: 
+	-\rm -f $(DEVP_OBJS) $(NML_JAVA_SOURCES:%.java=$(DEVP_DIR)/lib/%.o) \
+	$(POSEMATH_JAVA_SOURCES:%.java=$(DEVP_DIR)/lib/%.o) \
+	$(UTILS_JAVA_SOURCES:%.java=$(DEVP_DIR)/lib/%.o) \
+	$(DEVP_DIR)/lib/librcsforgcj.a
+
+
+.PHONY: myclean
+
+endif
+
+
+endif
+
+
+
+
+
+
+

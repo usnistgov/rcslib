@@ -1,0 +1,175 @@
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../../..
+endif
+
+PACKAGE_NAME = diagapplet
+
+PLAT=java
+
+JAVA_SOURCES = XAxisVarData.java \
+	CodeDisplayPanel.java \
+	diagappletFrame.java \
+	HierarchyPanel.java \
+	diagappletMain.java \
+	PlotTracker.java \
+	ImagePanel.java \
+	diag_update_interface.java \
+	diag_update.java
+
+
+include ../../Makefile.rcs
+
+
+$(DEVP_CLASSES) compile_all:$(DEVP_DIR)/lib/rcs/RCS_VERSION.class
+
+$(DEVP_DIR)/lib/rcs/RCS_VERSION.class:
+	-$(MAKE) -k -C ../rcs
+
+
+ifndef NO_SUBDIRS
+
+clean: remove_objs
+
+ifndef COMPILE_TOGETHER
+
+documentation clean install:
+	-(cd utils; $(MAKE)  PLAT=$(PLAT) $@;)
+	-(cd plotter; $(MAKE)  PLAT=$(PLAT) $@;)
+	-(cd CodeGen; $(MAKE)  PLAT=$(PLAT) $@;)
+
+do_sub_dirs:
+	-(cd utils; $(MAKE)  PLAT=$(PLAT) all;)
+	-(cd plotter; $(MAKE)  PLAT=$(PLAT) all;)
+	-(cd CodeGen; $(MAKE)  PLAT=$(PLAT) all;)
+
+else
+
+documentation clean install:
+	-(cd utils; $(MAKE)  PLAT=$(PLAT) $@ COMPILE_TOGETHER=1;)
+	-(cd plotter; $(MAKE)  PLAT=$(PLAT) $@ COMPILE_TOGETHER=1;)
+	-(cd CodeGen; $(MAKE)  PLAT=$(PLAT) $@ COMPILE_TOGETHER=1;)
+
+do_sub_dirs: make_lib_dir
+	-(cd utils; $(MAKE)  PLAT=$(PLAT) all COMPILE_TOGETHER=1;)
+	-(cd plotter; $(MAKE)  PLAT=$(PLAT) all COMPILE_TOGETHER=1;)
+	-(cd CodeGen; $(MAKE)  PLAT=$(PLAT) all COMPILE_TOGETHER=1;)
+
+endif
+
+
+endif
+
+
+diagapplet.jar: $(DEVP_DIR)/lib/diagapplet.jar
+
+$(DEVP_DIR)/lib/diagapplet.jar : $(DEVP_LIB_DIR)/diagappletMain.class
+
+.PHONY: diagapplet.jar
+
+all: diagapplet.jar jdiag.jar
+
+jdiag.jar: $(DEVP_DIR)/lib/jdiag.jar
+
+.PHONY:jdiag.jar
+
+$(DEVP_DIR)/lib/jdiag.jar: jdiagJarInfo.txt $(DEVP_DIR)/lib/diagapplet.jar $(DEVP_LIB_DIR)/diagJMain.class  $(DEVP_LIB_DIR)/diagappletJFrame.class $(DEVP_LIB_DIR)/utils/StandAloneApplet.class $(DEVP_LIB_DIR)/plotter/dplotter.class
+
+$(DEVP_LIB_DIR)/diagJMain.class: diagJMain.java $(DEVP_LIB_DIR)/jdiag_update.class $(DEVP_LIB_DIR)/diagappletMain.class $(DEVP_LIB_DIR)/diagappletJFrame.class
+
+$(DEVP_LIB_DIR)/jdiag_update.class : $(DEVP_LIB_DIR)/diag_update.class
+
+$(DEVP_LIB_DIR)/diag_update.class : $(DEVP_LIB_DIR)/diag_update_interface.class
+
+$(DEVP_LIB_DIR)/diagappletMain.class : $(DEVP_LIB_DIR)/HierarchyPanel.class $(DEVP_LIB_DIR)/diag_update.class
+
+$(DEVP_LIB_DIR)/HierarchyPanel.class : $(DEVP_LIB_DIR)/diag_update_interface.class
+
+
+ADD_MANIFEST_INFO = 1
+
+ifdef ADD_MANIFEST_INFO
+
+$(DEVP_DIR)/lib/diagappletJarInfo.txt: diagappletJarInfo.txt
+	(set -x ; \
+	cd ../..; \
+	rcs_version=`grep RCS_VERSION ../../rcsvers.hh | awk '{print $$3}' | sed s/\"// | sed s/\"//`; \
+	echo $$rcs_version; \
+	cd java/diagapplet; \
+	cat < $^ | sed s/RCS_VERSION_STRING/$$rcs_version/ > $@;)
+
+
+
+$(DEVP_DIR)/lib/diagapplet.jar: $(DEVP_CLASSES) $(DEVP_DIR)/lib/diagappletJarInfo.txt
+	(cd $(DEVP_DIR)/lib; $(JAR) -cmf0 diagappletJarInfo.txt diagapplet.jar rcs diagapplet;)
+
+
+else
+
+
+$(DEVP_DIR)/lib/diagapplet.jar: $(DEVP_CLASSES)
+	(cd $(DEVP_DIR)/lib; $(JAR) -cf0 diagapplet.jar rcs diagapplet;)
+
+endif
+
+rcs_diag_sources.mak:
+	./update_rcs_diag_sources.sh
+
+
+
+diag_sources.mak:
+	./update_diag_sources.sh
+
+include rcs_diag_sources.mak
+include diag_sources.mak
+
+diag_java_sources= $(rcs_diag_sources) ${diag_sources}
+
+
+diag_objs= ${diag_java_sources:%.java=%.o}
+
+.PHONY: remove_objs
+
+remove_objs:
+	-(\rm -f  ${diag_objs}; ) 2> /dev/null;
+
+%.o : %.java
+	gcj -c -I ..  $< -o $@
+
+diag: ${diag_objs}
+	gcj --main=diagapplet.diagappletMain -I .. $^ -o $@
+	( if test -d ../../../bin -a -w ../../../bin ; then \
+		cp ./diag ../../../bin; \
+	fi )
+
+jdiag: ${diag_objs}
+	gcj  --main=diagapplet.diagJMain -I .. $^ -o $@
+	( if test -d ../../../bin -a -w ../../../bin ; then \
+		cp ./jdiag ../../../bin; \
+	fi )
+
+
+
+ifdef ADD_MANIFEST_INFO
+
+$(DEVP_DIR)/lib/jdiagJarInfo.txt: jdiagJarInfo.txt
+	(set -x ; \
+	cd ../..; \
+	rcs_version=`grep RCS_VERSION ../../rcsvers.hh | awk '{print $$3}' | sed s/\"// | sed s/\"//`; \
+	echo $$rcs_version; \
+	cd java/diagapplet; \
+	cat < $^ | sed s/RCS_VERSION_STRING/$$rcs_version/ > $@;)
+
+
+
+$(DEVP_DIR)/lib/jdiag.jar: $(DEVP_CLASSES) $(DEVP_DIR)/lib/jdiagJarInfo.txt
+	(cd $(DEVP_DIR)/lib; $(JAR) -cmf0 jdiagJarInfo.txt jdiag.jar rcs diagapplet;)
+
+
+else
+
+
+$(DEVP_DIR)/lib/jdiag.jar: $(DEVP_CLASSES)
+	(cd $(DEVP_DIR)/lib; $(JAR) -cf0 jdiag.jar rcs diagapplet;)
+
+endif

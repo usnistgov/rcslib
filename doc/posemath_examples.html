@@ -1,0 +1,509 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><!--This file created 4/14/99 4:03 PM by Claris Home Page Lite-->
+<title>posemath examples</title>
+<meta name="GENERATOR" content="Claris Home Page Lite">
+   <x-sas-window top="59" bottom="1024" left="297" right="827"></x-sas-window>
+</head><body>
+
+<p></p><center><b><font color="#000000" size="+3">&nbsp;</font></b>
+</center><p></p>
+
+<p></p><center><b><font color="#000000" size="+3">Using the Posemath
+Library</font></b></center><p></p>
+
+<p></p><center><font color="#000000">by</font></center><p></p>
+
+<p></p><center><font color="#000000" size="+1">Karl Murphy</font>
+</center><p></p>
+
+<p><font color="#000000">Updated 4/14/99</font></p>
+
+<p><font color="#000000">&nbsp;</font></p>
+
+<p><font color="#000000">This gives examples of how to use the
+posemath library, part of the RCS libary. Most of the examples are
+given in C. Posemath also supports C++ and the corresponding code is
+more compact due to operator overloading.</font></p>
+
+<p><font color="#000000">See Also </font><font color="#000000"><a href="posemathdoc">RCS
+lib Document on posemath</a></font></p>
+
+<p><b><font color="#000000" size="+2">Introduction</font></b></p>
+
+<p>A <b>Vector</b> is a 3 dimentional quantity that has magnitude and
+direction. A vector is not a <b>point</b> although a vector can be
+used to represent the relative position between two points. A vector
+is not fixed in space, it only has magnitude and direction. Imagine
+an arrow that can be slid all around (although not rotated).</p>
+
+<p>&nbsp;</p>
+
+<p>A <b>Reference Frame</b> is a set of three mutually perpendicular
+unit vectors, often denoted <b>x</b>, <b>y</b>, and <b>z</b>, and an
+associated point called the origin.</p>
+
+<p><b><font size="+1">&nbsp;</font></b></p>
+
+<p><b><font size="+1">Vectors</font></b></p>
+
+<p>Given a reference frame <b>A</b> and a vector <b>v</b>, there
+exists 3 unique scalars, vx, vy, and vz such that</p>
+
+<p><b>&nbsp;</b></p>
+
+<p><b>v</b> = vx <b>x</b> + vy <b>y</b> + vz <b>x</b></p>
+
+<p>&nbsp;</p>
+
+<p>The <b>representation</b> of the vector v in the reference frame A
+is the three scalar values, [vx, vy, vz]T. Note that vx is the dot
+product of <b>v</b> and <b>x</b>, etc. The values [vx, vy, vz] are
+called <b>v</b> in <b>A</b> and are the representation used most
+often in posemath. The three scalars are meaningless without an
+associated reference frame.</p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">Example 1</font></b></p>
+
+<p>The vector <b>v</b> is the relative position of point <b>P </b>
+from the origin of frame <b>A</b>. Express the vector in posemath
+notation.</p>
+
+<p></p><center><img src="posemath_examples_files/image%2520047.gif" x-sas-useimagewidth="" x-sas-useimageheight="" height="112" width="235" align="bottom"></center><p></p>
+
+<p><tt>PmCartesian v = {10, 5, 0}; /* vector v in frame A */</tt>
+</p>
+
+<p>&nbsp;</p>
+
+<p>The position of a point relative to a reference frame is the
+vector from the origin of the frame to the point expressed in the
+frame. The representation of <b>v</b> (the vector from the origin of
+<b>A</b> to <b>P</b>) is different in different frames that have
+different orientations but always has the same magnitude. The
+position of <b>P</b> in different frames might also have different
+magnitudes.</p>
+
+<p>Posemath also supports cylindrical and spherical representations.
+</p>
+
+<p><b><font color="#000000" size="+2">&nbsp;</font></b></p>
+
+<p><b><font color="#000000" size="+2">Reference Frame
+Rotations</font></b></p>
+
+<p>Coordinate frames can be rotated relative to one another. There
+are many ways to represent rotations. A rotation matrix is a 3x3
+matrix where the columns are the representations of the <b>x</b>,
+<b>y</b>, and <b>z</b> axis of the rotated frame expressed in the
+unrotated frame. See the figure below.</p>
+
+<p>&nbsp;</p>
+
+<p></p><center><img src="posemath_examples_files/image%2520462.gif" x-sas-useimagewidth="" x-sas-useimageheight="" height="196" width="307" align="bottom"></center><p></p>
+
+<p>&nbsp;</p>
+
+<p>The elements of the matrix are the dot products of the various
+axis (<b>ay</b> dot <b>bz</b> = -1).</p>
+
+<p>The vector representation in a rotated frame can be calculated by
+using normal vector - matrix multiplication as shown below.</p>
+
+<p></p><center><img src="posemath_examples_files/image%2520089.gif" x-sas-useimagewidth="" x-sas-useimageheight="" height="217" width="276" align="bottom"></center><p></p>
+
+<p>Strictly speaking, the vectors <b>va</b> and <b>vb</b> are the
+same, they both span from the origin to the point <b>P</b>, even
+thought their representations in the two frames are different.</p>
+
+<p>&nbsp;</p>
+
+<p>Besides the rotation matrix, posemath supports many
+representations for rotations. One of which, the quaternion, is a
+strange but computationally nice representation. It has a scalar and
+vector part. The scalar is the cosine of half angle of rotation and
+the vector is the unit rotation vector multiplied by the sine of the
+half angle. I told you it was weird. Because of the computational
+niceties, posemath routines have a bias toward using quaternions.
+When you use them, think of them as a rotation matrix. pmPrintf()
+will even convert them to a matrix and print them that way.</p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">Example 2</font></b></p>
+
+<p>Rotate <b>bv</b> to get <b>av</b> as shown in the figure above.
+</p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>PmCartesian av; /* vector av in frame A */</tt></p>
+
+<p><tt>PmCartesian bv = {10, 0, -5}; /* vector bv in frame B */</tt>
+</p>
+
+<p><tt>PmQuaternion rq; /* the rotation expressed as </tt></p>
+
+<p><tt>a quaternion */</tt></p>
+
+<p><tt>PmRotationMatrix rm; /* the rotation expressed as </tt></p>
+
+<p><tt>a matrix */</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* Method 1 */</tt></p>
+
+<p><tt>rm = (PmRotationMatrix) {{1,0,0},{0,0,1},{0,-1,0}};</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* When reading a matrix, quaterian, unit vector, etc.</tt>
+</p>
+
+<p><tt>as ASCII you should normalize it if not all +-1 &amp; 0's.
+</tt></p>
+
+<p><tt>We will do it anyway */</tt></p>
+
+<p><tt>pmMatNorm( rm, &amp;rm );</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>pmMatCartMult( rm, bv, &amp;av ); </tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* Method 2 */</tt></p>
+
+<p><tt>/* represent the rotation as a quaternion */</tt></p>
+
+<p><tt>pmAxisAngleQuatConvert( PM_X, PM_PI / 2, &amp;rq);</tt></p>
+
+<p><tt>/* or */</tt></p>
+
+<p><tt>pmMatQuatConvert( rm, &amp;rq);</tt></p>
+
+<p><tt>pmQuatCartMult( rq, bv, &amp;av );</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* print rm as a quaternion and as a rotation matrix */ </tt>
+</p>
+
+<p><tt>pmPrintf("As a quat %q, as a matrix \n%Q\n", rq, rq);</tt>
+</p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* in C++ */</tt></p>
+
+<p><tt>av = rq * bv;</tt></p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">Example 2b</font></b></p>
+
+<p>Now the other way: Rotate <b>av</b> to get <b>bv</b> as shown in
+the figure above.</p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>PmQuaternion rqInv; /* the rotation inverse */</tt></p>
+
+<p><tt>pmQuatInv(rq, &amp;rqInv); /* invert rq */</tt></p>
+
+<p><tt>pmQuatCartMult( rqInv, av, &amp;bv );</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* in C++ */</tt></p>
+
+<p><tt>bv = (-rq) * av; // (-rq) is the inverse of rq</tt></p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">Example 3</font></b></p>
+
+<p>Given the pan tilt unit and the coordinate frames as shown,
+compute the rotation from the mount to the camera. Neglect
+translations</p>
+
+<p></p><center><img src="posemath_examples_files/image%2520188.gif" x-sas-useimagewidth="" x-sas-useimageheight="" height="313" width="258" align="bottom"></center><p></p>
+
+<p><tt>double pan, tilt; /* pan and tilt in rads */</tt></p>
+
+<p><tt>PmQuaternion panTilt; /* pan tilt rotation */</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>pmAxisAngleQuatConvert( PM_Y, pan, &amp;panTilt);</tt></p>
+
+<p><tt>pmQuatAxisAngleMult( panTilt, PM_X, tilt, &amp;panTilt);</tt>
+</p>
+
+<p><b><font color="#000000" size="+2">&nbsp;</font></b></p>
+
+<p><b><font color="#000000" size="+2">Reference Frame
+Transforms</font></b></p>
+
+<p>The transformation from one coordinate frame to another requires
+translation and rotation. One representation is the homogeneous
+transformation, a 4 x 4 matrix with the rotation matrix in the upper
+left, the translation vector on the right, and a row of 3 zeros and a
+1 along the bottom. The bottom row can be used to represent other
+transformations such as a change in scale, but these are not
+currently supported in posemath. The position of a point relative to
+a new reference frame can be calculated using normal vector - matrix
+multiplication as shown below. (A 1 is added to the end of each
+vector representation for proper matrix multiplication.)</p>
+
+<p>The translation is expressed in the non-rotated frame.</p>
+
+<p><b>av</b> = <b>T</b> * <b>bv</b></p>
+
+<p>where</p>
+
+<p><b>av</b> = [10, 5, 0, 1]T</p>
+
+<p><b>bv</b> = [10, 7, -5, 1]T</p>
+
+<p></p><center><img src="posemath_examples_files/image%2520842.gif" x-sas-useimagewidth="" x-sas-useimageheight="" height="377" width="364" align="bottom"></center><p></p>
+
+<p>&nbsp;</p>
+
+<p>The posemath library supports homogeneous transforms but is biased
+toward a different representation, the <b>pose</b>, a quaternion and
+a cartesian translation. It is often easier to think of the pose as a
+homogeneous transform.</p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">Example 4</font></b></p>
+
+<p>What is the pose for the above transform. Calculate <b>av</b>
+given <b>bv</b>.</p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>PmCartesian av; /* vector av in frame A */</tt></p>
+
+<p><tt>PmCartesian bv = {10, 7, -5}; /* vector bv in frame B */</tt>
+</p>
+
+<p><tt>PmPose t; /* transform w/ the rotation </tt></p>
+
+<p><tt>expressed as a quaternion */</tt></p>
+
+<p><tt>PmPose t_inv; /* inverse t */</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* represent the rotation as a quaternion */</tt></p>
+
+<p><tt>pmAxisAngleQuatConvert( PM_X, PM_PI / 2, &amp;t.rot);</tt>
+</p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* tran in un-rotated frame. One element at a time */</tt>
+</p>
+
+<p><tt>t.tran.x = t.tran.y = 0;</tt></p>
+
+<p><tt>t.tran.z = -7;</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>pmPoseCartMult( t, bv, &amp;av ); /* calc av given bv */</tt>
+</p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* print t with a quaternion and with a rotation matrix */
+</tt></p>
+
+<p><tt>pmPrintf("As a quat %p, as a matrix \n%P\n", t, t);</tt></p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">Example 4b</font></b></p>
+
+<p>Now the other way: Calculate <b>bv</b> given <b>av</b>.</p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>pmPoseInv( t, &amp;t_inv); /* invert t */</tt></p>
+
+<p><tt>pmPoseCartMult( t, av, &amp;bv ); /* calc bv given av */</tt>
+</p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* in C++ */</tt></p>
+
+<p><tt>bv = (-t) * av;</tt></p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">Example 5</font></b></p>
+
+<p>Given the two frames, <b>Vehicle</b> and <b>Mount</b> as shown in
+the figure below calculate the transformation from <b>Vehicle</b> to
+<b>Mount</b>.</p>
+
+<p>&nbsp;</p>
+
+<p></p><center><img src="posemath_examples_files/image%2520166.gif" x-sas-useimagewidth="" x-sas-useimageheight="" height="409" width="289" align="bottom"></center><p></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>PmPose mount; /* transform from Vehicle to Mount */</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* the translation is in the base frame (ie vehicle) */</tt>
+</p>
+
+<p><tt>mount.tran.x = 1.05;</tt></p>
+
+<p><tt>mount.tran.y = 0.2;</tt></p>
+
+<p><tt>mount.tran.z = -0.8;</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* rotate to align X axis */</tt></p>
+
+<p><tt>pmAxisAngleQuatConvert( PM_Z, PM_PI / 2, &amp;mount.rot);</tt>
+</p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* rotate to almost align Y &amp; Z axis */</tt></p>
+
+<p><tt>pmQuatAxisAngleMult( mount.rot, PM_X, PM_PI / 2,
+&amp;mount.rot);</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* rotate for 10 deg offset */</tt></p>
+
+<p><tt>pmQuatAxisAngleMult( mount.rot, PM_X, 10.0 * TO_RAD,
+&amp;mount.rot);</tt></p>
+
+<p><b><font color="#000000" size="+2">&nbsp;</font></b></p>
+
+<p><b><font color="#000000" size="+2">Multiple Transforms</font></b>
+</p>
+
+<p>Multiple transformation are computed using matrix multiplication
+when using Homogeneous Transformations and by using pose
+multiplication when using poses. Either way, the rules are the same.
+Multiplication is associative,</p>
+
+<p>(<b>T1</b> * <b>T2</b>) * <b>T3</b> = <b>T1</b> * (<b>T2</b> *
+<b>T3</b>)</p>
+
+<p>but not commutative (in general)</p>
+
+<p><b>T1</b> * <b>T2</b> != <b>T2</b> * <b>T1</b></p>
+
+<p>Manipulate equations by pre- and post-multiplying by inverses.
+Drawing a simple sketch showing the frames and relative transforms
+can help. As you traverse from one frame to the next, post-multiply
+by the transform if you are traversing in the direction of the arrow,
+and post-multiply by the INVERSE of the transform if you are
+traversing in the opposite direction.</p>
+
+<p></p><center><img src="posemath_examples_files/image%2520893.gif" x-sas-useimagewidth="" x-sas-useimageheight="" height="156" width="404" align="bottom"></center><p></p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">Example 6</font></b></p>
+
+<p>Given the pose of the vehicle in world frame, the pose of the
+mount in vehicle frame, the pose of the camera due to the pan tilt,
+and the x, y, z measurement of a rock in camera coordinates (see
+above examples), what is the position of the rock in the world frame?
+</p>
+
+<p></p><center><img src="posemath_examples_files/image%2520358.gif" x-sas-useimagewidth="" x-sas-useimageheight="" height="220" width="324" align="bottom"></center><p></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>PmPose dr, mount, pt; /* these are set elsewhere */</tt></p>
+
+<p><tt>PmCartesian obst, meas; /* meas is set elsewhere */</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>PmPose ttt; /* world to camera, temp pose*/</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>pmPosePoseMult( dr, mount, &amp;ttt); /* mount in world
+*/</tt></p>
+
+<p><tt>pmPosePoseMult( ttt, pt, &amp;ttt); /* camera in world */</tt>
+</p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>pmPoseCartMult( ttt, meas, &amp;obst); /* rock in my world
+*/</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>/* in c++ */</tt></p>
+
+<p><tt>obst = dr&nbsp;* mount * pt * meas; // rock on!</tt></p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">&nbsp;</font></b></p>
+
+<p><b><font color="#af0000" size="+1">Example 7</font></b></p>
+
+<p>A vehicle has two navigation sensors, a dead reckoning unit and a
+gps unit. The DR unit measures vehicle orientation and distance
+traveled since start up (in northing, easting, and down). The GPS
+measures the position of the antenna relative to the UTM zone (in
+northing, easting, and down). The DR_Base and the UTM_Base have the
+same orientation. Calculate the drift, ie, the offset of the DR_Base.
+In practice, this drift would be filtered to take out noise in the
+gps measurement.</p>
+
+<p><img src="posemath_examples_files/image%2520467.gif" x-sas-useimagewidth="" x-sas-useimageheight="" height="172" width="370" align="bottom"></p>
+
+<p><tt>PmPose dr; </tt></p>
+
+<p><tt>PmCartesian drift, antenna, gps; </tt></p>
+
+<p><tt>PmCartesian ttt; /* dr_base to antenna vector */</tt></p>
+
+<p><tt>&nbsp;</tt></p>
+
+<p><tt>pmPoseCartMult( dr, antenna, &amp;ttt);</tt></p>
+
+<p><tt>pmCartCartSub( gps, ttt, &amp;drift); </tt></p>
+
+<p><tt>/* note we can subtract because there is no rotation between
+</tt></p>
+
+<p><tt>the two bases, */</tt></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+</body></html>

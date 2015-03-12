@@ -1,0 +1,1415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<title>NML Guide (C++ Version)</title> 
+<meta name="description" content="The Neutral Message Language (NML)is
+a mechanism to allow control modules to communicate using standard set(s) of
+messages. It is built upon the Communications Management System a flexible, 
+portable and configurable means of communicating across either a
+bus or a network. " />
+<meta name="keywords" content="real-time control programming manufacturing"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://www.isd.mel.nist.gov/mel2.css" type="text/css" />
+
+<style type="text/css">
+  div.user{
+    width: 0
+    font-family: monospaced;
+    font-size: small;
+    background: rgb(235,235,255);
+    padding: 0.1em;
+    overflow: auto;
+    overflow-y: visible;
+  }
+  div.output{
+    width: 0
+    font-family: monospaced;
+    font-size: small;
+    background: rgb(235,255,235);
+    padding: 0.1em;
+    overflow: auto;
+    overflow-y: visible;
+  }
+  div.file{
+    width: 0
+    font-family: monospaced;
+    font-size: small;
+    background: rgb(255,235,235);
+    padding: 0.1em;
+    border: thin solid black;
+    overflow: auto;
+    overflow-y: visible;
+  }
+  em.var {
+    font-style: italic;
+    font-family: fantasy;
+    font-size: larger;
+   }
+  strong.bnfterminal {
+    font-weight:bolder;
+  }
+</style>
+</head>
+<body>
+ 
+<h1>The NML Programmer's Guide (C++ Version) </h1>
+
+<p><a name="TOP_OF_FILE"></a> </p>
+
+<ul>
+  <li><a href="index.html">See other RCS Library Documents.</a></li>
+  <li><a href="NMLtoc.html">Go To Table of Contents</a></li>
+</ul>
+
+<hr/>
+
+<h2><a name="Intro_Header"> Introduction</a></h2>
+
+<p>The Real-Time Control System (RCS) library is a C++ class library intended
+for multi-platform real-time distributed applications. It has been compiled and tested on several platforms including MS Windows, Mac OS X, Linux, and several UNIX systems. This document describes the use of the Neutral Message Language (NML) components of the library.</p>
+
+<p>The Communication Management System
+(CMS) provides access to a fixed-size buffer of general data to
+multiple reader or writer processes on the same processor, across a
+backplane, or over a network. Regardless of the communication method
+required, the interface to CMS is uniform.  Methods are provided to
+encode all of the basic C data types in a machine independent or
+neutral format, and to return them to the native format. A CMS_HEADER
+is added to each buffer which provides information about whether the
+buffer has been written or read from last, whether the buffer is new
+to a particular process and the size of the last write to the buffer.
+CMS uses a configuration file so that users can change communications
+protocols or parameters without recompiling or relinking the
+applications.  </p>
+ <p>The Neutral Message Language (NML), formerly known as the Neutral
+Manufacturing Language, provides a higher level interface to CMS. It provides a mechanism for
+handling multiple types of messages in the same buffer as well as
+simplifying the interface for encoding and decoding buffers in neutral
+format and the configuration mechanism. <!-- (Eventually it may also
+include sets of standard message formats and routines to handle them
+more easily. See <A HREF="nml_emc.html#TOP_OF_FILE">"The EMC-NML
+Message Set"</a>) --></p>
+ <p> Most of the examples have corresponding text
+files which can be down-loaded and compiled. The examples are included
+both directly in this document for easy reading and as separate
+text-only files which are ready to be compiled. (WWW Users: You may
+have to use your browser's &quot;Save&quot; or &quot;SaveAs&quot;
+command to get the files.) Unfortunately, given the variety of systems
+and compilers that are available it is impossible for me to give
+detailed compiling instructions here. However the following form
+should work on most systems.(All typed on one line.)</p>
+<pre>
+[C++ Compiler] -I[Location of RCS Include Files] [Example C++ File(s)] [RCS Library for Platform] -o [Executable File]
+</pre>
+<p>Since a working knowledge of C++ will be very helpful for understanding or using the RCS library utilities you may want to review 
+<a href="quickC++.html">"A Quick C++ Introduction for RCS Library Users"</a>.</p>
+
+<h3><a name="NOTATION">Notation</a></h3>
+
+<p>I like lots of examples.</p>
+
+<div class="user">
+<pre>
+
+     Commands users are expected to enter at a command prompt will look like this.
+
+</pre>
+</div>
+
+<div class="output">
+<pre>
+
+     Computer program generated example output will look like this.
+
+</pre>
+</div>
+
+<div class="file">
+<pre>
+
+Text files listed in line look like this.
+
+</pre>
+</div>
+
+<p>All of the example files referred to are in 
+<a href="rcslib_doc_examples.zip">rcslib_doc_examples.zip</a>.</p>
+
+<h2> <a name="Terminology_Header">Terminology</a></h2>
+
+ <p>The figure below illustrates the structure of a typical RCS application using NML. The
+application is distributed across three computers. Processes 1, 2, and
+3 are able to write directly into the shared memory buffers they use
+because they are located in the same computer or backplane. It is for
+this reason that they are labeled "LOCAL". Processes 4,5 and 6 can
+only access the buffers through an NML Server and are therefore
+labeled "REMOTE". The description might need to be complicated in a
+system with buffers in more than one machine. Processes would then
+need to be described as local or remote with respect to a particular
+buffer.</p>
+<p> <img src="fig1.gif" alt="NML Example System"/></p>
+<p>NML servers must be run for
+each buffer that will be accessed by remote processes. They read and
+write to the buffer in the same way as local processes on the behalf
+of remote processes.</p>
+<p>NML uses configuration files to store information about which processes communicate with 
+which buffers and how. Most of the options available to NML programmers are chosen by specifying them in the 
+configuration file. (The configuration files are ascii text files with a format described under <a href="NMLcfg.html">"Writing NML Configuration Files"</a>.)</p>
+ <p>NML is message-based rather than
+stream-based. Each successful read operation retrieves the data sent
+in exactly one write operation. Unless queuing is enabled, each write
+operation moves one message into the buffer replacing any previous
+message. </p>
+<p>  More than one type of message can be sent to the same buffer so a
+unique type identifier is always contained in the message. After a
+read operation, the process must use this identifier to determine the
+type of message before using any of the data in the message. Each type
+of message implies a particular data structure. Most messages are
+user-defined.</p>
+ <p>Messages are called encoded if they have been
+translated into a machine-independent or neutral format such as the
+eXternal Data Representation (XDR). Buffers are called encoded if the
+messages in them are to be encoded which is established in the
+configuration file. NML servers can encode and decode messages on
+behalf of remote processes. An NML vocabulary defines the set of
+messages that may be used in an application and provides the necessary
+functions for encoding and decoding the messages.</p>
+ <p>Header File</p>
+ <p>All of the necessary header files will be included if
+rcs.hh is included.</p>
+ <p>Classes</p>
+<p>The following classes provide the programming interface for CMS and NML:</p>
+
+<p>NML<br/>NMLmsg<br/>NML_SERVER</p>
+
+<p>CMS<br/>CMS_HEADER<br/>CMS_SERVER</p>
+ <p>CMS_USER</p>
+ <p>These classes are detailed in the following sections.</p>
+ <p>NML Application
+Structure</p>
+ <p>The next figure shows the structure of a single
+concurrent process module using NML (the memory buffer appears to be
+local to the application)</p>
+
+ <p><img src="appstrut.gif" alt="On the left is a key. Light blue-green boxes are modules from the RCS library. White boxes are modules the user is expected to complete. Green rectancgle with rounded corners is a shared memory buffer. Arrows chow the communications channels. On the right : The white box Application Routines (user) over light blue-green box NML library Routines(rcslib) over white box User-defined Format function over white box user defined update functions over light blue-green box CMS update functions over light green box CMS Communications Functions over arrow to green outline labeled shared memory buffer."/> </p>
+
+<p>The applications routines initialize and use objects from class NML and
+NMLmsg which depend on some user-defined functions. The format
+function selects from a set of user defined update functions for each
+aggregate type the user will need to pass to the memory buffer. The
+update function for each aggregate type is built by updating each
+member inpidually using CMS routines for the basic C data types.
+These basic update routines write to and read from internal CMS
+buffers which are themselves read or written to memory buffers that
+are available to other concurrent processes using the CMS
+Communications Routines.</p>
+
+
+<h2><a name="Design_Header">Designing an NML Application.</a></h2>
+
+<p>Because NML is configurable, programmers can choose between
+protocols with higher performance but which may be more restrictive or
+require more expensive hardware or those that are less restrictive or
+require less expensive more widely available hardware. By making a
+buffer local to a process you can improve the performance of that
+process. By moving processes you may be able to reduce the load on one
+CPU or increase the number of processes able to use the faster local
+protocol. Using servers to provide remote access to buffers frees
+local processes from being slowed down by the communications with
+remote processes.  </p>
+
+<h4>Example: Robot Controller/Supervisor Design </h4>
+
+<p>A controller for a robot must poll a variety of inputs
+and perform some computations every &quot;n&quot; milliseconds and a
+remote supervisor should be able to check the status of the robot when
+needed.  </p>
+ <p>The next figure shows one possible design for this
+application.  Because the controller can write directly to the shared
+memory buffer, writing the status takes a minimum time for the
+controller. Using the NML server allows the supervisor to be located
+almost anywhere and on almost any host.  </p>
+
+<p> <img src="nml_ex.gif" alt="Controller/Supervisor System Diagram"/></p>
+<p></p>
+ 
+<h3>Summary of Design Suggestions.  </h3>
+
+<ol>
+<li>Avoid
+overloading any CPU by assigning too many processes to it or building
+a single process which must do too much work.  </li>
+ <li>Place buffers
+so that they may be accessed locally by the most time-critical
+process(es).  </li>
+ <li>Use the "LOCAL" protocol whenever possible.
+</li>
+ <li>Only use neutrally encoded buffers when necessary.(i.e.
+backplane communications between different types of processors) or buffers
+with dynamic length arrays.
+</li>
+</ol>
+
+<h2><a name="Programming_Header">Programming with NML</a></h2>
+
+
+<p>NML applications programmers need to create a message
+vocabulary and associated format function, write a configuration file,
+create an NML object, and use the read and write member functions.
+</p>
+ 
+<h3><a name="NML_Vocab_Header">Creating an NML Vocabulary (Format Functions, Update Functions, and Message Definitions)</a></h3>
+
+ <p>The message vocabulary is a set of C++ classes, derived from
+NMLmsg, which can be thought of as data structures that are copied
+into the NML buffer during a write operation, and copied out during a
+read operation.  Each class is associated with a unique identifier, a
+positive integer, that allows readers to identify which message is
+present in the buffer.  Besides the particular data members of the
+class, each class also needs an update function which calls CMS
+methods to convert the data members to types CMS can handle.
+Currently, CMS provides support for the basic C language built-in
+types. &quot;long long&quot; and &quot;unsigned long long&quot; types
+are not really standard built in types and are not supported. One should read
+<a href="l64notes.html">NML 64bit long notes</a> before assuming a long or unsigned long will store 64 bits insead of 32 bits, or before assuming a long double stores more than 64 bits.
+(See <a href="NML.html#Insufficient_Args_Error">"Trouble Shooting -
+Insufficient Arguments Error"</a>) </p>
+ 
+<p>To enable CMS to neutrally
+format the data in the buffer or to allow NML servers to encode and
+decode the data for remote processes, a format function is required.
+This format function is nothing more than a switch statement,
+associating NML identifiers with the update functions of particular
+NML message classes.  The format function can be manually programmed as but it is recommended to have it be automatically generated using the <a href="CodeGen-Instructions.html">NML Code Generator</a>.</p>
+
+<h4>Variable Length Arrays</h4>
+<p>Some advanced users define messages with variable length arrays. 
+There are several ways to do this, but the simplest and most convenient way 
+is ussually to use the DECLARE_NML_DYNAMIC_LENGTH_ARRAY macro. The macro 
+has special meaning to  the NML Code Generator. The result is an array with
+a constant maximum size but where only the first name_length elements are sent
+ across the network with each remote read or write. Local reads and writes can be forced to use the condensed version by setting the neutral configuration 
+file flag to 1.
+</p>
+<p>For your information the text of the macro is:</p>
+<pre>
+#define DECLARE_NML_DYNAMIC_LENGTH_ARRAY(type, name, size) int name##_length; type name[size]; 
+</pre>
+
+<h4>Example: Message Definition. </h4>
+
+<p>Files needed for this example include: <a href="nml_ex1.hh">nml_ex1.hh</a>, <a href="nml_ex1.cc">nml_ex1.cc</a></p>
+
+<h5> Here is <a href="nml_ex1.hh">nml_ex1.hh</a></h5>
+
+<div class="file">
+<pre> 
+/* nml_ex1.hh */ 
+
+#ifndef NML_EX1_HH 
+#define NML_EX1_HH 
+#include &quot;rcs.hh&quot;
+
+/* Give the new structure a unique id number */ 
+#define EXAMPLE_MSG_TYPE 101 
+
+/* The id number must be unique within a CMS
+buffer, i.e. the number must be different than the id of any other
+type that might be written to a particular buffer. For simplicity it
+is recommended that the id number also be unique within an
+application. */
+
+/* Define the new message structure */ 
+struct EXAMPLE_MSG: public NMLmsg {
+
+	/* The constructor needs to store the id number */
+ 	/* and the size of the new structure */
+	/* by passing them as arguments to the base class constructor. */
+ 	EXAMPLE_MSG():NMLmsg(EXAMPLE_MSG_TYPE, sizeof(EXAMPLE_MSG)){};
+
+	/* Each new type needs to overload the update function. */
+	void update(CMS *cms);
+
+	/* Data in this new message format. */
+	float f;
+	char c;
+	int i; 
+	DECLARE_NML_DYNAMIC_LENGTH_ARRAY(int, da, 100);
+	
+};
+
+/* Declare the NML Format function. */ 
+int ex_format(NMLTYPE type, void *buf, CMS *cms);
+
+#endif  /* End of NML_EMC_HH */ 
+</pre>
+</div>
+ 
+
+<h3><a name="Creating_Object_Header">Creating an NML Object</a></h3>
+
+
+<p>NML has several constructors, but most users will use the
+  following.  </p>
+<p>NML(NML_FORMAT_PTR <em class="var">f_ptr</em>, char *
+  <em class="var">buf</em>, char *<em class="var">proc</em>, char *<em class="var">file</em>); </p>
+
+<p>The parameters are: <br/><em class="var">f_ptr</em> = &lt;address of format
+function to use&gt;; <br/><em class="var">buf</em> = &lt;name of the buffer to
+connect to as specified in configuration file&gt;; <br/><em class="var">proc</em>
+= &lt;name under which to access the buffer&gt;; <br/><em class="var">file</em> =
+&lt;name of the configuration file&gt;; </p>
+ <p></p>
+
+<p>There is also a constructor that takes a buffer line and process line as
+arguments rather than expecting to retrieve them from a configuration file.
+It is important for the application to ensure that the arguments contain 
+consistant parameters given the options passed by other applications with
+which it will communicate. 
+</p>
+<pre>
+NML(const char *bufferline, const char *processline);
+</pre>
+
+<p>If the second constructor is used the format function needs to be set 
+before any read or write, or even before one checks for a valid connection. The
+function to use for this is:</p>
+
+<pre>
+int NML::prefix_format_chain (NML_FORMAT_PTR);
+</pre>
+
+<p>This function can also be used multiple times regardless of which constructor is called. Then each time the format function would need to be called each
+format function in the list will be called until one returns a non-zero value. This might be useful for a channel that will collect messages from multiple types of applications each with its own format function or distrubute messages to multiple types of applications each with its own format function. One needs to be careful to ensure that message types do not conflict. Another option would be to have the java code generator load multiple header files and then generate a single format function combining all the message updates.
+</p>
+ 
+<h3><a name="Reading_NML_Header">Reading NML Data </a></h3>
+
+<p>If you examine
+  many of the communications interfaces you'll find a function that
+  looks like the UNIX read function.  </p>
+<p>/* UNIX general purpose
+  read. */ </p>
+<p>int read(int fd, char *buf, int nbyte); </p>
+ <p>/*
+   UNIX Read from message queue. */ </p>
+<p>int msgrcv(int msqid, struct
+  msgbuf *, int msgsz, long msgtyp, int msgflg); </p>
+<p>/* Read from a
+  socket (often used for TCP/IP) */ </p>
+<p>int recv(int socket, char
+  *buf, int len, int flags); </p>
+<p>Notice that the first parameter is
+  an identifier of the source to read, the second parameter is some type
+  of pointer to a buffer, and the third parameter is a measure of the
+  size of the buffer. Unfortunately this is a rather poor model for
+  configurable message-based communication because the program receiving
+  a message must be able to create a buffer large enough to hold the
+  incoming message even though there is no way it can know the size of
+  the new message. NML solves this problem by providing users access to
+  a local buffer that was created based on the size specified in the
+  configuration file and will contain a copy of the incoming message
+  after a read operation. 
+</p>
+
+<p>These are the member functions used to perform read: </p>
+
+<p>NMLTYPE NML::read(); </p>
+ <p>If the read is successful
+the message currently in the global CMS buffer will be copied into a
+local buffer for this process. The address of this local buffer is
+available through the member function get_address. If the buffer is
+encoded the format function will be called to return the message to
+native format. The message should be some user defined type derived
+from NMLmsg.The member NML::error_type can be examined to see the
+cause of NML::read returning -1.
+(See <a href="NML.html#Handling_Errors_Header">"Handling Errors"</a> ) If
+queuing is enabled on this buffer this read will remove the message
+from the queue so that other processes that are reading
+from this buffer will see the next message on the queue and
+potentially miss this one.  </p>
+
+ <p></p>
+ <p>Returns: </p>
+ <p>0 if the
+buffer has not been written to since the last read or <br/>-1 if an error
+occurred; or<br/>the type id of the message received if the buffer
+contains new data.  </p>
+ <p>NMLmsg *NML::get_address(); </p>
+
+<p>This function returns a pointer to the NML data stored during an
+NML::read() operation.  </p>
+ <p></p>
+ 
+
+<h4>Example: Reading from an NML Channel.</h4>
+ 
+<p>Files needed for this example include: 
+<a href="nml_ex3.cc">nml_ex3.cc</a>, <a href="nml_ex1.hh">nml_ex1.hh</a>,
+<a href="nml_ex1.cc">nml_ex1.cc</a>, <a href="ex_cfg.nml">ex_cfg.nml</a></p>
+ 
+<h5><a href="nml_ex3.cc">nml_ex3.cc</a></h5>
+ 
+<div class="file">
+<pre> 
+/* nml_ex3.cc */ 
+#include &quot;rcs.hh&quot; 
+#include &quot;<a href="nml_ex1.hh">nml_ex1.hh</a>&quot;
+
+int main(int argc, const char **argv) 
+{
+	RCS_TIMER timer(0.1);
+	NML example_nml(ex_format, &quot;ex_buf1&quot;,&quot;ex3_proc&quot;, &quot;<a href="ex_cfg.nml">ex_cfg.nml</a>&quot;);
+	EXAMPLE_MSG *example_msg_ptr;
+	int quit = 0;
+
+	while(!quit)
+	{
+		switch(example_nml.read())
+		{
+		case -1:
+			rcs_print( &quot;A communications error occurred.\n&quot;);
+			quit = 1;
+			break;
+
+		case 0:
+			/* The buffer contains the same message */
+			/* you read last time. */
+			break;
+
+		case EXAMPLE_MSG_TYPE:
+			example_msg_ptr = (EXAMPLE_MSG *)example_nml.get_address();
+			rcs_print(&quot; We have a new example message. \n&quot;);
+			rcs_print(&quot; The value of its members are:\n &quot;);
+			rcs_print(&quot; f=%f, c=%c, i=%d\n &quot;,
+				example_msg_ptr-&gt;f,
+				example_msg_ptr-&gt;c,
+				example_msg_ptr-&gt;i);
+			quit = 1;
+			break;
+		}
+		timer.wait();
+	} 
+} 
+</pre>
+</div>
+
+<p>Compile with:<a href="#UNIX_COMMANDS">*</a></p>
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the path for finding librcs.so
+LD_LIBRARY_PATH=&quot;${RCSLIB_DIR}/lib/:${LD_LIBRARY_PATH}&quot;;
+export LD_LIBRARY_PATH;
+
+## Create <a href="nml_ex1.cc">nml_ex1.cc</a> from <a href="nml_ex1.hh">nml_ex1.hh</a>
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/<a href="CodeGenCmdLine.jar">CodeGenCmdLine.jar</a> <a href="nml_ex1.hh">nml_ex1.hh</a> -o <a href="nml_ex1.cc">nml_ex1.cc</a>
+
+g++ <a href="nml_ex3.cc">nml_ex3.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_ex3
+</pre>
+</div>
+ 
+<p>This example also uses the <a href="utils.html#RCS_TIMER_Header">RCS_TIMER</a> class and the <a href="utils.html#rcs_print_header">rcs_print</a> function described in
+the guide for the <a href="utils.html">RCS Library Lower Level
+Utilities</a>. The symbolic constant VXWORKS should be defined only if
+you wish to compile the example for VxWorks. If you try to run this
+example, it will wait for something to be written into the buffer. To
+write something into the buffer, you can use the example in 
+<a href="NML.html#Writing_NML_Header">Writing NML Data</a></p>
+
+ <p>NMLTYPE NML::blocking_read(double timeout); </p>
+ <p>This performs the same function as the read() above except that if there
+is no new data the calling process will be put to sleep until either another process writes to the buffer or the timeout occurs. The timeout is given in seconds. to wait indefinitely provide a negative timeout. It is necessary to add 
+&quot;bsem=&lt;key&gt;&quot; to the buffer line of the NML configuration file in order to be able to perform a blocking read.</p>
+ <p></p>
+ <p>Returns: </p>
+ <p>-1 if an error
+occurred; or<br/>the type id of the message received if/when the buffer
+contains new data.  </p>
+ 
+<p>NMLTYPE NML::peek(); </p>
+ 
+<p>/* Read an NML message from a CMS buffer without
+changing the was_read flag */ </p>
+ 
+<p>Peek works exactly the
+same as read except that the flag that lets others know when the
+buffer is read is not changed and if queuing is enabled the message is
+not removed from the queue. This could be useful if you need to monitor
+a buffer without letting other processes using the buffer know. The
+member NML::error_type can be examined to see the cause of NML::peek
+returning -1.(See <a href="NML.html#Handling_Errors_Header">"Handling
+Errors"</a>) </p>
+ 
+<p>Returns: <br/>0 if the buffer has not been
+written to since the last read; <br/>-1 if an error occurred; or<br/>the
+type id of the message received if the buffer contains new data.  </p>
+
+<h3><a name="Writing_NML_Header">Writing NML Data </a></h3>
+
+<p>If you examine many of the communications interfaces you'll find a
+function that looks like the UNIX write function.  </p>
+ 
+<p>/* UNIX general purpose write. */ </p>
+ 
+<p>int write(int fd, char *buf, int
+nbyte); </p>
+ 
+<p>/* UNIX Send to a message queue. */ </p>
+ 
+<p>int msgsnd(int msqid, struct msgbuf *, int msgsz, long msgtyp, int
+msgflg); </p>
+ 
+<p>/* Output to a socket (often used for TCP/IP) */ </p>
+
+<p>int send(int socket, char *msg, int len, int flags); </p>
+ 
+<p>Notice
+that the first parameter is an identifier of the destination to write,
+the second parameter is some type of pointer to a buffer, and the
+third parameter is a measure of the size of the buffer. However C++
+allows us to considerably simplify this interface, by storing the size
+of a message when its constructed and by overloading the write
+function to accept either references or pointers to messages. All of
+the NML write functions are non-blocking.  </p>
+ <p>These are the
+member functions used to perform writes: </p>
+ <p>/* Write an NML
+message into a CMS buffer */ </p>
+ <p>int NML::write(NMLmsg
+&amp;<em class="var">nml_msg</em>); /* Reference version. */ </p>
+ <p>int
+NML::write(NMLmsg *<em class="var">nml_msg</em>); /* Pointer version. */ </p>
+
+<p><em class="var">nml_msg</em> should be a pointer or reference to an object of
+some user defined type derived from NMLmsg. If the buffer is
+configured to be in a neutral format the message will be encoded
+before it is written to the CMS buffer. The write functions overwrite
+the message currently in the buffer if queuing is not enabled. The
+member NML::error_type can be examined to see the cause of NML write
+returning -1.(See <a href="NML.html#Handling_Errors_Header">"Handling
+Errors"</a> ) </p>
+
+<p>Returns: 
+<br/>0 if successful;
+<br/>-1 otherwise.  </p>
+
+<h4>Example: Writing to an NML Channel.</h4>
+<p>Files needed for this example include: <a href="nml_ex4.cc">nml_ex4.cc</a>,
+<a href="nml_ex1.hh">nml_ex1.hh</a>, <a href="nml_ex1.cc">nml_ex1.cc</a>, <a href="ex_cfg.nml">ex_cfg.nml</a></p>
+
+<h5> Here is <a href="nml_ex4.cc">nml_ex4.cc</a></h5>
+
+<div class="file">
+<pre> 
+/* nml_ex4.cc */
+#include &quot;rcs.hh&quot;
+#include &quot;<a href="nml_ex1.hh">nml_ex1.hh</a>&quot;
+
+int main()
+{
+	NML example_nml(ex_format, &quot;ex_buf1&quot;, &quot;ex4_proc&quot;, &quot;ex_cfg.nml&quot;);
+	EXAMPLE_MSG example_msg;
+	example_msg.f = 123.456;
+	example_msg.c = 'c';
+	example_msg.i = 99;
+	example_nml.write(example_msg);
+}
+
+</pre>
+</div>
+
+<p>Compile with:<a href="#UNIX_COMMANDS">*</a></p>
+
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the path for finding librcs.so
+LD_LIBRARY_PATH=&quot;${RCSLIB_DIR}/lib/:${LD_LIBRARY_PATH}&quot;;
+export LD_LIBRARY_PATH;
+
+## Create <a href="nml_ex1.cc">nml_ex1.cc</a> from <a href="nml_ex1.hh">nml_ex1.hh</a>
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/<a href="CodeGenCmdLine.jar">CodeGenCmdLine.jar</a> <a href="nml_ex1.hh">nml_ex1.hh</a> -o <a href="nml_ex1.cc">nml_ex1.cc</a>
+
+g++ <a href="nml_ex4.cc">nml_ex4.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_ex4
+</pre>
+</div> 
+
+<p>This example writes a message into a buffer. To
+read the message use the example in <a href="NML.html#Reading_NML_Header">Reading NML Data</a></p>
+
+<p>/* Write an NML message into a CMS buffer if it has been read. */ </p>
+
+<p>int NML::write_if_read(NMLmsg &amp;nml_msg); /* Reference version. */ </p>
+<p>int NML::write_if_read(NMLmsg *nml_msg); /* Pointer version. */ </p>
+
+<p>These functions combine the operations of
+writing and checking if a buffer has been read. It checks to see if
+the buffer has been read. If it has then it writes the message into
+the buffer just as write would, but if not it returns -1. Since there
+is only one access to the buffer, there is no way for another process
+to write into the buffer between the check and the write. The member
+NML::error_type can be examined to see the cause of NML write_if_read
+returning -1.
+(See <a href="NML.html#Handling_Errors_Header">"Handling Errors"</a>) </p>
+ <p>Returns: 
+<br/>0 if successful;
+<br/>-1 otherwise.  </p>
+
+<h4>Note:</h4>
+<p>This may not work as expected with remote processes unless "CONFIRM_WRITE" 
+is added the the corresponding BufferLine in the NML file. From &quot;<a href="NMLcfg.html">The NML Configuration Files</a>&quot;  documentation:</p>
+<p>To force the server to send confirmation messages back to a remote writer add "confirm_write". This allows a remote writer to detect problems such as a full queue or if a write_if_read failed because the buffer was not read but it  reduces performance. </p>
+
+<h3> <a name="Check_If_Read_Header">Checking If Data Has Been Read. </a></h3>
+<p>If queuing is not enabled then a
+flag is kept in every CMS buffer called was_read. Every time a write
+is performed on the buffer the flag is set to 0. Every time a read is
+performed on the buffer the flag is set to 1. The check_if_read
+function just returns the value of that flag. To avoid overwriting a
+buffer that has not been read yet, it is better to use the
+write_if_read function. The member NML::error_type can be examined to
+see the cause of NML::check_if_read returning -1.
+(See<a href="NML.html#Handling_Errors_Header">"Handling Errors"</a> ) </p>
+<p>If queuing is enabled then the check_if_read function returns 1
+only if all of the messages in the buffer have been read meaning that
+the queue is empty.  </p>
+
+<p>Here is the prototype: </p>
+
+<p>int NML::check_if_read(); </p>
+
+<p>Returns: 
+<br/>0 The buffer contains a message that has never been read.
+<br/>1 The buffer contains a message that has been read at least once.
+<br/>-1 An error occurred that prevented NML from determining
+whether the buffer has been read.  </p>
+
+<h3><a name="Get_Msg_Count_Header">Getting the Message Count. </a></h3>
+
+<p>The number of messages that have been successfully written to the buffer over its lifetime is saved in the buffer and can be retreived for diagnostic or monitoring purposes.</p>
+
+
+<p>Here is the prototype: </p>
+
+<p>int NML::get_msg_count(); </p>
+
+<p>Returns: 
+<br/>-1 Some error prevented the message count from being retrieved . 
+<br/> otherwise the number of messages written to that buffer over its lifetime.
+</p>
+
+
+<h3><a name="Get_Queue_Length_Header">Getting the Queue Length</a></h3>
+
+<p>If queing is enabled the number of messages queued in the buffer, can
+be obtained. </p>
+
+<p>Here is the prototype: </p>
+
+<p>int NML::get_queue_length(); </p>
+
+<p>Returns: 
+<br/>-1 Some error prevented the queue length from being retrieved . 
+<br/> otherwise the number of messages currently queued in the buffer.
+</p>
+
+<h3><a name="Get_Space_Available_Header">Getting the Space Left In A Queued Buffer. </a></h3>
+
+<p>The mechanism for queuing in NML stores the queue in a fixed length buffer. It could perhaps store many small messages or only a few larger ones, or some combination. The number of bytes free in the buffer can be used to estimate how many more messages can be written to the buffer before it is full. </p>
+
+
+<p>Here is the prototype: </p>
+
+<p>int NML::get_space_available(); </p>
+
+<p>Returns: 
+<br/>-1 Some error prevented the space available from being retrieved . 
+<br/> otherwise the number of bytes that are free in a queued buffer is returned.
+</p>
+
+<h3><a name="Clearing_Buffer_Header">Clearing a buffer.</a></h3>
+
+<p>You may
+want to clear a buffer to preempt previously sent messages still in
+the queue or to ensure that residual data in a buffer is not mistaken
+for NML messages.  </p>
+<p>int NML::clear(); </p>
+
+<p>Returns:
+<br/>0 The buffer was successfully cleared. 
+<br/>-1 An error occurred.  </p>
+
+<h3><a name="LOADCFG">Loading an NML Configuration file to memory.</a></h3>
+<p> In order to start up a process faster, it is possible to load the configuration file in to memory before creating several NML channels that use the same
+file. The file can later be unloaded to free the previously allocated memory.</p>
+
+<h4>Example: Loading a config file for faster startup.</h4>
+
+<div class="file">
+<pre> 
+
+. . .
+	load_nml_config_file( &quot;ex_cfg.nml&quot; );
+	NML example_nml1(ex_format, &quot;ex_buf1&quot;,&quot;ex4_proc&quot;, &quot;ex_cfg.nml&quot;);
+	NML example_nml2(ex_format, &quot;ex_buf2&quot;,&quot;ex4_proc&quot;, &quot;ex_cfg.nml&quot;);
+	NML example_nml3(ex_format, &quot;ex_buf3&quot;,&quot;ex4_proc&quot;, &quot;ex_cfg.nml&quot;);
+	NML example_nml4(ex_format, &quot;ex_buf4&quot;,&quot;ex4_proc&quot;, &quot;ex_cfg.nml&quot;);
+. . .
+
+	unload_nml_config_file( &quot;ex_cfg.nml&quot; );
+. . .
+</pre>
+</div>
+
+<h3><a name="MSG2STR">Converting an NMLmsg to a string.</a></h3>
+
+<p>It is occasionally helpful to be able to display the contents of any 
+NMLmsg in a string. To accomplish this you will need an NML object which
+was initialized with a format function that handles your message type.</p>
+
+<p>const char * NML::msg2str(NMLmsg *);</p>
+<p>const char * NML::msg2str(NMLmsg &amp;);</p>
+
+<p>Returns:
+<br/>This function returns a pointer to a string with each member of the NML message converted to a string and separated with commas if successful or NULL otherwise. The first two members will be the type and size of the message. The string may be cleared on the next call to read, write, check_if_read, peek, write_if_read, clear, or msg2str with that NML object, or when that NML object is deleted, so the string should be displayed or copied before any of these operations occur.</p>
+
+
+<h3><a name="OVERCONFIG">Overriding the NML configuration file.</a></h3>
+
+<p> Occasionally, it may be helpful to override some of the options in
+the configuration file. For example a program will only connect to one host 
+each time it is run, but each time it might be a different host, instead of changing the config file each time, it might be convenient to let the host be specified on the command line. The following functions set static global variables
+common to all tasks in multithreaded environments like VxWorks, but unique to each process in more traditional environments like sunos5</p>
+
+<pre>
+extern void nmlSetHostAlias(const char *hostName, const char *hostAlias);
+extern void nmlClearHostAliases();
+extern void nmlAllowNormalConnection();
+extern void nmlForceRemoteConnection();
+extern void nmlForceLocalConnection();
+</pre>
+
+<p> nmlSetHostAlias adds another host/alias pair to a linked list. Whenever
+a hostname is read from the configuration file this list is checked to see 
+if it matches one of the aliases, and if so it is effectively replaced with
+the corresponding host name. nmlClearHostAliases deletes the entire list.
+nmlForceRemoteConnection forces the ProcessType to be read as REMOTE for 
+all following connections. nmlForceLocalConnection forces the ProcessType to be read as LOCAL for all following connection. nmlAllowNormalConnection returns it to the default behavior where the value in the configuration file is honored.
+</p>
+
+<p>Here's an example using it to allow the user to select a host from the
+command line. NOTE: The example only works when localhost is specified in
+the config file and the process type for &quot;bReader&quot; is REMOTE.</p>
+
+<div class="file">
+<pre>
+#include &quot;rcs.hh&quot;
+#include &quot;<a href="nml_ex1.hh">nml_ex1.hh</a>&quot;
+
+int main(int argc, char **argv)
+{
+
+  if(argc > 1)
+    {
+      nmlSetHostAlias(argv[1],&quot;localhost&quot;);
+    }
+  NML example_nml(ex_format, &quot;ex_buf1&quot;, &quot;bReader&quot;, &quot;ex_cfg.nml&quot;);
+  
+  if(!example_nml.valid())
+    {
+      rcs_print_error(&quot;Bad.\n&quot;);
+    }
+  else
+    {
+      rcs_print(&quot;Good.\n&quot;);
+    }
+
+}
+</pre>
+</div>
+
+<p>Compile with:<a href="#UNIX_COMMANDS">*</a></p>
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the path for finding librcs.so
+LD_LIBRARY_PATH=&quot;${RCSLIB_DIR}/lib/:${LD_LIBRARY_PATH}&quot;;
+export LD_LIBRARY_PATH;
+
+## Create <a href="nml_ex1.cc">nml_ex1.cc</a> from <a href="nml_ex1.hh">nml_ex1.hh</a>
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/<a href="CodeGenCmdLine.jar">CodeGenCmdLine.jar</a> <a href="nml_ex1.hh">nml_ex1.hh</a> -o <a href="nml_ex1.cc">nml_ex1.cc</a>
+
+g++ <a href="nml_set_host_alias_ex.cc">nml_set_host_alias_ex.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_set_host_alias_ex
+</pre>
+</div>
+
+<h3><a name="Phantom_Buffers_Header">Using Phantom Buffers.  </a></h3>
+
+<p>Use of PHANTOM Buffers has been deprecated.</p>
+
+<!--
+<p>Occasionally users may wish to temporarily redirect messages
+intended for a CMS buffer. One way of doing this is setting up
+functions to simulate the behavior of the NML commands and set the
+pointers NML::phantom_clear, NML::phantom_check_if_read,
+NML::phantom_read, NML::phantom_peek, NML::phantom_write, and/or
+NML::phantom_write_if_read to those functions. If the buffer type or
+process type specified in the configuration file is "PHANTOM" then
+every NML call of that type will result in calling your phantom
+function. Otherwise, NML will access the buffer normally.(See the
+section <a href="NMLcfg.html">"Writing NML Configuration Files"</a>) </p>
+
+<h4> Example: Using PHANTOM overrides.  </h4>
+
+<p>Files needed for this example include: <A
+href="nml_ex5.cc">nml_ex5.cc</a>, <a href="nml_ex1.hh">nml_ex1.hh</a>,
+<a href="nml_ex1.cc">nml_ex1.cc</a>, <a href="ex_cfg.nml">ex_cfg.nml</a></p>
+
+<h5> Here is <a href="nml_ex5.cc">nml_ex5.cc</a></h5>
+
+<PRE> 
+/* nml_ex5.cc */ 
+#include &quot;rcs.hh&quot; 
+#include &quot;nml_ex1.hh&quot;
+
+/* This example uses the PHANTOM writes to send all messages to stdout.  */
+
+int my_write(NMLmsg *msg) 
+{
+	printf("Message %d written.\n", msg-&gt;type);
+}
+
+main() 
+{
+	NML example_nml(ex_format, &quot;ex_buf1&quot;,&quot;ex5_proc&quot;, &quot;ex_cfg.nml&quot;);
+	example_nml.phantom_write = my_write;
+	EXAMPLE_MSG example_msg;
+	/* . . .  */
+	example_nml.write(example_msg); 
+} 
+</PRE> 
+
+ -->
+
+<h3> <a name="Handling_Errors_Header">Handling Errors </a></h3>
+
+<p>When the
+NML member functions cannot perform their task they try to provide
+developers with some information that may allow them to resolve the
+problem. This information is available in several forms.  </p>
+
+<p>The functions NML::read(), NML::write(), NML::peek(), and
+NML::write_if_read() return -1 if an error occurred.
+NML::get_address() returns NULL if an error occurs.  </p>
+
+<p>Messages are printed to character display devices or stored in a linked list
+with the rcs_print_error facility. (See the document "RCS Lower Level
+Utilities" for more information on the rcs_print_error facility. )
+Often several messages are issued for the same error, because if an
+error occurs at a low level the low level function will print an error
+and return a value indicating an error to a higher level function
+which may then also print an error. This allows the user to see the
+detail available at the lower level and the context available at the
+higher level.  </p>
+
+<p>NML::error_type is a variable set by NML functions that fail. It may
+have one the following values: </p>
+
+<ul>
+<li>NML_NO_ERROR - No error was recognized.  </li>
+<li>NML_INVALID_CONFIGURATION - A problem with the
+configuration file is indicated.  </li>
+<li>NML_BUFFER_NOT_READ -
+Operations like write_if_read will only succeed if the message
+currently in the buffer has been read.  </li>
+<li>NML_TIMED_OUT - An operation timed out.  </li>
+<li>NML_FORMAT_ERROR - Could indicate that
+there was a problem with the user defined format and update functions,
+that the size of the buffer is not large enough for one of the
+messages, or that a message was received that no format function
+recognizes.  </li>
+<li>NML_NO_MASTER_ERROR - Something needs to be
+initialized by the process that is configured to be the buffer master.
+Check that a master is configured and running.  </li>
+
+<li>NML_INTERNAL_CMS_ERROR - A CMS operation failed for a reason not
+previously given.  </li>
+</ul>
+
+<p>int NML::valid(); </p>
+
+<p>NML::valid() returns 0 if the object was not properly constructed
+or if an error has occurred severe enough that it is unlikely that any
+of the other NML operations on this object will succeed or 1 if
+everything seems to be in order.  </p>
+
+<h4>Example: Checking Error Status </h4>
+
+<p>Files needed for this example include: 
+<a href="nml_ex6.cc">nml_ex6.cc</a>, 
+<a href="nml_ex1.hh">nml_ex1.hh</a>, 
+<a href="nml_ex1.cc">nml_ex1.cc</a>, 
+<a href="ex_cfg.nml">ex_cfg.nml</a></p>
+ 
+<h5> Here is <a href="nml_ex6.cc">nml_ex6.cc</a></h5>
+
+<div class="file">
+<pre> 
+/* nml_ex6.cc */
+
+#include &quot;rcs.hh&quot; 
+#include &quot;nml_ex1.hh&quot;
+
+#include &lt;stdio.h&gt;
+
+/* This example prompts the user when NML times out to see if it
+should try again. */
+
+main() {
+	NML example_nml(ex_format, &quot;ex_buf1&quot;,&quot;ex6_proc&quot;, &quot;ex_cfg.nml&quot;);
+	EXAMPLE_MSG *example_msg_ptr;
+	char input_array[10];
+
+	TRY_AGAIN:
+
+	switch(example_nml.read())
+	{
+	case -1:
+		if(example_nml.error_type == NML_TIMED_OUT)
+		{
+			rcs_print(&quot;NML timed out\n&quot;);
+			rcs_print(&quot;Do you want to try again? (y/n)&quot;);
+			fgets(input_array,sizeof(input_array),stdin);
+			if(input_array[0] == 'y')
+				goto TRY_AGAIN;
+
+		}
+		break;
+
+	case 0:
+		/* The buffer contains the same message you read last time. */
+		break;
+
+	case EXAMPLE_MSG_TYPE:
+		example_msg_ptr = (EXAMPLE_MSG *)example_nml.get_address();
+		/* We have a new example message. */
+		break;
+
+	} 
+} 
+</pre>
+</div>
+
+<h2><a href="NMLcfg.html">The Section called &quot;Writing an NML Configuration
+File&quot; has been moved to it's own page at http://www.isd.mel.nist.gov/projects/rcslib/NMLcfg.html.</a></h2>
+
+<h2><a name="Spawn_and_Kill_Servers_Header">Spawning and Killing NML Servers</a></h2>
+
+<p>NML servers allow remote processes to access local buffers. The code
+for the servers has already been included in the RCS library but you
+must still start and stop them. There are several ways for you to
+control when servers are spawned and killed.
+</p>
+
+<h3><a name="Using_RUN_NML_SERVERS_Header">Using the run_nml_servers function.</a></h3>
+
+<p>void run_nml_servers();
+</p>
+
+<p>Each time an NML object is created it is added to a global list. In operating systems like LynxOs and SunOs that use heavy-weight
+threads each process has its own list. In operating systems like VxWorks
+that use light-weight threads the list is shared by all processes
+currently running that use NML. The function run_nml_servers reads the
+lists, checks for the server configuration flag, and groups the buffers
+with the same RPC, TCP or UDP number. For each different RPC, TCP or UDP program number a server
+is spawned to handle requests for the group of buffers with that RPC, TCP or UDP
+number. If all of the RPC, TCP or UDP numbers were the same the current process would
+become the server for all the buffers on the list that have a non-zero
+server configuration flag. This function will not return.
+
+Using run_nml_servers() has several advantages over nml_start(), nml_cleanup() described later and is generally the preferred method.
+</p>
+<ul>
+<li>If the server is also the master it will have no runtime dependancies in other words it does not need anything else to start before it starts making startup more consistant and reliable.</li>
+<li>On most operating systems seperating the server code from user code makes profiling or debugging either of them easier.</li>
+</ul>
+
+<h4>Example: Two NML buffers with a single process server. </h4>
+
+<p>Files needed for this example include: 
+<a href="nml_ex9.cc">nml_ex9.cc</a>, <a href="nml_ex1.hh">nml_ex1.hh</a>, 
+<a href="nml_ex1.cc">nml_ex1.cc</a>, <a href="ex_cfg.nml">ex_cfg.nml</a></p>
+
+<h5><a href="nml_ex9.cc">nml_ex9.cc</a></h5>
+
+<div class="file">
+<pre>
+#include &quot;rcs.hh&quot;
+#include &quot;nml_ex1.hh&quot;
+
+int main(int argc,const char**argv)
+{
+	NML nml1(ex_format, &quot;ex_buf1&quot;,&quot;ex9_svr&quot;,&quot;ex_cfg.nml&quot;);
+	NML nml2(ex_format, &quot;ex_buf2&quot;,&quot;ex9_svr&quot;,&quot;ex_cfg.nml&quot;);
+
+	run_nml_servers(); /* This never returns. */
+}
+</pre>
+</div>
+
+<p>Compile with:<a href="#UNIX_COMMANDS">*</a></p>
+
+<div class="user">
+<pre>
+
+## Set RCS lib install directory.
+## likely needs to adjusted for your system.
+RCSLIB_DIR=~/rcslib/; 
+
+## Set the path for finding librcs.so
+LD_LIBRARY_PATH=&quot;${RCSLIB_DIR}/lib/:${LD_LIBRARY_PATH}&quot;;
+export LD_LIBRARY_PATH;
+
+## Create <a href="nml_ex1.cc">nml_ex1.cc</a> from <a href="nml_ex1.hh">nml_ex1.hh</a>
+java -jar &quot;${RCSLIB_DIR}&quot;/bin/<a href="CodeGenCmdLine.jar">CodeGenCmdLine.jar</a> <a href="nml_ex1.hh">nml_ex1.hh</a> -o <a href="nml_ex1.cc">nml_ex1.cc</a>
+
+g++ <a href="nml_ex9.cc">nml_ex9.cc</a> <a href="nml_ex1.cc">nml_ex1.cc</a> -I&quot;${RCSLIB_DIR}&quot;/include -L &quot;${RCSLIB_DIR}&quot;/lib -lrcs -o nml_ex9
+</pre>
+</div>
+
+<p><a name="nml_start_function"></a><a name="nml_cleanup_function"></a></p>
+<h3>Using the nml_start and nml_cleanup functions.</h3>
+
+<p>void nml_start();
+</p>
+
+<p>void nml_cleanup()
+</p>
+
+<p>The nml_start function works like run_nml_servers except that it may
+spawn an additional process(es) so that it will return. The nml_cleanup
+function deletes all NML_SERVER objects and all NML objects so that all
+servers that were spawned will be stopped with SIGINT.
+</p>
+
+<h4>Example: Two NML buffers with servers and application code with single main.</h4>
+
+<p>Files needed for this example include: 
+<a href="nml_ex10.cc">nml_ex10.cc</a>, <a href="nml_ex1.hh">nml_ex1.hh</a>, 
+<a href="nml_ex1.cc">nml_ex1.cc</a>, <a href="ex_cfg.nml">ex_cfg.nml</a></p>
+
+<h5><a href="nml_ex10.cc">nml_ex10.cc</a></h5>
+
+<div class="file">
+<pre>
+/* nml_ex10.cc */
+#include &quot;rcs.hh&quot;
+#include &quot;nml_ex1.hh&quot;
+
+main()
+{
+	NML nml1(ex_format, &quot;ex_buf1&quot;,&quot;ex10_svr&quot;,&quot;ex_cfg.nml&quot;);
+	NML nml2(ex_format, &quot;ex_buf2&quot;,&quot;ex10_svr&quot;,&quot;ex_cfg.nml&quot;);
+
+	/* Spawn 2 servers and continue. */
+	nml_start(); 
+
+	/* . . . */
+	/* Perform some processing. */
+	/* . . . */
+
+
+	/* Kill the 2 servers and close NML channels. */
+	nml_cleanup();
+}
+</pre>
+</div>
+
+
+<p>Warning: Do NOT use any nml objects after calling nml_cleanup.
+</p>
+
+<h2><a name="User_Command_Header">User Command Utilities.</a></h2>
+
+<p>There are several utilities that can be used directly by users
+without any additional programming.
+</p>
+
+<h3><a name="Testing_Existence_Header">Testing for the existence of NML buffers.</a></h3>
+
+<p>nmltest [config_file local_host] 
+</p>
+
+<p>The nmltest program reads the config_file and attempts to connect to
+every buffer in the file. If it succeeds the buffer exists. If it does
+not either the master for the buffer was not started, or the server was not
+started, or the config file contains an error. It attempts to use the
+local protocol for buffers on the local_host. If you do not specify the
+config_file or local host it will prompt you for them. It also reports
+the type and size of message if any in the buffer and some other
+information which may be useful.
+</p>
+
+<h3><a name="Determining_Performance_Header">Determining the performance of NML on a particular system.</a></h3>
+
+<p>nmlperf [config_file local_host master iterations increments
+detailed_output display_mode]
+</p>
+
+<p>perfsvr [config_file local_host]
+</p>
+
+<p>The performance of NML varies depending on the system you are
+running under and the type of protocol used by CMS. The nmlperf program
+connects to every buffer in config_file. It uses the local protocol if
+the buffer is on local_host. It initializes the buffer if master equals
+1. It writes and reads the buffer with messages from a minimum size to
+the size of the buffer for iterations times with increments different
+sizes. If detailed_output equals 1 then it will display the time for
+every read and write. display_mode can be "B" for bytes-per-second or
+"M" for messages-per-second.
+</p>
+
+<p>If you don't specify all the parameters then
+you will be prompted for them. The perfsvr program is run on a
+remote machine to allow testing of remote protocols. 
+</p>
+
+<h3><a name="Removing_Buffers_Header">Removing Unwanted Buffers</a></h3>
+
+<p>nmlclean [config_file local_host]
+</p>
+
+<p>Occasionally severe errors cause programs to exit without deleting
+the NML buffers that they create. The nmlclean program attempts to free
+all of the operating system resources associated with buffers in the
+config_file on local_host and to kill the NML servers that are running.
+</p>
+
+<h2><a name="NML_Scripting">Using NML Script Files.</a></h2>
+
+<p>The NML Script files previously described here have been deprecated.</p>
+
+<!-- 
+<p>NML script files allow programs that use NML to be tested with
+certain inputs without the need for running a separate program
+to create those inputs. To use script files the buffer type in the
+configuration file should be set to FILEMEM and the in=&lt;script_file&gt;
+should
+be added to the buffer line. Each time the program calls NML::read or
+NML::peek for that buffer the script file will be read line by line until a command is found</p>
+
+<p> The following commands can be used:</p>
+
+<h3><a name="Script_MSG">MSG</a></h3>
+
+<p>When a line begins with &quot;MSG&gt;&quot; the command causes the read to 
+return a particular message. The rest of the line should contain the parameters
+ of the message in the same order as the CMS update functions, including the 
+type and size which are in every NMLmsg.
+</p> 
+
+<p>Example:</p>
+
+<p>In the file nml_emc.hh the NML_INTERP_RUN message is defined as follows.
+
+<pre>
+#define NML_INTERP_RUN_TYPE ((NMLTYPE) 410)
+class NML_INTERP_RUN : public NMLmsg
+{
+ public:
+  NML_INTERP_RUN() : NMLmsg(NML_INTERP_RUN_TYPE, sizeof(NML_INTERP_RUN)) {};
+  void update(CMS *cms);
+
+  char file[NML_INTERP_FILE_LEN];
+};
+</pre>
+
+<p>To have an NML_INTERP_RUN message read from the script, with file set to 
+&quot;team.dms&quot; use the following line.</p>
+
+<pre>
+MSG> 410, 0,team.dms,
+</pre>
+ 
+<p>The final comma is a good idea to make sure that no write space that might
+be on the end of the line is included in the string.
+</p>
+
+<h3><a name="Script_Wait">WAIT</a></h3>
+
+<p>When a line begins with &quot;WAIT&gt; the program will respond as if no
+new messages were received for some period of time.</p>
+
+<h3><a name="Script_Comment">COMMENTS</a></h3>
+
+<p>Comments can be inserted in the script file by beginning the line with the
+&quot;#&quot; character.
+
+-->
+
+
+<h2><a name="Trouble_Shooting_Header">Trouble Shooting</a></h2>
+
+<p>Here is a list of some of the problems that NML users have
+encountered and some tips for resolving them.
+</p>
+
+<h3><a name="Compile_Error_Header">Compile Time Errors.</a></h3>
+
+<p>While compiling one of the update functions for the NML vocabulary,
+the compiler complains that there are insufficient arguments for one of
+the CMS::update functions.
+</p>
+
+<!-- 
+<h4><a name="Insufficient_Args_Error">Insufficient Arguments Error</a></h4>
+
+<p>I received the error from g++.
+</p>
+
+<p>types.cc:47: too few arguments for method `update`.
+</p>
+
+<p>And in types.cc line 47 I have:
+</p>
+
+<p>	cms-&gt;update(x);
+</p>
+
+<p>Solution: Check the type of the variable you are updating. It is
+probably either an enum or a pointer type, since neither of these is
+supported. If it is an enum, define it as an int. The problem with enumerated values is that although one could define a function that accepted enums of a particular type it is impossible to define a function that would accept a reference to any enum as a parameter. If the variable is a pointer type
+define it as whatever it was pointing to. If it is an array add the
+length of the array as a second parameter to CMS::update.
+</p>
+
+
+<h3><a name="Run_Error">Run Time Errors</a></h3>
+
+<p>While starting an NML server, I get the following error.
+</p>
+
+<p>server: Can`t register server.
+</p>
+
+<p>Solution: Try it again. If possible the server will try to
+unregister the process currently registered on that number so it will be
+able to register. Check to see if another RPC, TCP or UDP server is already
+registered on the RPC, TCP or UDP program number that you are trying to use. (Use the
+command "rpcinfo -p" on a Sun, SGI or LynxOS machine.) If there is
+another server registered, then change the number in the configuration
+file. 
+</p>
+
+ -->
+
+<p>When I am trying to initialize an NML channel, I get the following
+error:
+</p>
+
+<p>shmget failed: No such file or directory.
+</p>
+
+<p>Solution: The master was probably not started before this
+non-master. Start the master first.
+</p>
+
+<p>When I am trying to initialize an NML channel, I get the following
+error.
+</p>
+
+<p>shmget failed: Invalid argument.
+</p>
+
+<p>Solution: This usually happens when the shared memory buffer exists
+but it's not the size that this process expects. Check that all of the
+processes are using the same configuration file and that the
+configuration file hasn't changed since the master process started. Also
+check the shared memory buffer with "ipcs" command to make sure no one
+else has created the buffer with a different size.
+</p>
+
+<p>When I am trying to initialize an NML channel to a remote host, my
+program gets hung.
+</p>
+
+<p>Solution: Check that the host specified for the buffer in the
+configuration file is correct, up and running and that the programs host
+can ping the remote host. If the host is not up and running or you can't
+ping it call your system administrator.
+</p>
+
+<!-- 
+
+<p>When I am trying to initialize an NML channel to a remote host, I
+get the following error.
+</p>
+
+<p>RPCMEM::open: RPC: Unknown Host
+</p>
+
+<p>Solution: The next line after this error should list the host the
+program expected to connect with. If it is not a spelling mistake, ask
+your system administrator to check and if necessary add the internet
+number of the remote host to the hosts database.
+</p>
+
+<p>When I am trying to initialize an NML channel to a remote host, I
+get the following error.
+</p>
+
+<p>          RPCMEM::open: RPC: Program not registered.
+</p>
+
+<p>Solution: The next line after this error should list the host the
+program expected to connect with and the RPC number that the NML server
+on that host should use. Make sure that the NML server has been started
+before any clients need to connect.
+</p>
+
+-->
+
+           
+<hr/>
+ 
+<p>Last Modified:  June 17, 2009</p>
+<ul>
+<li><a href="index.html">See other RCS Library Documents.</a></li>
+
+<li><a href="NMLtoc.html">Go To Table of Contents</a></li>
+
+<li><a href="NML.html#TOP_OF_FILE">Go to the top of this document.</a></li>     
+
+</ul>
+
+<p><a name="UNIX_COMMANDS">*</a>Commands are generally appropriate for Linux/Unix/MacOS by just pasting them into a terminal. For Windows install Cygwin and Java Develeper's Kit, set the PATH to add the JDK dir and paste the commands into cygwin.</p>
+
+
+<p>If you have questions or comments regarding this page  please
+contact  <a href="http://www.isd.mel.nist.gov/personnel/shackleford/"
+>Will Shackleford</a> at <em><a href="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</a></em></p>
+<p>To be automatically sent information on updates to the RCS library, please 
+<a href="http://www.onelist.com/subscribe.cgi/nist_rcs">subscribe to the &quot;nist_rcs&quot; mailing list on http://www.onelist.com</a>.</p>
+
+</body>
+</html>
+

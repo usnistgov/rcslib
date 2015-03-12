@@ -1,0 +1,74 @@
+ifeq ($(findstring vxworks, $(PLAT)),vxworks)
+
+OS_INTF_OBJS:= \
+	_sem.o \
+	sem.o \
+	_shm.o \
+	shm.o \
+	_table.o \
+	table.o \
+	_timer.o \
+	timer.o \
+	inetnull.o \
+	inifile.o \
+	_inifile.o
+
+else
+
+INETFILEFILE=inetnull
+
+
+OS_INTF_OBJS:= \
+	_sem.o \
+	sem.o \
+	_shm.o \
+	shm.o \
+	_table.o \
+	table.o \
+	_timer.o \
+	timer.o \
+	$(INETFILEFILE).o \
+	inifile.o \
+	_inifile.o
+
+endif
+# end-of  -- ifeq ($(findstring vxworks, $(PLAT)),vxworks)
+
+
+ifdef DEBUG_MEMORY
+OS_INTF_OBJS:= $(OS_INTF_OBJS) \
+	dbg_mem.o
+
+endif
+
+LIBRCS_OBJS:= $(LIBRCS_OBJS) \
+	$(OS_INTF_OBJS)
+
+
+
+# Declare which files are to be released
+OS_INTF_HEADERS = _sem.h \
+	sem.hh \
+	_shm.h \
+	shm.hh \
+	_table.h \
+	table.hh \
+	_timer.h \
+	timer.hh \
+	gtimer.hh \
+	rcs_exit.hh \
+	inetfile.hh \
+	inifile.h \
+	dbg_mem.h \
+	fileops.h \
+	rcs_mnmxtotal.hh 
+
+
+
+
+
+
+
+
+
+

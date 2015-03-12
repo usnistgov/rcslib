@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en-US">
+<head>
+<title>NML 64bit long notes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://www.isd.mel.nist.gov/mel2.css" type="text/css" />
+
+</head>
+<body>
+<h1>NML 64bit long notes</h1>
+
+<p>Currently most C and C++ compilers use long integers that contain only 32 bits. Compilers for ia64 processors are the primary exception. The compilers for ia64 generally use 32 bits for normal integers (just as most other compilers do) and 64 bits for long integers. Java uses 64 bit longs on all processors. XDR, the eXternal Data Representation stores only 32 bits for longs. This means if you are on an ia64 bit machine and a long needs to be sent remotely that exceeds the range of a 32 bit integer (-2147483648, 21474836487) a run-time error will occur. If instead &quot;packedl64&quot; encoding were selected instead of XDR then 64 bits would be transfered and no error would occur on the sending side. However if the remote reciever ran on a system using 32bit longs and again the value exceeded the range of a 32 bit integer then a run-time warning would be logged, the value of that particular long would be undefined but the rest of the message would still be transfered. To force an error in this last case instead of a warning, one could also add &quot;fail_on_overflow&quot; to the buffer line. The error would still occur on the recieving side and not the sending side. Differences in byte order and differences in address offsets between sender and reciever caused both by different alignment rules and by the differences in the size of the basic data types are handled transparently by NML using either encoding scheme. Only the differences in range should application programmers be concerned about.
+I have yet to make a decision or to thoroughly test the other encoding formats on the consequences of sending long integers that exceed the range of a 32 bit integer. An error/warning may occur on the sending side or the recieving side depending on the encoding method.</p>
+<p>The &quot;long double&quot; type has always been problematic its size ranges from 80 bits to 128 bits. NML always converts first to 64 bit double before sending it. The range is checked and an error occurs when sending a value that
+can not be represented in a 64 bit double. Unfortunately there is no way to check that the loss in precision is not significant, so it only makes sense to define long double's in messages that will either be passed between identical machines and use the &quot;FORCE_RAW&quot; option or will only be passed between local processes on the same system. </p> 
+
+<h2>Conclusion:</h2>
+
+<p>The simplest rule to follow would be to assume it is only safe to send long integers that exceed the range of a 32-bit integer (-2147483648, 21474836487) if &quot;packedl64&quot; encoding is used and all processes are either running on machines that store long integers in 64 bits or they are written in Java. </p>
+
+<hr />
+
+<p>Last Modified: June 9,2004</p>
+<p>If you have questions or comments regarding this page please
+contact  <a href="http://www.isd.mel.nist.gov/personnel/shackleford/index.htm"
+>Will Shackleford</a> at <i><a href="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</a></i></p>
+</body>
+</html>
+
+
+
+

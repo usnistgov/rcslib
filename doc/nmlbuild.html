@@ -1,0 +1,89 @@
+<html>
+<head>
+<title>NML Configuration File Builder</title>
+</head>
+<body  BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="551A8B" ALINK="#FF0000">
+<H1>NML Configuration File Builder</H1>
+<p>This form provides an interface to the CGI program which generates NML configuration files. After filling in the form press submit and the new NML file 
+will be created and displayed. Use your browsers &quot;Save As ...&quot; command to save the NML file where you can use it. The program makes several assumptions about your project that can be changed by editing the NML configuration 
+file with a text editor using information from <A HREF="http://isd.cme.nist.gov/proj/rcs_lib/NML.html">The NML Programmer's Guide</a>. All buffer and process 
+names need to be atleast 2 characters long and can be separated with 
+new lines, spaces, tabs, or commas. None of the fields are required, you may 
+leave any or all of them blank. The program will place all buffers  on
+the same host and give them all the same master and server.
+</p>
+<CENTER>
+<form name="all" METHOD="GET" ACTION="http://www.isd.mel.nist.gov/~shackle/cgi-bin/nmlbuild.cgi">
+<TABLE>
+<TR><TD>
+buffers: <br><textarea rows=4 cols=25 name="buffers"></textarea>
+</TD></TR>
+<TR><TD>
+local processes:<br><textarea rows=4 cols=25 name="localprocs"></textarea>
+</TD>
+<TD>
+remote processes:<br><textarea rows=4 cols=25 name="remoteprocs"></textarea>
+</TD>
+</TR>
+<TR><TD>
+master: <input type="text" name="master"></input>
+</TD><TD>
+server: <input type="text" name="server"></input>
+</TD></TR>
+<TR><TD>
+timeout for local processes: <br><input type="text" name="timeout" value="0.1"></input>
+</TD>
+<TD>
+timeout for remote processes:<br> <input type="text" name="remotetimeout" value="1.0"></input></TD>
+</TR>
+<TR>
+<TD>
+buffer host: <input type="text" name="bufferhost"></input>
+</TD>
+<TD>
+remote host: <input type="text" name="remotehost"></input>
+</TD>
+</TR>
+<TR>
+<TD>
+buffer type:<br> <input type="radio" name="buffertype" value="SHMEM">SHMEM</input><br>
+<input type="radio" name="buffertype" value="GLOBMEM">GLOBMEM</input><br>
+</TD>
+<TD>
+remote connection type:<br> <input type="radio" name="remoteconnecttype" value="TCP"> TCP with ascii encoding</input>
+<br><input type="radio" name="remoteconnecttype" value="RPC">RPC with XDR encoding</input>
+</TD>
+</TR>
+<TR>
+<TD>
+buffer size: <input type="text" name="bufsize" value="0x1000"></input><br>
+VME address: <input type="text" name="vme_addr" value="0x0"></input> <br>
+first shared memory key: <input type="text" name="shmem_key"></input><br>
+nuetral buffers: <input type="checkbox" name="nuet">
+</TD>
+<TD>
+TCP port: <br><input type="text" name="tcp_port"></input><br>
+RPC program number: <input type="text" name="rpc_prog_num"></input><br>
+</TD>
+<TR><TD>
+<input type="submit"></input>
+</TD></TR>
+</TABLE>
+
+</form>
+</CENTER>
+<HR>
+ 
+<p>Last Modified:  December 18,1996 </p>
+
+<UL>
+<LI><A HREF="index.html">See other RCS Library Documents.</A></LI>
+</UL>
+
+<P>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email, please
+contact  <A HREF="http://isd.cme.nist.gov/staff/shackleford/"
+>Will Shackleford</A> at <I><A HREF="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</A></I></P>
+
+</body>
+</html>
+

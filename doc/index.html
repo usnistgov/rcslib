@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<title>RCS Library</title>
+<meta name="description" content="The Real-Time Control Systems library is an archive of C++ code, scripts, makefiles, and documentation  developed to aid programmers of software to be used in real-time control systems." />
+<meta name="keywords" content="real-time control programming manufacturing
+software C++ java" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://www.isd.mel.nist.gov/mel2.css" type="text/css" />
+</head>
+
+<body>
+
+<h2>Real-Time Control Systems Library &ndash;&ndash; Software and Documentation</h2>
+  
+<p>The Real-Time Control Systems library is an archive of 
+          free C++, Java and Ada code, scripts, tools, makefiles, and documentation 
+          developed to aid programmers of software to be used in real-time control 
+          systems (especially those using the <a href="http://www.isd.mel.nist.gov/documents/albus/Ref_Model_Arch345.pdf">Reference 
+          Model Architecture for Intelligent Systems Design</a>).</p>
+
+<p>The following documents describe the library in more detail:</p>
+        
+<table>
+<tr>
+<td><a href="diag_hierarchy.png"><img src="diag_hierarchy_small.png" alt="Diagnostics Tool (Hierarchy View)" /></a></td>
+<td><a href="diag_graph.png"><img src="diag_graph_small.png" alt="Diagnostics Tool (Graph View)" /></a></td>
+</tr>
+</table>
+          
+
+<h2><a href="getrcs.html">Download</a></h2>
+
+<dl> 
+
+<!---
+<dt><a href="http://www.isd.mel.nist.gov/projects/rcslib/rcs_diag_videos/">RCS Diagnostics Tools Videos</a>(<b>Added December 2009</b>)</dt>
+<dd>A set of tutotorial screencast videos featuring the RCS Diagnostics Tool, Player, Stage and MOAST.</dd>
+--->
+
+
+<dt><a href="nml-tutorial.pdf">NML Tutorial</a></dt>
+<dd>A 90-page tutorial presentation on NML (PDF format)</dd>
+<dt><a href="bugs.html">Report Bugs/Get Support</a></dt>
+<dd>----</dd>          
+
+<dt><a href="NMLcpp.html">The NML Programmer's Guide (C++ Version)</a></dt>
+            <dd>Describes the use of the Neutral Message Language(NML) components 
+              of the library and related parts of the Communication Management 
+              System(CMS). It includes distributed application development in 
+              C++ and creating custom NML vocabularies. (Examples and function 
+              prototypes are given in C++.) </dd>
+
+<dt><a href="NMLjava.html">The NML Programmer's Guide (Java Version)</a></dt>
+            <dd>Describes the use of the Neutral Message Language(NML) components 
+              of the library and related parts of the Communication Management 
+              System(CMS). It includes distributed application development in 
+              Java and creating custom NML vocabularies. (Examples and function 
+              prototypes are given in Java.) See also  
+	    <a href="javadoc/">JavaDoc Generated Docs</a> or 
+	    <a href="rcslib_javadoc.zip">Zip archive of JavaDoc Generated Docs</a></dd>
+
+<dt><a href="NML_Ada.html">The NML Programmer's Guide (Ada Version)</a></dt>
+            <dd>Describes the use of the Neutral Message Language(NML) components 
+              of the library and related parts of the Communication Management 
+              System(CMS). It includes distributed application development in 
+              Ada and creating custom NML vocabularies. (Examples and function 
+              prototypes are given in Ada.) <b>Added October 24,2004</b></dd>
+            
+<dt><a href="NMLcfg.html">The NML Configuration Files</a></dt>
+            <dd>Describes writing an NML Configuration file and the options available. <strong>Updated March,2006</strong> </dd>
+            
+<dt><a href="newnmlcfg.html">The Version 2.0 NML Configuration File 
+              Format and Tool</a></dt>
+            <dd>Describes a newer experimental version of the NML Configuration 
+              file, the options available and a tool needed to convert the new 
+              format to the old format. </dd>
+            
+<dt><a href="nmlcfgsvr.html">The NML Configuration Server</a></dt>
+            <dd>Describes a program that can be used instead of or in addition to
+	    NML Configuration files. It determines the information normally stored in
+	     a configuration file as NML applications run. <b>Added April,2004</b></dd>
+
+<dt><a href="message_files.html">NML Message Files</a></dt>
+            <dd>Describes the file format, API for reading and writing and tools for displaying data in NML Packed Message Files. <b>Added June,2009</b></dd>
+            
+<dt><a href="nmlset.html">The NML_SET class</a></dt>
+            <dd>The NML Set class is a class intended to make it easier to write applications  to monitor or interact with multiple NML buffers especially when the number of such buffers is not fixed or known when the application starts. It is designed to work with the <a href="nmlcfgsvr.html">NML Configuration Server</a>. <b>Added July,2004</b></dd>
+            
+<dt><a href="NML_XML.html">NML support for XML</a></dt>
+            <dd>Describes a number of ways NML can be used to read or 
+	    send XML.</dd>
+            
+<dt><a href="nmlsubdiv.html">NML Subdivisions</a></dt>
+            <dd>Describes some extensions to NML that allow advanced users to 
+              access subdivisions within an NML buffer.</dd>
+            
+<dt><a href="nmlqr.html">The NML Query/Reply Service</a></dt>
+            <dd>Describes some extensions to NML that allow advanced users to 
+              create Query/Reply Services more easily.</dd>
+            
+<dt><a href="nmlperf.html">NML Performance Results</a></dt>
+            <dd>A summary of the results of some performance tests run on NML, 
+              including some hints at optimizing NML and running your own tests.</dd>
+            
+<dt><a href="timingdiag.html">Supplementary NML Timing Diagnostics 
+              Tools</a></dt>
+            <dd>Describes some tools and configuration options that allow users 
+              to obtained detailed information on the timing of reads and writes 
+              to thier NML buffers.</dd>
+	                  
+<dt><a href="CodeGen-Instructions.html">NML Code Generator Instructions</a></dt>
+            <dd>Instructions for using the NML Code Generator to create C++ update and format functions or Java NML definitions. <strong>Updated March,2006</strong></dd>
+            
+<dt><a href="nml_module.html">NML_MODULE</a></dt>
+            <dd>Describes the NML_MODULE base class which can be used to provide 
+              a template or framework for RCS applications.</dd>
+            
+<dt><a href="http://www.isd.mel.nist.gov/projects/rcslib/diagapplet/">RCS Java-based Diagnostics Tool</a></dt>
+            <dd>A tool written as a java applet that allows programmers to see 
+              the status and send commands to any RCS module.</dd>
+            
+<dt><a href="javadiag.html">RCS Java-based Diagnostics Tool Instructions</a></dt>
+            <dd>Instructions on how to build applications for use with the diagnostics 
+              tool. </dd>
+            
+<dt><a href="http://www.isd.mel.nist.gov/projects/rcslib/diagapplet/rcsdesign.html">RCS-Design Tool</a></dt>
+            <dd>A tool written as a java applet that allows programmers to create 
+              RCS applications graphically and generates source code.</dd>
+            
+<dt><a href="javadesign.html">RCS-Design Tool Instructions</a></dt>
+            <dd>Instructions on how to build applications with the RCS-Design 
+              tool. </dd>
+            
+<dt><a href="http://www.isd.mel.nist.gov/projects/rcslib/diagapplet/plotter.html">RCS Data Plotter</a></dt>
+            <dd>A Java applet which plots data on a cartesian or polar graph, 
+              read either in real-time or from a text file.</dd>
+            
+<dt><a href="sockintf.html">Socket Interface to NML</a></dt>
+            <dd>Describes how to connect to an NML server using sockets directly. 
+              This information should also be useful for other languages where 
+              the C++ NML client interface is not available.</dd>
+            
+<dt><a href="posemathdoc/">RCS Posemath Library</a></dt>
+            <dd>A library of classes for representing positions, rotations, and 
+              translations in a variety of coordinate systems and the functions 
+              to add/subtract/multiply/divide/convert them. For more info on posemath 
+              you may also want to check out: <a href="posemath_examples.html">Karl 
+              Murphy's Posemath Examples</a></dd>
+            
+<dt><a href="utils.html">RCS Library Lower Level Utilities</a></dt>
+            <dd>Describes many of the lower level utilities used to create the 
+              NODE, CMS, and NML components of the RCS Library but which may be 
+              useful on their own. Includes timers, semaphores, linked-lists, 
+              printing, and windows functions.</dd>
+           	    
+<dt><a href="getrcs.html">RCS Library Installation Instructions</a></dt>
+	      <dd>Provides instructions for getting and making the RCS Library.</dd>
+            
+<dt><a href="rcsvers.html">RCS Library Version Functions</a></dt>
+            <dd>Documentation for some functions for determining at run-time which 
+              version of the RCS library your using.</dd>
+
+            
+<dt><a href="emc_links.html">EMC (Enhanced Machine Controller) links</a></dt>
+            <dd></dd>
+
+</dl>
+
+<hr />
+
+<dl>
+<dt><strong>Commercial Product Disclaimer</strong></dt>
+<dd>Certain commercial equipment, 
+            instruments, or materials are identified in this paper to specify 
+            the experimental procedure adequately. Such identification is not 
+            intended to imply recommendation or endorsement by the National Institute 
+            of Standards and Technology, nor is it intended to imply that the 
+            materials or equipment identified are necessarily the best available 
+            for the purpose.
+</dd>
+
+<dt><strong>Software Disclaimer/Copywrite Release</strong></dt> 
+<dd>This software was developed at the <a href="http://www.nist.gov">National Institute of Standards and
+	Technology</a> by employees of the Federal Government in the course of their
+      official duties. Pursuant to <a href="http://www.copyright.gov/title17/92chap1.html#105">title 17 Section 105 of the United States
+	Code</a> this software is not subject to copyright protection and is in the
+      public domain. NIST Real-Time Control System software is an experimental
+      system. NIST assumes no responsibility whatsoever for its use by other
+parties, and makes no guarantees, expressed or implied, about its
+      quality, reliability, or any other characteristic. We would appreciate
+      acknowledgement if the software is used. This software can be
+      redistributed and/or modified freely provided that any derivative works
+      bear some notice that they are derived from it, and any modified
+      versions bear some notice that they have been modified.
+</dd>
+</dl>
+
+<hr />
+      
+<p>Last Modified: October 1, 2009</p>
+<p>If you have questions or comments regarding this page 
+  please contact <a href="http://www.isd.mel.nist.gov/personnel/shackleford/index.htm"
+		    >Will Shackleford</a> at <em><a href="mailto:shackle@nist.gov">shackle@nist.gov</a></em></p>
+
+</body>
+</html>

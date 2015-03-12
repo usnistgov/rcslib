@@ -1,0 +1,114 @@
+#!/bin/bash
+
+
+if test "x${KERNEL_SOURCE_DIR}" != "x" ; then
+    echo ${KERNEL_SOURCE_DIR};
+    exit 0;
+fi
+
+FULL_UNAME=`uname -a | sed 'y# #_#' | sed 'y#/#_#' | sed 'y#-#_#' | sed 'y#:#_#' 2>/dev/null`_${CC} 2>/dev/null
+
+if test "x${FULL_UNAME}" != "x" ; then
+    if test -f ~/.kernel_source_dir.${FULL_UNAME} ; then
+	KERNEL_SOURCE_DIR=`head -n 1 ~/.kernel_source_dir.${FULL_UNAME} 2>/dev/null` 2>/dev/null
+	export KERNEL_SOURCE_DIR;
+    fi
+fi
+
+if test "x${KERNEL_SOURCE_DIR}" != "x" ; then 
+    echo ${KERNEL_SOURCE_DIR}
+    exit 0
+fi
+
+if test ! -f .kernel_src_dir_guess_warn -a ! -f ~/.kernel_src_dir_guess_warn ; then 
+    echo "Trying to guess Linux Kernel source directory." 1>&2
+    echo "Set the environment variable KERNEL_SOURCE_DIR to override this." 1>&2
+    touch  .kernel_src_dir_guess_warn >/dev/null 2>/dev/null
+    touch  ~/.kernel_src_dir_guess_warn >/dev/null 2>/dev/null
+fi
+
+
+\rm -f /tmp/linktest* >/dev/null 2>/dev/null
+
+ ( cd /tmp ; touch linktestfile$$ ;  ln -s linktestfile$$ linktestfile$$.link ); >/dev/null 2>/dev/null
+
+#ls -l /tmp/link*
+
+if test -h /tmp/linktestfile$$.link -a '!' -h /tmp/linktestfile$$ ; then
+    LINK_FLAG=-h;
+else
+    LINK_FLAG=-L;
+fi
+
+\rm -f /tmp/linktest* >/dev/null 2>/dev/null
+
+if test ${LINK_FLAG} /usr/src/linux ; then 
+    KERNEL_SOURCE_DIR=/usr/src/linux
+    export KERNEL_SOURCE_DIR
+    if test "x${FULL_UNAME}" != "x" ; then
+       \rm -f ~/.kernel_source_dir.* 2>/dev/null  ;
+       echo ${KERNEL_SOURCE_DIR} > ~/.kernel_source_dir.${FULL_UNAME} 2>/dev/null ;
+    fi
+    echo ${KERNEL_SOURCE_DIR}
+    exit  0
+fi
+
+verfiles=
+rev=`uname -r`
+
+function search_list {
+
+    for i in $verfiles ; do
+	    if [ ! -f $i ] ; then
+		continue;
+	    fi
+	    if grep UTS_RELEASE $i >/dev/null 2>/dev/null ; then 
+		irev=`grep UTS_RELEASE $i | gawk '{print $3}' | sed 's.[" ]..g'`
+		if [ ${#irev} -gt 0 ] ; then
+		    if [ "$irev" = "$rev" ] ; then
+			    export KERNEL_SOURCE_DIR=`echo $i | sed s%/include/linux/version.h%%`
+			    if test ! -f ~/.kernel_source_dir_printed ; then
+				echo "KERNEL_SOURCE_DIR=${KERNEL_SOURCE_DIR}" 1>&2
+				touch ~/.kernel_source_dir_printed
+			    fi
+			    echo $KERNEL_SOURCE_DIR
+			    if test "x${FULL_UNAME}" != "x" ; then
+				\rm -f ~/.kernel_source_dir.* 2>/dev/null >/dev/null  ;
+				echo ${KERNEL_SOURCE_DIR} > ~/.kernel_source_dir.${FULL_UNAME} 2>/dev/null ;
+			    fi
+
+			    exit 0
+		    fi
+	         fi
+	    fi
+	    
+    done
+
+}
+
+# try locate first it is ussually faster
+if [ -x `which locate 2>/dev/null` ] ; then
+    verfiles=`locate '/usr/src/*/include/linux/version.h'`
+
+    rev=`uname -r`
+    search_list
+fi
+
+
+# Locate doesn't exist or 
+verfiles=`find /usr/src/ -name version.h 2>/dev/null`
+search_list
+
+KERNEL_SOURCE_DIR=/usr/src/linux
+echo "Could not find Linux kernel source directory, trying ${KERNEL_SOURCE_DIR} anyway" 1>&2	
+
+
+if test "x${FULL_UNAME}" != "x" ; then
+    \rm -f ~/.kernel_source_dir.* 2>/dev/null >/dev/null  ;
+fi
+
+echo ${KERNEL_SOURCE_DIR}
+
+
+exit -1
+

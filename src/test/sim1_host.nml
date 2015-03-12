@@ -1,0 +1,9 @@
+# sim1_host.nml
+# INPUT_FILENAME=sim_host1.nml2
+ 
+
+# Buffers:
+#       name 	   type  	      host 	size 	neut 	0 	buf# 	max_proc 	. . .
+B        foo 	SHMEM    	 localhost 	1024 	0 	* 	1000 	* 	1000 	TCP=1000  packed 
+B        bar 	SHMEM    	 localhost 	1024 	0 	* 	1001 	* 	1001 	TCP=1000  packed 
+

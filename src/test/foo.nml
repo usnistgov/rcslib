@@ -1,0 +1,85 @@
+# foo.nml
+ 
+
+# Buffers:
+#       name 	   type  	      host 	size 	neut 	0 	buf# 	max_proc 	. . .
+B         b1 	SHMEM    	 localhost 	4928 	0 	* 	1 	* 	48101 	UDP=23100  header=nml_test_format.hh xml 
+B         b2 	SHMEM    	 localhost 	4928 	0 	* 	2 	* 	48102 	TCP=23101 bsem=20001  header=nml_test_format.hh confirm_write xdr
+B         qb 	SHMEM    	 localhost 	48640 	0 	* 	3 	* 	48103 	TCP=23102 bsem=20003  header=nml_test_format.hh confirm_write xdr queue 
+ 
+B globmem_buf1 	GLOBMEM 	 localhost 	3072 	0 	0 	4 	28  	TCP=23104 vme_addr=0x1400000  xdr
+B globmem_buf2 	GLOBMEM 	 localhost 	10240 	0 	0 	5 	20  	TCP=23105 vme_addr=0x1400C00  split SHM_KEY=3001 USE_SHMEM_FOR_TESTING_GMEM xdr  memory_align=6
+B globmem_buf3 	GLOBMEM 	 localhost 	10240 	0 	0 	6 	20  	TCP=23106 vme_addr=0x1403400  split xdr
+B globmem_buf4 	GLOBMEM 	 localhost 	3072 	0 	0 	7 	20  	TCP=23107 vme_addr=0x1405C00  xdr
+ 
+
+# Processes: 
+#       Name 	    Buffer 	      type 	      host 	       ops 	server 	timeout 	master 	c_num  	 . . .
+P         lw 	   default 	     LOCAL 	 localhost 	        RW 	0 	1.000000 	0 	0 	 waitformaster
+P         lr 	   default 	     LOCAL 	 localhost 	        RW 	0 	0.100000 	0 	1 	 waitformaster
+P        lwm 	   default 	     LOCAL 	 localhost 	        RW 	0 	1.000000 	1 	2 	 waitformaster
+P        lrm 	   default 	     LOCAL 	 localhost 	        RW 	0 	0.100000 	1 	3 	 waitformaster
+P         rw 	   default 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	4 	 waitformaster
+P         rr 	   default 	    REMOTE 	 localhost 	        RW 	0 	5.000000 	0 	4 	 waitformaster
+P        b1s 	        b1 	     LOCAL 	 localhost 	        RW 	1 	10.000000 	1 	0 	 waitformaster DO_NOT_TRACK_CLIENT_UDP_PORTS
+P        b1s 	   default 	     LOCAL 	 localhost 	        RW 	1 	10.000000 	1 	4 	 waitformaster 
+P        b2s 	        b2 	     LOCAL 	 localhost 	        RW 	1 	10.000000 	1 	0 	 waitformaster
+P        b2s 	   default 	     LOCAL 	 localhost 	        RW 	1 	10.000000 	1 	5 	 waitformaster
+ 
+P      gbl01 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	0 	 waitformaster
+P      gbl02 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	1 	 waitformaster
+P      gbl03 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	2 	 waitformaster
+P      gbl04 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	3 	 waitformaster
+P      gbl05 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	4 	 waitformaster
+P      gbl06 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	5 	 waitformaster
+P      gbl07 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	6 	 waitformaster
+P      gbl08 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	7 	 waitformaster
+P      gbl09 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	8 	 waitformaster
+P      gbl11 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	9 	 waitformaster
+P      gbl12 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	10 	 waitformaster
+P      gbl13 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	11 	 waitformaster
+P      gbl14 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	12 	 waitformaster
+P      gbl15 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	13 	 waitformaster
+P      gbl16 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	14 	 waitformaster
+P      gbl17 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	15 	 waitformaster
+P      gbl18 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	16 	 waitformaster
+P      gbl19 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	17 	 waitformaster
+P      gbl21 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	18 	 waitformaster
+P      gbl22 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	19 	 waitformaster
+P      gbl23 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	20 	 waitformaster
+P      gbl24 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	21 	 waitformaster
+P      gbl25 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	22 	 waitformaster
+P      gbl26 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	23 	 waitformaster
+P      gbl27 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	24 	 waitformaster
+P      gbl28 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	25 	 waitformaster
+P      gbl29 	globmem_buf1 	     LOCAL 	 localhost 	        RW 	0 	10.000000 	0 	26 	 waitformaster
+ 
+P      gbr01 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr02 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr03 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr04 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr05 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr06 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr07 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr08 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr09 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr11 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr12 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr13 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr14 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr15 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr16 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr17 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr18 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr19 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr21 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr22 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr23 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr24 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr25 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr26 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr27 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr28 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+P      gbr29 	globmem_buf1 	    REMOTE 	 localhost 	        RW 	0 	10.000000 	0 	27 	 waitformaster
+ 
+

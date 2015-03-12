@@ -1,0 +1,39 @@
+#!/bin/csh -X
+
+echo Running $0 
+
+chmod a+rx ./run.*
+
+if($UserDir == "") then
+        exit
+endif
+
+if (! -d $UserDir ) then
+    exit
+endif
+
+cd $UserDir
+chmod a+rx run.*
+
+chmod a+r src
+chmod a+r plat
+cd src
+chmod a+r *
+
+
+if($AppDir == "") then
+        exit
+endif
+
+
+if (! -d $AppDir ) then
+    exit
+endif
+
+cd $UserDir
+chmod a+rx run.*
+
+chmod a+r src
+chmod a+r plat
+cd src
+chmod a+r *

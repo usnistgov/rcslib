@@ -1,0 +1,56 @@
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../../../..
+endif
+
+
+PACKAGE_NAME = rcs.posemath
+
+COMPILE_TOGETHER=1
+
+
+JAVA_SOURCES = \
+	PmException.java \
+	PmCartesian.java \
+	PmCircle.java \
+	PmCylindrical.java \
+	PmEulerZyx.java \
+	PmEulerZyz.java \
+	PmHomogeneous.java \
+	PmLine.java \
+	PmPose.java \
+	PmQuaternion.java \
+	PmRotationMatrix.java \
+	PmRotationVector.java \
+	PmRpy.java \
+	PmSpherical.java \
+	PM_CARTESIAN.java \
+	PM_CYLINDRICAL.java \
+	PM_EULER_ZYX.java \
+	PM_EULER_ZYZ.java \
+	PM_HOMOGENEOUS.java \
+	PM_POSE.java \
+	PM_QUATERNION.java \
+	PM_ROTATION_MATRIX.java \
+	PM_ROTATION_VECTOR.java \
+	PM_RPY.java \
+	PM_SPHERICAL.java \
+	PM_LINE.java \
+	PM_CIRCLE.java \
+	Posemath.java
+
+ifdef USE_GCJ
+
+LOCAL_GCJ_FLAGS=-I../..
+
+SRCS=$(JAVA_SOURCES)
+
+OBJS=$(JAVA_SOURCES:%.java=%.o)
+
+else
+
+PLAT=java
+
+endif
+
+include ../../../Makefile.rcs

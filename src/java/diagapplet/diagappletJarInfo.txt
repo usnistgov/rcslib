@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Main-Class: diagapplet.diagappletMain
+
+Name: rcs
+Specification-Title: "RCS-Library Classes"
+Specification-Version: "1.0"
+Specification-Vendor: "National Institute of Standards and Technology (Will Shackleford)"
+Implementation-Title: "rcs"
+Implementation-Version: "RCS_VERSION_STRING"
+Implementation-Vendor: National Institute of Standards and Technology (Will Shackleford)"
+Sealed: true
+
+Name: diagapplet
+Specification-Title: "RCS-Diagnostics Tool"
+Specification-Version: "1.0"
+Specification-Vendor: "National Institute of Standards and Technology (Will Shackleford)"
+Implementation-Title: "diagapplet"
+Implementation-Version: "RCS_VERSION_STRING"
+Implementation-Vendor: National Institute of Standards and Technology (Will Shackleford)"
+Sealed: true

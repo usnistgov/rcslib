@@ -1,0 +1,31 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    irix5
+
+# The C compiler.
+CC =    gcc
+
+# The C++ compiler.
+CPLUSPLUS =     g++
+
+# The C and C++ compilation flags to be used.
+CFLAGS  = -D$(PLAT) -D__SGI__ -DSGI
+CLINK = -lm
+CPLUSPLUSFLAGS =        -D__CPLUSPLUS__
+CPLUSPLUSLINK = $(CLINK)
+MAKEDEPEND =  makedepend
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        echo ranlib not needed for
+
+# The assembler.
+AS =    as
+
+LD =    ld
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+COPY_SOURCE_COMMAND = cp
+CPLUSPLUS_EXTENSION = cc

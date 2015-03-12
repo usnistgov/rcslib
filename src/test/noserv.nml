@@ -1,0 +1,5 @@
+B         b1    SHMEM    	 127.0.0.1     320000 	1	0 	1	6 	10001 packed
+
+P         lw 	        b1 	     LOCAL 	 127.0.0.1 	        RW 	0 	INF     	0 	0 	waitformaster
+P         lr 	        b1 	     LOCAL 	 127.0.0.1 	        RW 	0 	INF     	1 	1 	
+

@@ -1,0 +1,64 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    rtlinux
+
+# The C compiler.
+CC =    gcc
+
+# The C++ compiler.
+CPLUSPLUS =     g++
+CPLUSPLUS_EXTENSION = cc
+
+# 13-may-2001 KJO Change RTLMKFILE path to use /usr/src/rtlinux link
+# as recommended by rtlinux distribution.  Add -follow option to 'find'.
+RTLMKFILE := $(shell find /usr/src/rtlinux -follow -name rtl.mk | grep -v examples | grep -v drivers | grep -v schedulers | grep -v fifos | grep -v system )
+
+include $(RTLMKFILE)
+
+$(RTLMKFILE):
+	-@( echo foo > /dev/null)
+
+
+
+WARN_FLAG=
+
+ifdef WARN_MAX
+WARN_FLAG=-Wall
+endif
+
+ifdef NO_WARN
+WARN_FLAG=-w
+endif
+
+
+# The C and C++ compilation flags to be used.
+CFLAGS  := -DRTLINUX -Drtlinux  -Drtlinux2 -DNO_STDIO_SUPPORT -D$(PLAT)  $(WARN_FLAG) $(CFLAGS)  -DPLATNAME=\"$(PLAT)\"
+CLINK =
+CPLUSPLUSFLAGS =        -D__CPLUSPLUS__ $(CFLAGS)
+CPLUSPLUSLINK =         $(CLINK)
+
+# makedepend must be run from a sun. (Preferably one with a cross-compiler.)
+MAKEDEPEND = /usr/X11R6/bin/makedepend
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        ranlib
+
+# The assembler.
+AS =    as
+
+LD =    gcc
+STRIP = strip
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+COPY_SOURCE_COMMAND = cp
+RCSLIB_LIBRARY_NAME = librcs.a
+
+# disable SCCS make rule for Linux
+% : SCCS/s.%
+	@true
+
+% ::    RCS/%,v
+	co $@

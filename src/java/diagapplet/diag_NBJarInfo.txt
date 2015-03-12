@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: diagapplet.diag_NB_UI
+Class-Path: rcs.jar plotter_NB.jar CodeGenCmdLine.jar
+SplashScreen-Image: diagapplet/diag_splash.gif

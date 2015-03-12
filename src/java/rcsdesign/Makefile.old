@@ -1,0 +1,56 @@
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../../..
+endif
+
+PACKAGE_NAME = rcsdesign
+
+PLAT=java
+
+JAVA_SOURCES =  AutoSizedTextArea.java \
+	AlertDialog.java \
+	QueryDialog.java \
+	QueryStringDialog.java \
+	FileTypeInfo.java \
+	ListElement.java \
+	AlphabetizedList.java \
+	InnerAppletRepainter.java \
+	rcsDesignGui.java \
+	rcsdesignModuleInfo.java \
+	rcsdesignMainLoopInfo.java \
+	rcsDesignWriterInfo.java \
+	rcsDesignUserAbortException.java \
+	Merger.java \
+	rcsDesignWriter.java \
+	rcsdesignFrame.java \
+	MakeFileRunner.java \
+	rcsDesign.java
+
+include ../../Makefile.rcs
+
+
+rcsDesign.jar: $(DEVP_DIR)/lib/rcsDesign.jar
+
+.PHONY: rcsDesign.jar
+
+all: rcsDesign.jar
+
+
+
+ifndef DO_NOT_ADD_MANIFEST_INFO
+
+$(DEVP_DIR)/lib/rcsDesignJarInfo.txt: rcsDesignJarInfo.txt
+	( rcs_version=`grep RCS_VERSION ../../rcsvers.hh | awk '{print $$3}' | sed s/\"// | sed s/\"//`; cat < $^ | sed s/RCS_VERSION_STRING/$$rcs_version/ > $@;)
+
+
+
+$(DEVP_DIR)/lib/rcsDesign.jar: $(DEVP_CLASSES) $(DEVP_DIR)/lib/rcsDesignJarInfo.txt
+	(cd $(DEVP_DIR)/lib; $(JAR) -cmf0 rcsDesignJarInfo.txt rcsDesign.jar rcs diagapplet rcsdesign;)
+
+else
+
+$(DEVP_DIR)/lib/rcsDesign.jar: $(DEVP_CLASSES)
+	(cd $(DEVP_DIR)/lib; $(JAR) -cf0  rcsDesign.jar rcs diagapplet rcsdesign;)
+
+endif
+

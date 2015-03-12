@@ -1,0 +1,285 @@
+
+
+ifndef NO_SUBDIRS
+.PHONY : do_sub_dirs
+
+all: do_sub_dirs
+endif
+
+ifdef JAVA_CLASSES
+ifndef CLASSES
+CLASSES = $(JAVA_CLASSES)
+endif
+endif
+
+ifdef JAVA_SOURCES
+ifndef CLASSES
+CLASSES = $(subst .java,.class, $(JAVA_SOURCES))
+endif
+endif
+
+ifndef JAVA_SOURCES
+COMPILE_SEPARATELY=1
+endif
+
+OLD_JAVA=1
+ifndef JDK_DIR
+JDK_DIR:=$(shell $(RCSLIB_MAIN_DIR)/etc/jdk_dir)
+endif
+
+ifdef JDK_DIR
+
+JAVA_SETUP = JDK_DIR=$(JDK_DIR); export JDK_DIR; LD_LIBRARY_PATH=$(JDK_DIR)/lib; export LD_LIBRARY_PATH;
+ifndef JAVA_BASE_CLASSES_ARCHIVE
+JAVA_BASE_CLASSES_ARCHIVE = $(JDK_DIR)/lib/classes.zip
+endif
+
+JAVA_TOOLS_DIR = $(JDK_DIR)/bin
+
+endif
+
+ifndef JAVA_COMPILER
+JAVA_COMPILER=$(shell if [ -x $(JAVA_TOOLS_DIR)/javac ] ; then echo $(JAVA_TOOLS_DIR)/javac; elif which javac >/dev/null 2>/dev/null ; then which javac; elif which jikes  >/dev/null 2>/dev/null ; then which jikes; fi )
+endif
+
+
+ifdef USER_DIR
+ifndef COMPILING_RCSLIB
+
+ifdef LOCAL_CLASSPATH
+CLASSPATH = $(JAVA_BASE_CLASSES_ARCHIVE):$(LOCAL_CLASSPATH):$(DEVP_DIR)/lib:$(RCSLIB_MAIN_DIR)/plat/java/lib
+else
+CLASSPATH = $(JAVA_BASE_CLASSES_ARCHIVE):$(DEVP_DIR)/lib:$(RCSLIB_MAIN_DIR)/plat/java/lib
+endif
+
+else
+
+ifdef LOCAL_CLASSPATH
+CLASSPATH = $(JAVA_BASE_CLASSES_ARCHIVE):$(LOCAL_CLASSPATH):$(DEVP_DIR)/lib
+else
+CLASSPATH = $(JAVA_BASE_CLASSES_ARCHIVE):$(DEVP_DIR)/lib
+endif
+
+endif
+
+DOC_JAVA_SOURCES = $(JAVA_SOURCES:%=$(DOC_DIR)/%)
+RELEASE_DOC_DIR = $(RELEASE_DIR)/java_doc
+
+
+$(DOC_DIR)/%.java: %.java
+	-cp $< $@;
+	chmod 0664 $@;
+
+%.class:%.java
+	$(JAVA_COMPILER) $(LOCAL_JAVA_FLAGS) -classpath $(CLASSPATH)  $<
+$(DOC_DIR)/$(PACKAGE_NAME).%.html:%.java
+	$(JAVA_TOOLS_DIR)/javadoc -noindex -notree -classpath $(CLASSPATH) -d $(DOC_DIR) $<
+
+$(DOC_DIR)/Package-$(PACKAGE_NAME).html: $(JAVA_SOURCES)
+	$(JAVA_TOOLS_DIR)/javadoc -classpath $(CLASSPATH) -d $(DOC_DIR) $(PACKAGE_NAME)
+
+
+ifdef PACKAGE_NAME
+
+documentation: make_doc_dir $(DOC_DIR)/Package-$(PACKAGE_NAME).html $(DOC_JAVA_SOURCES)
+
+else
+
+documentation: make_doc_dir  $(DOC_JAVA_SOURCES)
+
+endif
+
+make_doc_dir:
+	-@( if test ! -d $(DOC_DIR); then mkdir $(DOC_DIR); fi;)
+	-@( if test ! -d $(RELEASE_DOC_DIR); then mkdir $(RELEASE_DOC_DIR); fi;)
+
+compile_all: make_lib_dir
+	$(JAVA_COMPILER) $(LOCAL_JAVA_FLAGS) -classpath $(CLASSPATH) -d $(DEVP_DIR)/lib $(JAVA_SOURCES)
+
+.PHONY: compile_all
+
+
+ifdef COMPILE_SEPARATELY
+
+all:  classes install_devp_classes_sources
+
+else
+
+all: compile_all install_devp_classes_sources
+
+endif
+
+ifdef PACKAGE_NAME
+
+PACKAGE_DIR=$(subst .,/,$(PACKAGE_NAME))
+SUB_DIR=$(PACKAGE_DIR)
+
+DEVP_LIB_DIR = $(DEVP_DIR)/lib/$(PACKAGE_DIR)
+DEVP_SRC_DIR = $(DEVP_DIR)/src/$(PACKAGE_DIR)
+RELEASE_LIB_DIR = $(RELEASE_DIR)/lib/$(PACKAGE_DIR)
+RELEASE_SRC_DIR = $(RELEASE_DIR)/src/$(PACKAGE_DIR)
+
+endif
+
+
+ifdef CLASSES
+
+DEVP_CLASSES = $(CLASSES:%=$(DEVP_LIB_DIR)/%)
+
+$(DEVP_LIB_DIR)/%.class: %.java
+	$(JAVA_COMPILER) $(LOCAL_JAVA_FLAGS) -classpath $(CLASSPATH) -d $(DEVP_DIR)/lib $<
+
+endif
+
+
+classes: make_lib_dir
+
+
+ifdef SKIP_MAKE_LIB_DIR
+
+make_lib_dir:
+
+else
+
+make_lib_dir:
+	-@( if test ! -d $(USER_DIR)/plat; then \
+	chmod u+w $(USER_DIR) 2>/dev/null; \
+	mkdir -p  $(USER_DIR)/plat; chmod u+w  $(USER_DIR)/plat; fi;)
+	-@( if test ! -d $(DEVP_DIR); then mkdir -p  $(DEVP_DIR); chmod u+w  $(DEVP_DIR); fi;)
+	-@( if test ! -d $(DEVP_DIR)/lib; then mkdir -p  $(DEVP_DIR)/lib; chmod u+w  $(DEVP_DIR)/lib; fi;)
+	-@( if test ! -d $(DEVP_LIB_DIR); then mkdir -p  $(DEVP_LIB_DIR); chmod u+w  $(DEVP_LIB_DIR); fi;)
+	-@( if test ! -d $(DEVP_DIR)/src; then mkdir -p  $(DEVP_DIR)/src; chmod u+w  $(DEVP_DIR)/src; fi;)
+	-@( if test ! -d $(DEVP_SRC_DIR); then mkdir -p  $(DEVP_SRC_DIR); chmod u+w  $(DEVP_SRC_DIR); fi;)
+	-@( if test ! -d $(APPDIR)/plat; then \
+	chmod u+w $(APPDIR) 2>/dev/null; \
+	mkdir -p  $(APPDIR)/plat; chmod u+w  $(APPDIR)/plat; fi;)
+	-@( if test ! -d $(RELEASE_DIR); then mkdir -p  $(RELEASE_DIR); chmod u+w  $(RELEASE_DIR); fi;)
+	-@( if test ! -d $(RELEASE_DIR)/lib; then mkdir -p  $(RELEASE_DIR)/lib; chmod u+w  $(RELEASE_DIR)/lib; fi;)
+	-@( if test ! -d $(RELEASE_LIB_DIR); then mkdir -p  $(RELEASE_LIB_DIR); chmod u+w  $(RELEASE_LIB_DIR); fi;)
+	-@( if test ! -d $(RELEASE_DIR)/src; then mkdir -p  $(RELEASE_DIR)/src; chmod u+w  $(RELEASE_DIR)/src; fi;)
+	-@( if test ! -d $(RELEASE_SRC_DIR); then mkdir -p  $(RELEASE_SRC_DIR); chmod u+w  $(RELEASE_SRC_DIR); fi;)
+
+endif
+
+install: classes install_devp_classes_sources install_classes_sources
+
+classes:
+
+clean: remove_devp_classes_srcs
+
+remove_devp_classes_srcs:
+	-(if ls *.java > /dev/null 2> /dev/null ; then \
+		JAVA_FILES=`echo *.java`; echo JAVA_FILES = $${JAVA_FILES:?}; \
+		if test -d $(DEVP_SRC_DIR) ; then cd $(DEVP_SRC_DIR) &&  mv $$JAVA_FILES /tmp; fi;\
+	fi;)
+	-(if ls *.class > /dev/null 2> /dev/null ; then \
+		CLASS_FILES=`echo *.class`; echo CLASS_FILES = $${CLASS_FILES:?}; \
+		\rm -f *.class; \
+		if test -d $(DEVP_SRC_DIR) ; then cd $(DEVP_LIB_DIR) && \rm -f $$CLASS_FILES; fi; \
+	fi;)
+
+
+ifndef DEVP_CLASSES
+
+install_devp_classes_sources:
+	-(if ls *.java  > /dev/null 2> /dev/null ; then \
+		JAVA_FILES=`echo *.java`; echo JAVA_FILES = $${JAVA_FILES:?}; \
+		cp $$JAVA_FILES  $(DEVP_SRC_DIR); cd $(DEVP_SRC_DIR); chmod 0664 $$JAVA_FILES; \
+	fi;)
+	-(if ls *.class  > /dev/null 2> /dev/null ; then \
+		CLASS_FILES=`echo *.class`; echo CLASS_FILES = $${CLASS_FILES:?}; \
+		cp $$CLASS_FILES  $(DEVP_LIB_DIR); cd $(DEVP_LIB_DIR); chmod 0664 $$CLASS_FILES; \
+	fi;)
+
+
+else
+
+install_devp_classes_sources: $(DEVP_CLASSES)
+	-(if ls *.java  > /dev/null 2> /dev/null ; then \
+		JAVA_FILES=`echo *.java`; echo JAVA_FILES = $${JAVA_FILES:?}; \
+		cp $$JAVA_FILES  $(DEVP_SRC_DIR); cd $(DEVP_SRC_DIR); chmod 0664 $$JAVA_FILES; \
+	fi;)
+
+
+endif
+
+
+install_classes_sources:
+	-(cd $(DEVP_SRC_DIR); if ls *.java  > /dev/null 2> /dev/null ; then \
+		JAVA_FILES=`echo *.java`; echo JAVA_FILES = $${JAVA_FILES:?}; \
+		cp $$JAVA_FILES  $(RELEASE_SRC_DIR); cd $(RELEASE_SRC_DIR); chmod 0664 $$JAVA_FILES; \
+	fi;)
+	-(cd $(DEVP_LIB_DIR); if ls *.class  > /dev/null 2> /dev/null ; then \
+		CLASS_FILES=`echo *.class`; echo CLASS_FILES = $${CLASS_FILES:?}; \
+		cp $$CLASS_FILES  $(RELEASE_LIB_DIR); cd $(RELEASE_LIB_DIR); chmod 0664 $$CLASS_FILES; \
+	fi;)
+
+
+install_documentation:
+	-(cd $(DOC_DIR); \
+	if ls *.java  > /dev/null 2> /dev/null ; then \
+		cd $(DOC_DIR); \
+		JAVA_FILES=`echo *.java`; echo JAVA_FILES = $${JAVA_FILES:?}; \
+		cp $$JAVA_FILES  $(RELEASE_DOC_DIR); cd $(RELEASE_DOC_DIR); chmod 0664 $$JAVA_FILES; \
+	fi;)
+	-(cd $(DOC_DIR); \
+	if ls *.html  > /dev/null 2> /dev/null ; then \
+		cd $(DOC_DIR); \
+		HTML_FILES=`echo *.html`; echo HTML_FILES = $${HTML_FILES:?}; \
+		cp $$HTML_FILES  $(RELEASE_DOC_DIR); cd $(RELEASE_DOC_DIR); chmod 0664 $$HTML_FILES; \
+	fi;)
+	-(cd $(DOC_DIR); \
+	if test -d images; then \
+		if test ! -d $(RELEASE_DOC_DIR)/images; then \
+			mkdir $(RELEASE_DOC_DIR)/images; \
+			cp $(DOC_DIR)/images/* $(RELEASE_DOC_DIR)/images/ ; \
+		fi; \
+	fi;)
+
+
+
+.PHONY: documentation classes  make_doc_dir install_classes_sources install_documentation
+.PHONY: install_devp_classes_sources make_lib_dir remove_devp_classes_srcs
+
+
+endif
+
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    os5
+
+
+
+COPY_SOURCE_COMMAND = cp
+
+RCSLIB_LIBRARY_NAME = rcs.jar
+
+SCCS/s.% :  %
+	sccs get $<
+
+% :     RCS/%,v
+	co $@
+
+
+printenv:  print_java_defs
+
+print_java_defs:
+	-@echo DOC_DIR = $(DOC_DIR)
+	-@echo PACKAGE_NAME = $(PACKAGE_NAME)
+	-@echo LOCAL_CLASSPATH = $(LOCAL_CLASSPATH)
+	-@echo CLASSPATH = $(CLASSPATH)
+	-@echo CLASSES = $(CLASSES)
+	-@echo DEVP_CLASSES = $(DEVP_CLASSES)
+	-@echo DOC_JAVA_SOURCES = $(DOC_JAVA_SOURCES)
+	-@echo RELEASE_DOC_DIR = $(RELEASE_DOC_DIR)
+	-@echo JAVA_COMPILER = $(JAVA_COMPILER)
+	-@echo JAVA_TOOLS_DIR = $(JAVA_TOOLS_DIR)
+	-@echo JDK_DIR = $(JDK_DIR)
+
+# The library archiver and ranlib programs.
+ifndef JAR
+AR:=$(shell if [ -x $(JAVA_TOOLS_DIR)/jar ] ; then echo $(JAVA_TOOLS_DIR)/jar;  elif which jar 1> /dev/null 2> /dev/null; then which jar; fi )
+JAR:=$(AR)
+endif
+
+RANLIB=echo "no ranlib for ..."

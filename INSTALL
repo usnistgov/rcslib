@@ -1,0 +1,158 @@
+The Real-Time Control Systems (RCS) Library has two seperate build
+systems. 
+
+NOTE To LINUX users:
+	Regardless, of which build system you use you will need to install
+rtai or rtlinux first if you plan to use either. Otherwise it will be built
+to work only with nonrealtime user space applications.
+
+*********** CONFIGURE/AUTOCONF  ******************************************
+
+One build system uses scripts and makefiles that are created
+with GNU autoconf, automake and libtool. This is new as of May 2003. 
+
+This method has the following advantages.
+
+* It does not require you to know exactly which .def file should be 
+used for your platform and there is less chance you will need
+to edit a make file or a configuration file.
+* Autoconf is becoming more of a standard.
+
+But it also has some disadvantages:
+
+* It isn't as easy to switch back and forth between multiple
+platforms, assuming all of the platforms already had working .def files.
+* At the moment we are not building any of the Java libraries or tools
+this way.
+* VxWorks builds do not work.
+* Some of the programs will actually  be libtool scripts. In order
+to debug a libtool script you need to run:
+
+libtool gdb programname
+
+instead of 
+
+gdb programname
+ 
+
+
+
+To build using this system run a command such as
+
+mkdir ~/my_installation_of_rcslib
+./configure --prefix=~/my_installation_of_rcslib
+make
+make install
+
+from this top-level directory. The mkdir command and 
+--prefix option are optional but at this point recommended.  So
+one could alternatively run
+
+./configure
+make
+make install
+
+This is what most software packages built with configure recommend.
+The advantages of setting a prefix and creating your own 
+directory are that:
+
+* There is less chance of your interfering with the operating system or 
+with other users on this system.
+* You can easily uninstall by simply deleting the new directory.
+* You don't need to be root to run "make install" command.
+* You can more easily switch between different versions or rcslib.
+
+The disadvantages are:
+
+* You need to add -L~/my_installation_of_rcslib/lib to link commands,
+ -I~/my_installation_of_rcslib/include to compiler preprocessor commands,
+ ~/my_installation_of_rcslib/lib to you LD_LIBRARY_PATH environment variable
+and ~/my_installation_of_rcslib/bin to your PATH environment variable.
+
+
+Run the command
+./configure --help 
+
+to see some other options.
+
+Also you may want to read the file INSTALL.configure which is the origional
+configure INSTALL help file.
+
+
+*********************************************************************
+
+
+******** Static Makefiles with Platform .def files ****************** 
+
+The other build system uses static Makefiles, some scripts in the etc directory and one or two of the .def files in the etc directory. This is the much
+older system that has been used since the rcslib was created (circa 1994) .
+
+The make program needs to be a recent version of GNU make. On some
+systems this is called gnumake or gmake.
+
+There are a series of static Makefiles all in subdirectories of rcslib/src.
+
+Each static Makefile includes rcslib/etc/generic.def. generic.def will
+include one or possibly two of the the other .def files depending on the
+variable PLAT. PLAT can be set on the make command line or as an 
+environment variable in the shell before the "make" program is started.
+
+If PLAT is not set the value will be determined by running the script 
+rcslib/etc/platname that will look at the output of the 'uname' program
+ to try to guess the value, then it will try to find the closest existing
+.def file.
+
+The idea of this system is that if someone has already built a system
+with your platfrom then you can build by running:
+
+cd rcslib/src
+make PLAT=myplat
+ 
+or even
+
+cd rcslib/src
+make
+
+If you platform is correctly guesses. 
+
+All of the object files, header files, libraries and programs 
+created are stored in rcslib/plat/myplat under the subdirectories
+lib/ src/ include/ and bin/ .
+
+If there is not a .def file for your platfrom you create a new .def file
+(probably by copying and renaming a .def for a similar platform) 
+The .def syntax is the same as for a Makefile except that the purpose is mostly just to set some variables rather than create rules for specific targets.
+
+For RTLINUX and RTAI systems you typically need to build twice
+
+cd rcslib/src
+make PLAT=linux_rtl
+make PLAT=rtlinux_3_0
+
+or
+
+cd rcslib/src
+make PLAT=linux_rtai
+make PLAT=rtai
+
+There is also a "java" plat which will build the java tools and class archives.
+
+cd rcslib/src/java
+make PLAT=java
+
+See
+
+http://www.isd.mel.nist.gov/projects/rcslib/Makefiles.html
+
+for more info on this build system.
+
+
+*********************************************************************
+
+
+
+
+
+
+
+

@@ -1,0 +1,187 @@
+
+
+-------------------------------------------------------------------
+
+2001
+
+* Ported to QNX 6.0 and 6.1, Linux 2.4, 
+
+* Added support for communications to processes under Rtlinux 3.0 and RTAI 
+
+* Updated java support for JDK 1.3
+
+* A variety of changes aimed at allowing the RCS-Design tool and Diagnostics
+applets work on low-resolution screens.
+
+--------------------------------------------------------------------
+
+2002
+
+Support for converting back and forth between XML and NML (binary) messages
+is almost complete.
+
+Support for building the RCS library using the GNU autotools configure/
+autoconf/automake/libtool etc instead of static
+Makefiles and build scripts is almost complete .
+
+---------------------------------------------------------------------
+
+2003
+
+Support was added for converting back and forth between XML and 
+NML (binary) messages.
+
+Support for building the RCS library using the GNU autotools configure/
+autoconf/automake/libtool etc instead of static
+Makefiles and build scripts is almost complete.
+
+The RCS Library was modified so that it could be compiled with the MinGW,
+a free set of tools that allows one to compile programs on MS Windows.
+
+---------------------------------------------------------------------
+
+2004
+
+NML - the Neutral Messaging Language is one of the main components of the RCS 
+library. OE - a standard "Operating Environment" being pursued by 
+"Weapon System Technical Architecture Working Group"(WSTAWG). The integration 
+effort included both wrapping the NML api with the OE api and the reverse.
+
+An NML configuration server was added to the RCS library which 
+generates the data that would otherwise be stored in an NML configuration file
+as processes run and makes the data available through a TCP socket interface.
+Existing applications can use the server if the config file name is changed 
+to "nmlcfgsvr:<hostname>" where hostname is the name or IP address of the 
+host running the nmlcfgsvr. There is also an additional API: 
+nmlcfgsvr_create(), nmlcfgsvr_check(), nmlcfgsvr_delete() that new applications
+ could use to manipulate and query the configuration data with finer control 
+than what occurs within the NML constructors/destructors. It may be useful in 
+situations where maintaining a configuration file  might be difficult. It was 
+used to implement the OE NamingService for the oeim demonstration.
+
+Multireader queues were added. With multireader queues every reader will get
+every message (assuming the queue does not become full). With normal NML queues
+ while multiple processes could read from the same queue only one process 
+would get each message, removing it from the queue so that it is no longer 
+available to the other processes. This is intended to be used with OE Endpoints
+ and OE Endpoint Groups however neither of these has yet been implemented on 
+topof NML.
+
+Priority based queues were added. Priority based queues can be written to with 
+an new function NML::write_with_priority() which takes an additional integer 
+priority. Messages with higher priority will be received by the reader before 
+messages with  lower priority if the high priority message was written while 
+the low priority message was in the queue.
+
+A function was added to interrupt blocking reads and other blocking functions, 
+that can be called from a second thread or signal handler. 
+
+A large list of new blocking functions were added to support OE's heavy use of 
+callbacks and triggers including: wait_for_anything(), wait_for_read(),
+wait_for_clear(),wait_for_write(),wait_for_queue_length_over(),
+wait_for_queue_length_under().
+
+The DCS developed application called OEIM, (OE Instant Messenger) was compiled 
+and run on top NML using the newly developed OE over NML wrapper replacing the 
+DCS implementation of OE. Only a few trivial changes to the source code were 
+required. All of the changes were related to dormant errors in the OEIM 
+application. (Using functions not in the OE spec, argument types that were 
+close but not correct, deleting objects more than once, etc.)
+
+The conformance tests developed at DCS for DataStores and MessageQueues were 
+compiled and successfully run over the OE over NML wrapper.
+
+Software from DCS was integrated in to NML so that NML can be configured to 
+exchange data by internally calling OE defined functions implemented in the 
+separate DCS provided library.
+
+For the second phase of the project we built a proxy between a specific NML application and a specific OE application. The application selected was the connection between the Soldier Machine Interface(SMI), a graphical MS Windows program, 
+originally developed by GDRS and now modified and maintained by DCS somehow related to VCAT and a linux program called the yoke driver. The yoke is a particular hand-held tethered input device that combines several small joysticks, switches and buttons. The current state of the switches and joysticks is read by a linux program and written to an NML buffer on a periodic basis. There was also a simulated version of this program that ran a graphical application on linux that displayed a picture of the yoke where the state of the switches and joysticks could be set using a normal desktop mouse. While the original SMI program was written to use NML it was modified to use OE so that a proxy would be necessary. I wrote a program that read from the NML buffer written to by the yoke program, converted that data structure to one that could be sent to the new SMI program over OE and then sent it. I also performed a number of performance tests using the proxy and found that while the DCS OE implementation is much slower than using NML,
+the overhead added by using a proxy versus using OE directly was extremely negligible.
+
+Since completing the OE-NML integration work I have updated the RCS Library
+web pages and source-code archives so that the NML dynamic configuration server could be used more widely. I have recieved some feedback from Steve Legowik who
+is testing using it with a new ANS.
+
+-----------------------------------------------------------------------------
+
+2005
+
+Support was added to NML for IPv6, previously only IPv4 was supported.
+IPv6 is the internet standard low-level protocol which allows 2^128 addresses
+rather than 2^32 addresses possible with IPv4.
+GDRS and RoboticsResearch are apparently both working on proving their systems
+will be compatible with IPv6.
+
+Several new features were added the the RCS Diagnostics tool in support of
+MOAST, LAGR and the HMWWV ARL work, including the ability to modify status 
+messages, view images, and plot arrays.
+
+A new way of recording separate variable logs was added to the NML server in 
+support of higher time resolution plots in the diagnostics tool and 
+potentially for other applications. The client tells the server which 
+variable(s) is of interest, maximum log size to keep and frequency and the 
+server logs only that variable until the client can request the entire log. 
+This lessens the chance of change in a variable being missed in the plot and 
+assuming the message is large compared to the number of variables being 
+logged reduces bandwidth required.
+
+A number of additional plotting styles were added to the Diagnotics tools
+including the ability to display one plot vs another, the difference between 
+two plots, the integral or derivative or to have the diag tool smooth the plot.
+All variables can now be displayed overlapping in a single area of the screen 
+as before or each variable displayed in a separate section of the screen.
+
+---------------------------------------------------------------------------
+
+2006
+
+The notion of a cloned buffer which is basically a caching system
+ was added to the configuration file. This allows
+a remote process to be configured to read from a local clone rather than the
+original remote buffer, a process that continually updates the local clone 
+is spawned in the background. The read from a local clone is much 
+faster than from the remote buffer. If multiple processes on the same host
+ need to read from the same remote buffer, this can reduce the bandwidth 
+required as the message is only sent once, rather than potentially once 
+for each process.
+
+A function was added nmlSetIgnoreRemote(), if the function is called at the 
+beginning of a program for any subsequent call to create a connection to a 
+remote buffer will be silently ignored. This allows one to write a server that 
+connects to every single buffer that might even potentially be used anywhere 
+in the system, but at run time only create buffers appropriate for that host 
+given the current configuration. For lagr this meant several different
+server programs could be combined into one easier to maintain program.
+
+At the request of GDRS, the library was ported to VxWorks 6.2 and 
+LynxOs 4.0.
+
+
+-------------------------------------------------------------------------
+
+2007
+
+We have continued to support GDRS with a number of bug-fixes. Rashmi Patel of
+GDRS has been particularly active in porting the latest RCS library to 
+the latest versions of VxWorks and Windows CE. Neither operating system do we
+have development versions of to do the testing that can be done at GDRS.
+
+There is a new diagnostics tool using the latest Swing components and therefore a more modern appearance.
+
+-------------------------------------------------------------------------
+
+2008
+
+
+* Automatically generate memory map description text files for data structure documentation.
+
+* Functions to save/read  NML messages in files platform independant packed files in both C++ and Java.
+
+* Diagnostics tools can query NML configuration server for list of buffers.
+Diagnostics tool can parse C++ headers directly wihout need of a ".diag" or ".cfg" file.
+
+* NML Table now sortable by buffer name/host/ message count or connection status.
+
+* get_type() function retrieves the type of message without needing to read the whole message. 
+

@@ -1,0 +1,481 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>nml_module</TITLE>
+<META NAME="keywords" CONTENT="real-time control programming manufacturing software C++ java">
+<META NAME="Version" CONTENT="8.0.3410">
+<META NAME="Date" CONTENT="10/11/96">
+<META NAME="description" CONTENT="The Real-Time Control Systems library is an archive of C++ code, scripts, makefiles, and documentation  developed to aid programmers of software to be used in real-time control systems.">
+<META NAME="Template" CONTENT="C:\Program Files\Microsoft Office\Office\HTML.DOT">
+</HEAD>
+<BODY TEXT="#000000" LINK="#0000ff" VLINK="#800080" BGCOLOR="#ffffff" ALINK="#FF0000">
+
+<H1>NML_MODULE</H1>
+<B><FONT FACE="Arial"><P>Table of Contents</P><DIR>
+
+</B></FONT><P><IMG SRC="Bullet5.gif" ALT=""  WIDTH=12 HEIGHT=12>&nbsp;<A HREF="#DefineControlModuleClass">Defining a New Class for a Control Module</A></P>
+<P><IMG SRC="Bullet5.gif" ALT=""  WIDTH=12 HEIGHT=12><A HREF="#WriteMainLoop">Writing the Main Loop(s)</A></P>
+<P><IMG SRC="Bullet5.gif" ALT="" WIDTH=12 HEIGHT=12>&nbsp;<A HREF="#NML_MODULEMembersList">List of NML_MODULE Member Functions and Variables</A></P>
+<P>&nbsp;</P></DIR>
+
+<H2>Introduction</H2>
+<P>NML_MODULE is a base class for RCS control modules that primarily use NML for communications. 
+This has sometimes been referred to as the RCS Template, although it is not defined with the C++ keyword template. 
+It is used by deriving an application specific class from NML_MODULE and overloading some of the functions. The NML_MODULE provides each 
+module with a consistent structure and performs some of the common chores such as measuring performance, initializing NML and checking for 
+new commands. 
+Many of the tasks for setting up a module can also be performed automatically with the RCS Design Tool.</P>
+<H2><A NAME="DefineControlModuleClass"></A>Defining a New Class for a Control Module</H2>
+<PRE>In order for the main program to create an instance of this module, it needs to have a definition of the class in a C++ header file. 
+The following provides an example:
+/*
+mcps.hpp
+
+This C++ header file defines the class MCPS_MODULE
+It was generated with the RCS-Design tool.
+
+MODIFICATIONS:
+1-Dec-97&#9;Modified by RCS-Design tool.
+21-Oct-97&#9;Created by RCS-Design tool.
+
+*/
+
+// Prevent Multiple Inclusion
+#ifndef MCPS_HPP
+#define MCPS_HPP
+
+// Include Files
+#include "rcs.hh" &#9;// Common RCS definitions
+#include "nml_mod.hh" &#9;// NML_MODULE definitions
+#include "mcpsn.hpp" &#9;// NML Commands and Status definitions for mcps
+#include "mcexmon.hpp" &#9;// NML Commands and Status definitions for mcexmo
+#include "mcexton.hpp" &#9;// NML Commands and Status definitions for mcexto
+
+// Auxilliary Input NML Message Files
+#include "mcps_auxinn.hpp"&#9;// NML Messages for mcps_auxin
+
+// Auxilliary Output NML Message Files
+#include "mcps_auxoutn.hpp"&#9;// NML Messages for mcps_auxout
+
+class MCPS_MODULE: public NML_MODULE
+{
+&#9;// RCS-Design-MERGE-DISABLE Edits to the following area will NOT be preserved by the RCS-Design tool.
+
+public:
+
+&#9;MCPS_MODULE(); // Constructor
+
+&#9;// Overloaded Virtual Functions
+&#9;void PRE_PROCESS();
+&#9;void DECISION_PROCESS();
+&#9;void POST_PROCESS();
+
+&#9;// Command Functions
+&#9;void INIT(MCPS_INIT *);
+&#9;void HALT(MCPS_HALT *);
+&#9;void HOME(MCPS_HOME *);
+&#9;void MOVE(MCPS_MOVE *);
+&#9;void CUT(MCPS_CUT *);
+
+&#9;// Convenience Variables
+&#9;MCPS_STATUS mcps_status;
+&#9;int mcexmo_sub_num;
+&#9;MCEXMO_STATUS *mcexmo_status;
+&#9;int mcexto_sub_num;
+&#9;MCEXTO_STATUS *mcexto_status;
+
+&#9;// Auxiliary Input NML Channels
+&#9;NML *MCPS_AUXIN_CHANNEL;&#9;// NML Channel for mcps_auxin
+&#9;MCPS_AUXIN_MSG *mcps_auxin_data;&#9;// NML Data for mcps_auxin
+
+&#9;// Auxiliary Output NML Channels
+&#9;NML *MCPS_AUXOUT_CHANNEL;&#9;// NML Channel for mcps_auxout
+&#9;MCPS_AUXOUT_MSG mcps_auxout_data;&#9;//NML Data for mcps_auxout
+&#9;// RCS-Design-MERGE-ENABLE Edits after this line will be preserved by the RCS-Design tool.
+
+
+private:
+&#9;// Add custom variables and functions here.
+
+};
+
+#endif &#9;// MCPS_HPP</PRE>
+<P>The header needs to include seven other C++ header files. "rcs.hh" contains definitions for most of the utilities in the RCS Library. "
+nml_mod.hh" contains the base class NML_MODULE. "mcpsn.hpp" contains definitions for the NML interface to this module, the classes that 
+can be sent as commands such as MCPS_INIT, MCPS_HALT, MCPS_HOME, MCPS_CUT, and MCPS_MOVE and the class used to provide status to its 
+superior MCPS_STATUS. "mcexmon.hpp" and "mcexton.hpp" provide the NML messages for the two subordinates mcexmo and mcexto. 
+"mcps_auxinn.hpp" provides the message MCPS_AUXIN_MSG read from the auxiliary input channel. "mcps_auxoutn.hpp" provides the message 
+MCPS_AUXOUT_MSG sent to the auxiliary output channel. </P>
+<P>The functions PRE_PROCESS, DECISION_PROCESS, and POST_PROCESS are defined in the NML_MODULE base class but typically overloaded in 
+each control module. These functions are called every cycle by the NML_MODULE::controller function which is not normally overloaded. 
+(RCS uses cyclic processing, normally with a constant cycle time such as 30 ms set as a parameter to the RCS_TIMER constructor 
+in the main loop.)</P>
+<P>PRE_PROCESS is normally used for retrieving inputs and performing simple conversions needed every cycle and by multiple commands. 
+For example, one might read an encoder input and multiply by a scale factor to convert encoder ticks to mm. For more complicated sensor 
+processing, it may be better to develop a separate module just for sensory processing or even an entire hierarchy. It can also be used to 
+read any auxiliary input.</P>
+<P>DECISION_PROCESS usually calls one of the command functions based on the current command type. The command functions for this module 
+are INIT, HALT, MOVE, CUT and HOME.</P>
+<P>POST_PROCESS is normally used for writing outputs and performing simple conversions on the outputs needed every cycle by multiple 
+commands. 
+For example, one might multiply a commanded velocity by a scale factor before writing a voltage to a DAC (Digital-to-Analog Converter). 
+It can also be used to write any auxiliary output.</P>
+<P>The command functions usually contain state tables made up of multiple "if ... else if ... " blocks. The state tables are designed so 
+that only a small amount of processing needs to occur each cycle and long complex commands are spread over many cycles. The current line 
+in the state table is the first line where the conditions for the if are true. This line is highlighted within the 
+<A HREF="http://www.isd.mel.nist.gov/projects/rcs_lib/diagapplet">RCS Diagnostics tool</A>.</P>
+<P>The variable mcps_status will be passed as a parameter to NML_MODULE::setStatChannel inside the constructor. Then it will be sent to 
+the NML channel every cycle. Information can be sent to the superior just by defining the appropriate variable in MCPS_STATUS and 
+setting it in one of the command functions, PRE_PROCESS or POST_PROCESS. </P>
+<P>The variable mcexmo_sub_num recieves the subordinate number returned by NML_MODULE::addSubordinate() that is needed by the function 
+sendCommand() to send commands to the mcexmo module. The variable mcexmo_status is set to point to the buffer where status data from the 
+mcexmo module will be updated every cycle.</P>
+<P>The comments "// RCS-Design-MERGE-DISABLE" and "// RCS-Design-MERGE-ENABLE" separate out an area of the file users of the 
+RCS-Design tool may wish to avoid editing, since those edits will be deleted if the file is modified with the RCS Design tool.</P>
+<P>The following are segments from the actual code for the MCPS control module. <A HREF="mcps.cpp">(Click here to see the complete file, 
+"mcps.cc".)</A></P>
+<PRE>// Constructor
+MCPS_MODULE::MCPS_MODULE()
+{
+
+&#9;// Set up NML Channels
+&#9;// RCS-Design-MERGE-DISABLE Edits to the following area will NOT be preserved by the RCS-Design tool.
+
+&#9;setErrorLogChannel(new NML(nmlErrorFormat, "errlog", "mcps", "isam.nml"));
+&#9;setCmdChannel(new RCS_CMD_CHANNEL(mcpsFormat, "mcps_cmd", "mcps", "isam.nml"));
+&#9;setStatChannel(new RCS_STAT_CHANNEL(mcpsFormat, "mcps_sts", "mcps", "isam.nml"), &amp;mcps_status);
+
+&#9;mcexmo_sub_num = 
+&#9;addSubordinate(
+&#9;&#9;new RCS_CMD_CHANNEL(mcexmoFormat, "mcexmo_cmd", "mcps", "isam.nml"),
+&#9;&#9;new  RCS_STAT_CHANNEL(mcexmoFormat, "mcexmo_sts", "mcps", "isam.nml"));
+&#9;mcexmo_status = (MCEXMO_STATUS *)  statusInData[mcexmo_sub_num];
+
+&#9;mcexto_sub_num = 
+&#9;addSubordinate(
+&#9;&#9;new RCS_CMD_CHANNEL(mcextoFormat, "mcexto_cmd", "mcps", "isam.nml"),
+&#9;&#9;new  RCS_STAT_CHANNEL(mcextoFormat, "mcexto_sts", "mcps", "isam.nml"));
+&#9;mcexto_status = (MCEXTO_STATUS *)  statusInData[mcexto_sub_num];
+
+&#9;// Auxiliary Input NML Channels
+&#9;//mcps_auxin
+&#9;MCPS_AUXIN_CHANNEL = new NML(mcps_auxinFormat, "mcps_auxin", "mcps", "isam.nml");
+&#9;mcps_auxin_data = (MCPS_AUXIN_MSG *) MCPS_AUXIN_CHANNEL-&gt;get_address();
+
+&#9;// Auxilliary Output NML Channels
+&#9;//mcps_auxout
+&#9;MCPS_AUXOUT_CHANNEL = new NML(mcps_auxoutFormat, "mcps_auxout", "mcps", "isam.nml");
+&#9;// RCS-Design-MERGE-ENABLE Edits after this line will be preserved by the RCS-Design tool.
+
+&#9;// Add additional code to initialize the module here.
+
+}</PRE>
+<P>The constructor is used to setup the NML channels for the module as well as any other initialization that needs to be done. 
+The command, status and error log channels for this subordinate are setup with the functions NML_MODULE::setCmdChannel(), 
+NML_MODULE::setStatChannel(), and NML_MODULE::setErrorLogChannel. The connections to each subordinate are setup with 
+NML_MODULE::addSubordinate(). Finally, any auxiliary inputs or outputs are setup.</P>
+<PRE>/*
+DECISION_PROCESS
+
+The DECISION_PROCESS function is called every cycle as long as there is a non-zero command.
+It is expected to call a command function based on commandInData-&gt;type.
+
+*/
+void MCPS_MODULE::DECISION_PROCESS()
+{
+&#9;switch(commandInData-&gt;type)
+&#9;{
+&#9;&#9;// RCS-Design-MERGE-DISABLE Edits to the following area will NOT be preserved by the RCS-Design tool.
+
+&#9;case MCPS_INIT_TYPE:
+&#9;&#9;INIT((MCPS_INIT *)commandInData);
+&#9;&#9;break;
+
+&#9;case MCPS_HALT_TYPE:
+&#9;&#9;HALT((MCPS_HALT *)commandInData);
+&#9;&#9;break;
+
+&#9;case MCPS_HOME_TYPE:
+&#9;&#9;HOME((MCPS_HOME *)commandInData);
+&#9;&#9;break;
+
+&#9;case MCPS_MOVE_TYPE:
+&#9;&#9;MOVE((MCPS_MOVE *)commandInData);
+&#9;&#9;break;
+
+&#9;case MCPS_CUT_TYPE:
+&#9;&#9;CUT((MCPS_CUT *)commandInData);
+&#9;&#9;break;
+&#9;&#9;// RCS-Design-MERGE-ENABLE Edits after this line will be preserved by the RCS-Design tool.
+
+
+&#9;default:
+&#9;&#9;logError("The command %d is not recognized.",commandInData-&gt;type);
+&#9;&#9;break;
+&#9;}
+}</PRE>
+<P>The DECISION_PROCESS function calls the appropriate command function based on the current command type and passes commandInData 
+to that function.</P>
+<PRE>
+/*
+INIT
+
+Parameter(s):
+MCPS_INIT *cmd_in -- NML Message sent from superior.
+
+Most Modules will have an INIT command.
+The INIT function is expected to initialize any variables that may be
+in an uninitialized or unknown state, send INIT commands to its subordinates,
+wait for the subordinates to be DONE and then inform its superior that it is done
+The state tables should use the STATE_MATCH macro so the diagnostics tool can 
+highlight the current line in the state table.
+
+*/
+void MCPS_MODULE::INIT(MCPS_INIT *cmd_in)
+{
+&#9;// RCS-Design-MERGE-DISABLE Edits to the following area will NOT be preserved by the RCS-Design tool.
+
+&#9;MCEXMO_INIT mcexmoInitMsg;
+&#9;MCEXTO_INIT mcextoInitMsg;
+&#9;// RCS-Design-MERGE-ENABLE Edits after this line will be preserved by the RCS-Design tool.
+
+
+&#9;if(STATE_MATCH(NEW_COMMAND))
+&#9;{
+&#9;&#9;// Send an INIT command to all subordinates.
+&#9;&#9;// RCS-Design-MERGE-DISABLE Edits to the following area will NOT be preserved by the RCS-Design tool.
+
+&#9;&#9;sendCommand(&amp;mcexmoInitMsg, mcexmo_sub_num);
+&#9;&#9;sendCommand(&amp;mcextoInitMsg, mcexto_sub_num);
+&#9;&#9;// RCS-Design-MERGE-ENABLE Edits after this line will be preserved by the RCS-Design tool.
+
+
+&#9;&#9;stateNext(S1);
+&#9;&#9;// Reinitialize variables here.
+
+&#9;}
+&#9;// Wait for all subordinates to report done.
+&#9;// RCS-Design-MERGE-DISABLE Edits to the following area will NOT be preserved by the RCS-Design tool.
+
+&#9;else if(STATE_MATCH(S1,
+&#9;&#9;mcexmo_status-&gt;status == RCS_DONE &amp;&amp;
+&#9;&#9;mcexto_status-&gt;status == RCS_DONE &amp;&amp;
+&#9;&#9;1))
+&#9;// RCS-Design-MERGE-ENABLE Edits after this line will be preserved by the RCS-Design tool.
+
+&#9;{
+&#9;&#9;status = RCS_DONE;
+&#9;&#9;stateNext(S2);
+&#9;}
+&#9;else if(STATE_MATCH(S2))
+&#9;{
+&#9;&#9;// Idle State
+&#9;}
+}
+
+The INIT function provides a good example for a command function.  When a new command is received, the state is set to NEW_COMMAND. 
+On the first cycle, the state table sends commands to its subordinates, mcexmo and mcexto, with the sendCommand function, sets the state 
+to S1 and returns. The next cycle the state table checks to if the status of both mcexmo and mcexto is RCS_DONE. If so the state table 
+sets its own status to  RCS_DONE and state to S2.</PRE>
+<H2><A NAME="WriteMainLoop"></A>Writing the Main Loop(s)</H2>
+<P>In order to run the module it is necessary to call its controller() function from the main function for the program. In addition, the 
+programmer has the option of combining several modules in the same executable with eliminates some of the task switching and mutual 
+exclusion overhead and allows for tighter synchronization. It is a good idea to keep the code in this file to a minimum so that the 
+application can be reorganized easily.</P>
+<P>The following is an example:</P>
+<PRE>/*
+&#9;isammain.cc
+
+&#9;This file provides the C++ main function which
+&#9;creates and runs the following control modules:
+
+&#9;&#9;MOTION_MODULE
+&#9;&#9;MCWM_MODULE
+&#9;&#9;MCEXTO_MODULE
+&#9;&#9;MCVJ_MODULE
+&#9;&#9;MCSP_MODULE
+&#9;&#9;MCPS_MODULE
+&#9;&#9;MCPL_MODULE
+&#9;&#9;MCEXMO_MODULE
+&#9;&#9;TOOL_MODULE
+
+&#9;MODIFICATIONS:
+&#9;1-Dec-97&#9;Created.
+
+*/
+
+// Include Files
+#include &lt;stdlib.h&gt;&#9;// exit()
+#include &lt;signal.h&gt;&#9;// SIGINT, signal()
+#include "rcs.hh" &#9;// Common RCS definitions
+#include "nml_mod.hh" &#9;// NML_MODULE definitions
+#include "motion.hpp"&#9;// definition of MOTION_MODULE
+#include "mcwm.hpp"&#9;// definition of MCWM_MODULE
+#include "mcexto.hpp"&#9;// definition of MCEXTO_MODULE
+#include "mcvj.hpp"&#9;// definition of MCVJ_MODULE
+#include "mcsp.hpp"&#9;// definition of MCSP_MODULE
+#include "mcps.hpp"&#9;// definition of MCPS_MODULE
+#include "mcpl.hpp"&#9;// definition of MCPL_MODULE
+#include "mcexmo.hpp"&#9;// definition of MCEXMO_MODULE
+#include "tool.hpp"&#9;// definition of TOOL_MODULE
+
+// flag signifying main loop is to terminate
+int isam_done = 0;
+
+//signal handler for ^C
+extern "C" void isam_quit(int sig);
+void isam_quit(int sig)
+{
+&#9;isam_done = 1;
+}
+
+// main loop, running 9 controller(s)
+int main(int argc, char **argv)
+{
+
+&#9;set_rcs_print_destination(RCS_PRINT_TO_STDOUT);
+
+&#9;RCS_TIMER *timer = new RCS_TIMER(0.1);
+&#9;MOTION_MODULE *motion = new MOTION_MODULE();
+&#9;MCWM_MODULE *mcwm = new MCWM_MODULE();
+&#9;MCEXTO_MODULE *mcexto = new MCEXTO_MODULE();
+&#9;MCVJ_MODULE *mcvj = new MCVJ_MODULE();
+&#9;MCSP_MODULE *mcsp = new MCSP_MODULE();
+&#9;MCPS_MODULE *mcps = new MCPS_MODULE();
+&#9;MCPL_MODULE *mcpl = new MCPL_MODULE();
+&#9;MCEXMO_MODULE *mcexmo = new MCEXMO_MODULE();
+&#9;TOOL_MODULE *tool = new TOOL_MODULE();
+
+&#9;// set the SIGINT handler
+&#9;signal(SIGINT, isam_quit);
+
+&#9;// enter main loop
+&#9;while(!isam_done)
+&#9;{
+&#9;&#9;motion-&gt;controller();
+&#9;&#9;mcwm-&gt;controller();
+&#9;&#9;mcexto-&gt;controller();
+&#9;&#9;mcvj-&gt;controller();
+&#9;&#9;mcsp-&gt;controller();
+&#9;&#9;mcps-&gt;controller();
+&#9;&#9;mcpl-&gt;controller();
+&#9;&#9;mcexmo-&gt;controller();
+&#9;&#9;tool-&gt;controller();
+
+&#9;&#9;timer-&gt;wait();
+&#9;}
+
+&#9;// Delete Modules
+&#9;delete motion;
+&#9;delete mcwm;
+&#9;delete mcexto;
+&#9;delete mcvj;
+&#9;delete mcsp;
+&#9;delete mcps;
+&#9;delete mcpl;
+&#9;delete mcexmo;
+&#9;delete tool;
+
+&#9;// Delete Timer
+&#9;delete timer;
+}</PRE>
+<DL>
+<DD>The file simply includes the header file containing the definition of each of the control module classes and creates one object from 
+each class. 
+Inside a while loop the controller function is called for each object followed by a function that puts the process to sleep until time 
+for the next cycle. 
+The RCS_TIMER::wait function is specifically designed for this and sleeps a period that varies depending on the amount of processing the 
+modules do so that the period between cycles remains consistent. 
+For example, if for one cycle the sum of the time required to run all of the controllers is 40 ms and the timer was initialized at 
+0.1s = 100ms. The wait function will put the process to sleep 60 ms so the total time for the cycle is 100 ms. 
+(See <A HREF="http://www.isd.mel.nist.gov/projects/rcs_lib/utils.html#RCS_TIMER_wait_header">RCS Library Lower Level Utilities</A>.) 
+It is necessary to have some way of breaking the loop to shutdown the controller gracefully, in this example I have setup a signal handler 
+for "&lt;CNTRL&gt; C" to do this.</DD>
+<DT>&nbsp;</DT>
+</DL>
+<B><FONT FACE="Arial"><P><A NAME="NML_MODULEMembersList"></A>List of NML_MODULE Member Functions and Variables</P>
+</B></FONT><P>The functions and variables for NML_MODULE are listed here in alphabetical order.</P>
+<DL>
+<DT>int addSubordinate(RCS_CMD_CHANNEL *, RCS_STAT_CHANNEL *);</DT>
+<DD>The addSubordinate function is normally called from within the module's constructor to set an NML channel to send commands to a 
+particular subordinate and another NML channel to check for status updates from that subordinate every cycle. 
+It returns the subordinate's number used to identify it in calls to sendCommand and as an index into the statusInData array.</DD>
+<DT>int checkDclock();</DT>
+<DD>Returns 1 if the count down delay timer has expired, 0 otherwise.</DD>
+<DT>RCS_CMD_MSG *commandInData;</DT>
+<DD>The variable commandInData points to an area of memory where commands are placed when they are received</DD>
+<DT>void controller();</DT>
+<DD>The controller function is called every cycle from the main loop. It reads the NML input buffers, calls the functions PRE_PROCESS, 
+DECISION_PROCESS, and POST_PROCESS, writes to the NML output buffers, and updates the performance metrics.</DD>
+<DT>virtual void DECISION_PROCESS();</DT>
+<DD>The DECISION_PROCESS function is called by the controller function. Its purpose is to call one of the command functions based on the 
+current command type.</DD>
+<DT>int loadDclock(double seconds); </DT>
+<DD>Initializes a count down delay clock with will expire causing checkDclock to return 1 after the number of seconds specified. 
+Fractions of a second are allowed. The actual resolution depends on the accuracy of the system clock.</DD>
+<DT>void logError(const char *fmt, ...);</DT>
+<DD>The logError function logs a message to the NML channel specified with setErrorLogChannel. The message will contain a string created 
+from the format and variable number of arguments using the printf conventions. The message can be retrieved and displayed by the RCS 
+Diagnostics tool or a custom GUI. (Graphical User Interface)</DD>
+<DT>void logText(const char *fmt, ...);</DT>
+<DD>The logText function logs a message to the NML channel specified with setErrorLogChannel. The message will contain a string created 
+from the format and variable number of arguments using the printf conventions. The message can be retrieved and displayed by the RCS 
+Diagnostics tool or a custom GUI. (Graphical User Interface)</DD>
+<DT>void modifyCommand(RCS_CMD_MSG *, int subordinate_number);</DT>
+<DD>Sends the command specified by the first argument to the subordinate specified by the second in the same way as sendCommand except 
+that the serial number is not incremented. The subordinate will not see this as a new command but rather continue processing the old 
+command but with the new parameters.</DD>
+<DT>virtual void POST_PROCESS();</DT>
+<DD>The POST_PROCESS function is called by the controller function after DECISION_PROCESS. Its purpose is to perform simple conversions 
+and output processing and write any auxiliary outputs that need to be done every cycle regardless of the current command or state.</DD>
+<DT>virtual void PRE_PROCESS();</DT>
+<DD>The PRE_PROCESS function is called by the controller function before DECISION_PROCESS. Its purpose is to perform simple conversions 
+and sensory processing and read any auxiliary inputs that need to be done every cycle regardless of the current command or state.</DD>
+<DT>void requestDisplay(const char *url);</DT>
+<DD>The requestDisplay function logs a message to the NML channel specified with setErrorLogChannel. The message will contain a string 
+with the URL. (Universal Resource Locator). The RCS Diagnostics tool or a custom GUI (Graphical User Interface) can have a web browser 
+automatically open to the URL, where extended pre-written instructions for the operator would be located.</DD>
+<DT>void sendCommand(RCS_CMD_MSG *, int subordinate_number);</DT>
+<DD>Sends the command specified by the first argument to the subordinate specified by the second.</DD>
+<DT>void setCmdChannel(RCS_CMD_CHANNEL *);</DT>
+<DD>The setCmdChannel function is normally called from within the module's constructor to set an NML channel to check for 
+commands every cycle.</DD>
+<DT>void setErrorLogChannel(NML *);</DT>
+<DD>The setErrorLogChannel function is normally called from within the module's constructor to set an NML channel where error 
+messages will be written when logError is called.</DD>
+<DT>void setStatChannel(RCS_STAT_CHANNEL *, RCS_STAT_MSG *);</DT>
+<DD>The setStatChannel function is normally called from within the module's constructor to set an NML channel and the address of a 
+message to be written out every cycle with status information for the module's superior.</DD>
+<DT>int STATE_MATCH(int state, int conds);</DT>
+<DD>The STATE_MATCH function is used within the state tables and allows the current line in the state table to be tracked in the 
+diagnostics tool. It returns a non-zero integer if the current state is equal to the first argument and the second argument 
+evaluates to a non-zero number, otherwise it returns zero.</DD>
+<DT>int status;</DT>
+<DD>The current status of this module. This value is always sent to the
+supervisor. It should normally be equal to one of the following symbolic constants: RCS_EXEC,RCS_DONE, or RCS_ERROR. 
+The rest of the data sent to the 
+superior can be accessed at RCS_STAT_MSG *statusOutData, but users of the
+RCS-Design tool will ussually find it more convenient to use the 
+variable that is automatically created of the form <module_name>_status. This
+variable points to the same location but has a module-specific type.</DD>
+<DT>RCS_STAT_MSG **statusInData;</DT>
+<DD>The statusInData variable points to an array of buffers where the statuses of subordinates are placed when they are received.
+Users of the RCS-Design tool will ussually find it more convenient to use the 
+variable that is automatically created of the form &lt;module_name&gt;_status. This
+variable points to the same location but has a module-specific type.
+</DD>
+<DT>RCS_STAT_MSG *statusOutData;</DT>
+<DD>Pointer to the buffer of data that will be sent to this module's superior.
+ Users of the RCS-Design tool will ussually find it more convenient to use the 
+variable that is automatically created of the form &lt;module_name&gt;_status. This
+variable points to the same location but has a module-specific type.
+</DD>
+</DL>
+<P><HR></P>
+<DFN><P>Last Modified: %H%</P>
+<P>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email,
+ please contact </DFN><A HREF="http://www.isd.mel.nist.gov/personnel/shackleford/"><I>Will Shackleford</I></A><DFN> at 
+</DFN><A HREF="mailto:shackle@cme.nist.gov"><I>shackle@cme.nist.gov</I></A></P></BODY>
+</HTML>
+

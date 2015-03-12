@@ -1,0 +1,173 @@
+
+# The operating system version, as reported by 'os', if applicable.
+OS =    linux
+
+# The C compiler.
+ifndef CC
+CC =    gcc
+endif
+
+ifndef CXX
+CXX = g++
+endif
+
+# The C++ compiler.
+ifndef CPLUSPLUS
+CPLUSPLUS =     $(CXX)
+endif
+CPLUSPLUS_EXTENSION = cc
+
+
+ifdef OPTIMIZE
+ifndef OPTIMIZE_FLAG
+OPTIMIZE_FLAG = -O2
+endif
+endif
+
+ifndef NO_DEBUG
+ifndef DEBUG_FLAG
+DEBUG_FLAG = -g
+endif
+endif
+
+ifndef WARN_FLAG
+ifdef WARN_MAX
+WARN_FLAG=-Wall -Werror
+endif
+endif
+
+ifndef WARN_FLAG
+ifdef NO_WARNINGS
+WARN_FLAG=-w
+endif
+endif
+
+ifndef WARN_FLAG
+WARN_FLAG=
+endif
+
+ifdef NO_RTL
+HAVE_RTLINUX:=NO
+else
+HAVE_RTLINUX:=$(strip $(shell $(RCSLIB_MAIN_DIR)/etc/havertlinux.sh ))
+endif
+
+ifeq ($(HAVE_RTLINUX),YES)
+HAVE_RTL_FLAG=-DHAVE_RTL
+HAVE_RTL=1
+
+#RT Linux header files are needed by the non-realtime linux apps sometimes
+# primarily for mbuff and rtfifo definitions.
+RTLINUX:=$(strip $(shell $(RCSLIB_MAIN_DIR)/etc/rtlinuxdir.sh) )
+RTINCLUDE=$(strip -I$(RTLINUX)/include )
+RTPOSIXINCLUDE=$(strip $(RTINCLUDE)/posix )
+
+else
+HAVE_RTL_FLAG=-DNO_RTL
+NO_RTL=1
+
+endif
+
+REAL_PLAT := $(shell $(RCSLIB_MAIN_DIR)/etc/realplat.sh $(PLAT) $(RCSLIB_MAIN_DIR) ) 
+
+REAL_RCSPLAT := $(shell cd $(RCSLIB_MAIN_DIR)/plat/$(REAL_PLAT); pwd )
+
+
+SEARCH_PATH_FLAG = -Xlinker -rpath -Xlinker
+RCS_LIB_SEARCH_PATH= $(REAL_RCSPLAT)/lib \
+	$(SEARCH_PATH_FLAG) $(RCS_PLATLIB)
+
+
+XML_INC=
+XML_LINK=
+
+ifdef USE_LIBXML2
+XML_INC = -I/usr/include/libxml2  -DUSE_LIBXML2
+XML_LINK = -lxml2
+endif
+
+ifdef USE_XML
+OPT_XML_INC=$(XML_INC) -DUSE_XML
+OPT_XML_LINK=$(XML_LINK)
+endif
+
+
+ifndef NO_PIC
+PIC_FLAG=-fPIC
+endif
+
+# The C and C++ compilation flags to be used.
+CFLAGS  = $(PIC_FLAG) $(DEBUG_FLAG) $(OPTIMIZE_FLAG) $(WARN_FLAG) -D$(PLAT) -DPLATNAME=\"$(PLAT)\" -Dlinux -DHAVE_LIBDL -DHAVE_TCL_EXTEND -DLINUX_KERNEL_2_2 -fstrict-aliasing $(HAVE_RTL_FLAG) $(OPT_XML_INC) -DHAVE_FSYNC -DHAVE_SNPRINTF
+
+CLINK = -ldl -lrt -lpthread $(OPT_XML_LINK)
+CPLUSPLUSFLAGS =        -D__CPLUSPLUS__ $(CFLAGS)  -DNO_IOSTREAM
+CPLUSPLUSLINK =         $(CLINK)
+
+# Flags for compiling and linking X Windows apps
+XINC = -I/usr/include
+XLINK = -L/usr/X11/lib -L/usr/X11R6/lib -lXaw
+
+# Flags for compiling and linking Tcl apps
+TCL_INC=$(strip $(shell $(RCSLIB_MAIN_DIR)/etc/tcltkincflags.sh))
+TCL_LINK=$(shell $(RCSLIB_MAIN_DIR)/etc/tcltklibflags.sh )
+TK_LINK=
+
+
+# makedepend must be run from a sun. (Preferably one with a cross-compiler.)
+#MAKEDEPEND = /usr/X11R6/bin/makedepend
+USE_GPP_M=1
+
+# The library archiver and ranlib programs.
+AR =    ar
+RANLIB =        ranlib
+
+# The assembler.
+AS =    as
+
+LD =    ld
+
+PLATBIN =       $(RCSDIR)/plat/$(PLAT)/bin
+PLATLIB =       $(RCSDIR)/plat/$(PLAT)/lib
+
+DYNAMIC_LINK_FLAG = -shared
+DYNAMIC_LIB_BUILD_TOOL=gcc
+
+COPY_SOURCE_COMMAND = cp
+RCSLIB_LIBRARY_NAME = librcs.a
+STRIP = strip
+
+# disable SCCS make rule for Linux
+% : SCCS/s.%
+	@true
+
+% ::    RCS/%,v
+	co $@
+
+
+JDK_DIR=/usr/local/jdk
+
+
+printenv_linuxdef_commands:
+	$(IGNORE_MARK)$(ECHO_MARK)echo HAVE_RTLINUX=$(HAVE_RTLINUX)
+	$(IGNORE_MARK)$(ECHO_MARK)echo NO_RTL=$(NO_RTL)
+	$(IGNORE_MARK)$(ECHO_MARK)echo HAVE_RTL_FLAG=$(HAVE_RTL_FLAG)
+	$(IGNORE_MARK)$(ECHO_MARK)echo REAL_PLAT=$(REAL_PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)echo REAL_RCSPLAT=$(REAL_RCSPLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RTLINUX=$(RTLINUX)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RTINCLUDE=$(RTINCLUDE)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RTPOSIXINCLUDE=$(RTPOSIXINCLUDE)
+	
+printenv : printenv_linuxdef_commands
+
+.PHONY: printenv_linuxdef_commands
+
+
+
+
+
+
+
+
+
+
+

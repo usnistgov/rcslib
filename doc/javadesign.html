@@ -1,0 +1,152 @@
+<html>
+<head>
+<title>Java-based Design Tool for RCS Applications</title>
+</head>
+<body  BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000EE" VLINK="551A8B" ALINK="#FF0000">
+<H1>The RCS Design Tool Instructions</H1>
+
+<h2>Introduction</h2>
+
+
+The <B>N</B>ational <B>I</B>nstitute of <B>S</B>tandards and <B>T</B>echnology (NIST) has been using the <B>R</B><I>eal-time </I><B>C</B><I>ontrol </I><B>S</B><I>ystem</I> (RCS) Reference Model Architecture for building control systems based on a hierarchy of cyclically executing control modules. The RCS-Design tool is a Java-based program that allows users to layout a hierarchy of these
+controllers and automatically generate the source code, makefiles and configuration files needed to build and run the application.
+
+<h2>Views</h2>
+
+A drop down list in the upper right corner of the design tool allows the user 
+to select from several different views.
+
+<DL>
+<DT><B>Hierarchy</B></DT>
+<DD>The Hierarchy view contains a large blue area on the right where a graphic of the hierarchy will be shown, and some controls for adding modules/commands on the left.<A HREF="design-hierarchy.gif">(See Picture.)</A></DD>
+<DT><B>Options</B></DT>
+<DD>The options view allows the user modify miscellaneous options.<A HREF="design-options.gif">(See Picture.)</A></DD>
+<DT><B>Loops</B></DT>
+<DD>The loops view allows the user to group modules in loops that are run inside the same process and set some options for the loop. <A HREF="design-loops.gif">(See Picture.)</A></DD>
+<DT><B>NML Code Generation</B></DT>
+<DD>The NML Code Generation view allows the user to generate NML update functions, format functions and constructors in C++ or Java. <A HREF="design-codegen.gif">(See Picture.)</A></DD>
+<DT><B>Files View</B></DT>
+<DD> The files view allows the user to view or edit all of the files in the project created by the RCS-Design tool. <A HREF="design-files.gif">(See Picture.)</A></DD>
+</DL>
+
+<h2>Top Buttons</h2>
+
+A row of buttons on the top is available regardless of selected view.
+
+<DL>
+<DT><B>Create Source</B></DT>
+<DD>Create all the source and configuration files in the application.</DD>
+<DT><B>Print</B></DT>
+<DD>Print the graphic of the hierarchy.</DD>
+<DT><B>Make</b></DT>
+<DD>Run the makefile interpreter to compile the application.</dd>
+<DT><b>Run</B></DT>
+<DD>Run the application and the diagnostics tool to control it.</dd>
+<DT><B>Import</b></DT>
+<DD>Import another controller into this application. A dialog window will 
+open for the user to select the &quot;.cfg&quot; file of the controller to import. The top-level module of the selected controller will be added as a subordinate of the currently selected module.</DD>
+<DT><b>Open</b><DT>
+<DD>Open the &quot;.cfg&quot; of a controller to view/modify.</DD>
+<DT><B>New</b><DT>
+<DD>Begin working on a new application.</DD>
+</DL>
+
+<h2>Hierarchy View</h2>
+
+The hierachy view provides a graphic of the controller's hierachy.
+Subordinates are placed below their supervisor with a line connecting them.
+Supervisors send commands to thier subordinates and monitor the subordinates 
+status. The currently selected module will be black.
+
+<p>The module can be selected either by clicking on its icon or its name in 
+the modules list. To add an additional module, enter the name in the text 
+field under &quot;Add Module&quot;. It will be a subordinate of the 
+currently selected module. A module can be deleted by selecting it and 
+clicking the &quot;Delete Module&quot; button.
+
+<p>Under the &quot;Delete Module&quot; button is a drop down list that allows
+the user to select what information is displayed about the current module. There are the following choices:</p>
+
+<DL>
+<DT><B>Subordinates</b></dt>
+<DD>This option provides a list of subordinates. The hierarchy can be reorganized by selecting and deselecting subordinates in the list.</DD>
+<DT><B>Commands</b></DT>
+<DD>This option provides a list of commands that the module will accept. Commands can be added or deleted from the list.</DD>
+<DT><B>Aux. Channel</b></DT>
+<DD>This option provides a list of auxilliary channels. Auxilliary channels provide a general method of communication that can be used between any two modules regardless of where they are in the hierarchy.</DD>
+</DL>
+
+<h2>Options View</h2>
+
+<p>The following is a list of options that can be controlled from this view: (Many of these options can also be set on the command-line when the RCS-Design tool is run as a stand-alone application.) </p>
+
+<DL>
+<DT><b>Application Directory</b></DT>
+<DD>The directory where the release version of the application should be placed.</DD>
+<DT><b>User Directory</b></DT>
+<DD>The directory where the development version for this user should be placed.</dd>
+<DT><B>RCS Library Directory</B></DT>
+<DD>The directory where the RCS Library is installed.</DD>
+<DT><B>Application Name</b></DT>
+<DD>A name that is used in several source files to keep the files in this application unique. It is recommended that the name contain no spaces or punctuation. It must be less than 5 characters to work in DOS.</DD>
+<DT><B>C++ Source File Extension</b></DT>
+<DD>The extension to use for C++ source files. (ie. .cpp, .C, .cc) </DD>
+<DT><B>C++ Header File Extension</b></DT>
+<DD>The extension to use for C++ header files. (ie. .hpp, .h, .hh) </DD>
+<DT><B>C++ Object File Extension</b></DT>
+<DD>The extension that your C++ compiler adds to object files. (ie, .o, .obj)</DD>
+<DT><B>Make Command</B></DT>
+<DD>A command that when executed will invoke the makefile interpreter. There are some scripts included in the RCS library to solve some problems that occur on
+some systems when the make interpreter is invoked directly.</DD>
+<DT><B>Run Command</b></DT>
+<DD>A command to execute to run the application. A script-file is normally automatically generated for this purpose.</DD>
+<DT><B>Platforms List</b></DT>
+<DD>For each platform there is a directory for object files and a .def file
+which specifies the compiler options, what compiler to use etc. The user can build the same application for multiple platforms by just selecting different platforms before each &quot;make&quot;. </DD>
+<DT><B>Replace Existing File</b></DT>
+<DD>When a file already exist and the user tries to create the file again either though the &quot;Files View&quot; or with the &quot;Create Source&quot; the tool can either replace it with an updated version, leave it alone or ask the user.</dd>
+<DT><B>Use Merger</b></DT>
+<DD>If this checkbox is checked then whenever the tool replaces a file it will
+do a line-by-line comparison of the new file with the old file and attempt
+to preserve user edits in the old file and merge the two together.</DD>
+<DT><B>Make Backups</b></DT>
+<DD>When the tool replaces an existing file it will first rename the file according to the following formula  if this checkbox is checked:<br>
+&lt;original file name&gt;+".~n~", where n is an
+integer that makes the backup unique.<br>(This preserves your work but can create a large number of backup files, all the backups can be deleted by clicking the &quot;Remove Backups&quot; button.)</DD>
+<DT><B>Development Platform</b></DT>
+<DD>If UNIX is selected the makefiles generated are compatible with the 
+GNU make program, if Windows 95/NT is selected the makefiles will be compatible with NMAKE a program that comes with Microsoft Visual C++.</DD>
+<DT><B>Libraries</B></DT>
+<DD>List the extra object libraries that should be linked into your application.</DD>
+<DT><B>Includes</B></DT>
+<DD>List the extra directories where the compiler should look for include files.</DD>
+<DT><B>Debug</b></DT>
+<DD>Print out a variety of messages as you use the tool for debugging the tool.</DD>
+</DL>
+
+<h2>Loops View</h2>
+
+The loops view allows the user to group modules into loops. Each loop 
+may have a differnt cycle time.
+
+<h2>NML Code Generation</h2>
+
+See <A HREF="http://www.isd.mel.nist.gov/projects/rcslib/CodeGen-Instructions.html">http://www.isd.mel.nist.gov/projects/rcslib/CodeGen-Instructions.html</a>
+
+<h2>Files View</h2>
+
+The files view allows you to see and update each of the files in the application. If the file does not exist or is not up-to-date when you select it from the list it will be created and displayed. Otherwise, it will just be displayed.
+If you edit code in the text area you can save your changes with the &quot;Save&quot; button. To reintegrate changes from one of the other views click the 
+&quot;Update&quot; button.
+
+
+<HR>
+
+<p>Last Modified: 04/09/98</p>
+<P>If you have questions or comments regarding this page or you would like to be notified of changes to the RCS library via email, please
+contact  <A HREF="http://www.isd.mel.nist.gov/personnel/shackleford/"
+>Will Shackleford</A> at <I><A HREF="mailto:shackle@cme.nist.gov">shackle@cme.nist.gov</A></I></P>
+
+</body>
+</html>
+

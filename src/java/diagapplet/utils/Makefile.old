@@ -1,0 +1,60 @@
+
+
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR=../../../..
+endif
+
+
+
+PACKAGE_NAME = diagapplet.utils
+
+ifndef USE_GCJ
+PLAT=java
+endif
+
+JAVA_SOURCES = CountButton.java \
+	CountButtonInterface.java \
+	CountList.java \
+	CountListInterface.java \
+	URLLoadInfoPanel.java \
+	FastListPanel.java \
+	FastListContainer.java \
+	StandAloneApplet.java \
+	ModifiedFileDialog.java \
+	URLLoadInfoPanelInterface.java \
+	FastListPanelInterface.java \
+	FastListPanelItem.java \
+	FakeFastListPanel.java
+
+
+ifdef USE_GCJ
+
+LOCAL_GCJ_FLAGS=-I../..
+
+SRCS= \
+	URLLoadInfoPanelInterface.java \
+	CountButtonInterface.java \
+	CountListInterface.java \
+	FastListPanelInterface.java \
+	FastListPanelItem.java \
+	FakeFastListPanel.java
+
+OBJS=$(SRCS:%.java=%.o)
+
+endif
+
+include ../../../Makefile.rcs
+
+ifdef USE_GCJ
+
+all: libdiagutilforgcj
+
+libdiagutilforgcj : $(DEVP_DIR)/lib/libdiagutilforgcj.a
+
+.PHONY: libdiagutilforgcj
+
+$(DEVP_DIR)/lib/libdiagutilforgcj.a: \
+	$(DEVP_OBJS)
+	$(AR) cr $@ $^
+
+endif

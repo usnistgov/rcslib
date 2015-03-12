@@ -1,0 +1,20 @@
+
+options{
+	MakeCommand="make ";
+	ListModulesByNumber=false;
+	MODULE_WIDTH=160;
+	MODULE_HEIGHT=60;
+	MODULE_X_SPACING=50;
+	MODULE_Y_SPACING=40;
+}
+
+ex1{
+	no_cmd=true;
+	no_stat=true;
+	aux_input="b1";
+	aux_input_types="nml_test_format.hh";
+	nml_configuration_file="dltest.nml";
+}
+
+
+

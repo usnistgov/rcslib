@@ -1,0 +1,74 @@
+
+#JDK_DIR=/usr/local/jdk
+ifndef JDK_DIR
+JDK_DIR:=$(shell $(RCSLIB_MAIN_DIR)/etc/jdk_dir)
+endif
+
+ifdef OLD_JAVA
+ifndef JAVA_SETUP
+JAVA_SETUP = JDK_DIR=$(JDK_DIR); export JDK_DIR; LD_LIBRARY_PATH=$(JDK_DIR)/lib; export LD_LIBRARY_PATH;
+endif
+
+ifndef JAVA_BASE_CLASSES_ARCHIVE
+JAVA_BASE_CLASSES_ARCHIVE = $(JDK_DIR)/lib/classes.zip
+endif
+
+else
+
+ifndef JAVA_SETUP
+JAVA_SETUP = JDK_DIR=$(JDK_DIR); export JDK_DIR;
+endif
+
+
+endif
+# OLD_JAVA
+
+ifndef JAVA_TOOLS_DIR
+JAVA_TOOLS_DIR = $(JDK_DIR)/bin
+endif
+
+ifndef JAVA_RUNTIME
+ifndef JAVA_TOOLS_DIR
+JAVA_RUNTIME = $(JAVA_SETUP) java
+else
+JAVA_RUNTIME = $(JAVA_SETUP) $(JAVA_TOOLS_DIR)/java
+endif
+endif
+
+
+ifdef OLD_JAVA
+
+ifndef CLASSPATH
+ifdef JAVA_BASE_CLASSES_ARCHIVE
+CLASSPATH = .:$(JAVA_BASE_CLASSES_ARCHIVE)
+else
+CLASSPATH = .:/depot/jdk/lib/classes.zip
+endif
+endif
+# CLASSPATH
+
+ifndef JAVA_CLASSPATH
+JAVA_CLASSPATH = $(CLASSPATH)
+endif
+
+endif 
+# OLD_JAVA
+
+
+NML_CODEGEN =  $(RCSLIB_MAIN_DIR)/etc/CodeGen
+
+
+ifdef USE_GCJ
+
+ifndef GCJ
+GCJ=gcj
+endif
+
+$(DEVP_SRC_DIR)/%.java: %.java
+	cp $^ $@
+
+$(DEVP_LIB_DIR)/%.o : %.java
+	$(GCJ) -c $(LOCAL_GCJ_FLAGS) $< -o $@
+
+
+endif

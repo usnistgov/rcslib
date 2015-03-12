@@ -1,0 +1,1258 @@
+# ;; -*- mode: makefile; -*-
+
+# Makefile.generic:
+# Makefile definitions to be included in makefiles
+#  for RCS Utilities and Applications
+#  (non-platform specific definitions only)
+# - compatible with GNU Make versions 3.55+
+
+ORIG_PLAT=$(PLAT)
+
+ifdef DEBUG_RCS_MAKE
+$(warning PLAT=$(PLAT) )
+$(warning LOCAL_CFLAGS=$(LOCAL_CFLAGS) )
+endif
+
+ifndef ECHO_MARK
+ifndef ECHO_EVERYTHING
+ECHO_MARK=@
+else
+ECHO_MARK=
+endif
+endif
+
+ifndef IGNORE_MARK
+ifndef IGNORE_NONE
+IGNORE_MARK=-
+else
+IGNORE_MARK=
+endif
+endif
+
+ifndef MKDIR_CMD
+MKDIR_CMD=install -d
+endif
+
+
+ifeq ($(MAKELEVEL),0)
+ifndef PLAT
+RESET_PLAT=1
+else
+
+ifdef RTLINUX
+ifneq (rtlinux, $(findstring rtlinux,$(PLAT)))
+ifneq (java, $(findstring java,$(PLAT)))
+RESET_PLAT=1
+else
+RESET_PLAT=0
+endif
+else
+RESET_PLAT=0
+endif
+
+else
+RESET_PLAT=0
+endif
+endif
+else
+RESET_PLAT=0
+endif
+
+# Set default RCS directory
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR := $(shell if test -d ../rcslib ; then cd ../rcslib; pwd ; \
+	elif test -d ../../rcslib ; then cd ../../rcslib; pwd ; \
+	elif test -d ../../../rcslib ; then cd ../../../rcslib ; pwd;  \
+	elif test -d ../../../../rcslib ; then cd ../../../../rcslib ; pwd; \
+	fi )
+endif
+
+ifndef MAKEFILES_DIR
+MAKEFILES_DIR:=$(shell cd $(RCSLIB_MAIN_DIR)/etc >/dev/null 2>/dev/null; pwd)
+endif
+
+# Set default target
+ifndef DEFAULT_TARGET
+DEFAULT_TARGET = all
+endif
+
+default: $(DEFAULT_TARGET)
+
+
+ifndef APPNAME
+APPNAME:=$(notdir $(APPDIR))
+endif
+
+# Set default user directory.
+ifndef USER_DIR
+CURDIR:=$(shell pwd)
+USER_DIR_SEDCMD:=sed s\#$(APPNAME)/sr.\*\$$\#$(APPNAME)\#
+USER_DIR:=$(shell pwd | $(USER_DIR_SEDCMD))
+endif
+# USER_DIR = $(HOME)/$(notdir $(APPDIR))
+
+ifdef DEBUG_RCS_MAKE
+$(warning USER_DIR=$(USER_DIR))
+$(warning USER_PLAT=$(USER_PLAT) )
+endif
+
+ifndef PLAT
+ifndef DETERMINE_PLAT_DEF_INCLUDED
+include $(MAKEFILES_DIR)/determineplat.def
+DETERMINE_PLAT_DEF_INCLUDED=1
+endif
+else
+ifndef USER_PLAT
+ifeq (~, $(findstring ~,$(USER_DIR)))
+USER_PLAT := $(shell ( \
+	if test -d $(USER_DIR) -a ! -d $(USER_DIR)/plat  ; then \
+	chmod u+w $(USER_DIR); \
+	mkdir $(USER_DIR)/plat; \
+	fi; \
+	if test -d $(USER_DIR)/plat -a ! -d $(USER_DIR)/plat/$(PLAT)  ; then \
+	mkdir $(USER_DIR)/plat/$(PLAT); \
+	fi; \
+	cd $(USER_DIR)/plat/$(PLAT) >/dev/null 2>/dev/null; pwd))
+else
+ifeq (../, $(findstring ../,$(USER_DIR)))
+USER_PLAT := $(shell ( \
+	if test -d $(USER_DIR) -a ! -d $(USER_DIR)/plat  ; then \
+	chmod u+w $(USER_DIR); \
+	mkdir $(USER_DIR)/plat; \
+	fi; \
+	if test -d $(USER_DIR)/plat -a ! -d $(USER_DIR)/plat/$(PLAT)  ; then \
+	mkdir $(USER_DIR)/plat/$(PLAT); \
+	fi; \
+	cd $(USER_DIR)/plat/$(PLAT) >/dev/null 2>/dev/null; pwd))
+else
+USER_PLAT := $(USER_DIR)/plat/$(PLAT)
+endif
+endif
+endif
+
+
+ifndef USER_PLAT
+USER_PLAT := $(USER_DIR)/plat/$(PLAT)
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning USER_PLAT=$(USER_PLAT) )
+endif
+
+ifdef USE_TMP
+DEVP_DIR = /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)
+else
+DEVP_DIR = $(USER_PLAT)
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning DEVP_DIR=$(DEVP_DIR) )
+endif
+
+ifndef PLAT_DEF_INCLUDED
+ifdef MAKEFILES_DIR
+include $(MAKEFILES_DIR)/$(PLAT).def
+else
+include $(PLAT).def
+endif
+PLAT_DEF_INCLUDED=1
+endif
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning RESET_PLAT=$(RESET_PLAT) )
+endif
+
+ifeq ($(RESET_PLAT),1)
+.DEFAULT: remake_with_plat
+
+ 
+remake_with_plat:
+	$(IGNORE_MARK)$(ECHO_MARK) echo The plat was not set initially, re-running Makefile with PLAT set.
+	$(MAKE) $(EXTRA_MAKEFLAGS) $(MAKECMDGOALS) $(MFLAGS)  PLAT=$(PLAT)
+	$(ECHO_MARK)echo The following error was deliberately inserted to prevent running the make twice.
+	$(ECHO_MARK)test foo = goo
+
+.FORCE: remake_with_plat
+
+
+ifneq (,$(MAKECMDGOALS))
+
+$(MAKECMDGOALS): remake_with_plat
+
+endif
+
+%: remake_with_plat
+
+
+%.o: remake_with_plat
+%.obj: remake_with_plat
+%.c: remake_with_plat
+%.cc: remake_with_plat
+%.cpp: remake_with_plat
+%.h: remake_with_plat
+%.hh: remake_with_plat
+%.hpp: remake_with_plat
+
+do_sub_makes: remake_with_plat
+
+
+LIBS=
+OBJS=
+HEADERS=
+SOURCES=
+
+headers depend all: remake_with_plat
+
+clean: remove_deps remake_clean
+
+.PHONY: remake_clean
+
+remake_clean:
+	$(IGNORE_MARK)$(ECHO_MARK) echo The plat was not set initially, re-running Makefile with PLAT set.
+	$(MAKE) clean $(MFLAGS)  PLAT=$(PLAT)
+	$(ECHO_MARK)echo The following error was deliberately inserted to prevent running the make twice.
+	$(ECHO_MARK)test foo = goo
+
+.PHONY: clean headers depend all do_sub_makes
+
+else
+
+ifeq (all, $(findstring all,$(MAKECMDGOALS)))
+BUILDING_ALL=1
+endif
+
+ifeq (,$(MAKECMDGOALS))
+BUILDING_ALL=1
+endif
+
+
+
+#Prevent Multiple Inclusion Warnings
+#ifndef GENERIC_MAKEFILE_ALREADY_INCLUDED
+GENERIC_MAKEFILE_ALREADY_INCLUDED = 1
+
+# Set default RCS directory
+ifndef RCSLIB_MAIN_DIR
+RCSLIB_MAIN_DIR = /proj/rcslib
+endif
+
+
+ifndef MAKEFILES_DIR
+MAKEFILES_DIR:=$(shell cd $(RCSLIB_MAIN_DIR); pwd)/etc
+endif
+
+echo_plat:
+	echo $(MAKEFILES_DIR)
+
+.PHONY: echo_plat
+
+ifndef RCS_LIBRARY_NAME
+RCS_LIBRARY_NAME = librcs.a
+endif
+
+ifndef RCS_DEBUG_LIBRARY_NAME
+RCS_DEBUG_LIBRARY_NAME = librcsd.a
+endif
+
+ifndef RCS_SHARED_LIBRARY_NAME
+RCS_SHARED_LIBRARY_NAME = librcs.so
+endif
+
+# Define variables for directories.
+
+# The directory stucture under APPDIR or USER_DIR should look like:
+# APPDIR/
+#       src/                    /* Active Source Files */
+#
+#       plat/
+#               sunos4/ . . .
+#               sunos5/ . . .
+#               vxworks5.1/ . . .
+# where sunos4, sunos5, vxworks5.1 etc are  possible values for $(PLAT)
+# Each platform directory should have a directory structure under it like:
+# APP_PLAT/
+#               src/            /* Archived Source files. */
+#               lib/            /* Object and Library files. */
+#               bin/            /* Binaries and executables. */
+#               include/        /* .h and .hh files */
+
+ifndef RCS_PLAT
+RCS_PLAT := $(shell cd $(RCSLIB_MAIN_DIR); \
+	 cd plat >/dev/null 2>/dev/null || (chmod u+w .; mkdir plat; cd plat;); \
+	pwd )
+endif
+
+RCS_INCLUDE = $(RCS_PLAT)/$(PLAT)/include
+RCS_PLATBIN  =  $(RCS_PLAT)/$(PLAT)/bin
+RCS_PLATLIB  = $(RCS_PLAT)/$(PLAT)/lib
+RCS_LIBRARY = $(RCS_PLATLIB)/$(RCS_LIBRARY_NAME)
+RCS_DEBUG_LIBRARY = $(RCS_PLATLIB)/$(RCS_DEBUG_LIBRARY_NAME)
+RCS_SHARED_LIBRARY = $(RCS_PLATLIB)/$(RCS_SHARED_LIBRARY_NAME)
+DEBUG_RCS_LIBRARY = $(RCS_DEBUG_LIBRARY)
+
+RCS_INCLUDE_DIR = $(RCS_INCLUDE)
+RCS_BIN_DIR = $(RCS_PLATBIN)
+RCS_LIB_DIR = $(RCS_PLATLIB)
+RCS_SRC_DIR = $(RCS_PLAT)/$(PLAT)/src
+
+
+ifndef RCS_SHARED_LIBRARY_NAME_W_VERSION
+RCS_SHARED_LIBRARY_NAME = librcs$(RCS_VERSION).so
+endif
+
+ifndef PHONY_INCLUDE_DIR
+PHONY_INCLUDE_DIR = $(MAKEFILES_DIR)/phony/include
+endif
+
+# Set default application directory.
+ifndef APPDIR
+APPDIR = $(USER_DIR)
+NOINSTALL=1
+endif
+
+ifeq ($(APPDIR),$(USER_DIR))
+NOINSTALL=1
+endif
+
+ifndef ENABLE_RCSLIB_INSTALL
+ifeq ($(APPDIR),$(RCSLIB_MAIN_DIR))
+NOINSTALL=1
+endif
+endif
+
+
+
+
+# Release Directories and Files
+
+ifndef APP_PLAT
+ifeq (~, $(findstring ~,$(APPDIR)))
+APP_PLAT := $(shell ( \
+	if test -d $(APPDIR) -a ! -d $(APPDIR)/plat  ; then \
+	chmod u+w $(APPDIR) 2>/dev/null; \
+	mkdir $(APPDIR)/plat; \
+	fi; \
+	if test -d $(APPDIR)/plat -a ! -d $(APPDIR)/plat/$(PLAT)  ; then \
+	mkdir $(APPDIR)/plat/$(PLAT); \
+	fi; \
+	cd $(APPDIR)/plat/$(PLAT) >/dev/null 2>/dev/null; pwd))
+else
+ifeq (../, $(findstring ../,$(APPDIR)))
+APP_PLAT := $(shell ( \
+	if test -d $(APPDIR) -a ! -d $(APPDIR)/plat  ; then \
+	chmod u+w $(APPDIR) 2>/dev/null; \
+	mkdir $(APPDIR)/plat; \
+	fi; \
+	if test -d $(APPDIR)/plat -a ! -d $(APPDIR)/plat/$(PLAT)  ; then \
+	mkdir $(APPDIR)/plat/$(PLAT); \
+	fi; \
+	cd $(APPDIR)/plat/$(PLAT) >/dev/null 2>/dev/null; pwd))
+else
+APP_PLAT := $(APPDIR)/plat/$(PLAT)
+endif
+endif
+endif
+
+RELEASE_DIR = $(APP_PLAT)
+
+
+ifndef SUB_DIR
+RELEASE_INCLUDE_DIR = $(RELEASE_DIR)/include
+RELEASE_SRC_DIR  = $(RELEASE_DIR)/src
+RELEASE_LIB_DIR = $(RELEASE_DIR)/lib
+RELEASE_BIN_DIR = $(RELEASE_DIR)/bin
+else
+RELEASE_INCLUDE_DIR = $(RELEASE_DIR)/include/$(SUB_DIR)
+RELEASE_SRC_DIR  = $(RELEASE_DIR)/src/$(SUB_DIR)
+RELEASE_LIB_DIR = $(RELEASE_DIR)/lib/$(SUB_DIR)
+RELEASE_BIN_DIR = $(RELEASE_DIR)/bin/$(SUB_DIR)
+endif
+
+RELEASE_HEADERS = $(HEADERS:%=$(RELEASE_INCLUDE_DIR)/%)
+RELEASE_LIBS = $(LIBS:%=$(RELEASE_LIB_DIR)/%)
+ifdef OBJ_EXTENSION
+RELEASE_OBJS = $(OBJS:%.o=$(RELEASE_LIB_DIR)/%.$(OBJ_EXTENSION))
+else
+RELEASE_OBJS = $(OBJS:%=$(RELEASE_LIB_DIR)/%)
+endif
+RELEASE_BINS = $(BINS:%=$(RELEASE_BIN_DIR)/%)
+PRE_RELEASE_SRCS = $(SRCS:%=$(RELEASE_SRC_DIR)/%)
+
+RELEASE_PLATBIN = $(RELEASE_BIN_DIR)
+RELEASE_PLATLIB = $(RELEASE_LIB_DIR)
+
+ifndef ARCHIVE_DIRECTORY
+ARCHIVE_DIRECTORY = $(APPDIR)/archive
+endif
+
+# Development Directories and Files
+
+ifndef NO_DIR_SETUP
+ifndef SUB_DIR
+ifndef DEVP_INCLUDE_DIR
+DEVP_INCLUDE_DIR = $(DEVP_DIR)/include
+endif
+ifndef DEVP_SRC_DIR
+DEVP_SRC_DIR  = $(DEVP_DIR)/src
+endif
+ifndef DEVP_LIB_DIR
+DEVP_LIB_DIR = $(DEVP_DIR)/lib
+endif
+ifndef DEVP_BIN_DIR
+DEVP_BIN_DIR = $(DEVP_DIR)/bin
+endif
+else
+ifndef DEVP_INCLUDE_DIR
+DEVP_INCLUDE_DIR = $(DEVP_DIR)/include/$(SUB_DIR)
+endif
+ifndef DEVP_SRC_DIR
+DEVP_SRC_DIR  = $(DEVP_DIR)/src/$(SUB_DIR)
+endif
+ifndef DEVP_LIB_DIR
+DEVP_LIB_DIR = $(DEVP_DIR)/lib/$(SUB_DIR)
+endif
+ifndef DEVP_BIN_DIR
+DEVP_BIN_DIR = $(DEVP_DIR)/bin/$(SUB_DIR)
+endif
+endif
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning DEVP_DIR=$(DEVP_DIR) )
+$(warning DEVP_INCLUDE_DIR=$(DEVP_INCLUDE_DIR) )
+$(warning DEVP_LIB_DIR=$(DEVP_LIB_DIR) )
+endif
+
+DEVP_HEADERS = $(HEADERS:%=$(DEVP_INCLUDE_DIR)/%)
+PRE_DEVP_SRCS = $(SRCS:%=$(DEVP_SRC_DIR)/%)
+DEVP_LIBS = $(LIBS:%=$(DEVP_LIB_DIR)/%)
+DEVP_OBJS = $(OBJS:%=$(DEVP_LIB_DIR)/%)
+DEVP_BINS = $(BINS:%=$(DEVP_BIN_DIR)/%)
+OBJECT_CENTER_SRC_FILES = $(SRCS:%.cc=$(DEVP_LIB_DIR)/%.src)
+
+DEVP_PLATBIN = $(DEVP_BIN_DIR)
+DEVP_PLATLIB = $(DEVP_LIB_DIR)
+
+ifdef USE_TMP
+make_dirs: make_tmp_dirs
+endif
+
+depend: make_dirs
+
+make_dirs: 
+	$(IGNORE_MARK)$(ECHO_MARK) \
+	if test '!' -d $(DEVP_DIR) ; then $(MKDIR_CMD) $(DEVP_DIR); fi
+	$(IGNORE_MARK)$(ECHO_MARK) \
+	if test '!' -d $(DEVP_LIB_DIR) ; then $(MKDIR_CMD) $(DEVP_LIB_DIR); fi
+	$(IGNORE_MARK)$(ECHO_MARK) \
+	if test '!' -d $(DEVP_SRC_DIR) ; then $(MKDIR_CMD) $(DEVP_SRC_DIR); fi
+	$(IGNORE_MARK)$(ECHO_MARK) \
+	if test '!' -d $(DEVP_INCLUDE_DIR) ; then $(MKDIR_CMD) $(DEVP_INCLUDE_DIR); fi
+	$(IGNORE_MARK)$(ECHO_MARK) \
+	if test '!' -d $(DEVP_BIN_DIR) ; then $(MKDIR_CMD) $(DEVP_BIN_DIR); fi
+
+make_release_dirs:
+	$(IGNORE_MARK)$(ECHO_MARK) \
+	if test '!' -d $(RELEASE_DIR) ; then $(MKDIR_CMD) $(RELEASE_DIR); fi
+	$(IGNORE_MARK)$(ECHO_MARK) \
+	if test '!' -d $(RELEASE_LIB_DIR) ; then $(MKDIR_CMD) $(RELEASE_LIB_DIR); fi
+	$(IGNORE_MARK)$(ECHO_MARK) \
+	if test '!' -d $(DEVP_BIN_DIR) ; then $(MKDIR_CMD) $(DEVP_BIN_DIR); fi
+	$(IGNORE_MARK)$(ECHO_MARK) \
+	if test '!' -d $(RELEASE_SRC_DIR) ; then $(MKDIR_CMD) $(RELEASE_SRC_DIR); fi
+	$(IGNORE_MARK)$(ECHO_MARK) \
+	if test '!' -d $(RELEASE_INCLUDE_DIR) ; then $(MKDIR_CMD) $(RELEASE_INCLUDE_DIR); fi
+
+.PHONY: make_dirs make_release_dirs
+
+ifeq (linux, $(findstring linux,$(PLAT)) )
+$(MAKEFILES_DIR)/$(PLAT).def : $(MAKEFILES_DIR)/linux.def
+	-( if test -w $(MAKEFILES_DIR) -a -f $^ -a ! -f $@  ; then \
+	cp $^ $@; \
+	fi; )
+
+endif
+
+
+# Include the platform specific Makefile definitions.
+ifndef PLAT_DEF_INCLUDED
+include $(MAKEFILES_DIR)/$(PLAT).def
+PLAT_DEF_INCLUDED=1
+endif
+
+
+ifndef NO_JAVA
+ifndef JAVA_BASE_DEF_INCLUDED
+include $(MAKEFILES_DIR)/javabase.def
+JAVA_BASE_DEF_INCLUDED=1
+endif
+endif
+
+ifdef USE_STATIC_RCSLIB
+USE_STATIC_RCS_LIB=1
+endif
+
+
+ifndef NO_RCS_VERSION
+ifndef RCS_VERSION
+ifdef COMPILING_RCSLIB
+ifdef TOP_SRCDIR
+RCS_VERSION := $(shell grep RCS_VERSION $(TOP_SRCDIR)/src/rcsvers.hh | awk -F'[ \"]' '{printf("%s",$$4);}')
+RCS_DATE := $(shell date +%y\ %m\ %d | awk '{printf("%d.%d-%d",$$1,$$2,$$3);}')
+#RCS_VERSION := $(RCS_VERSION)-$(RCS_DATE)
+# TOP_SRCDIR
+else
+
+ifdef USER_DIR
+RCS_VERSION := $(shell grep RCS_VERSION $(USER_DIR)/src/rcsvers.hh | awk -F'[ \"]' '{printf("%s",$$4);}')
+RCS_DATE := $(shell date +%y\ %m\ %d | awk '{printf("%d.%d-%d",$$1,$$2,$$3);}')
+#RCS_VERSION := $(RCS_VERSION)-$(RCS_DATE)
+# USER_DIR
+endif
+
+# TOP_SRCDIR
+endif
+
+# COMPILING_RCSLIB
+else
+
+ifdef USE_RCS_VERSION_ON_LINK
+RCS_VERSION := $(shell grep RCS_VERSION $(RCS_INCLUDE)/rcsvers.hh | awk -F'[ \"]' '{printf("%s",$$4);}')
+RCS_SO_LIBNAME := $(shell ls -t1 $(RCS_PLATLIB)/librcs$(RCS_VERSION)*.so | head -n 1  )
+RCS_DATE := $(subst $(RCS_PLATLIB)/librcs$(RCS_VERSION)-,,$(RCS_SO_LIBNAME))
+RCS_DATE := $(subst .so,,$(RCS_DATE))
+# RCS_VERSION := $(RCS_VERSION)-$(RCS_DATE)
+# USE_RCS_VERSION_ON_LINK
+endif
+
+# COMPILING_RCSLIB
+endif
+
+# RCS_VERSION
+endif
+
+# NO_RCS_VERSION
+endif
+
+
+ifdef USE_STATIC_RCS_LIB
+RCS_L_FLAG=$(RCS_PLATLIB)/$(RCS_LIBRARY_NAME)
+RCS_LINK_FLAG=$(RCS_L_FLAG)
+
+else
+
+ifndef RCS_L_FLAG
+ifdef USE_RCS_VERSION_ON_LINK
+RCS_L_FLAG=-lrcs$(RCS_VERSION)
+else
+RCS_L_FLAG=-lrcs
+endif
+endif
+
+ifndef POSEMATH_L_FLAG
+POSEMATH_L_FLAG=-lpm
+endif
+
+
+ifndef RCS_LINK_FLAG
+ifdef NO_RCS_SEARCH_PATH
+RCS_LINK_FLAG = -L$(RCS_PLATLIB) $(RCS_L_FLAG) $(POSEMATH_L_FLAG)
+else
+RCS_LINK_FLAG = -L$(RCS_PLATLIB) $(RCS_L_FLAG) $(POSEMATH_L_FLAG) $(SEARCH_PATH_FLAG) $(RCS_LIB_SEARCH_PATH)
+endif
+endif
+endif
+
+# Set Final value of SRCS file with PLAT specific EXTENSIONS
+RELEASE_SRCS = $(PRE_RELEASE_SRCS:%.cc=%.$(CPLUSPLUS_EXTENSION))
+DEVP_SRCS = $(PRE_DEVP_SRCS:%.cc=%.$(CPLUSPLUS_EXTENSION))
+
+# Generic patterns
+
+# Pattern rules for C and C++ compilation
+
+# Set default compiler setup
+ifndef COMPILER_SETUP
+COMPILER_SETUP = test
+else
+
+ifndef COMPILER_SETUP_WITH_SEMICOLON
+COMPILER_SETUP_WITH_SEMICOLON = $(COMPILER_SETUP);
+endif
+endif
+
+ifdef DEBUG_RCS_MAKE
+$(warning LOCAL_CFLAGS=$(LOCAL_CFLAGS) )
+$(warning CFLAGS=$(CFLAGS) )
+$(warning LOCAL_CPLUSPLUSFLAGS=$(LOCAL_CPLUSPLUSFLAGS) )
+$(warning CPLUSPLUSFLAGS=$(CPLUSPLUSFLAGS) )
+$(warning CC=$(CC) )
+$(warning CPLUSPLUS=$(CPLUSPLUS) )
+endif
+
+
+ifndef COMPILING_RCSLIB
+
+$(DEVP_LIB_DIR)/%.o:    %.c %.h
+	( $(COMPILER_SETUP_WITH_SEMICOLON) \
+	$(CC) $< -c $(LOCAL_CFLAGS) \
+	 -I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include  -I$(RCS_INCLUDE) \
+	 $(CFLAGS) -o $@ )
+
+$(DEVP_LIB_DIR)/%.o:    %.c
+	( $(COMPILER_SETUP_WITH_SEMICOLON) \
+	$(CC) $< -c $(LOCAL_CFLAGS)  \
+	 -I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include  -I$(RCS_INCLUDE) \
+	$(CFLAGS) -o $@ )
+
+$(DEVP_LIB_DIR)/%.o:    %.cc %.hh
+	( $(COMPILER_SETUP_WITH_SEMICOLON) \
+	$(CPLUSPLUS) $< -c $(LOCAL_CFLAGS) $(LOCAL_CPLUSPLUSFLAGS)\
+	-I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include  -I$(RCS_INCLUDE) \
+	  $(CFLAGS) $(CPLUSPLUSFLAGS) -o $@ )
+
+$(DEVP_LIB_DIR)/%.o:    %.cc
+	( $(COMPILER_SETUP_WITH_SEMICOLON) \
+	$(CPLUSPLUS) $< -c $(LOCAL_CFLAGS)  $(LOCAL_CPLUSPLUSFLAGS)\
+	-I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include  -I$(RCS_INCLUDE) \
+	 $(CFLAGS) $(CPLUSPLUSFLAGS) -o $@ )
+
+$(DEVP_LIB_DIR)/%.obj:    %.cpp %.hpp
+	( $(COMPILER_SETUP_WITH_SEMICOLON) \
+	$(CPLUSPLUS) $< -c $(LOCAL_CFLAGS) $(LOCAL_CPLUSPLUSFLAGS)\
+	-I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include  -I$(RCS_INCLUDE) \
+	  $(CFLAGS) $(CPLUSPLUSFLAGS) -o $@ )
+
+$(DEVP_LIB_DIR)/%.obj:    %.cpp
+	( $(COMPILER_SETUP_WITH_SEMICOLON) \
+	$(CPLUSPLUS) $< -c $(LOCAL_CFLAGS)  $(LOCAL_CPLUSPLUSFLAGS)\
+	-I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include  -I$(RCS_INCLUDE) \
+	 $(CFLAGS) $(CPLUSPLUSFLAGS) -o $@ )
+
+
+else # COMPILING_RCSLIB
+
+$(DEVP_LIB_DIR)/%.o:    %.c %.h
+	( $(COMPILER_SETUP_WITH_SEMICOLON) \
+	$(CC) $< -c $(LOCAL_CFLAGS) \
+	 -I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include   \
+	 $(CFLAGS) -o $@ )
+
+$(DEVP_LIB_DIR)/%.o:    %.c
+	( $(COMPILER_SETUP_WITH_SEMICOLON) \
+	$(CC) $< -c $(LOCAL_CFLAGS)  \
+	 -I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include   \
+	$(CFLAGS) -o $@ )
+
+$(DEVP_LIB_DIR)/%.o:    %.cc %.hh
+	( $(COMPILER_SETUP_WITH_SEMICOLON) \
+	$(CPLUSPLUS) $< -c $(LOCAL_CFLAGS) $(LOCAL_CPLUSPLUSFLAGS)\
+	-I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include   \
+	  $(CFLAGS) $(CPLUSPLUSFLAGS) -o $@ )
+
+$(DEVP_LIB_DIR)/%.o:    %.cc
+	( $(COMPILER_SETUP_WITH_SEMICOLON) \
+	$(CPLUSPLUS) $< -c $(LOCAL_CFLAGS)  $(LOCAL_CPLUSPLUSFLAGS)\
+	-I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include   \
+	 $(CFLAGS) $(CPLUSPLUSFLAGS) -o $@ )
+
+endif
+
+# Pattern Rules for copying to the release directory.
+INSTALL_COMMANDS = \
+	$(IGNORE_MARK)$(ECHO_MARK) echo installing $@; \
+	\rm -f $@; \
+	cp $< $@;  \
+	chmod a+rw $@; \
+	chmod o-w $@;
+
+INSTALL_BIN_COMMANDS = \
+	 $(INSTALL_COMMANDS) \
+	chmod a+x $@;
+
+
+$(DEVP_SRC_DIR)/%.cc: %.cc
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND)  $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+$(DEVP_SRC_DIR)/%.cpp: %.cpp
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND)  $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+$(DEVP_SRC_DIR)/%.rc: %.rc
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND)  $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+$(DEVP_SRC_DIR)/%.c: %.c
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND) $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+$(DEVP_SRC_DIR)/%.s: %.s
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND) $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+$(DEVP_SRC_DIR)/$(SUB_SRC_DIR)/%.$(CPLUSPLUS_EXTENSION): %.cc
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND)  $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+
+$(DEVP_SRC_DIR)/$(SUB_SRC_DIR)/%.c: %.c
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND) $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+
+$(DEVP_SRC_DIR)/$(SUB_SRC_DIR)/%.s: %.s
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND) $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+
+
+$(DEVP_INCLUDE_DIR)/%.hh: %.hh
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND) $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+$(DEVP_INCLUDE_DIR)/%.hpp: %.hpp
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND) $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+$(DEVP_INCLUDE_DIR)/%.h: %.h
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND) $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+$(DEVP_INCLUDE_DIR)/%.rh: %.rh
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND) $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+
+
+$(DEVP_INCLUDE_DIR)/$(SUB_INCLUDE_DIR)/%.hh: %.hh
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND) $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+
+$(DEVP_INCLUDE_DIR)/$(SUB_INCLUDE_DIR)/%.hpp: %.hpp
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND) $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+$(DEVP_INCLUDE_DIR)/$(SUB_INCLUDE_DIR)/%.h: %.h
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $@;
+	$(COPY_SOURCE_COMMAND) $< $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod a+rw $@
+	$(IGNORE_MARK)$(ECHO_MARK)chmod o-w $@
+
+
+ifndef NOINSTALL
+
+$(RELEASE_INCLUDE_DIR)/%: $(DEVP_INCLUDE_DIR)/%
+	$(INSTALL_COMMANDS)
+
+$(RELEASE_LIB_DIR)/%: $(DEVP_LIB_DIR)/%
+	$(INSTALL_COMMANDS)
+
+$(RELEASE_BIN_DIR)/%: $(DEVP_BIN_DIR)/%
+	$(INSTALL_BIN_COMMANDS)
+
+$(RELEASE_SRC_DIR)/%: $(DEVP_SRC_DIR)/%
+	$(INSTALL_COMMANDS)
+
+
+endif
+
+# Phony Targets
+
+ifdef SUB_DIR
+all: make_dirs
+
+make_dirs : make_sub_dirs
+
+make_sub_dirs:
+	$(IGNORE_MARK)$(ECHO_MARK) $(MKDIR_CMD) $(DEVP_DIR)/lib/$(SUB_DIR);
+	$(IGNORE_MARK)$(ECHO_MARK) $(MKDIR_CMD) $(DEVP_DIR)/src/$(SUB_DIR);
+	$(IGNORE_MARK)$(ECHO_MARK) $(MKDIR_CMD) $(DEVP_DIR)/bin/$(SUB_DIR);
+	$(IGNORE_MARK)$(ECHO_MARK) $(MKDIR_CMD) $(DEVP_DIR)/include/$(SUB_DIR);
+	$(IGNORE_MARK)$(ECHO_MARK) $(MKDIR_CMD) $(RELEASE_DIR)/lib/$(SUB_DIR);
+	$(IGNORE_MARK)$(ECHO_MARK) $(MKDIR_CMD) $(RELEASE_DIR)/src/$(SUB_DIR);
+	$(IGNORE_MARK)$(ECHO_MARK) $(MKDIR_CMD) $(RELEASE_DIR)/bin/$(SUB_DIR);
+	$(IGNORE_MARK)$(ECHO_MARK) $(MKDIR_CMD) $(RELEASE_DIR)/include/$(SUB_DIR);
+
+.PHONY: make_sub_dirs
+
+endif # SUB_DIR
+
+all: make_dirs headers sources
+
+headers: 
+sources: 
+
+ifndef NO_COMPILING
+all: make_dirs depend objs libs
+
+depend: 
+
+objs:  depend
+libs:  depend objs 
+
+objs: $(DEVP_OBJS)
+
+libs: $(DEVP_LIBS)
+
+.PHONY: libs objs
+ifndef NO_BINS
+all: bins
+bins: make_dirs
+bins: $(DEVP_BINS)
+
+.PHONY: bins
+endif
+# NO_BINS
+
+endif
+#NO_COMPILING
+
+
+make_tmp_dirs:
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d /tmp; then mkdir /tmp; fi; )
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d /tmp/$(notdir $(USER_DIR)); then mkdir /tmp/$(notdir $(USER_DIR)); fi; )
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d /tmp/$(notdir $(USER_DIR))/plat; then mkdir /tmp/$(notdir $(USER_DIR))/plat; fi; )
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d /tmp/$(notdir $(USER_DIR))/plat/$(PLAT); then mkdir /tmp/$(notdir $(USER_DIR))/plat/$(PLAT); fi; )
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)/lib; then mkdir /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)/lib; fi; )
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)/src; then mkdir /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)/src; fi; )
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)/bin; then mkdir /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)/bin; fi; )
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)/include; then mkdir /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)/include; fi; )
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d $(USER_DIR)/plat; then mkdir $(USER_DIR)/plat; fi;)
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d $(USER_DIR)/plat/$(PLAT); then mkdir $(USER_DIR)/plat/$(PLAT); fi;)
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d $(USER_DIR)/plat/$(PLAT)/lib; then mkdir $(USER_DIR)/plat/$(PLAT)/lib; fi;)
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d $(USER_DIR)/plat/$(PLAT)/src; then mkdir $(USER_DIR)/plat/$(PLAT)/src; fi;)
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d $(USER_DIR)/plat/$(PLAT)/bin; then mkdir $(USER_DIR)/plat/$(PLAT)/bin; fi;)
+	$(IGNORE_MARK)$(ECHO_MARK)( if test ! -d $(USER_DIR)/plat/$(PLAT)/include; then mkdir $(USER_DIR)/plat/$(PLAT)/include; fi;)
+
+copy_tmp_bins:
+	$(IGNORE_MARK)(cp /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)/bin/* $(USER_DIR)/plat/$(PLAT)/bin)
+	$(IGNORE_MARK)(cp /tmp/$(notdir $(USER_DIR))/plat/$(PLAT)/bin/*.a $(USER_DIR)/plat/$(PLAT)/bin)
+
+.PHONY: copy_tmp_bins make_tmp_dirs
+
+sources: $(DEVP_HEADERS) $(DEVP_SRCS)
+
+sources_message:
+	$(IGNORE_MARK)$(ECHO_MARK) echo Sources = $(DEVP_SRCS)
+
+headers: $(DEVP_HEADERS)
+
+headers_message:
+	$(IGNORE_MARK)$(ECHO_MARK) echo Headers = $(DEVP_HEADERS)
+
+
+ifeq ($(MAKELEVEL), 0)
+depend: headers sources depend_message depend_commands
+else
+depend: depend_commands
+endif
+
+depend_message:
+	$(IGNORE_MARK)$(ECHO_MARK) echo Updating dependancies.
+
+
+ifndef MAKEDEPEND_CFLAGS
+MAKEDEPEND_CFLAGS= $(filter -I%,$(CFLAGS))
+endif
+
+ifndef MAKEDEPEND_CPLUSPLUSFLAGS
+MAKEDEPEND_CPLUSPLUSFLAGS= $(filter -I%,$(CPLUSPLUSFLAGS))
+endif
+
+ifdef NO_DEPENDS
+depend_commands:
+	-$(ECHO_MARK)echo Skipping Depends.
+
+else # NO_DEPENDS
+
+ifndef SRCS
+depend_commands:
+	$(IGNORE_MARK)$(ECHO_MARK)echo No sources.
+
+else # SRCS
+
+
+ifdef USE_GPP_M
+
+ifndef COMPILING_RCSLIB
+
+depend_commands:
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) touch .depend .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .gpp_m_errors
+	$(IGNORE_MARK)$(ECHO_MARK) touch .gpp_m_errors
+	$(IGNORE_MARK)$(ECHO_MARK)(if [ ! -z "$(SRCS)" ] ; then  (g++ -M $(LOCAL_CFLAGS) $(CFLAGS) $(CPLUSPLUSFLAGS) -I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include -I$(RCS_INCLUDE)  -DMAKEDEPEND=1 $(SRCS)  >.depend.$(PLAT) ) 2>.gpp_m_errors; exit 0; fi;)
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend.std_headers_removed
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend.$(PLAT).first_pass
+	$(IGNORE_MARK)$(ECHO_MARK) touch .depend.$(PLAT).first_pass
+	$(IGNORE_MARK)$(ECHO_MARK) cp .depend.$(PLAT) .depend.$(PLAT).first_pass
+	$(IGNORE_MARK)$(ECHO_MARK) cat .depend.$(PLAT) | sed s#\[a-z,_,/,0-9,A-Z\]\*\[.\]o:#plat/$(PLAT)/lib/\&# | sed s#/usr/include/\[a-z,_,/,0-9,A-Z\]\*\[.\]h\ #\ #g | sed s#/usr/src/rt\[a-z,_,/,0-9,A-Z\]\*\[.\]h\ #\ #g | sed s#/itl/apps/gcc\[a-z,_,/,0-9,A-Z\]\*\[.\]h\ #\ #g | sed s#/usr/lib/gcc-lib/\[a-z,_,/,0-9,A-Z\]\*\[.\]h\ #\ #g | sed s#/usr/include/\[a-z,_,/,0-9,A-Z\]\*\[.\]h\ #\ #g | sed s#/usr/src/rt\[a-z,_,/,0-9,A-Z\]\*\[.\]h\ #\ #g |  sed s#/itl/apps/gcc\[a-z,_,/,0-9,A-Z\]\*\[.\]h\ #\ #g | sed s#/usr/lib/gcc-lib/\[a-z,_,/,0-9,A-Z\]\*\[.\]h\ #\ #g > .depend.std_headers_removed
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) mv .depend.std_headers_removed  .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) rm -f .depend
+	$(IGNORE_MARK)$(ECHO_MARK) cat .depend.$(PLAT) | sed s#plat/$(PLAT)/lib#\\$$\(DEVP_LIB_DIR\)#  | sed s#$(RCS_INCLUDE)#$$\(RCS_INCLUDE\)# | \
+	sed s#$(DEVP_INCLUDE_DIR)#$$\(DEVP_INCLUDE_DIR\)# | \
+	sed s#$(PHONY_INCLUDE_DIR)#$$\(PHONY_INCLUDE_DIR\)#  | sed -f $(RCSLIB_MAIN_DIR)/etc/addnewline.sed >> .depend
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)cp .depend .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)cp .depend .depend.$(REAL_PLAT)
+
+else # COMPILING_RCSLIB
+
+depend_commands:
+	$(IGNORE_MARK)$(ECHO_MARK)  \rm -f .depend .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)  touch .depend .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)  \rm -f .gpp_m_errors
+	$(IGNORE_MARK)$(ECHO_MARK)  touch .gpp_m_errors
+	$(IGNORE_MARK)$(ECHO_MARK)  (if [ ! -z "$(SRCS)" ] ; then (g++ -M $(LOCAL_CFLAGS) $(CFLAGS) $(CPLUSPLUSFLAGS) -I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include  -DMAKEDEPEND=1 $(SRCS)  >.depend.$(PLAT) ) 2>.gpp_m_errors; exit 0; fi)
+	$(IGNORE_MARK)$(ECHO_MARK)  (if [ ! -s .gpp_m_errors ] ; then \rm -f .gpp_m_errors; fi;)
+	$(IGNORE_MARK)$(ECHO_MARK)  \rm -f .depend.std_headers_removed
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend.$(PLAT).first_pass
+	$(IGNORE_MARK)$(ECHO_MARK) touch .depend.$(PLAT).first_pass
+	$(IGNORE_MARK)$(ECHO_MARK) cp .depend.$(PLAT) .depend.$(PLAT).first_pass
+	$(IGNORE_MARK)$(ECHO_MARK) cat .depend.$(PLAT) | sed s#/usr/include/\[a-z,_,/,A-Z,0-9\]\*\[.\]h\ #\ #g | sed s#/usr/src/rt\[a-z,_,/,A-Z,0-9\]\*\[.\]h\ #\ #g | sed s#/itl/apps/gcc\[a-z,_,/,A-Z,0-9\]\*\[.\]h\ #\ #g | sed s#/usr/lib/gcc-lib/\[a-z,_,/,A-Z,0-9\]\*\[.\]h\ #\ #g | sed s#/usr/include/\[a-z,_,/,A-Z,0-9\]\*\[.\]h\ #\ #g | sed s#/usr/src/rt\[a-z,_,/,A-Z,0-9\]\*\[.\]h\ #\ #g | sed s#/itl/apps/gcc\[a-z,_,/,A-Z,0-9\]\*\[.\]h\ #\ #g | sed s#/usr/lib/gcc-lib/\[a-z,_,/,A-Z,0-9\]\*\[.\]h\ #\ #g > .depend.std_headers_removed
+	$(IGNORE_MARK)$(ECHO_MARK)  \rm -f .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)  mv .depend.std_headers_removed  .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)  rm -f .depend
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend.$(PLAT).second_pass
+	$(IGNORE_MARK)$(ECHO_MARK) touch .depend.$(PLAT).second_pass
+	$(IGNORE_MARK)$(ECHO_MARK) cp .depend.$(PLAT) .depend.$(PLAT).second_pass
+	$(IGNORE_MARK)$(ECHO_MARK)  cat .depend.$(PLAT) | sed s#\^\[a-z,_,/,A-Z,0-9\]\*\[.\]o:#\\$$\(DEVP_LIB_DIR\)/\&#  | sed s#$(RCS_INCLUDE)#$$\(RCS_INCLUDE\)# | \
+	sed s#$(DEVP_INCLUDE_DIR)#$$\(DEVP_INCLUDE_DIR\)# | \
+	sed s#$(PHONY_INCLUDE_DIR)#$$\(PHONY_INCLUDE_DIR\)#  | sed -f $(RCSLIB_MAIN_DIR)/etc/addnewline.sed >> .depend
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) cp .depend .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)cp .depend .depend.$(REAL_PLAT)
+
+endif # COMPILING_RCSLIB
+
+else # USE_GPP_M
+
+ifndef COMPILING_RCSLIB
+
+depend_commands: 
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) touch .depend .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .makedepend.log .makedepend.err
+	$(IGNORE_MARK)$(ECHO_MARK) touch .makedepend.log .makedepend.err
+	$(IGNORE_MARK)$(ECHO_MARK) ( $(MAKEDEPEND) \
+		-f .depend.$(PLAT) \
+		-p$$\(DEVP_LIB_DIR\)/ \
+		-- $(LOCAL_CFLAGS) $(LOCAL_CPLUSPLUSFLAGS) \
+		-I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include -I$(RCS_INCLUDE) -I$(PHONY_INCLUDE_DIR) \
+		$(MAKEDEPEND_CFLAGS) $(MAKEDEPEND_CPLUSPLUSFLAGS) -DMAKEDEPEND=1 \
+		  -I/usr/include/g++-2 \
+		 -- $(SRCS)   >.makedepend.log) 2>.makedepend.err
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend.std_headers_removed
+	$(IGNORE_MARK)$(ECHO_MARK) cat .depend.$(PLAT) | sed s#/usr/include/\[a-z,_,/,A-Z,0-9\]\*\[.\]h\ #\ #g > .depend.std_headers_removed
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) mv .depend.std_headers_removed  .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) rm -f .depend
+	$(IGNORE_MARK)$(ECHO_MARK) cat .depend.$(PLAT) | sed s#$(RCS_INCLUDE)#$$\(RCS_INCLUDE\)# | \
+	sed s#$(DEVP_INCLUDE_DIR)#$$\(DEVP_INCLUDE_DIR\)# | \
+	sed s#$(PHONY_INCLUDE_DIR)#$$\(PHONY_INCLUDE_DIR\)# >> .depend
+	$(IGNORE_MARK)$(ECHO_MARK)cp .depend.$(PLAT) .depend.$(REAL_PLAT)
+
+
+else # COMPILING_RCSLIB
+
+depend_commands: 
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) touch .depend .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .makedepend.log .makedepend.err
+	$(IGNORE_MARK)$(ECHO_MARK) touch .makedepend.log .makedepend.err
+	$(IGNORE_MARK)$(ECHO_MARK) (thisdir=`pwd`; cd $(DEVP_SRC_DIR); $(MAKEDEPEND) \
+		-f $${thisdir}/.depend.$(PLAT) \
+		-p$$\(DEVP_LIB_DIR\)/ \
+		-- $(LOCAL_CFLAGS) $(LOCAL_CPLUSPLUSFLAGS)  \
+		-I$(DEVP_INCLUDE_DIR) -I$(DEVP_DIR)/include  -I$(PHONY_INCLUDE_DIR) \
+		$(MAKEDEPEND_CFLAGS) $(MAKEDEPEND_CPLUSPLUSFLAGS) -DMAKEDEPEND=1 \
+		  -I/usr/include/g++-2 \
+		 -- $(SRCS)   >.makedepend.log) 2>.makedepend.err
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend.std_headers_removed
+	$(IGNORE_MARK)$(ECHO_MARK) cat .depend.$(PLAT) | sed s#/usr/include/\[a-z,_,/,A-Z,0-9\]\*\[.\]h\ #\ #g > .depend.std_headers_removed
+	$(IGNORE_MARK)$(ECHO_MARK) \rm -f .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) mv .depend.std_headers_removed  .depend.$(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK) rm -f .depend
+	$(IGNORE_MARK)$(ECHO_MARK) cat .depend.$(PLAT) | sed s#$(RCS_INCLUDE)#$$\(RCS_INCLUDE\)# | \
+	sed s#$(DEVP_INCLUDE_DIR)#$$\(DEVP_INCLUDE_DIR\)# | \
+	sed s#$(PHONY_INCLUDE_DIR)#$$\(PHONY_INCLUDE_DIR\)# | \
+	grep -v PHONY_INCLUDE_DIR >> .depend
+	$(IGNORE_MARK)$(ECHO_MARK)cp .depend.$(PLAT) .depend.$(REAL_PLAT)
+
+
+endif # COMPILING_RCSLIB
+
+endif # USE_GPP_M
+
+endif # SRCS
+
+endif # NO_DEPENDS
+
+clean_all: clean delete
+
+clean: remove_deps clean_commands
+
+clean_commands:
+	$(IGNORE_MARK)\rm -f $(DEVP_OBJS)
+	$(IGNORE_MARK)\rm -f $(DEVP_LIBS)
+	$(IGNORE_MARK)\rm -f $(DEVP_BINS)
+	$(IGNORE_MARK)\rm -f $(DEVP_SRCS)
+	$(IGNORE_MARK)\rm -f $(DEVP_HEADERS)
+
+
+delete:  delete_commands
+
+delete_commands:
+	$(IGNORE_MARK)\rm -f $(RELEASE_OBJS)
+	$(IGNORE_MARK)\rm -f $(RELEASE_LIBS)
+	$(IGNORE_MARK)\rm -f $(RELEASE_SRCS)
+	$(IGNORE_MARK)\rm -f $(RELEASE_BINS)
+	$(IGNORE_MARK)\rm -f $(RELEASE_HEADERS)
+
+
+
+ifdef  NO_COMPILING
+install: make_release_dirs $(RELEASE_HEADERS) $(RELEASE_SRCS) $(RELEASE_LIBS) $(RELEASE_BINS) \
+	log_install_message
+
+else
+ifneq ($(PLAT), lynx)
+install: make_release_dirs $(RELEASE_HEADERS) $(RELEASE_SRCS) $(RELEASE_LIBS) \
+	$(RELEASE_BINS) log_install_message
+else
+install: make_release_dirs depend_commands $(RELEASE_HEADERS) $(RELEASE_SRCS) \
+	$(RELEASE_LIBS) \
+	$(RELEASE_BINS) log_install_message
+
+endif
+endif
+
+force_install: force_install_commands
+
+force_install_commands:
+	-install -m 664 $(DEVP_HEADERS) $(RELEASE_INCLUDE_DIR)
+	-install -m 664 $(DEVP_LIBS) $(RELEASE_LIB_DIR)
+	-install -m 664 $(DEVP_OBJS) $(RELEASE_LIB_DIR)
+	-install -m 664 $(DEVP_BINS) $(RELEASE_BIN_DIR)
+	-install -m 664 $(DEVP_SRCS) $(RELEASE_SRC_DIR)
+
+blind_install:
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $(RELEASE_BIN_DIR)/*
+	$(IGNORE_MARK)\cp  $(DEVP_BIN_DIR)/* $(RELEASE_BIN_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)chmod 664 $(RELEASE_BIN_DIR)/*
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $(RELEASE_LIB_DIR)/*
+	$(IGNORE_MARK)\cp  $(DEVP_LIB_DIR)/* $(RELEASE_LIB_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)chmod 664 $(RELEASE_LIB_DIR)/*
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $(RELEASE_SRC_DIR)/*
+	$(IGNORE_MARK)\cp $(DEVP_SRC_DIR)/* $(RELEASE_SRC_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)chmod 664 $(RELEASE_SRC_DIR)/*
+	$(IGNORE_MARK)$(ECHO_MARK)\rm -f $(RELEASE_INCLUDE_DIR)/*
+	$(IGNORE_MARK)\cp $(DEVP_INCLUDE_DIR)/* $(RELEASE_INCLUDE_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)chmod 664 $(RELEASE_INCLUDE_DIR)/*
+
+log_install_message:
+	$(IGNORE_MARK)$(ECHO_MARK) if (test ! -f $(APPDIR)/.log )\
+	  then touch $(APPDIR)/.log; chmod 666 $(APPDIR)/.log; \
+	fi;
+	$(IGNORE_MARK)$(ECHO_MARK)echo Logging install message.
+	$(IGNORE_MARK)$(ECHO_MARK)echo On  `date`, $(LOGNAME) installed `pwd` >>$(APPDIR)/.log
+	$(IGNORE_MARK)$(ECHO_MARK)echo for $(PLAT) to $(RELEASE_DIR) >>$(APPDIR)/.log
+	$(IGNORE_MARK)$(ECHO_MARK)echo using $(HOST) with $(osrev) >>$(APPDIR)/.log
+	$(IGNORE_MARK)$(ECHO_MARK)echo Headers = $(HEADERS) >>$(APPDIR)/.log
+	$(IGNORE_MARK)$(ECHO_MARK)echo Srcs = $(SRCS) >>$(APPDIR)/.log
+	$(IGNORE_MARK)$(ECHO_MARK)echo Objs = $(OBJS) >>$(APPDIR)/.log
+	$(IGNORE_MARK)$(ECHO_MARK)echo Libs = $(LIBS) >>$(APPDIR)/.log
+	$(IGNORE_MARK)$(ECHO_MARK)echo Bins = $(BINS) >>$(APPDIR)/.log
+
+print_variables:
+	$(IGNORE_MARK)$(ECHO_MARK)echo OBJS = $(OBJS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo LIBS = $(LIBS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo BINS = $(BINS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo SRCS = $(SRCS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo HEADERS = $(HEADERS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_OBJS = $(DEVP_OBJS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_LIBS = $(DEVP_LIBS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_BINS = $(DEVP_BINS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_SRCS = $(DEVP_SRCS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_HEADERS = $(DEVP_HEADERS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_OBJS = $(RELEASE_OBJS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_LIBS = $(RELEASE_LIBS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_BINS = $(RELEASE_BINS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_SRCS = $(RELEASE_SRCS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_HEADERS = $(RELEASE_HEADERS)
+
+
+# Declare PHONY targets to be PHONY
+
+# load_source: $(OBJECT_CENTER_SRC_FILES) loadsource_message
+
+release_headers : $(RELEASE_HEADERS)
+
+# load_source_message:
+#       echo $(OBJECT_CENTER_SRC_FILES)
+# .PHONY load_source load_source_message
+
+.PHONY: all install depend depend_commands force_install force_install_commands
+
+.PHONY: delete delete_commands sources headers release_headers
+
+.PHONY: clean clean_commands clean_all log_install_message sources_message
+
+#.PHONY: run_setup_script
+
+
+# Local dependancies
+
+HAVE_PLAT_DEPEND=$(shell if [ -f .depend.$(PLAT) ] ; then  echo yes; else echo no; fi)
+HAVE_DEPEND=$(shell if [ -f .depend ] ; then  echo yes; else echo no; fi)
+USE_AUTO_DEPENDS=yes
+
+ifeq (yes, $(HAVE_PLAT_DEPEND))
+USE_SEPARATE_DEPENDS=1
+
+else
+
+ifeq (no, $(HAVE_DEPEND))
+USE_AUTO_DEPENDS=no
+endif
+endif
+
+ifneq (no, $(USE_AUTO_DEPENDS))
+ifdef USE_SEPARATE_DEPENDS
+ifdef REAL_PLAT
+include .depend.$(REAL_PLAT)
+else
+include .depend.$(PLAT)
+endif
+else
+ifndef NEVER_USE_GENERIC_DEPEND
+include .depend
+endif
+endif
+
+ifdef REAL_PLAT
+.depend.$(REAL_PLAT):
+	-touch $@
+endif
+
+ifneq ($(strip $(PLAT)), $(strip $(REAL_PLAT)))
+
+.depend.$(PLAT):
+	-touch $@
+
+endif
+
+.depend:
+	-touch $@
+
+endif
+
+.PRECIOUS: $(SRCS) $(HEADERS) $(RELEASE_SRCS) $(RELEASE_HEADERS)
+
+
+#endif
+# to match ifndef MAKEFILE_GENERIC_ALREADY_INCLUDED
+#endif
+
+
+# Create a phony target for debug purposes.
+
+printenv_gendef_commands:
+	$(IGNORE_MARK)$(ECHO_MARK)echo RCS_VERSION = $(RCS_VERSION)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RCS_SO_LIBNAME = $(RCS_SO_LIBNAME)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RCS_DATE = $(RCS_DATE)
+	$(IGNORE_MARK)$(ECHO_MARK)echo PLAT = $(PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)echo REAL_PLAT = $(REAL_PLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)echo REAL_RCSPLAT = $(REAL_RCSPLAT)
+	$(IGNORE_MARK)$(ECHO_MARK)echo TEST_VAR = $(TEST_VAR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RCS_INSTALL_DIRECTORY = $(RCS_INSTALL_DIRECTORY)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RCSLIB_MAIN_DIR = $(RCSLIB_MAIN_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo GENERIC_MAKEFILE = $(GENERIC_MAKEFILE)
+	$(IGNORE_MARK)$(ECHO_MARK)echo APPDIR = $(APPDIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo USER_DIR = $(USER_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo MAKEFILES_DIR = $(MAKEFILES_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RCS_LIBRARY_NAME = $(RCS_LIBRARY_NAME)
+	$(IGNORE_MARK)$(ECHO_MARK)echo PHONY_INCLUDE_DIR = $(PHONY_INCLUDE_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RCS_INCLUDE = $(RCS_INCLUDE)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RCS_PLATBIN = $(RCS_PLATBIN)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RCS_PLATLIB = $(RCS_PLATLIB)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RCS_LIBRARY = $(RCS_LIBRARY)
+	$(IGNORE_MARK)$(ECHO_MARK)echo ARCHIVE_DIRECTORY = $(ARCHIVE_DIRECTORY)
+	$(IGNORE_MARK)$(ECHO_MARK)echo CFLAGS = $(CFLAGS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo MAKEDEPEND_CFLAGS = $(MAKEDEPEND_CFLAGS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo LOCAL_CFLAGS = $(LOCAL_CFLAGS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo CPLUSPLUSFLAGS = $(CPLUSPLUSFLAGS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo MAKEDEPEND_CPLUSPLUSFLAGS = $(MAKEDEPEND_CPLUSPLUSFLAGS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo LOCAL_CPLUSPLUSFLAGS = $(LOCAL_CPLUSPLUSFLAGS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEFAULT_TARGET = $(DEFAULT_TARGET)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_DIR = $(RELEASE_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_INCLUDE_DIR = $(RELEASE_INCLUDE_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_LIB_DIR = $(RELEASE_LIB_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_BIN_DIR = $(RELEASE_BIN_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_SRC_DIR = $(RELEASE_SRC_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_HEADERS = $(RELEASE_HEADERS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_LIBS = $(RELEASE_LIBS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_OBJS = $(RELEASE_OBJS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo RELEASE_BINS = $(RELEASE_BINS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_DIR = $(DEVP_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_INCLUDE_DIR = $(DEVP_INCLUDE_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_LIB_DIR = $(DEVP_LIB_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_BIN_DIR = $(DEVP_BIN_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_SRC_DIR = $(DEVP_SRC_DIR)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_HEADERS = $(DEVP_HEADERS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_LIBS = $(DEVP_LIBS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_OBJS = $(DEVP_OBJS)
+	$(IGNORE_MARK)$(ECHO_MARK)echo DEVP_BINS = $(DEVP_BINS)
+	$(IGNORE_MARK)$(ECHO_MARK)printenv
+
+printenv : printenv_gendef_commands
+
+.PHONY: printenv printenv_gendef_commands
+
+
+ifndef DYNAMIC_LIB_BUILD_TOOL
+DYNAMIC_LIB_BUILD_TOOL=$(LD)
+endif
+
+remove_deps:
+	-echo Removing dependancy files.
+	-\rm -f .dep*
+	-\rm -f `find . -name .dep\*`
+
+.PHONY: remove_deps
+
+
+endif
+
