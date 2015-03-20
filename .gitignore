@@ -70,3 +70,4 @@ Doxyfile
 *.class
 
 
+/rcsjava_maven/rcslib/target/
