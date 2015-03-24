@@ -26,7 +26,7 @@ package diagapplet.utils;
 
 /**
  * Interface to CountList
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public interface CountListInterface
 {   

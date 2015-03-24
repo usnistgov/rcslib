@@ -28,7 +28,7 @@ package rcs.nml;
 /**
  * Generic class used to send an operator inteface as small text error message.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public class NML_ERROR extends NMLmsg
 {

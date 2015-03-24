@@ -30,7 +30,7 @@ import javax.swing.DefaultListModel;
 
 /**
  * Swing version of FastListPanel
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public class JListFastListPanel implements FastListPanelInterface
 {

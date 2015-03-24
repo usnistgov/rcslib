@@ -33,7 +33,7 @@ import java.awt.event.*;
 /**
  * Custom AWT File Dialog to select a file.
  * Used only in old CodeGen and Design tool.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public class ModifiedFileDialog extends Dialog implements ActionListener, KeyListener, WindowListener, ItemListener
 {

@@ -32,7 +32,7 @@ import rcs.utils.StackTracePrinter;
 
 /**
  * Class with some utility funtions used handling Strings, environment variables etc.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class StringFuncs {
 

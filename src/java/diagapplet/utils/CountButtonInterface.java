@@ -27,7 +27,7 @@ package diagapplet.utils;
 
 /**
  * Interface for CountButton
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public interface CountButtonInterface
 {   

@@ -32,7 +32,7 @@ import java.awt.Color;
 
 /**
  * AWT Panel for displaying progress while loading a URL.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public	class URLLoadInfoPanel extends Panel implements URLLoadInfoPanelInterface
 {

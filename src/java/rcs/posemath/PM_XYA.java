@@ -183,7 +183,7 @@ public class PM_XYA implements Cloneable {
     }
 
     /**
-     * @param y the y to set
+     * @param a new value of angle
      */
     public void setA(double a) {
         this.a = a;

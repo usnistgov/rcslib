@@ -87,7 +87,7 @@ public class diagPreserve
 
     /**
      * Set The vector of strings of NML config file names.
-     * @param _recentNmlConfigFileVector
+     * @param _recentNmlConfigFileVector recent nml files vector
      */
     public void set_recentNmlConfigFileVector(Vector<String> _recentNmlConfigFileVector) {
         recentNmlConfigFileVector = _recentNmlConfigFileVector;
@@ -97,7 +97,7 @@ public class diagPreserve
      * Set a flag so the diagnostics too  will reconnect or not when next restarted.
      * (It may be over written with a setting on the command line or in the diagnostics
      * config file.)
-     * @param _connected
+     * @param _connected is the system connected
      */
     public void set_connected(boolean _connected) {
         connected = _connected;

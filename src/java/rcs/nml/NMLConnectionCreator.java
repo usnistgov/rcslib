@@ -31,7 +31,7 @@ package rcs.nml;
  * 
  * This class only exists to eliminate a circular dependancy in CodeGen, etc.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public class  NMLConnectionCreator implements NMLConnectionCreatorInterface
 {

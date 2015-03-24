@@ -28,7 +28,7 @@ import rcs.utils.StackTracePrinter;
 
 /**
  * Class with information about one C++ structure.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class StructureTypeInfo implements Comparable {
 

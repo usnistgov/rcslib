@@ -40,7 +40,7 @@ import java.util.List;
  * Class that allows the reading of packed files directly without using
  * an NMLConnection.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class PackedFileReader {
 
@@ -465,8 +465,8 @@ public class PackedFileReader {
 
     /**
      * Use FormatConverter to get a string representation of the message.
-     * @param inMsg
-     * @return
+     * @param inMsg message to convert
+     * @return converted string
      */
     public String convertMsgToString(final NMLmsg inMsg) {
         return converter.convertMsgToString(inMsg);

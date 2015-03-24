@@ -29,7 +29,7 @@ import rcs.utils.URL_and_FileLoader;
  * GUI classes to eliminate dependancies on java.awt and javax.swing needed by
  * the older graphical tool. (CodeGen.java)
  *
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class CodeGenCmdLine {
     //public static String []orig_args=null;
@@ -43,7 +43,7 @@ public class CodeGenCmdLine {
      * or the name of a C++ header file to generate the default format and
      * update functions.
      *
-     * @param args
+     * @param args command line arguments
      */
     public static void main(String args[]) {
         try {

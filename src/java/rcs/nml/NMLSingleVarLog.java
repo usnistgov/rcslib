@@ -30,7 +30,7 @@ package rcs.nml;
  * from a large or potentially large message and that was automatically
  * collected at some frequency.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class NMLSingleVarLog
 {

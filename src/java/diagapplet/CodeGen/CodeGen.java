@@ -99,7 +99,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
      * Set the m_fStandAlone property. When the property is true the gui will not attempt
      * to resize itself or parse applet options.
      * Used only by the Design tool.
-     * @param b
+     * @param b whether to assume standalone mode
      */
     public void set_m_fStandAlone(boolean b) {
         m_fStandAlone = b;
@@ -179,7 +179,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
     /**
      * Run the graphical tool.
      * @deprecated Use CodeGenCmdLine instead.
-     * @param args
+     * @param args cmd line arguments
      */
     public static void main(String args[]) {
         boolean print_prompt = true;
@@ -340,7 +340,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
 
     /**
      * Used by RCS Design tool. Initializes the class list.
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception when class list can not be initialized
      */
     public void InitializeClassList() throws Exception {
         cgc.InitializeClassList();
@@ -758,7 +758,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
 
     /**
      * See CodeGenCommon.LoadHierarchy()
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception when hiearchy can not be loaded
      */
     public void LoadHierarchy() throws Exception {
         cgc.LoadHierarchy();
@@ -783,7 +783,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
     /**
      * Run a .gen script file. The script file may contain a list of headers to parse in what order and
      * which update/format files functions to generate to which output files in what order.
-     * @param new_script_file
+     * @param new_script_file script file to run
      */
     public void RunScriptFile(String new_script_file) {
         cgc.RunScript(new_script_file);
@@ -916,7 +916,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
 
     /**
      * Set the preserve modules hashtable property, see CodeGenCommon.set_preserve_modules_hashtable()
-     * @param b
+     * @param b whether to preserve modules
      */
     public void set_preserve_modules_hashtable(boolean b) {
         cgc.set_preserve_modules_hashtable(b);
@@ -924,7 +924,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
 
     /**
      * Set the inside_diagapplet property, see CodeGenCommon.set_preserve_modules_hashtable()
-     * @param b
+     * @param b whether being run inside diagapplet
      */
     public void set_inside_diagapplet(boolean b) {
         cgc.set_inside_diagapplet(b);
@@ -933,7 +933,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
 
     /**
      * Set the hierarchyFile. Used only by Design tool.
-     * @param str
+     * @param str new hierarchy file name
      */
     public void set_m_hierarchyFile(String str) {
         cgc.set_m_hierarchyFile(str);
@@ -941,7 +941,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
 
     /**
      * Set the configFile. Used only by Design tool.
-     * @param str
+     * @param str new configuration file name
      */
     public void set_m_ConfigFile(String str) {
         cgc.set_m_ConfigFile(str);
@@ -949,7 +949,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
 
     /**
      * Set the modulesHashTable. Used only by Design tool.
-     * @param ht
+     * @param ht new modules hash table
      */
     public void set_m_modulesHashTable(java.util.Hashtable ht) {
         cgc.set_m_modulesHashTable(ht);
@@ -957,7 +957,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
 
     /**
      * Set the serversHashTable. Used only by Design tool.
-     * @param ht
+     * @param ht new servers hashtable
      */
     public void set_serversHashtable(java.util.Hashtable ht) {
         cgc.set_serversHashtable(ht);
@@ -965,7 +965,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
 
     /**
      * Set the loadingPanel. Used only by Design tool.
-     * @param lp
+     * @param lp new loadingPanel
      */
     public void set_m_loadingPanel(diagapplet.utils.URLLoadInfoPanelInterface lp) {
         cgc.set_m_loadingPanel(lp);
@@ -973,7 +973,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
     
     /**
      * Set the ClassList. Used only by Design tool.
-     * @param flp
+     * @param flp new fastlistpanel
      */
     public void set_ClassList(FastListPanelInterface flp) {
         cgc.set_ClassList(flp);
@@ -981,7 +981,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
 
     /**
      * Set modulesCountList. Used only by Design Tool.
-     * @param lst
+     * @param lst new modules countlist
      */
     public void set_m_modulesCountList(diagapplet.utils.CountListInterface lst) {
         cgc.set_m_modulesCountList(lst);

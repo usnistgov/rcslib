@@ -27,7 +27,7 @@ package diagapplet.CodeGen;
 /**
  * An interface used to update a graphical progress bar and status text with information
  * on the progress loading a hierarchy, configuration file etc.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public interface LoadHierarchyUpdateInterface
 {

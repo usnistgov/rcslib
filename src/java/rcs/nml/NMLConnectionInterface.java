@@ -26,8 +26,8 @@ package rcs.nml;
 
 /**
  * An interface to NMLConnection used by CodeGenenerator and diagnostics tool to
- * avoid circular dependancies.
- * @author Will Shackleford <shackle@nist.gov>
+ * avoid circular dependencies.
+ * @author Will Shackleford 
  */
 public interface NMLConnectionInterface
 {
@@ -84,7 +84,7 @@ public interface NMLConnectionInterface
      * will be used for the next connection attempt. Either host names or IP addresses
      * can be used.
      * This is normally obtained from the BufferLine of the config file or from the nmlcfgsvr.
-     * @param s
+     * @param s new hostname
      */
     public void set_host(String s);
     
@@ -99,7 +99,7 @@ public interface NMLConnectionInterface
     /**
      * Set the TCP or UDP port to be used for the next time a connect() is performed.
      * This is normally obtained from the BufferLine of the config file or from the nmlcfgsvr.
-     * @param _port
+     * @param _port new port number
      */
     public void set_port(int _port);
     
@@ -118,7 +118,7 @@ public interface NMLConnectionInterface
      * The buffer number is sent with each request to the server to identify which buffer
      * should be used.
      * This is normally obtained from the BufferLine of the config file or from the nmlcfgsvr.
-     * @param _buffer_number
+     * @param _buffer_number new buffer number
      */
     public void set_buffer_number(int _buffer_number);
     
@@ -132,7 +132,7 @@ public interface NMLConnectionInterface
      * Set the name of the NML configuration file.
      * This should be followed with ReadNMLConfigurationFileNoThrow() to actually have
      * the configration file read. 
-     * @param _configuration_file
+     * @param _configuration_file new configuration file
      */
     public void set_configuration_file(String _configuration_file);
     
@@ -150,7 +150,7 @@ public interface NMLConnectionInterface
      * 
      * This is normally set by being passed as an argument to the NMLConnection() constructor.
      *
-     * @param _buffer_name 
+     * @param _buffer_name new buffer name
      */
     public void set_buffer_name(String _buffer_name);
     
@@ -166,7 +166,7 @@ public interface NMLConnectionInterface
      * Set the process name.
      * 
      * This is normally set by being passed as an argument to the NMLConnection() constructor.
-     * @param _process_name
+     * @param _process_name new process name
      */
     public void set_process_name(String _process_name);
     
@@ -200,7 +200,7 @@ public interface NMLConnectionInterface
      * constructor was used to createt the NMLConnection.
      * * 
      * @return 0 connect was ok. -1 error occured.
-     * @throws Exception
+     * @throws Exception when connection fails
      */
     public int connect() throws Exception;
     
@@ -215,7 +215,7 @@ public interface NMLConnectionInterface
      * 
      * @param s string to be converted 
      * @return 0 write ok, -1 an error occured.
-     * @throws NMLException 
+     * @throws NMLException  when write fails
      */
     public int  writeDataString(String s) throws NMLException;
     
@@ -277,15 +277,6 @@ public interface NMLConnectionInterface
     public boolean is_connected();
     
     
-    
-    /**
-     * Login to an NML server using a name and passwd.
-     * @param name
-     * @param passwd
-     * @return  true if successful, false otherwise
-     */
-    public boolean loginNoThrow(String name, String passwd);
-    
     /**
      * Get the buffer line from the configuration file.
      * @return BufferLine
@@ -303,7 +294,7 @@ public interface NMLConnectionInterface
      * NOTEL: another process may change this before you have a chance to read the
      * message.
      * @return msg_type
-     * @throws Exception
+     * @throws Exception when get_msg_type fails
      */
     public int get_msg_type() throws Exception;
     
@@ -312,7 +303,7 @@ public interface NMLConnectionInterface
      * including messages written by other processes/systems.
      * 
      * @return msg_count
-     * @throws Exception
+     * @throws Exception when get_msg_count fails
      */
     public int get_msg_count() throws Exception;
     
@@ -331,7 +322,7 @@ public interface NMLConnectionInterface
      * the message is new.
      * A message in new if its id does not equal  the value set here.
      * 
-     * @param _id
+     * @param _id new value for id
      */
     public void set_last_id_read(int _id);
     
@@ -350,7 +341,7 @@ public interface NMLConnectionInterface
      * The message dictionary sets the set of message types that can be read or written
      * from this channel.
      * 
-     * @param new_dict
+     * @param new_dict new dictionary object
      */
     public void SetMessageDictionary(NMLMessageDictionary new_dict);
     
@@ -358,7 +349,7 @@ public interface NMLConnectionInterface
      * Set an interface that will have its member functions called for various errors.
      * Used by the diagnostics tools to improve error reporting.
      * 
-     * @param new_nfceci
+     * @param new_nfceci new callback object
      */
     public void SetFormatConvertErrCallback(NMLFormatConvertErrCallbackInterface new_nfceci);
 
@@ -379,7 +370,7 @@ public interface NMLConnectionInterface
      * Get a NMLSingleVaLog object associated with the var_log_number that should have been 
      * returned by setupSingleVarLog()
      * 
-     * @param var_log_number
+     * @param var_log_number number assoctiated with var_log
      * @return singleVarLog
      */
     public NMLSingleVarLog getSingleVarLog( int var_log_number);
@@ -388,7 +379,7 @@ public interface NMLConnectionInterface
     /**
      * Stop collecting data on a single variable setup in setupSingleVarLog().
      * 
-     * @param var_log_number
+     * @param var_log_number number associated with var log
      * @return 0 ok, -1 comm error in sending close request.
      */
     public int closeSingleVarLog( int var_log_number);

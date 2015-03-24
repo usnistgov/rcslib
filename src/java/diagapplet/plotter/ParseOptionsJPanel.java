@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Will Shackleford<shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class ParseOptionsJPanel extends javax.swing.JPanel {
 

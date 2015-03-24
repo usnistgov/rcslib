@@ -30,7 +30,7 @@ import java.io.PrintStream;
  * Allows control of whether and to which print stream NML debug prints
  * are done in the rest of the NML java classes.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public class debugInfo
 {

@@ -30,7 +30,7 @@ import rcs.nml.NMLFormatConverterBase;
  * They are generally created using the CodeGenerator and therefore have type information
  * built in at compile-time. The Diag version must discover the type information at runtime.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class DiagNMLMsgDict implements NMLMessageDictionary, DiagNMLMsgDictInterface {
 

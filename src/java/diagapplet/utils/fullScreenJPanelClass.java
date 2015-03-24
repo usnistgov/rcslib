@@ -34,7 +34,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public class fullScreenJPanelClass extends JPanel {
 

@@ -36,8 +36,6 @@ import java.awt.Rectangle;
 /**
  * Interface that allows the creation classes resposible for painting a component without
  * needing to be derived from java.awt.Component or javax.swing.JComponent. 
- * Used by  {@link diagapplet.utils.ImageJPanel} and {@link JPaintablePanel}.
- * Implemented by {@link diagapplet.utils.ImagePainter}
  * @author shackle
  */
 public interface PainterInterface
@@ -57,7 +55,7 @@ public interface PainterInterface
     
     /**
      * Store a rectangle typically selected by the user via Mouse or MouseMotion event.
-     * @param rect
+     * @param rect rectangle to select
      */
     public void set_selected_rect(Rectangle rect);
 }

@@ -26,7 +26,7 @@ import java.io.FileOutputStream;
 
 /**
  *
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public class XMLFileWriter {
 

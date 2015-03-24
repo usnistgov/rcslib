@@ -31,7 +31,7 @@ import java.util.Vector;
 /**
  * Class encapsulating all informaation from an NML configuration file/server.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public class NMLConfigInfo
 {

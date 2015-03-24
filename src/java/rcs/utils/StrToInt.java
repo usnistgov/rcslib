@@ -29,7 +29,7 @@ import java.util.*;
  * Convert a string to an integer accepting a somewhat larger range of strings
  * than String.parseInt() and adding some additional error printing.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class StrToInt {
 

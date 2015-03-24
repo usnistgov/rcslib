@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author Will Shackleford<shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class ParseOptions implements Cloneable {
 

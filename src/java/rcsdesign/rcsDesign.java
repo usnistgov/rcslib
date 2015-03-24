@@ -91,7 +91,7 @@ import rcs.utils.URL_and_FileLoader;
 
 /**
  * Main class for RCS Design tool.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class rcsDesign extends rcsDesignGui     implements Runnable, ActionListener, ItemListener, TextListener, AdjustmentListener
 {

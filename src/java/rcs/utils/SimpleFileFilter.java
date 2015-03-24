@@ -31,7 +31,7 @@ import java.util.*;
 /**
  * FilenameFilter which checks for a pattern match used by design tool.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class SimpleFileFilter implements FilenameFilter
 {

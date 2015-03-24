@@ -32,7 +32,7 @@ import java.io.FileOutputStream;
  * Class that allows the writing of packed files directly without using
  * an NMLConnection.
  *
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class PackedFileWriter {
 

@@ -48,7 +48,7 @@ import javax.swing.Timer;
 /**
  * A swing Jframe that adds controls to an ImageJPanel to display
  * scale, and cycle through a  set of images.
- * @author  Will Shackleford <shackle@nist.gov>
+ * @author  Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public class ImageJFrame extends javax.swing.JFrame
 {

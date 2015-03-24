@@ -31,7 +31,7 @@ import java.awt.event.*;
 
 /**
  * Wrapper that allows a class to be run as an applet or standalone outside a browser.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public class StandAloneApplet extends Applet implements ComponentListener
 {

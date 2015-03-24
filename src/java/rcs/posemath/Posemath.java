@@ -370,11 +370,12 @@ public class Posemath {
     /**
      * Adds two PM_POSES and returns a weightedAvg
      *  ie. c1*s1+c2*s2;
-     * @param c1 first PM_POSE to add
+     * @param p1 first PM_POSE to add
      * @param s1 weighting scale factor for c1
-     * @param c2 second PM_POSE to add
+     * @param p2 second PM_POSE to add
      * @param s2 weighting scale factor for c2
      * @return c1*s1+c2*s2
+     * @throws rcs.posemath.PmException when multiplication fails
      */
     public static PM_POSE weightedAvg(PM_POSE p1, double s1,
             PM_POSE p2, double s2) throws PmException {
@@ -525,7 +526,7 @@ public class Posemath {
      *  Otherwise use Math.sqrt().
      * @param x number to take square root of
      * @return square root of x
-     * @throws PmException
+     * @throws PmException when x less than zero
      */
     static public double pmSqrt(double x) throws PmException {
         if (x > 0.0) {
@@ -551,10 +552,10 @@ public class Posemath {
 
     /**
      * Determine if a within eps of b.
-     * @param a
-     * @param b
-     * @param eps
-     * @return (Math.abs(a - b) < eps)
+     * @param a value to check if close to b
+     * @param b value to check if close to b
+     * @param eps allowed difference between two values
+     * @return {@code (Math.abs(a - b) < eps) } 
      */
     public static boolean pmClose(double a, double b, double eps) {
         return (Math.abs(a - b) < eps);
@@ -729,7 +730,7 @@ public class Posemath {
      * @param a angle in radians for rotation
      * @param q quaternion to store result
      * @return 0
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public int pmAxisAngleQuatConvert(int axis, double a, PmQuaternion q) throws PmException {
         double sh;
@@ -776,7 +777,7 @@ public class Posemath {
      * Convert a rotation vector to a quaternion
      * @param v rotation vector to convert
      * @return v as a quaternion
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public PM_QUATERNION toQuat(PM_ROTATION_VECTOR v) throws PmException {
         PM_QUATERNION q = new PM_QUATERNION();
@@ -788,7 +789,7 @@ public class Posemath {
      * Convert a rotation vector to a quaternion
      * @param v rotation vector to convert
      * @return v as a quaternion
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public PmQuaternion toQuat(PmRotationVector v) throws PmException {
         PmQuaternion q = new PmQuaternion();
@@ -801,7 +802,7 @@ public class Posemath {
      * @param r rotation vector to convert
      * @param q quaternion to store result
      * @return 0
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public int pmRotQuatConvert(PmRotationVector r, PmQuaternion q) throws PmException {
         double sh;
@@ -843,7 +844,7 @@ public class Posemath {
      * Convert rotation vector to rotation matrix
      * @param v rotation vector to convert (must be normalized)
      * @return v as a rotation matrix
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public PM_ROTATION_MATRIX toMat(PM_ROTATION_VECTOR v) throws PmException {
         PM_ROTATION_MATRIX m = new PM_ROTATION_MATRIX();
@@ -855,7 +856,7 @@ public class Posemath {
      * Convert rotation vector to rotation matrix
      * @param v rotation vector to convert (must be normalized)
      * @return v as a rotation matrix
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public PmRotationMatrix toMat(PmRotationVector v) throws PmException {
         PmRotationMatrix m = new PmRotationMatrix();
@@ -868,7 +869,7 @@ public class Posemath {
      * @param r rotation vector to convert
      * @param m rotation matrix to store result
      * @return 0
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public int pmRotMatConvert(PmRotationVector r, PmRotationMatrix m) throws PmException {
         double s, c, omc;
@@ -932,7 +933,7 @@ public class Posemath {
      * Convert quaternion to a rotation vector
      * @param v quaternion to convert (must be normalized)
      * @return v as a rotation vector
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public PM_ROTATION_VECTOR toRot(PM_QUATERNION v) throws PmException {
         PM_ROTATION_VECTOR r = new PM_ROTATION_VECTOR();
@@ -944,7 +945,7 @@ public class Posemath {
      * Convert quaternion to a rotation vector
      * @param v quaternion to convert (must be normalized)
      * @return v as a rotation vector
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public PmRotationVector toRot(PmQuaternion v) throws PmException {
         PmRotationVector r = new PmRotationVector();
@@ -954,9 +955,9 @@ public class Posemath {
     
     /**
      * Convert quaternion to a rotation vector
-     * @param v quaternion to convert (must be normalized)
+     * @param m matrix to convert (must be normalized)
      * @return v as a rotation vector
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public PmRotationVector toRot(PmRotationMatrix m) throws PmException {
         return toRot(toQuat(m));
@@ -967,7 +968,7 @@ public class Posemath {
      * @param q quaternion to convert
      * @param r rotation vector to store result
      * @return 0
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public int pmQuatRotConvert(PmQuaternion q, PmRotationVector r) throws PmException {
         double sh;
@@ -1002,7 +1003,7 @@ public class Posemath {
      * Convert a quaternion to a rotation matrix.
      * @param v quaternion to convert (must be normalized)
      * @return v as a rotation matrix
-     * @throws PmException
+     * @throws PmException when conversion is not possible
      */
     static public PM_ROTATION_MATRIX toMat(PM_QUATERNION v) throws PmException {
         PM_ROTATION_MATRIX m = new PM_ROTATION_MATRIX();

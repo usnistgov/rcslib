@@ -36,7 +36,7 @@ package rcs.nml;
  * Absolute times are in seconds since Jan,1 1970 UTC aka "unix time" although
  * see the pages for System.currentTimeMillis()
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class time_tracker implements Cloneable {
 

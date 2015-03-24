@@ -34,7 +34,7 @@ package diagapplet.utils;
 
 /**
  * An interface that connects DiagError to the diagnostics tool.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public interface DiagErrorAppendInterface
 {

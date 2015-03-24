@@ -31,8 +31,8 @@ import rcs.nml.NMLConnectionCreatorInterface;
 
 /**
  * Provides an interface for the Diagnostics tool and Design Tools to CodeGenCommon
- * without a circular dependancy that directly using the class would cause.
- * @author Will Shackleford <shackle@nist.gov>
+ * without a circular dependency that directly using the class would cause.
+ * @author Will Shackleford 
  */
 public interface CodeGenCommonInterface {
 
@@ -56,8 +56,8 @@ public interface CodeGenCommonInterface {
     /**
      * Returns the modulesHashTable property. 
      * This is a HashTable matching module names (Strings) to ModuleInfo objects.
-     * The use of a generic hashtable rather than Hashtable<String,ModuleInfo> is to maintain Java 1.4 compatibility. 
-     * @return m_modulesHashTable
+     * The use of a generic hashtable rather than {@code Hashtable<String,ModuleInfo> } is to maintain Java 1.4 compatibility. 
+     * @return m_modulesHashTable current modules hash table
      */
     public java.util.Hashtable get_m_modulesHashTable();
 
@@ -66,7 +66,7 @@ public interface CodeGenCommonInterface {
      * This is a Hashtable macthing String option names to String values.
      * Options can be set with command line parameters, int the options section of 
      * a config file or .diag file or with environment variables.
-     * The use of a generic hashtable rather than Hashtable<String,String> is to maintain Java 1.4 compatibility.
+     * The use of a generic hashtable rather than {@code Hashtable<String,String> } is to maintain Java 1.4 compatibility.
      * @return the hashtable.
      */
     public java.util.Hashtable get_optionsHashTable();
@@ -80,7 +80,7 @@ public interface CodeGenCommonInterface {
 
     /**
      * Set the hierarchyFile property.
-     * @param str
+     * @param str new hierarchy file name
      */
     public void set_m_hierarchyFile(String str);
 
@@ -96,7 +96,7 @@ public interface CodeGenCommonInterface {
      * Set the ClassList property. Depending on whether this is run from a graphical tool or not
      * the ClassList may simply wrap a Vector of strings of the class names or a Graphical widget
      * for displaying selecting them.
-     * @param flp
+     * @param flp new fast list panel
      */
     public void set_ClassList(diagapplet.utils.FastListPanelInterface flp);
     
@@ -112,13 +112,13 @@ public interface CodeGenCommonInterface {
      * Set the ModulesList property. Depending on whether this is run from a graphical tool or not
      * the ModulesList may simply wrap a Vector of strings of the module names or a Graphical widget
      * for displaying selecting them.
-     * @param lst
+     * @param lst new fast list panel
      */
     public void set_m_modulesList(diagapplet.utils.FastListPanelInterface lst);
     
     /**
      * Load the hierarchy parsing the file set with set_m_hierarchyFile().
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception when LoadHierachy fails
      */
     public void LoadHierarchy() throws Exception;
 
@@ -127,7 +127,7 @@ public interface CodeGenCommonInterface {
      * Only used by diagnostics tool.
      * This object create DiagNMLMsgDict objects indirectly in a way to avoid 
      * circular dependancy.
-     * @param _diag_dict_creator
+     * @param _diag_dict_creator new dictionary object
      */
     public void set_diag_dict_creator(DiagNMLMsgDictCreatorInterface _diag_dict_creator);
 
@@ -143,7 +143,7 @@ public interface CodeGenCommonInterface {
      * Used only by the diagnostics tools.
      * This object create NMLConnecton objects indirectly in a way to avoid 
      * circular dependancy.
-     * @param _nml_creator
+     * @param _nml_creator new nml creator object
      */
     public void set_nml_creator(NMLConnectionCreatorInterface _nml_creator);
 
@@ -159,8 +159,8 @@ public interface CodeGenCommonInterface {
      * searching command line args given in args.
      * Parameters can also be found in environment variables or the options section
      * of the diag file.
-     * @param strName
-     * @param args
+     * @param strName parameter name
+     * @param args arguments
      * @return value
      */
     public String GetParameter(String strName, String args[]);
@@ -168,9 +168,9 @@ public interface CodeGenCommonInterface {
     /**
      * Adds Information related to an auxilliary buffer.
      * Only used by diagnostics tool.
-     * @param buffer_name
-     * @param header
-     * @param nml_file
+     * @param buffer_name buffer name
+     * @param header header file name
+     * @param nml_file nml file name
      */
     public void AddAuxBufferModule(String buffer_name, String header, String nml_file);
 

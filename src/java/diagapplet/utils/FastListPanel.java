@@ -31,7 +31,7 @@ import rcs.utils.StackTracePrinter;
 /**
  * AWT Panel that was used as replacement for AWT List as it could be updated faster than the 
  * older AWT List implementation.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public class FastListPanel extends Panel implements MouseListener, ItemSelectable, FastListPanelInterface, KeyListener {
 

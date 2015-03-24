@@ -24,7 +24,7 @@ package rcs.nml;
 /**
  * Class encapsulating information from the configuration file/server about an NML buffer.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public class NMLBufferConfigInfo {
 

@@ -33,7 +33,7 @@ package diagapplet.CodeGen;
  * The need to eliminate circular dependancies came from seperately compiling each java
  * file in a Makefile with a variety of compilers. It is likely no longer necessary
  * to eliminate the circular dependancies.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public interface DiagNMLMsgDictCreatorInterface
 {
@@ -41,8 +41,8 @@ public interface DiagNMLMsgDictCreatorInterface
     /**
      * Create a new DiagNMLMsgDict() object and set the fields cmd_stream and
      * stat_stream.
-     * @param cmd_stream
-     * @param stat_stream
+     * @param cmd_stream is this a command stream
+     * @param stat_stream is this a status stream 
      * @return new dictionary object
      */
     DiagNMLMsgDictInterface create(boolean cmd_stream,boolean stat_stream);

@@ -28,7 +28,7 @@ package diagapplet.utils;
 /**
  * Common interface to the Swing and AWT Panels for displaying progress while loading
  * a URL/File.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public interface URLLoadInfoPanelInterface
 {

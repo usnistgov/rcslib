@@ -414,8 +414,7 @@ public class ProcessView {
     /**
      * Add PropertyChangeListener.
      *
-     * @param prop property name
-     * @param listener
+     * @param listener listener to add
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
@@ -424,7 +423,8 @@ public class ProcessView {
     /**
      * Remove PropertyChangeListener.
      *
-     * @param listener
+     * @param prop property 
+     * @param listener listener to remove
      */
     public void removePropertyChangeListener(String prop,
             PropertyChangeListener listener) {

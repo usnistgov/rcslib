@@ -28,7 +28,7 @@ package rcs.nml;
 /**
  * Object stored in NMLSingeVarLog items_list;
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class NMLSingleVarLogItem
 {
