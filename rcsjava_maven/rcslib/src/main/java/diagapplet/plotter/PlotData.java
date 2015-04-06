@@ -30,7 +30,7 @@ import javax.swing.JOptionPane;
 
 /**
  * Class containing all of the data for a single plot.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class PlotData {
 
@@ -463,6 +463,8 @@ public class PlotData {
     }
 
     /**
+     * Return whether plotter i should show this data.
+     * @param i index of plotter to get show value of
      * @return the show
      */
     public boolean getShow(int i) {

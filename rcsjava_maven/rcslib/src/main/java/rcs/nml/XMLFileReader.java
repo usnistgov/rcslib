@@ -26,7 +26,7 @@ import java.io.FileInputStream;
 
 /**
  *
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public class XMLFileReader {
 

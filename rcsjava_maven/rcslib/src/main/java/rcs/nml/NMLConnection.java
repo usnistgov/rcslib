@@ -40,7 +40,6 @@ import java.nio.channels.spi.SelectorProvider;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import rcs.utils.StrToLong;
-import rcs.utils.jcrypt;
 import rcs.utils.URL_and_FileLoader;
 import java.util.Vector;
 import rcs.utils.StackTracePrinter;
@@ -247,7 +246,7 @@ public class NMLConnection implements NMLConnectionInterface {
      * the message is new.
      * A message in new if its id does not equal  the value set here.
      *
-     * @param _id
+     * @param _id new value of id
      */
     public void set_last_id_read(int _id) {
         last_id_read = _id;
@@ -443,7 +442,7 @@ public class NMLConnection implements NMLConnectionInterface {
      * Add an opject to be called with each error to append messages.
      * Multiple appenders can be added.
      *
-     * @param nea
+     * @param nea listener for error events
      */
     static public void AddNMLErrorAppender(NMLErrorAppender nea) {
         if (null == NMLErrorAppenders) {
@@ -547,7 +546,7 @@ public class NMLConnection implements NMLConnectionInterface {
      * Set an interface that will have its member functions called for various errors.
      * Used by the diagnostics tools to improve error reporting.
      *
-     * @param new_nfceci
+     * @param new_nfceci listenter for format error events
      */
     public void SetFormatConvertErrCallback(NMLFormatConvertErrCallbackInterface new_nfceci) {
         nfceci = new_nfceci;
@@ -565,7 +564,7 @@ public class NMLConnection implements NMLConnectionInterface {
      * @see rcs.nml.NMLConnection#SetMessageDictionary(rcs.nml.NMLMessageDictionary)
      * @see rcs.nml.NMLMessageDictionary
      */
-    public NMLMessageDictionary GetMessageDictionary() throws NMLException {
+    public NMLMessageDictionary GetMessageDictionary()  {
         if (null != format_converter) {
             message_dictionary = format_converter.GetMessageDictionary();
         }
@@ -582,6 +581,7 @@ public class NMLConnection implements NMLConnectionInterface {
      * directly.
      *
      * @param new_fc the NMLFormatConverter for this Connection to use.
+     * @throws rcs.nml.NMLException when nml_fc is not extended from NMLFormatConverterBase
      *
      * @see rcs.nml.NMLFormatConverter
      */
@@ -611,7 +611,7 @@ public class NMLConnection implements NMLConnectionInterface {
      *
      * @see rcs.nml.NMLConnection#SetFormatConverter(rcs.nml.NMLFormatConverter)
      */
-    public NMLFormatConverter GetFormatConverter() throws NMLException {
+    public NMLFormatConverter GetFormatConverter() {
         return format_converter;
     }
 
@@ -626,8 +626,9 @@ public class NMLConnection implements NMLConnectionInterface {
      * @param ProcessName the name of the process that will use this connection (must match one of the process names in the configuration file)
      * @param ConfigurationFile the file name or URL of an NML configuration file (URL's should either be complete, or they can be relative to
      * rcs.utils.URL_and_FileLoader.current_directory)
-     * @throws rcs.nml.NMLException If the configuration file can not be read, the file is improperly formatted or the buffer or process can
-            can not be found in it.
+     * @exception  rcs.nml.NMLException
+     *            If the configuration file can not be read, the file is improperly formatted or the buffer or process can
+     *            can not be found in it.
      *
      */
     public NMLConnection(NMLMessageDictionary msg_dict, String BufferName, String ProcessName, String ConfigurationFile) throws NMLException {
@@ -674,9 +675,10 @@ public class NMLConnection implements NMLConnectionInterface {
      * @param ProcessName the name of the process that will use this connection (must match one of the process names in the configuration file)
      * @param ConfigurationFile the file name or URL of an NML configuration file (URL's should either be complete, or they can be relative to
      * rcs.utils.URL_and_FileLoader.current_directory)
-     * @param _additional_options
-     * @throws rcs.nml.NMLException If the configuration file can not be read, the file is improperly formatted or the buffer or process can
-            can not be found in it.
+     * @param _additional_options array of additional options
+     * @exception  rcs.nml.NMLException
+     *            If the configuration file can not be read, the file is improperly formatted or the buffer or process can
+     *            can not be found in it.
      *
      */
     public NMLConnection(NMLMessageDictionary msg_dict, String BufferName, String ProcessName, String ConfigurationFile, String _additional_options[]) throws NMLException {
@@ -696,8 +698,9 @@ public class NMLConnection implements NMLConnectionInterface {
      * @param ProcessName the name of the process that will use this connection (must match one of the process names in the configuration file)
      * @param ConfigurationFile the file name or URL of an NML configuration file (URL's should either be complete, or they can be relative to
      * rcs.utils.URL_and_FileLoader.current_directory)
-     * @throws rcs.nml.NMLException If the configuration file can not be read, the file is improperly formatted or the buffer or process can
-            can not be found in it.
+     * @exception  rcs.nml.NMLException
+     *            If the configuration file can not be read, the file is improperly formatted or the buffer or process can
+     *            can not be found in it.
      *
      */
     public void ReadNMLConfigurationFile(String BufferName, String ProcessName, String ConfigurationFile) throws NMLException {
@@ -723,7 +726,7 @@ public class NMLConnection implements NMLConnectionInterface {
     /**
      * Parse or return configution info from a previously parsed NML configuration file.
      *
-     * @param configuration_file
+     * @param configuration_file name of configuration file to read
      * @return nml configuraton info
      */
     public static NMLConfigInfo GetConfigInfo(String configuration_file) {
@@ -868,8 +871,9 @@ public class NMLConnection implements NMLConnectionInterface {
     }
     /**
      * Read preset configuration file.
-     * @throws rcs.nml.NMLException If the configuration file can not be read, the file is improperly formatted or the buffer or process can
-            can not be found in it.
+     * @exception  rcs.nml.NMLException
+     *            If the configuration file can not be read, the file is improperly formatted or the buffer or process can
+     *            can not be found in it.
      */
     NMLBufferConfigInfo default_buf_info = null;
 
@@ -1112,7 +1116,7 @@ public class NMLConnection implements NMLConnectionInterface {
 
     /**
      * Rereadn the NML Configuration file.
-     * @throws rcs.nml.NMLException
+     * @throws rcs.nml.NMLException when configuration is invalid
      */
     public void ReadNMLConfigurationFile() throws NMLException {
         String current_line = null;
@@ -1725,7 +1729,7 @@ public class NMLConnection implements NMLConnectionInterface {
      * constructor was used to createt the NMLConnection.
      * *
      * @return 0 connect was ok. -1 error occured.
-     * @throws rcs.nml.NMLException
+     * @throws rcs.nml.NMLException when connection fails
      */
     synchronized public int connect() throws NMLException {
         try {
@@ -2104,35 +2108,6 @@ public class NMLConnection implements NMLConnectionInterface {
     }
 
     /**
-     * This function allows the application to gain access to
-     * NML servers with security enabled.
-     *
-     * @param name the login name of the user running the client program
-     * @param passwd the passwd of the user to login as.
-     * @throws rcs.nml.NMLException If the login could not be attempted because the connection to the
-            NML server failed. (If the passwd is wrong it returns false.)
-     *
-     * @return true if login was successful
-     */
-    public boolean login(String name, String passwd) throws NMLException {
-        switch (protocol_option) {
-            case NML_TCP_PROTOCOL_TYPE:
-                return loginTCP(name, passwd);
-
-            case NML_UDP_PROTOCOL_TYPE:
-                return true;
-
-            case NML_STCP_PROTOCOL_TYPE:
-                return true;
-
-            default:
-                ErrorPrint("NMLConnection.read(): Invalid protocol_option = " + protocol_option + " -- buffer_name = " + buffer_name);
-                return false;
-        }
-
-    }
-
-    /**
      * When the NMLConnection performs a verify bufname (which it normally
      * does in the constructor) it requests the buffername from
      * the server that corresponds to the selected port and buffer number.
@@ -2176,7 +2151,9 @@ public class NMLConnection implements NMLConnectionInterface {
      * @return null if the message in the
      * buffer has already been read by this NMLConnection, otherwise it
      * returns the NMLmsg read.
-     * @throws rcs.nml.NMLException The read failed (ussually because of some network error).
+     *
+     * @exception  rcs.nml.NMLException
+     *            The read failed (ussually because of some network error).
      *
      */
     synchronized public NMLmsg read() throws NMLException {
@@ -2393,10 +2370,10 @@ public class NMLConnection implements NMLConnectionInterface {
     }
 
     /**
-     * Get a NMLSingleVaLog object associated with the var_log_number that should have been
+     * Get a NMLSingleVarLog object associated with the var_log_number that should have been
      * returned by setupSingleVarLog()
      *
-     * @param var_log_number
+     * @param var_log_number number of var log object
      * @return singleVarLog
      */
     synchronized public NMLSingleVarLog getSingleVarLog(int var_log_number) {
@@ -2497,7 +2474,7 @@ public class NMLConnection implements NMLConnectionInterface {
     /**
      * Stop collecting data on a single variable setup in setupSingleVarLog().
      *
-     * @param var_log_number
+     * @param var_log_number number of log to close
      * @return 0 ok, -1 comm error in sending close request.
      */
     synchronized public int closeSingleVarLog(int var_log_number) {
@@ -2548,7 +2525,7 @@ public class NMLConnection implements NMLConnectionInterface {
     /**
      * Tell the server to send this process messages from the buffer every period
      * seconds without needing a request message.
-     * @param period
+     * @param period time to wait between sending messages
      * @return 0 for success, -1 for error
      */
     public int setSubscriptionPeriod(double period) {
@@ -3364,7 +3341,9 @@ public class NMLConnection implements NMLConnectionInterface {
      * buffer has already been read by this NMLConnection or no message
      * has yet been written to the buffer, otherwise it
      * returns the NMLmsg read.
-     * @throws rcs.nml.NMLException The peek failed.
+     *
+     * @exception  rcs.nml.NMLException
+     *            The peek failed.
      */
     synchronized public NMLmsg peek() throws NMLException {
         if (Thread.interrupted() || !connected) {
@@ -3901,7 +3880,9 @@ public class NMLConnection implements NMLConnectionInterface {
      *    The string is a comma separated list of the parameters
      *    in the NMLmsg in the order they are updated, starting with
      *    the type and size.
-     * @throws rcs.nml.NMLException The read failed.
+     *
+     * @exception  rcs.nml.NMLException
+     *            The read failed.
      *
      * @see rcs.nml.NMLConnection#read()
      */
@@ -4076,7 +4057,9 @@ public class NMLConnection implements NMLConnectionInterface {
      *    The string is a comma separated list of the parameters
      *    in the NMLmsg in the order they are updated, starting with
      *    the type and size.
-     * @throws rcs.nml.NMLException The peek failed.
+     *
+     * @exception  rcs.nml.NMLException
+     *            The peek failed.
      *
      * @see rcs.nml.NMLConnection#peek()
      */
@@ -4274,119 +4257,6 @@ public class NMLConnection implements NMLConnectionInterface {
         return reply_string;
     }
 
-    protected boolean loginTCP(String name, String passwd) throws NMLException {
-        if (port < 1) {
-            throw create_NMLException(" !ERROR! Invalid Port.");
-        }
-        if (null == m_OutputStream || null == m_InputStream) {
-            if (!null_error_reported) {
-                ErrorPrint("\r\nCan't read NML (port=" + port + " buffer_number=" + buffer_number + " host=" + host + ")" + " -- buffer_name = " + buffer_name);
-                ErrorPrint("Stream is null.");
-            }
-            null_error_reported = true;
-            throw create_NMLException(" !ERROR! No input or output stream.");
-        }
-        try {
-            long start_millis = System.currentTimeMillis();
-            while (read_request_sent) {
-                peekTCP();
-                if (read_request_sent && ((System.currentTimeMillis()) - start_millis) > 2000) {
-                    ErrorPrint("NMLConnection.loginTCP()  -- timed out waiting for !read_request_sent.");
-                    ErrorPrint("\r\nCan't login NML (port=" + port + " buffer_number=" + buffer_number + " host=" + host + ")");
-                    return false;
-                }
-            }
-
-
-            m_OutputStream.writeInt(serial_number);
-            request_type = REMOTE_CMS_GET_KEYS_REQUEST_TYPE;
-            m_OutputStream.writeInt(request_type);
-            m_OutputStream.writeInt(buffer_number);
-            m_OutputStream.writeInt(0);
-            m_OutputStream.writeInt(0);
-            byte namebytes[] = new byte[16];
-            byte temp_namebytes[] = name.getBytes();
-            for (int i = 0; i < temp_namebytes.length && i < 16; i++) {
-                namebytes[i] = temp_namebytes[i];
-            }
-            if (temp_namebytes.length < 16) {
-                for (int i = temp_namebytes.length; i < 16; i++) {
-                    namebytes[i] = 0;
-                }
-            }
-            m_OutputStream.write(namebytes, 0, 16);
-            this.tcpWrite();
-            serial_number++;
-            this.tcpRead(20);
-            int returned_serial_number = m_InputStream.readInt();
-            if (returned_serial_number != serial_number) {
-                ErrorPrint("returned_serial_number(" + returned_serial_number + ") != serial_number(" + serial_number + ")  -- buffer_name = " + buffer_name);
-            }
-            byte key1_bytes[] = new byte[8];
-            m_InputStream.read(key1_bytes, 0, 8);
-            String key1 = new String(key1_bytes, 0, 2);
-            String passwd_pass1 = jcrypt.crypt(passwd, key1);
-            byte key2_bytes[] = new byte[8];
-            m_InputStream.read(key2_bytes, 0, 8);
-            String key2 = new String(key2_bytes, 0, 2);
-            String passwd_pass2 = jcrypt.crypt(passwd_pass1, key2);
-            m_OutputStream.writeInt(serial_number);
-            request_type = REMOTE_CMS_LOGIN_REQUEST_TYPE;
-            m_OutputStream.writeInt(request_type);
-            m_OutputStream.writeInt(buffer_number);
-            m_OutputStream.writeInt(0);
-            m_OutputStream.writeInt(0);
-            m_OutputStream.write(namebytes, 0, 16);
-            byte passwdbytes[] = new byte[16];
-            byte temp_passwdbytes[] = passwd_pass2.getBytes();
-            for (int i = 0; i < temp_passwdbytes.length && i < 16; i++) {
-                passwdbytes[i] = temp_passwdbytes[i];
-            }
-            if (temp_passwdbytes.length < 16) {
-                for (int i = temp_passwdbytes.length; i < 16; i++) {
-                    passwdbytes[i] = 0;
-                }
-            }
-            m_OutputStream.write(passwdbytes, 0, 16);
-            this.tcpWrite();
-            serial_number++;
-            for (int i = 0; i < 300; i++) {
-                if (null == m_InputStream) {
-                    throw this.create_NMLException("input stream closed unexpectedly, disconnect_stack_trace=" + this.disconnect_stack_trace);
-                }
-                if (m_InputStream.available() >= 8) {
-                    break;
-                }
-                Thread.sleep(100);
-            }
-            if (null == m_InputStream) {
-                throw this.create_NMLException("input stream closed unexpectedly, disconnect_stack_trace=" + this.disconnect_stack_trace);
-            }
-            if (m_InputStream.available() < 8) {
-                ErrorPrint("NMLConnection.login(" + name + ",********) timed out.");
-                ErrorPrint("Can't login NML (port=" + port + " buffer_number=" + buffer_number + " host=" + host + ")");
-                return false;
-            }
-            returned_serial_number = m_InputStream.readInt();
-            if (returned_serial_number != serial_number) {
-                ErrorPrint("returned_serial_number(" + returned_serial_number + ") != serial_number(" + serial_number + ")  -- buffer_name = " + buffer_name);
-            }
-            int login_succeeded = m_InputStream.readInt();
-            if (read_debug_on || write_debug_on || config_debug_on) {
-                DebugPrint("login_succeeded = " + login_succeeded);
-            }
-            return (login_succeeded == 1);
-
-        } catch (Exception e) {
-            ErrorPrint("\r\nCan't read NML (port=" + port + " buffer_number=" + buffer_number + " host=" + host + ")");
-            if (null != e.getMessage()) {
-                System.err.print("\r\n" + e.getMessage() + "\r\n");
-            }
-            e.printStackTrace(rcs.nml.debugInfo.debugPrintStream);
-            throw create_NMLException(" !ERROR! Misc. Error.", e);
-        }
-
-    }
 
     protected int writeTCP(NMLmsg msg) {
         try {
@@ -4623,6 +4493,7 @@ public class NMLConnection implements NMLConnectionInterface {
      *
      * @param msg the NMLmsg to write.
      * @return 0 if the write was successful, -1 if there was an error
+     * @throws rcs.nml.NMLException when write fails
      */
     synchronized public int write(NMLmsg msg) throws NMLException {
         if (null == msg) {
@@ -4798,7 +4669,7 @@ public class NMLConnection implements NMLConnectionInterface {
      * will be used for the next connection attempt. Either host names or IP addresses
      * can be used.
      * This is normally obtained from the BufferLine of the config file or from the nmlcfgsvr.
-     * @param _host
+     * @param _host new value for host
      */
     public void set_host(String _host) {
         host = _host;
@@ -4816,7 +4687,7 @@ public class NMLConnection implements NMLConnectionInterface {
      * Set the name of the NML configuration file.
      * This should be followed with ReadNMLConfigurationFileNoThrow() to actually have
      * the configration file read.
-     * @param _configuration_file
+     * @param _configuration_file new value of configuration file
      */
     public void set_configuration_file(String _configuration_file) {
         configuration_file = _configuration_file;
@@ -4837,7 +4708,7 @@ public class NMLConnection implements NMLConnectionInterface {
      *
      * This is normally set by being passed as an argument to the NMLConnection() constructor.
      *
-     * @param _buffer_name
+     * @param _buffer_name new value of buffer_name
      */
     public void set_buffer_name(String _buffer_name) {
         buffer_name = _buffer_name;
@@ -4857,7 +4728,7 @@ public class NMLConnection implements NMLConnectionInterface {
      * Set the process name.
      *
      * This is normally set by being passed as an argument to the NMLConnection() constructor.
-     * @param _process_name
+     * @param _process_name new process name
      */
     public void set_process_name(String _process_name) {
         process_name = _process_name;
@@ -4922,7 +4793,7 @@ public class NMLConnection implements NMLConnectionInterface {
     /**
      * Set the TCP or UDP port to be used for the next time a connect() is performed.
      * This is normally obtained from the BufferLine of the config file or from the nmlcfgsvr.
-     * @param _port
+     * @param _port new port value
      */
     public void set_port(int _port) {
         if (config_debug_on) {
@@ -4947,7 +4818,7 @@ public class NMLConnection implements NMLConnectionInterface {
      * The buffer number is sent with each request to the server to identify which buffer
      * should be used.
      * This is normally obtained from the BufferLine of the config file or from the nmlcfgsvr.
-     * @param _buffer_number
+     * @param _buffer_number new buffer number
      */
     public void set_buffer_number(int _buffer_number) {
         buffer_number = _buffer_number;
@@ -5009,23 +4880,6 @@ public class NMLConnection implements NMLConnectionInterface {
         return connected;
     }
 
-    /**
-     * Login to an NML server using a name and passwd.
-     *
-     *
-     * Same as login except  that it never  throws exceptions
-     * @param _name
-     * @param _passwd
-     * @return  true if successful, false otherwise
-     */
-    public boolean loginNoThrow(String _name, String _passwd) {
-        try {
-            return login(_name, _passwd);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     /**
      * Get the buffer line from the configuration file.
@@ -5051,7 +4905,7 @@ public class NMLConnection implements NMLConnectionInterface {
 
     /**
      * Print messages to the console/stderr  to debug the config related  code.
-     * @param b
+     * @param b whether to print config debug messages
      */
     public static void set_config_debug_on(boolean b) {
         //Thread.dumpStack();

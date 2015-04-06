@@ -29,7 +29,7 @@ package rcs.nml;
  * Interface for classes to be called when NML errors occur during formatting to provide
  * more informative error messages.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public interface NMLFormatConvertErrCallbackInterface
 {

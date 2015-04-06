@@ -23,6 +23,8 @@ versions bear some notice that they have been modified.
  */
 package diagapplet.CodeGen;
 
+import diagapplet.CodeGen.ModuleInfo;
+import diagapplet.CodeGen.StructureTypeInfo;
 import java.util.*;
 import rcs.nml.NMLFormatConverter;
 import rcs.nml.NMLmsg;

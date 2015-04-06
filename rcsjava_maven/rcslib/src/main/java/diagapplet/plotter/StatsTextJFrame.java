@@ -8,7 +8,7 @@ package diagapplet.plotter;
 
 /**
  *
- * @author Will Shackleford<shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class StatsTextJFrame extends javax.swing.JFrame {
 

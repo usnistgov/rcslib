@@ -181,7 +181,7 @@ public class BufferInfo {
     /**
      * Change to a new configuration file. Disconnecting and reconnecting with new
      * parameters each of the NML Connections as necessary.
-     * @param new_config_file
+     * @param new_config_file new value of configuration file name
      */
     public void SetNMLConfigFile(String new_config_file) {
 	if (double_buffer_nml) {

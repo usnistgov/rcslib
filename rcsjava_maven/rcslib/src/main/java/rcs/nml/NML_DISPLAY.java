@@ -30,7 +30,7 @@ package rcs.nml;
 /**
  * Class used to send an operator interface a small text message to display.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public class NML_DISPLAY extends NMLmsg
 {

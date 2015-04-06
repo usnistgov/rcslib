@@ -48,7 +48,7 @@ public class JPaintablePanel extends JPanel
     
     /**
      * Set the external painter object that will be used every time the panel needs to be repainted.
-     * @param _painter
+     * @param _painter new painter
      */
     public void set_painter(diagapplet.PainterInterface _painter)
     {

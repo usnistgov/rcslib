@@ -36,7 +36,7 @@ import java.util.Vector;
 /**
  * Class that should be used so that errors are visible in diag error log text area.
  * and also System.err.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class DiagError {
 

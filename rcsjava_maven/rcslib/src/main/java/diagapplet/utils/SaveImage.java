@@ -35,7 +35,7 @@ import javax.swing.JFileChooser;
 
 /**
  * Set of utilities for saving images.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public class SaveImage {
 

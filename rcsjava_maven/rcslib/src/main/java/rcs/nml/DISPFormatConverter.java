@@ -56,7 +56,7 @@ class DISPFormatConverter extends NMLFormatConverterBase
   {
     if(debug_on)
       {
-            rcs.nml.debugInfo.debugPrintStream.println("write_string_without_zero_end("+str+") called.");
+        rcs.nml.debugInfo.debugPrintStream.println("write_string_without_zero_end("+str+") called.");
       }
     if(null != output_stream)
 	{
@@ -116,9 +116,9 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
+            rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+            rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+            rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
             e.printStackTrace(rcs.nml.debugInfo.debugPrintStream);
           }
         else
@@ -148,7 +148,7 @@ class DISPFormatConverter extends NMLFormatConverterBase
                     temp_input_bytes = new byte[bytes_in_input_stream];
                     if(debug_on)
                       {
-                            rcs.nml.debugInfo.debugPrintStream.println("DISPFormatConverter.make_it_use_string() reading "+bytes_in_input_stream+" bytes from input_stream.");
+                        rcs.nml.debugInfo.debugPrintStream.println("DISPFormatConverter.make_it_use_string() reading "+bytes_in_input_stream+" bytes from input_stream.");
                       }
                     input_stream.readFully(temp_input_bytes, 0, bytes_in_input_stream);
                     bytes_in_input_stream = 0;
@@ -160,7 +160,7 @@ class DISPFormatConverter extends NMLFormatConverterBase
                     input_string = "";
                     if(debug_on)
                       {
-                            rcs.nml.debugInfo.debugPrintStream.println("DISPFormatConverter.make_it_use_string() reading ? bytes from input_stream.");
+                        rcs.nml.debugInfo.debugPrintStream.println("DISPFormatConverter.make_it_use_string() reading ? bytes from input_stream.");
                       }
                     while(input_stream.read(temp_input_bytes,0,2048) > 0)
                       {
@@ -169,22 +169,22 @@ class DISPFormatConverter extends NMLFormatConverterBase
                   }
                 if(debug_on)
                   {
-                        rcs.nml.debugInfo.debugPrintStream.println("Checking for double commas");
-                        rcs.nml.debugInfo.debugPrintStream.println(input_string);
+                    rcs.nml.debugInfo.debugPrintStream.println("Checking for double commas");
+                    rcs.nml.debugInfo.debugPrintStream.println(input_string);
                   }
                 int dc_index = input_string.indexOf(",,");
                 while(dc_index > 0)
                   {
                     if(debug_on)
                       {
-                            rcs.nml.debugInfo.debugPrintStream.println("Breaking String");
-                            rcs.nml.debugInfo.debugPrintStream.println(input_string.substring(0,dc_index));
-                            rcs.nml.debugInfo.debugPrintStream.println(input_string.substring(dc_index+2));
+                        rcs.nml.debugInfo.debugPrintStream.println("Breaking String");
+                        rcs.nml.debugInfo.debugPrintStream.println(input_string.substring(0,dc_index));
+                        rcs.nml.debugInfo.debugPrintStream.println(input_string.substring(dc_index+2));
                       }
                     input_string = input_string.substring(0,dc_index)+",(null),"+input_string.substring(dc_index+2);
                     if(debug_on)
                       {
-                            rcs.nml.debugInfo.debugPrintStream.println(input_string);
+                        rcs.nml.debugInfo.debugPrintStream.println(input_string);
                       }
                     dc_index = input_string.indexOf(",,");
                   }
@@ -203,9 +203,9 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
+            rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+            rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+            rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
             e.printStackTrace(rcs.nml.debugInfo.debugPrintStream);
           }
         else
@@ -222,10 +222,10 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println(input_string);
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
+            rcs.nml.debugInfo.debugPrintStream.println(input_string);
+            rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+            rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+            rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
           }
         tokens_taken++;
       }
@@ -233,7 +233,7 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("output_string = "+output_string_buffer.toString());
+            rcs.nml.debugInfo.debugPrintStream.println("output_string = "+output_string_buffer.toString());
           }
       }
 
@@ -305,8 +305,8 @@ class DISPFormatConverter extends NMLFormatConverterBase
         if(debug_on)
           {
             e.printStackTrace(rcs.nml.debugInfo.debugPrintStream);
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+            rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+            rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
 	    if(input_string_tokenizer != null)
 		{
 		    rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
@@ -373,12 +373,12 @@ class DISPFormatConverter extends NMLFormatConverterBase
               {
                 if(debug_on)
                   {
-                        rcs.nml.debugInfo.debugPrintStream.println("updating string: length ="+i);
+                    rcs.nml.debugInfo.debugPrintStream.println("updating string: length ="+i);
                   }
                 token = new String(x,0,i);
                 if(debug_on)
                   {
-                        rcs.nml.debugInfo.debugPrintStream.println("updating string ="+token);
+                    rcs.nml.debugInfo.debugPrintStream.println("updating string ="+token);
                   }
                 output_string_buffer.append(token);
 		output_string_buffer.append(',');
@@ -407,9 +407,9 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
+            rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+            rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
               e.printStackTrace(rcs.nml.debugInfo.debugPrintStream);
           }
         else
@@ -464,9 +464,9 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
+              rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
               e.printStackTrace(rcs.nml.debugInfo.debugPrintStream);
           }
         else
@@ -528,9 +528,9 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
+              rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
               e.printStackTrace(rcs.nml.debugInfo.debugPrintStream);
           }
         else
@@ -576,9 +576,9 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
+              rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
               e.printStackTrace(rcs.nml.debugInfo.debugPrintStream);
           }
         else
@@ -634,9 +634,9 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
+              rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
               e.printStackTrace(rcs.nml.debugInfo.debugPrintStream);
           }
         else
@@ -697,9 +697,9 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
+              rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
               e.printStackTrace(rcs.nml.debugInfo.debugPrintStream);
           }
         else
@@ -755,9 +755,9 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
+              rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
               e.printStackTrace(rcs.nml.debugInfo.debugPrintStream);
           }
         else
@@ -814,9 +814,9 @@ class DISPFormatConverter extends NMLFormatConverterBase
       {
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
-                rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
+              rcs.nml.debugInfo.debugPrintStream.println("token = "+token);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens_taken = "+tokens_taken);
+              rcs.nml.debugInfo.debugPrintStream.println("tokens left = "+input_string_tokenizer.countTokens());
               e.printStackTrace(rcs.nml.debugInfo.debugPrintStream );
           }
         else

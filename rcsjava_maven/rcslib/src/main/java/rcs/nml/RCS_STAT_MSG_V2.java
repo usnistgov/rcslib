@@ -29,7 +29,7 @@ package rcs.nml;
  * you use the original RCS_STAT_MSG or even derive your own status messages from
  * NMLmsg base class unless you are working with a project that has already adopted it.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public class RCS_STAT_MSG_V2 extends RCS_STAT_MSG
 {

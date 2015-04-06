@@ -94,7 +94,7 @@ class XMLNodeInfo {
 /**
  * Used internally by NML to convert messages to and from XML.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class XMLFormatConverter extends NMLFormatConverterBase {
 

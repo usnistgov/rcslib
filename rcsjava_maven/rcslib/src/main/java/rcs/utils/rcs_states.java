@@ -133,7 +133,7 @@ public class rcs_states {
 	/**
 	 * Sets the source file and source line.
 	 * (seems a little redundant especially if you just called state_match())
-	 * @param stat
+	 * @param stat message to update
 	 */
 	public static void state_new(RCS_STAT_MSG stat) {
 		//create exception and write its stack trace to a String
@@ -161,7 +161,7 @@ public class rcs_states {
 
 	/**
 	 * Sets stat.state to the next state.
-	 * @param stat 
+	 * @param stat message to update
 	 * @param next (NEW_COMMAND, or one of the S* constants in this class.) 
 	 */
 	public static void state_next(RCS_STAT_MSG stat, int next) {
@@ -170,8 +170,8 @@ public class rcs_states {
 
 	/**
 	 * Sets stat.status to the next status
-	 * @param stat
-	 * @param next 
+	 * @param stat message to update
+	 * @param next (NEW_COMMAND, or one of the S* constants in this class.)
 	 */
 	public static void status_next(RCS_STAT_MSG stat, int next) {
 		stat.status = next;
@@ -180,7 +180,7 @@ public class rcs_states {
 	/**
 	 * Sets the stat.source_line and stat.source_file,
 	 * called when all state_match()'s fail.
-	 * @param stat
+	 * @param stat message to update
 	 */
 	public static void state_default(RCS_STAT_MSG stat) {
 		//create exception and write its stack trace to a String

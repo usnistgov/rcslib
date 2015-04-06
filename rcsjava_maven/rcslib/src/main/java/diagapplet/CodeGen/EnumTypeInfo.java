@@ -30,7 +30,7 @@ import java.util.Enumeration;
 /**
  * A class that includes informataion on the various values and their assocated names
  * with any enumeration.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class EnumTypeInfo
 {

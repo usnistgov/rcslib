@@ -49,7 +49,7 @@ public abstract class NMLmsg implements Cloneable
 
         /**
         * This constructor is to be used by derived types.
-        * <p></p>
+        *
         * Example:
         * <pre>
         * class MY_MSG extends NMLmsg

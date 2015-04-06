@@ -74,7 +74,7 @@ class NonBlockingDatagramSocket extends DatagramSocket
         packets_received++;
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream.println("new packet "+packets_received);
+            rcs.nml.debugInfo.debugPrintStream.println("new packet "+packets_received);
           }
         return true;
       }
@@ -83,7 +83,7 @@ class NonBlockingDatagramSocket extends DatagramSocket
         setSoTimeout(orig_timeout);
         if(debug_on)
           {
-                rcs.nml.debugInfo.debugPrintStream .println("timeout");
+              rcs.nml.debugInfo.debugPrintStream .println("timeout");
           }
         return false;
       }

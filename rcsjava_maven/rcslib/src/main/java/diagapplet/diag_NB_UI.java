@@ -5178,7 +5178,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
     /**
      * Searches the NML configuration file and adds a new AuxBuffer for each buffer that
      * is not queued and has the "header=" option set.
-     * @param configuration_file
+     * @param configuration_file configuration file to load
      */
     public void LoadAuxBuffersFromNmlConfigFile(String configuration_file) {
         try {
@@ -7600,12 +7600,12 @@ private void jMenuItemDumpStructActionPerformed(java.awt.event.ActionEvent evt) 
         String struct_name = JOptionPane.showInputDialog("Name of structure to dump.");
         StructureTypeInfo sti = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(struct_name);
         if (null != sti) {
-                diagapplet.utils.DiagError.println(sti.toString());
+            diagapplet.utils.DiagError.println(sti.toString());
         } else {
             JOptionPane.showMessageDialog(this, "Can't get info for " + struct_name + " : options printed to errlog.");
             Enumeration keys = ModuleInfo.m_structInfoByNameHashTable.keys();
             while (keys.hasMoreElements()) {
-                    diagapplet.utils.DiagError.println(keys.nextElement().toString());
+                diagapplet.utils.DiagError.println(keys.nextElement().toString());
             }
         }
     } catch (Exception e) {
@@ -7854,7 +7854,7 @@ private void jMenuItemPrintHierarchyActionPerformed(java.awt.event.ActionEvent e
     /**
      * Main function --normally opens a new Diagnostics Window
      * run with --help to see available command line options.
-     * @param _args
+     * @param _args command line arguments
      */
     public static void main(String _args[]) {
 

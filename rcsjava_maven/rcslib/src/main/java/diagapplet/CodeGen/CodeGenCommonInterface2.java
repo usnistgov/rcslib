@@ -29,7 +29,7 @@ import rcs.nml.NMLConnectionCreatorInterface;
 /**
  * This includes protected extentions of the CodeGenCommonInterface not intented to
  * be accessed outside the diagapplet directory.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford  {@literal <shackle@nist.gov> } 
  */
 interface CodeGenCommonInterface2 extends CodeGenCommonInterface {
 
@@ -73,7 +73,7 @@ interface CodeGenCommonInterface2 extends CodeGenCommonInterface {
      * Sets the modulesHashTable property. 
      * This is a HashTable matching module names (Strings) to ModuleInfo objects.
      * The use of a generic hashtable is to maintain Java 1.4 compatibility.
-     * @param ht
+     * @param ht new hashtable
      */
     void set_m_modulesHashTable(java.util.Hashtable ht);
 

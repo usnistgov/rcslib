@@ -30,7 +30,7 @@ import java.awt.event.*;
 
 /**
  * AWT List object that counts events.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class CountList extends List implements ItemListener, CountListInterface
 {

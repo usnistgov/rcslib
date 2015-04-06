@@ -31,7 +31,7 @@ import java.util.*;
 
 /**
  * Information about a server tracked only by Design tool.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class ServerInfo
 {

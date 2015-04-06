@@ -27,7 +27,7 @@ package diagapplet.utils;
 
 /**
  * Common interface to FastListPanel and FakeFastListPanel.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public interface FastListPanelInterface
 {

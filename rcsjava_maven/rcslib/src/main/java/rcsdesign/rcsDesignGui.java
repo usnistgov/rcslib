@@ -40,7 +40,7 @@ import rcs.utils.URL_and_FileLoader;
 /**
  * Graphical base class for RCS Design tool.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class rcsDesignGui extends StandAloneApplet
 {

@@ -27,6 +27,8 @@ package rcs.utils;
 import java.io.OutputStream;
 import java.io.IOException;
 
+import rcs.utils.CorrectedPipedOutputStreamInterface;
+import rcs.utils.CorrectedPipedInputStreamInterface;
 
 /**
 * This class provides the same interface as java.io.PipedOutputStream

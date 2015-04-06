@@ -29,7 +29,7 @@ import java.util.*;
 
 /**
  * Tracks the same data as FastListPane without any actual display.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public class FakeFastListPanel implements FastListPanelInterface
 {

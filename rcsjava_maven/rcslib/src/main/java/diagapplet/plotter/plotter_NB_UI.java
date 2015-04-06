@@ -721,11 +721,6 @@ public class plotter_NB_UI extends javax.swing.JPanel {
             }
         });
 
-        plotGraphJPanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                plotGraphJPanel1MouseDragged(evt);
-            }
-        });
         plotGraphJPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 plotGraphJPanel1MouseClicked(evt);
@@ -740,6 +735,11 @@ public class plotter_NB_UI extends javax.swing.JPanel {
         plotGraphJPanel1.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 plotGraphJPanel1ComponentResized(evt);
+            }
+        });
+        plotGraphJPanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                plotGraphJPanel1MouseDragged(evt);
             }
         });
 

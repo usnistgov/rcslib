@@ -1,5 +1,3 @@
-package diagapplet.CodeGen;
-
 /* 
 The NIST RCS (Real-time Control Systems) 
  library is public domain software, however it is preferred

@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
  * Date structure wih built in NML update and 
  * a special update format for XML.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public class CMS_DATE
 {

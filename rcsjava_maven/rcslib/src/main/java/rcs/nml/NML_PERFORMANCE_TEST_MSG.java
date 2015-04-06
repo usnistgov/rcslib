@@ -93,17 +93,17 @@ class NML_PERFORMANCE_TEST_MSG extends NMLmsg
     serial_number = nml_fc.update(serial_number);
     if(debug_on)
       {
-            rcs.nml.debugInfo.debugPrintStream.println("serial_number="+serial_number);
+        rcs.nml.debugInfo.debugPrintStream.println("serial_number="+serial_number);
       }
     test_type = nml_fc.update(test_type);
     if(debug_on)
       {
-            rcs.nml.debugInfo.debugPrintStream.println("test_type="+test_type);
+        rcs.nml.debugInfo.debugPrintStream.println("test_type="+test_type);
       }
     array_length = nml_fc.update(array_length);
     if(debug_on)
       {
-            rcs.nml.debugInfo.debugPrintStream .println("array_length="+array_length);
+          rcs.nml.debugInfo.debugPrintStream .println("array_length="+array_length);
       }
     switch(test_type)
       {

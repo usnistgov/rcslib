@@ -26,8 +26,8 @@ package rcs.nml;
 
 /**
  * Interface to NMLConnectionCreator used by CodeGenerator and Diagnostics tool to avoid
- * circular dependancies.
- * @author Will Shackleford <shackle@nist.gov>
+ * circular dependencies.
+ * @author Will Shackleford 
  */
 public interface NMLConnectionCreatorInterface
 {

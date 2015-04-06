@@ -49,7 +49,7 @@ import rcs.utils.StackTracePrinter;
  * functions, C,Java, and Ada class definitions and information for the
  * Diagnostics and Design tools.
  *
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class CodeGenCommon implements CodeGenCommonInterface2 {
 
@@ -67,7 +67,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
      *
      * @param _output_filename The name of the only output file to generate,
      * must end in .cc or .cpp, sets to generate only C++ code.
-     * @author Will Shackleford <shackle@nist.gov>
+     * @author Will Shackleford  {@literal <shackle@nist.gov> } 
      */
     private static String forced_output_filename = null;
 

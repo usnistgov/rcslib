@@ -30,7 +30,7 @@ import java.awt.event.*;
 
 /**
  * Container that adds scrollbars to FastListPanel.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public class FastListContainer extends Panel implements AdjustmentListener
 {

@@ -31,7 +31,7 @@ import java.util.Hashtable;
 /**
  * Interface to the ModuleInfo class, used to reduce circlular dependancies.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public interface ModuleInfoInterface
 {

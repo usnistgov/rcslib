@@ -11,7 +11,7 @@ public interface MsgToTimeStamp {
      * Return the timestamp that should be  associated with this message
      * used for indexing log files. Unfortunately different messages use different
      * variables for this and some with different epochs/units etc.
-     * @param msg
+     * @param msg message to extract timestamp from
      * @return time in seconds associated with this message since Jan 1,1970.
      */
     public double MsgToTimeStamp(rcs.nml.NMLmsg msg);

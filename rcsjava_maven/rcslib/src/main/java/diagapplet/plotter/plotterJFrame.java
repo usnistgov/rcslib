@@ -55,7 +55,7 @@ import javax.swing.UIManager;
 /**
  * Seperate Frame with only a plotter_NB_UI inside.
  *
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class plotterJFrame extends javax.swing.JFrame {
 
@@ -868,8 +868,11 @@ private void jMenuItemSaveImageActionPerformed(java.awt.event.ActionEvent evt) {
     /**
      * Open a new plotterFrame to show only this file.
      *
-     * @param fname file name of csv file to plot
+     * @param prefix string to look for in the names
+     * @param xname name of X plot
+     * @param l list of objects with xy data
      * @return the frame that was openned.
+     * @throws java.lang.NoSuchFieldException when reflection fails
      */
     public static plotterJFrame ShowXYObjectsList(String prefix, String xname, List l)
             throws NoSuchFieldException {
@@ -889,8 +892,10 @@ private void jMenuItemSaveImageActionPerformed(java.awt.event.ActionEvent evt) {
     /**
      * Open a new plotterFrame to show only this file.
      *
-     * @param fname file name of csv file to plot
+     * @param prefix start of name to look for
+     * @param l list of objects to plot
      * @return the frame that was openned.
+     * @throws java.lang.NoSuchFieldException when obect reflection fails
      */
     public static plotterJFrame ShowObjectsList(String prefix, List l)
             throws NoSuchFieldException {
@@ -979,7 +984,8 @@ private void jMenuItemSaveImageActionPerformed(java.awt.event.ActionEvent evt) {
     /**
      * Open a new plotterFrame to show only this file.
      *
-     * @param fname file name of csv file to plot
+     * @param name name to give new plot
+     * @param fa array of floats to plot
      * @return the frame that was openned.
      */
     public static plotterJFrame ShowFloatArray(String name, float fa[]) {
@@ -994,8 +1000,9 @@ private void jMenuItemSaveImageActionPerformed(java.awt.event.ActionEvent evt) {
     /**
      * Open a new plotterFrame to show only this file.
      *
-     * @param fname file name of csv file to plot
-     * @return the frame that was openned.
+     * @param name name of new plot
+     * @param da array of doubles to plot
+    * @return the frame that was openned.
      */
     public static plotterJFrame ShowDoubleArray(String name, double da[]) {
         plotterJFrame frame = new plotterJFrame();

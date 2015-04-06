@@ -66,5 +66,12 @@ public class PM_QUATERNION extends PmQuaternion implements Cloneable
       PM_QUATERNION cloned_object = (PM_QUATERNION) super.clone();
       return cloned_object;
   }
+  
+  public PM_QUATERNION multipy(PM_QUATERNION other) throws PmException {
+      PM_QUATERNION out = new PM_QUATERNION();
+      Posemath.pmQuatQuatMult(this, other, out);
+      return out;
+  }
+  
 
 }

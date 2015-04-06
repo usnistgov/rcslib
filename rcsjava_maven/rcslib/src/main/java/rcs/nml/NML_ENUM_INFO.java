@@ -30,7 +30,7 @@ import java.util.Hashtable;
 /**
  * Information stored about an enumeration passed via NML.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford 
  */
 public class NML_ENUM_INFO
 {

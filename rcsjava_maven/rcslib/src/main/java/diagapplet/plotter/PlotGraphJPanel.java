@@ -45,7 +45,7 @@ import javax.swing.JPanel;
 
 /**
  * JPanel for the actual graph without the controls around the outside.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class PlotGraphJPanel
         extends JPanel //implements MouseListener, MouseMotionListener

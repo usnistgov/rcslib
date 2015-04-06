@@ -40,14 +40,14 @@ package diagapplet.CodeGen;
  * to eliminate the circular dependancies.
  * 
  * @see rcs.nml.NMLFormatConvertErrCallbackInterface
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public interface DiagNMLMsgDictInterface extends rcs.nml.NMLMessageDictionary
 {
     /**
      * Used to set a ModuleInfo object, needed for this to function.
      * The non type safe use of an object parameter
-     * @param mi
+     * @param mi new module info object
      */
     void SetModuleInfoObject(ModuleInfoInterface mi);
     
@@ -85,7 +85,7 @@ public interface DiagNMLMsgDictInterface extends rcs.nml.NMLMessageDictionary
     /**
      * Log Information about this dictionary when  NML error occurs with a related Exception
      * called by NMLFormatConvertErrCallbackInterface 
-     * @param e
+     * @param e exception to log
      */
     void miscError(Exception e);
 }

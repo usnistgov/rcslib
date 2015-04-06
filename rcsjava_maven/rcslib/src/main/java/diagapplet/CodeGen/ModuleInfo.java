@@ -41,7 +41,7 @@ import rcs.utils.URL_and_FileLoader;
  * Class contains references to all information taken from a Module section of a
  * diag or hierarchy file.
  *
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public class ModuleInfo implements ModuleInfoInterface {
 
@@ -6850,44 +6850,6 @@ public class ModuleInfo implements ModuleInfoInterface {
             return -1;
         }
         return 0;
-    }
-
-    public boolean login(String name, String passwd) {
-        try {
-            if (!is_connected) {
-                if (connect() < 0) {
-                    return false;
-                }
-            }
-            if (!no_cmd) {
-                if (!m_cmd_read_Connection.loginNoThrow(name, passwd)) {
-                    return false;
-                }
-                if (double_buffer_nml
-                        && !m_cmd_write_Connection.loginNoThrow(name, passwd)) {
-                    return false;
-                }
-            }
-            if (!no_stat) {
-                if (double_buffer_nml
-                        && !m_stat_write_Connection.loginNoThrow(name, passwd)) {
-                    return false;
-                }
-                if (!m_stat_read_Connection.loginNoThrow(name, passwd)) {
-                    return false;
-                }
-            }
-            if (!no_errlog && null != m_errlogConnection) {
-                m_errlogConnection.loginNoThrow(name, passwd);
-            }
-            return true;
-        } catch (Throwable e) {
-            if (null != e.getMessage()) {
-                diagapplet.utils.DiagError.println("\r\n" + e.getMessage() + "\r\n");
-            }
-            e.printStackTrace();
-            return false;
-        }
     }
 
     public int disconnect() {

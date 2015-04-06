@@ -24,6 +24,9 @@ versions bear some notice that they have been modified.
 
 package rcs.nml;
 
+import rcs.nml.NMLmsg;
+import rcs.nml.NML_ENUM_INFO;
+
 /**
 * Base class for NML status messages.
 * <pre>

@@ -17,7 +17,7 @@ import rcs.nml.NMLMessageDictionary;
 
 /**
  *
- * @author  Will Shackleford <shackle@nist.gov>
+ * @author  Will Shackleford
  */
 public class MessageFileJFrame extends javax.swing.JFrame {
 

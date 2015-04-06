@@ -33,6 +33,7 @@ package rcs.posemath;
 
 // Import all NML, CMS, and RCS classes and interfaces
 import rcs.nml.NMLFormatConverter;
+import rcs.posemath.PmException;
 
 /*
 *       Class definition for PmCylindrical

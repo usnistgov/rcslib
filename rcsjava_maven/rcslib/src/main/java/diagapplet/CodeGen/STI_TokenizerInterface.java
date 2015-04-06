@@ -30,7 +30,7 @@ package diagapplet.CodeGen;
  * an ability to skipInfo in a structure or array using data
  * parsed by ModuleInfo etc.
  * 
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford
  */
 public interface STI_TokenizerInterface extends java.util.Enumeration
 {
