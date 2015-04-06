@@ -18,7 +18,7 @@ etc/linux_*.def
 include
 lib
 plat/
-
+NetBeans/librcs_cxx/nbproject/private/
 
 
 # Compiled Object files
