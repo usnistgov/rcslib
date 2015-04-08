@@ -51,16 +51,16 @@ public class PmRpy implements Cloneable {
         nml_fc.endClass("Pmrpy", null);
     }
 
-    PmRpy(double startr, double startp, double starty) {
+    public PmRpy(double startr, double startp, double starty) {
         r = startr;
         p = startp;
         y = starty;
     }
 
-    PmRpy() {
+    public PmRpy() {
     }
 
-    PmRpy(PmQuaternion q) throws PmException {
+    public PmRpy(PmQuaternion q) throws PmException {
         Posemath.pmQuatRpyConvert(q, this);
     }
 
