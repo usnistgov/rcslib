@@ -1,18 +1,22 @@
 #!/bin/bash
 
+set -x;
+
 for ldir in /tmp/tni_* ; do
     echo ""
     echo "Start Log Directory: ${ldir}"
     echo ""
     ls -l "${ldir}"
-    for log in "/tmp/${ldir}/*.log" ; do
-        echo ""
-        echo "Start Log: ${log}"
-        echo ""
-        cat "${log}"
-        echo ""
-        echo "End Log: ${log}"
-        echo ""
+    for log in "${ldir}/"*.log ; do
+        if test "x${log}" != "x" -a -f "${log}" ; then
+            echo ""
+            echo "Start Log: ${log}"
+            echo ""
+            cat "${log}"
+            echo ""
+            echo "End Log: ${log}"
+            echo ""
+        fi
     done;
     echo ""
     echo "End Log Directory: ${ldir}"
