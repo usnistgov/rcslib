@@ -3,7 +3,6 @@ rcs/utils/SimpleFileFilter.java
 rcs/utils/CorrectedPipeData.java
 rcs/utils/CorrectedPipedInputStream.java
 rcs/utils/StrToLong.java
-rcs/utils/jcrypt.java
 rcs/utils/CorrectedPipedInputStreamInterface.java
 rcs/utils/CorrectedPipedOutputStream.java
 rcs/utils/CorrectedPipedOutputStreamInterface.java

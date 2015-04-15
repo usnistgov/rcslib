@@ -1028,7 +1028,6 @@ rcs_jar_DEPENDENCIES = \
 	src/java/rcs/utils/URL_and_FileLoader.java \
 	src/java/rcs/utils/rcs_states.java \
 	src/java/rcs/utils/StackTracePrinter.java \
-	src/java/rcs/utils/jcrypt.java \
 	src/java/rcs/utils/StrToInt.java
 
 rcs_jar_LINK = $(top_srcdir)/src/java/build_rcs_jar.sh
@@ -1583,7 +1582,6 @@ EXTRA_DIST = \
 	doc/javadoc/rcs/utils/class-use/CorrectedPipedInputStream.html \
 	doc/javadoc/rcs/utils/class-use/rcs_states.html \
 	doc/javadoc/rcs/utils/class-use/CorrectedPipedOutputStream.html \
-	doc/javadoc/rcs/utils/class-use/jcrypt.html \
 	doc/javadoc/rcs/utils/class-use/URL_and_FileLoader.html \
 	doc/javadoc/rcs/utils/StrToLong.html \
 	doc/javadoc/rcs/utils/package-summary.html \
@@ -1595,7 +1593,6 @@ EXTRA_DIST = \
 	doc/javadoc/rcs/utils/rcs_states.html \
 	doc/javadoc/rcs/utils/CorrectedPipedOutputStream.html \
 	doc/javadoc/rcs/utils/package-frame.html \
-	doc/javadoc/rcs/utils/jcrypt.html \
 	doc/javadoc/rcs/utils/package-tree.html \
 	doc/javadoc/rcs/utils/URL_and_FileLoader.html \
 	doc/javadoc/rcs/class-use/RCS_VERSION.html \
@@ -2822,7 +2819,6 @@ EXTRA_DIST = \
 	src/java/rcs/utils/CorrectedPipedInputStream.java \
 	src/java/rcs/utils/CorrectedPipedOutputStreamInterface.java \
 	src/java/rcs/utils/CorrectedPipedOutputStream.java \
-	src/java/rcs/utils/jcrypt.java \
 	src/java/rcs/utils/Makefile \
 	src/java/rcs/utils/Makefile.old \
 	src/java/rcs/utils/SimpleFileFilter.java \
@@ -3137,7 +3133,6 @@ EXTRA_DIST = \
 MOSTLYCLEANFILES = \
 	src/rcs_svn_vers.hh.orig \
 	plat/java/lib/rcs/RCS_VERSION.class \
-	plat/java/lib/rcs/utils/jcrypt.class \
 	plat/java/lib/rcs/utils/URL_and_FileLoader.class \
 	plat/java/lib/rcs/utils/CorrectedPipeData.class \
 	plat/java/lib/rcs/utils/CorrectedPipedInputStream.class \
@@ -3270,7 +3265,6 @@ MOSTLYCLEANFILES = \
 	plat/java/src/rcs/utils/StrToInt.java \
 	plat/java/src/rcs/utils/StrToLong.java \
 	plat/java/src/rcs/utils/URL_and_FileLoader.java \
-	plat/java/src/rcs/utils/jcrypt.java \
 	plat/java/src/rcs/nml/CMS_DATE.java \
 	plat/java/src/rcs/nml/CMS_TIME.java \
 	plat/java/src/rcs/nml/NMLSingleVarLogItem.java \
@@ -3432,7 +3426,6 @@ MOSTLYCLEANFILES = \
 	rcs/utils/SimpleFileFilter.java \
 	rcs/utils/CorrectedPipeData.java \
 	rcs/utils/StrToLong.java \
-	rcs/utils/jcrypt.java \
 	rcs/utils/CorrectedPipedInputStream.java \
 	rcs/utils/CorrectedPipedOutputStream.java \
 	rcs/utils/CorrectedPipedInputStreamInterface.java \
@@ -3525,7 +3518,6 @@ MOSTLYCLEANFILES = \
 	rcs_lib/rcs/utils/CorrectedPipedInputStreamInterface.class \
 	rcs_lib/rcs/utils/CorrectedPipedOutputStreamInterface.class \
 	rcs_lib/rcs/utils/StrToLong.class \
-	rcs_lib/rcs/utils/jcrypt.class \
 	rcs_lib/rcs/utils/CorrectedPipedOutputStream.class \
 	rcs_lib/rcs/utils/URL_and_FileLoader.class \
 	rcs_lib/rcs/RCS_VERSION.class \
@@ -3614,7 +3606,6 @@ MOSTLYCLEANFILES = \
 	CodeGenCmdLine_lib/rcs/utils/StrToInt.class \
 	CodeGenCmdLine_lib/rcs/utils/StrToLong.class \
 	CodeGenCmdLine_lib/rcs/utils/URL_and_FileLoader.class \
-	CodeGenCmdLine_lib/rcs/utils/jcrypt.class \
 	CodeGenCmdLine_lib/rcs/utils/CorrectedPipedInputStream.class \
 	CodeGenCmdLine_lib/rcs/utils/CorrectedPipedInputStreamInterface.class \
 	CodeGenCmdLine_lib/rcs/utils/CorrectedPipeData.class \
@@ -3773,7 +3764,6 @@ MOSTLYCLEANFILES = \
 	diagapplet_lib/rcs/utils/CorrectedPipedInputStreamInterface.class \
 	diagapplet_lib/rcs/utils/CorrectedPipedOutputStreamInterface.class \
 	diagapplet_lib/rcs/utils/StrToLong.class \
-	diagapplet_lib/rcs/utils/jcrypt.class \
 	diagapplet_lib/rcs/utils/CorrectedPipedOutputStream.class \
 	diagapplet_lib/rcs/utils/URL_and_FileLoader.class \
 	diagapplet_lib/rcs/RCS_VERSION.class \
@@ -3847,7 +3837,6 @@ MOSTLYCLEANFILES = \
 	plotter_lib/rcs/utils/CorrectedPipedInputStreamInterface.class \
 	plotter_lib/rcs/utils/CorrectedPipedOutputStreamInterface.class \
 	plotter_lib/rcs/utils/StrToLong.class \
-	plotter_lib/rcs/utils/jcrypt.class \
 	plotter_lib/rcs/utils/CorrectedPipedOutputStream.class \
 	plotter_lib/rcs/utils/URL_and_FileLoader.class \
 	plotter_lib/diagapplet/plotter/PlotGraphScreenMap.class \
@@ -3941,7 +3930,6 @@ MOSTLYCLEANFILES = \
 	jdiag_lib/rcs/utils/CorrectedPipedInputStreamInterface.class \
 	jdiag_lib/rcs/utils/CorrectedPipedOutputStreamInterface.class \
 	jdiag_lib/rcs/utils/StrToLong.class \
-	jdiag_lib/rcs/utils/jcrypt.class \
 	jdiag_lib/rcs/utils/CorrectedPipedOutputStream.class \
 	jdiag_lib/rcs/utils/URL_and_FileLoader.class \
 	jdiag_lib/rcs/RCS_VERSION.class \
