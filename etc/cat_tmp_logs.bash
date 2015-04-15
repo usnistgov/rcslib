@@ -5,7 +5,7 @@ for ldir in /tmp/tni_* ; do
     echo "Start Log Directory: ${ldir}"
     echo ""
     ls -l "${ldir}"
-    for log in "${ldir}/*.log" ; do
+    for log in "/tmp/${ldir}/*.log" ; do
         echo ""
         echo "Start Log: ${log}"
         echo ""
