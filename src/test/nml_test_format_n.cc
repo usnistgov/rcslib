@@ -217,14 +217,14 @@ Estimated_size	MyStat	128
 Estimated_size	MyStat2	296
 Estimated_size	QTEST_MSG	168
 Estimated_size	SIMPLER_MSG	112
-Estimated_size	TEST_MESSAGE	7248
+Estimated_size	TEST_MESSAGE	6168
 Estimated_size	TEST_MESSAGE_BASE	304
 Estimated_size	c_struct	16
 Estimated_size	c_struct2	16
 Estimated_size	fwLaserStruct	24
-Estimated_size	teststruct	496
+Estimated_size	teststruct	372
 Estimated_size	teststruct_td2	360
-Estimated_size	MAXIMUM	7248
+Estimated_size	MAXIMUM	6168
 */
 /*
 *	NML/CMS Format function : nml_test_format
@@ -298,7 +298,7 @@ const char *nml_test_symbol_lookup(long type)
 
 /*
 *	NML/CMS Update function for BOP_MSG
-*	from nml_test_format.hh:330
+*	from nml_test_format.hh:328
 */
 void BOP_MSG::update(CMS *cms)
 {
@@ -348,7 +348,7 @@ void MyStat2::update(CMS *cms)
 
 /*
 *	NML/CMS Update function for QTEST_MSG
-*	from nml_test_format.hh:314
+*	from nml_test_format.hh:312
 */
 void QTEST_MSG::update(CMS *cms)
 {
@@ -368,7 +368,7 @@ void QTEST_MSG::update(CMS *cms)
 
 /*
 *	NML/CMS Update function for SIMPLER_MSG
-*	from nml_test_format.hh:303
+*	from nml_test_format.hh:301
 */
 void SIMPLER_MSG::update(CMS *cms)
 {
@@ -385,7 +385,7 @@ void SIMPLER_MSG::update(CMS *cms)
 
 /*
 *	NML/CMS Update function for TEST_MESSAGE
-*	from nml_test_format.hh:210
+*	from nml_test_format.hh:208
 */
 void TEST_MESSAGE::update(CMS *cms)
 {
@@ -526,7 +526,7 @@ void TEST_MESSAGE::update(CMS *cms)
 
 /*
 *	NML/CMS Update function for TEST_MESSAGE_BASE
-*	from nml_test_format.hh:195
+*	from nml_test_format.hh:193
 */
 void TEST_MESSAGE_BASE::update(CMS *cms)
 {
@@ -578,7 +578,7 @@ void nmlupdate(CMS *cms,c_struct2 *x)
 
 /*
 *	NML/CMS Update function for fwLaserStruct
-*	from nml_test_format.hh:205
+*	from nml_test_format.hh:203
 */
 void nmlupdate(CMS *cms,fwLaserStruct *x)
 {
@@ -634,15 +634,6 @@ void nmlupdate(CMS *cms,teststruct *x)
 	cms->update_with_name("f_pi",x->f_pi);
 	cms->next_update_default("endts");
 	cms->update_with_name("endtsbuf",(char *) x->endtsbuf,16);
-	cms->beginClassVar("pm_cart_test");
-	nmlupdate(cms,((PmCartesian *)&(x->pm_cart_test)));
-	cms->endClassVar("pm_cart_test");
-	for(int i_pm_cart_test_array = 0;i_pm_cart_test_array < 4 ;i_pm_cart_test_array++)
-	{
-		cms->beginStructArrayElem("pm_cart_test_array",i_pm_cart_test_array);
-		nmlupdate(cms, ((PmCartesian *) (x->pm_cart_test_array)) + i_pm_cart_test_array);
-		cms->endStructArrayElem("pm_cart_test_array",i_pm_cart_test_array);
-	}
 
 	cms->endClass("teststruct",0);
 
@@ -651,7 +642,7 @@ void nmlupdate(CMS *cms,teststruct *x)
 
 /*
 *	NML/CMS Update function for teststruct_td2
-*	from nml_test_format.hh:167
+*	from nml_test_format.hh:165
 */
 void nmlupdate(CMS *cms,teststruct_td2 *x)
 {
@@ -697,7 +688,7 @@ void nmlupdate(CMS *cms,teststruct_td2 *x)
 
 /*
 *	Constructor for BOP_MSG
-*	from nml_test_format.hh:330
+*	from nml_test_format.hh:328
 */
 BOP_MSG::BOP_MSG()
 	: NMLmsg(BOP_MSG_TYPE,sizeof(BOP_MSG))
@@ -711,7 +702,7 @@ BOP_MSG::BOP_MSG()
 
 /*
 *	Constructor for QTEST_MSG
-*	from nml_test_format.hh:314
+*	from nml_test_format.hh:312
 */
 QTEST_MSG::QTEST_MSG()
 	: NMLmsg(QTEST_MSG_TYPE,sizeof(QTEST_MSG))
@@ -730,7 +721,7 @@ QTEST_MSG::QTEST_MSG()
 
 /*
 *	Constructor for SIMPLER_MSG
-*	from nml_test_format.hh:303
+*	from nml_test_format.hh:301
 */
 SIMPLER_MSG::SIMPLER_MSG()
 	: NMLmsg(SIMPLER_MSG_TYPE,sizeof(SIMPLER_MSG))
@@ -746,7 +737,7 @@ SIMPLER_MSG::SIMPLER_MSG()
 
 /*
 *	Constructor for TEST_MESSAGE
-*	from nml_test_format.hh:210
+*	from nml_test_format.hh:208
 */
 TEST_MESSAGE::TEST_MESSAGE()
 	: TEST_MESSAGE_BASE(TEST_MESSAGE_TYPE,sizeof(TEST_MESSAGE))
@@ -902,7 +893,7 @@ TEST_MESSAGE::TEST_MESSAGE()
 
 /*
 *	Constructor for TEST_MESSAGE_BASE
-*	from nml_test_format.hh:195
+*	from nml_test_format.hh:193
 */
 TEST_MESSAGE_BASE::TEST_MESSAGE_BASE()
 	: RCS_STAT_MSG_V2(TEST_MESSAGE_BASE_TYPE,sizeof(TEST_MESSAGE_BASE))

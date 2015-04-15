@@ -809,15 +809,6 @@ package body nml_test_format_n_ada is
 		Cms.Update_Double_Dla(Cms_Ptr, "dda", Msg.dda,Msg.dda_length,2);
 		Cms.Update_C_Float(Cms_Ptr, "f_pi", Msg.f_pi);
 		Cms.Update_Char_Array(Cms_Ptr, "endtsbuf", Msg.endtsbuf,16);
-		Cms.Begin_Class_Var(Cms_Ptr,"pm_cart_test");
-		Update_Internal_PmCartesian(Cms_Ptr,Msg.pm_cart_test);
-		Cms.End_Class_Var(Cms_Ptr,"pm_cart_test");
-		for pm_cart_test_array_Index in Msg.pm_cart_test_array'Range
-		loop
-			Cms.Begin_Struct_Array_Elem(Cms_Ptr,"pm_cart_test_array",int(pm_cart_test_array_Index - Msg.pm_cart_test_array'First));
-			Update_Internal_PmCartesian(Cms_Ptr, Msg.pm_cart_test_array(pm_cart_test_array_Index));
-			Cms.End_Struct_Array_Elem(Cms_Ptr,"pm_cart_test_array",int(pm_cart_test_array_Index - Msg.pm_cart_test_array'First));
-		end loop;
 		Cms.End_Class(Cms_Ptr,"teststruct","");
 	end Update_teststruct;
 
@@ -854,15 +845,6 @@ package body nml_test_format_n_ada is
 		Cms.Update_Double_Dla(Cms_Ptr, "dda", Msg.dda,Msg.dda_length,2);
 		Cms.Update_C_Float(Cms_Ptr, "f_pi", Msg.f_pi);
 		Cms.Update_Char_Array(Cms_Ptr, "endtsbuf", Msg.endtsbuf,16);
-		Cms.Begin_Class_Var(Cms_Ptr,"pm_cart_test");
-		Update_Internal_PmCartesian(Cms_Ptr,Msg.pm_cart_test);
-		Cms.End_Class_Var(Cms_Ptr,"pm_cart_test");
-		for pm_cart_test_array_Index in Msg.pm_cart_test_array'Range
-		loop
-			Cms.Begin_Struct_Array_Elem(Cms_Ptr,"pm_cart_test_array",int(pm_cart_test_array_Index - Msg.pm_cart_test_array'First));
-			Update_Internal_PmCartesian(Cms_Ptr, Msg.pm_cart_test_array(pm_cart_test_array_Index));
-			Cms.End_Struct_Array_Elem(Cms_Ptr,"pm_cart_test_array",int(pm_cart_test_array_Index - Msg.pm_cart_test_array'First));
-		end loop;
 		Cms.End_Class(Cms_Ptr,"teststruct","");
 	end Update_Internal_teststruct;
 

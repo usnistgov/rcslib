@@ -265,8 +265,6 @@ typedef struct {
 	double dda[2];
 	float f_pi;
 	char endtsbuf[16];
-	nml_PmCartesian_c_t pm_cart_test;
-	nml_PmCartesian_c_t pm_cart_test_array[4];
 } nml_teststruct_c_t;
 
 typedef struct {
@@ -410,7 +408,6 @@ void cms_TEST_MESSAGE_BASE_update(struct cms_c_struct *cms, nml_TEST_MESSAGE_BAS
 void cms_c_struct_update(struct cms_c_struct *cms, nml_c_struct_c_t *x);
 void cms_c_struct2_update(struct cms_c_struct *cms, nml_c_struct2_c_t *x);
 void cms_fwLaserStruct_update(struct cms_c_struct *cms, nml_fwLaserStruct_c_t *x);
-void cms_PmCartesian_update(struct cms_c_struct *cms, nml_PmCartesian_c_t *x);
 void cms_teststruct_update(struct cms_c_struct *cms, nml_teststruct_c_t *x);
 void cms_teststruct_td2_update(struct cms_c_struct *cms, nml_teststruct_td2_c_t *x);
 void cms_struct_from_other_header_update(struct cms_c_struct *cms, nml_struct_from_other_header_c_t *x);

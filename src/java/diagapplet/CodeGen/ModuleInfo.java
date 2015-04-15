@@ -1,22 +1,22 @@
 /*
- The NIST RCS (Real-time Control Systems)
- library is public domain software, however it is preferred
- that the following disclaimers be attached.
+The NIST RCS (Real-time Control Systems)
+library is public domain software, however it is preferred
+that the following disclaimers be attached.
 
- Software Copywrite/Warranty Disclaimer
+Software Copywrite/Warranty Disclaimer
 
- This software was developed at the National Institute of Standards and
- Technology by employees of the Federal Government in the course of their
- official duties. Pursuant to title 17 Section 105 of the United States
- Code this software is not subject to copyright protection and is in the
- public domain. NIST Real-Time Control System software is an experimental
- system. NIST assumes no responsibility whatsoever for its use by other
- parties, and makes no guarantees, expressed or implied, about its
- quality, reliability, or any other characteristic. We would appreciate
- acknowledgement if the software is used. This software can be
- redistributed and/or modified freely provided that any derivative works
- bear some notice that they are derived from it, and any modified
- versions bear some notice that they have been modified.
+This software was developed at the National Institute of Standards and
+Technology by employees of the Federal Government in the course of their
+official duties. Pursuant to title 17 Section 105 of the United States
+Code this software is not subject to copyright protection and is in the
+public domain. NIST Real-Time Control System software is an experimental
+system. NIST assumes no responsibility whatsoever for its use by other
+parties, and makes no guarantees, expressed or implied, about its
+quality, reliability, or any other characteristic. We would appreciate
+acknowledgement if the software is used. This software can be
+redistributed and/or modified freely provided that any derivative works
+bear some notice that they are derived from it, and any modified
+versions bear some notice that they have been modified.
 
  */
 package diagapplet.CodeGen;
@@ -31,17 +31,14 @@ import diagapplet.utils.URLLoadInfoPanelInterface;
 
 import java.util.Enumeration;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
 import rcs.nml.NMLMessageDictionary;
 import rcs.utils.StackTracePrinter;
 import rcs.utils.URL_and_FileLoader;
 
 /**
- * Class contains references to all information taken from a Module section of a
- * diag or hierarchy file.
- *
- * @author Will Shackleford
+ * Class contains references to all information taken from a Module section of 
+ * a diag or hierarchy file.
+ * @author Will Shackleford <shackle@nist.gov>
  */
 public class ModuleInfo implements ModuleInfoInterface {
 
@@ -62,7 +59,6 @@ public class ModuleInfo implements ModuleInfoInterface {
 
     /**
      * Get a string for debuggin purposes.
-     *
      * @return last_loading_module_string;
      */
     static public String get_last_loading_module_string() {
@@ -73,17 +69,16 @@ public class ModuleInfo implements ModuleInfoInterface {
     }
     static private volatile ModuleInfo last_loading_module = null;
     /**
-     * Variable temporarily set to true only by the diagnostics hierarchy view
-     * when sending a message string that only contains the type and size
-     * placeholder. Other variables in the message are set to zero or taken from
-     * the last message.
+     * Variable temporarily set to true only by the diagnostics hierarchy view when
+     * sending a message string that only contains the type and size placeholder.
+     * Other variables in the message are set to zero or taken from the last message.
      */
     public boolean sending_short_string = false;
     public boolean preset_x = false;
     public boolean preset_y = false;
     public boolean adding_aux_channel = false;
     static private final boolean double_buffer_nml = false;
-    static public final String Id = "$Id: ModuleInfo.java 2331 2014-05-27 15:37:43Z shackle $";
+    static public final String Id = "$Id: ModuleInfo.java 1845 2011-11-04 18:22:11Z shackle $";
     static public Vector ignored_header_list = null;
 
     static public rcs.nml.NMLFormatConvertErrCallbackInterface get_nml_format_err_callback() {
@@ -98,8 +93,7 @@ public class ModuleInfo implements ModuleInfoInterface {
      */
     public boolean no_stat = false;
     /**
-     * A list of deleted commands used by the Design tool when remerging old
-     * code.
+     * A list of deleted commands used by the Design tool when remerging old code.
      */
     public Vector deleted_commands = null;
     public String designLog = "";
@@ -215,37 +209,28 @@ public class ModuleInfo implements ModuleInfoInterface {
                 if (debug_on) {
                     System.out.println("ErrorPrint + " + cur_file_name + ":" + cur_file_line + " (" + StackTracePrinter.ThrowableToShortList(t) + ")  " + s);
                 }
-                System.out.flush();
-                System.err.flush();;
-                diagapplet.utils.DiagError.println(cur_file_name + ":" + cur_file_line +" "+ s);
-                diagapplet.utils.DiagError.println(cur_file_name + ":" + cur_file_line + " stackTrace =  (" + StackTracePrinter.ThrowableToShortList(t) + ")  ");
-                if(null != last_loading_module.replacedValues && last_loading_module.replacedValues.size() > 0) {
-                    diagapplet.utils.DiagError.println(cur_file_name + ":" + cur_file_line + " replacedValues = "+last_loading_module.printReplacedValues(","));
+                diagapplet.utils.DiagError.println(cur_file_name + ":" + cur_file_line + " (" + StackTracePrinter.ThrowableToShortList(t) + ")  " + s);
+                if (num_error_prints < 3) {
+                    if (null != last_loading_module
+                            && null != last_loading_module.last_file_loader) {
+                        System.out.println("last_loading_module.last_file_loader = " + last_loading_module.last_file_loader);
+                    }
                 }
-                diagapplet.utils.DiagError.println("");
-                System.out.flush();
-                System.err.flush();
-//                if (num_error_prints < 3) {
-//                    if (null != last_loading_module
-//                            && null != last_loading_module.last_file_loader) {
-//                        System.out.println("last_loading_module.last_file_loader = " + last_loading_module.last_file_loader);
-//                    }
-//                }
                 return;
             }
             diagapplet.utils.DiagError.println(StackTracePrinter.ThrowableToShortList(t) + " " + s);
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        if (num_error_prints < 3 && debug_on) {
-//            if (null != last_loading_module
-//                    && null != last_loading_module.last_file_loader) {
-//                System.out.println("last_loading_module.last_file_loader = " + last_loading_module.last_file_loader);
-//            }
-//            if (debug_on) {
-//                Thread.dumpStack();
-//            }
-//        }
+        if (num_error_prints < 3) {
+            if (null != last_loading_module
+                    && null != last_loading_module.last_file_loader) {
+                System.out.println("last_loading_module.last_file_loader = " + last_loading_module.last_file_loader);
+            }
+            if(debug_on) {
+                Thread.dumpStack();
+            }
+        }
     }
 
     static private String cur_tag() {
@@ -403,14 +388,6 @@ public class ModuleInfo implements ModuleInfoInterface {
         if (null == extraHeaderFiles) {
             extraHeaderFiles = new Vector();
         }
-        if(extraHeaderFiles.contains(header)) {
-            return;
-        }
-        for(int i = 0; i < extraHeaderFiles.size(); i++) {
-            if(extraHeaderFiles.get(i).toString().compareTo(header) ==0) {
-                return;
-            }
-        }
         extraHeaderFiles.add(header);
     }
     public static boolean UseDefaultTypes = true;
@@ -445,18 +422,18 @@ public class ModuleInfo implements ModuleInfoInterface {
         str += "\tAuxInputNames=" + AuxInputNames + "\n";
         str += "\tAuxOutputNames=" + AuxOutputNames + "\n";
         /*
-         if(m_structInfoHashTable != null)
-         {
-         str += "m_structInfoHashTable="+m_structInfoHashTable+"\n";
-         }
-         if(m_stat_structInfoHashTable != null)
-         {
-         str += "m_stat_structInfoHashTable="+m_stat_structInfoHashTable+"\n";
-         }
-         if(m_cmd_structInfoHashTable != null)
-         {
-         str += "m_cmd_structInfoHashTable="+m_cmd_structInfoHashTable+"\n";
-         }
+        if(m_structInfoHashTable != null)
+        {
+        str += "m_structInfoHashTable="+m_structInfoHashTable+"\n";
+        }
+        if(m_stat_structInfoHashTable != null)
+        {
+        str += "m_stat_structInfoHashTable="+m_stat_structInfoHashTable+"\n";
+        }
+        if(m_cmd_structInfoHashTable != null)
+        {
+        str += "m_cmd_structInfoHashTable="+m_cmd_structInfoHashTable+"\n";
+        }
          */
         //str += "\tm_loadedPreDefinedTypes=" + m_loadedPreDefinedTypes + "\n";
         str += "} \n\n";
@@ -572,6 +549,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                 }
             }
 
+
             predefined_type_files = new Vector();
             cmd_plotting_variables = new Hashtable();
             stat_plotting_variables = new Hashtable();
@@ -604,8 +582,8 @@ public class ModuleInfo implements ModuleInfoInterface {
             if (no_cmd) {
                 return null;
             }
-            DiagNMLMsgDictInterface dict
-                    = diag_dict_creator.create(true, false);
+            DiagNMLMsgDictInterface dict =
+                    diag_dict_creator.create(true, false);
             dict.SetModuleInfoObject(this);
             nci = nml_creator.NewNMLConnection();
             nci.SetMessageDictionary(dict);
@@ -641,8 +619,8 @@ public class ModuleInfo implements ModuleInfoInterface {
             if (no_stat) {
                 return null;
             }
-            DiagNMLMsgDictInterface dict
-                    = diag_dict_creator.create(false, true);
+            DiagNMLMsgDictInterface dict =
+                    diag_dict_creator.create(false, true);
             dict.SetModuleInfoObject(this);
             nci = nml_creator.NewNMLConnection();
             nci.SetMessageDictionary(dict);
@@ -875,15 +853,17 @@ public class ModuleInfo implements ModuleInfoInterface {
         m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
 
         /*
-         StructureTypeInfo stat_type_info = typeInfoToAdd;
-         typeInfoToAdd = new StructureTypeInfo();
-         typeInfoToAdd.Name = "RCS_STAT_MSG_V2";
-         typeInfoToAdd.setInfo("long command_type;int echo_serial_number; enum RCS_STATUS status; int state; int line; int source_line; char source_file[64]; enum RCS_ADMIN_STATE admin_state; ");
-         typeInfoToAdd.Id = -2;
-         typeInfoToAdd.PreFinalPassInfo = "PM_CARTESIAN x;PM_CARTESIAN y;PM_CARTESIAN z;";
-         typeInfoToAdd.DerivedFrom = null;
-         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
+        StructureTypeInfo stat_type_info = typeInfoToAdd;
+        typeInfoToAdd = new StructureTypeInfo();
+        typeInfoToAdd.Name = "RCS_STAT_MSG_V2";
+        typeInfoToAdd.setInfo("long command_type;int echo_serial_number; enum RCS_STATUS status; int state; int line; int source_line; char source_file[64]; enum RCS_ADMIN_STATE admin_state; ");
+        typeInfoToAdd.Id = -2;
+        typeInfoToAdd.PreFinalPassInfo = "PM_CARTESIAN x;PM_CARTESIAN y;PM_CARTESIAN z;";
+        typeInfoToAdd.DerivedFrom = null;
+        typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
          */
+
+
         // POSEMATH types
         // translation types
         typeInfoToAdd = new StructureTypeInfo();
@@ -1573,8 +1553,6 @@ public class ModuleInfo implements ModuleInfoInterface {
     }
     // @SuppressWarnings("unchecked")
 
-    LinkedList<String> replacedValues = new LinkedList<String>();
-    
     public String ReplaceDefinedValues(String inStr, int rdv_recurse_count, Hashtable usedDefines) {
         String outStr = "";
         String breakers = " \t\r\n+-/*\\,()";
@@ -1687,9 +1665,6 @@ public class ModuleInfo implements ModuleInfoInterface {
         } catch (Exception e) {
             e.printStackTrace();
             outStr = inStr;
-        }
-        if(inStr.compareTo(outStr) != 0) {
-            replacedValues.add(cur_file_line+":"+cur_file_line + " "+ inStr +" replaced with "+outStr);
         }
         return outStr;
     }
@@ -1839,102 +1814,102 @@ public class ModuleInfo implements ModuleInfoInterface {
     }
 
     /*
-     {
-     if(application_type != RCS_DIAGNOSTICS_APPLICATION_TYPE
-     && !always_perform_final_pass)
-     {
-     return "";
-     }
-     int indexLSquareParen;
-     int indexRSquareParen;
-     int arrayLength;
-     String arrayString;
-     String  new_var_string;
-     String preArrayString = "";
-     String postArrayString = "";
+    {
+    if(application_type != RCS_DIAGNOSTICS_APPLICATION_TYPE
+    && !always_perform_final_pass)
+    {
+    return "";
+    }
+    int indexLSquareParen;
+    int indexRSquareParen;
+    int arrayLength;
+    String arrayString;
+    String  new_var_string;
+    String preArrayString = "";
+    String postArrayString = "";
 
-     if(debug_on)
-     {
-     DebugPrint("SeparateArrayElements("+varString+")");
-     }
+    if(debug_on)
+    {
+    DebugPrint("SeparateArrayElements("+varString+")");
+    }
 
-     try
-     {
-     indexRSquareParen = varString.indexOf(']');
-     if(indexRSquareParen < 0)
-     {
-     return varString+";";
-     }
-     indexLSquareParen = varString.indexOf('[');
-     if(indexLSquareParen < 0)
-     {
-     return varString+";";
-     }
-     if(indexLSquareParen >= indexRSquareParen)
-     {
-     return varString+";";
-     }
-     if(-1 != varString.indexOf("char "))
-     {
-     return varString+";";
-     }
-     if(-1 != varString.indexOf("."))
-     {
-     return varString+";";
-     }
-     arrayString = varString.substring(indexLSquareParen +1, indexRSquareParen);
-     arrayString = ReplaceDefinedValues(arrayString,null);
-     try
-     {
-     arrayLength = doArrayLengthMath(arrayString);
-     }
-     catch(NumberFormatException e)
-     {
-     if(null == definedValues)
-     {
-     e.printStackTrace();
-     return varString+";";
-     }
-     DefinedValue dv =  (DefinedValue) definedValues.get(arrayString);
-     if(null == dv)
-     {
-     e.printStackTrace();
-     return varString+";";
-     }
-     arrayLength = rcs.utils.StrToInt.convert(dv.value);
-     }
-     if(arrayLength < 1)
-     {
-     return varString;
-     }
-     preArrayString = varString.substring(0,indexLSquareParen+1);
-     if(indexRSquareParen < varString.length())
-     {
-     postArrayString = varString.substring(indexRSquareParen);
-     }
-     if(arrayLength > 4000000)
-     {
-     ErrorPrint("Array "+varString+" is too long for diagnostics tool. (Truncating!)");
-     arrayLengthTooLong = true;
-     arrayLength = 4000;
-     }
-     StringBuffer sb = new StringBuffer((arrayLength+2)*(preArrayString.length()+postArrayString.length()+10));
-     for(int i = 0; i < arrayLength; i++)
-     {
-     sb.append(preArrayString);
-     sb.append(i);
-     sb.append(postArrayString);
-     sb.append(';');
-     //new_var_string += preArrayString+i+postArrayString+";";
-     }
-     return sb.toString();
-     }
-     catch(Exception e)
-     {
-     e.printStackTrace();
-     }
-     return varString;
-     }
+    try
+    {
+    indexRSquareParen = varString.indexOf(']');
+    if(indexRSquareParen < 0)
+    {
+    return varString+";";
+    }
+    indexLSquareParen = varString.indexOf('[');
+    if(indexLSquareParen < 0)
+    {
+    return varString+";";
+    }
+    if(indexLSquareParen >= indexRSquareParen)
+    {
+    return varString+";";
+    }
+    if(-1 != varString.indexOf("char "))
+    {
+    return varString+";";
+    }
+    if(-1 != varString.indexOf("."))
+    {
+    return varString+";";
+    }
+    arrayString = varString.substring(indexLSquareParen +1, indexRSquareParen);
+    arrayString = ReplaceDefinedValues(arrayString,null);
+    try
+    {
+    arrayLength = doArrayLengthMath(arrayString);
+    }
+    catch(NumberFormatException e)
+    {
+    if(null == definedValues)
+    {
+    e.printStackTrace();
+    return varString+";";
+    }
+    DefinedValue dv =  (DefinedValue) definedValues.get(arrayString);
+    if(null == dv)
+    {
+    e.printStackTrace();
+    return varString+";";
+    }
+    arrayLength = rcs.utils.StrToInt.convert(dv.value);
+    }
+    if(arrayLength < 1)
+    {
+    return varString;
+    }
+    preArrayString = varString.substring(0,indexLSquareParen+1);
+    if(indexRSquareParen < varString.length())
+    {
+    postArrayString = varString.substring(indexRSquareParen);
+    }
+    if(arrayLength > 4000000)
+    {
+    ErrorPrint("Array "+varString+" is too long for diagnostics tool. (Truncating!)");
+    arrayLengthTooLong = true;
+    arrayLength = 4000;
+    }
+    StringBuffer sb = new StringBuffer((arrayLength+2)*(preArrayString.length()+postArrayString.length()+10));
+    for(int i = 0; i < arrayLength; i++)
+    {
+    sb.append(preArrayString);
+    sb.append(i);
+    sb.append(postArrayString);
+    sb.append(';');
+    //new_var_string += preArrayString+i+postArrayString+";";
+    }
+    return sb.toString();
+    }
+    catch(Exception e)
+    {
+    e.printStackTrace();
+    }
+    return varString;
+    }
      */
     private String SeparateCommaSeparatedVariables(String varString) throws Exception {
         int comma_index;
@@ -2239,134 +2214,9 @@ public class ModuleInfo implements ModuleInfoInterface {
     public static volatile String cur_file_name = null;
     public static volatile int cur_file_line = 0;
     int line = 0;
-
-    private class FileLocation {
-
-        final String fileName;
-        final int line;
-        final int charPos;
-
-        FileLocation(final String _fileName, final int _line, final int _charPos) {
-            this.fileName = _fileName;
-            this.line = _line;
-            this.charPos = _charPos;
-        }
-
-        @Override
-        public String toString() {
-            return this.fileName + ":" + line + "(" + charPos + ")";
-        }
-    }
-
-    public String printParenStack(String sep) {
-        String s = "";
-        for (int i = 0; i < parenStack.size(); i++) {
-            s += parenStack.get(i).toString() + sep;
-        }
-        return s;
-    }
-
-    public String printBraceStack(String sep) {
-        String s = "";
-        for (int i = 0; i < braceStack.size(); i++) {
-            s += braceStack.get(i).toString() + sep;
-        }
-        return s;
-    }
-    
-    public static String printListString(List<String> l, String sep) {
-        String s = "";
-        for (int i = (l.size() > 10)?(l.size()-10):0; i < l.size(); i++) {
-            s += l.get(i).toString() + sep;
-        }
-        return s;
-    }
-    
-    public String printParenHist(String sep) {
-        return printListString(parenHist,sep);
-    }
-
-    public String printBraceHist(String sep) {
-        return printListString(braceHist,sep);
-    }
-    
-    public String printReplacedValues(String sep) {
-        return printListString(replacedValues,sep);
-    }
-    
-    private final Stack<FileLocation> parenStack = new Stack<FileLocation>();
-
-    public int getParenCount() {
-        return parenStack.size();
-    }
-
-    private LinkedList<String> parenHist = new LinkedList<String>();
-
-    public void decParenCount(int charPos) {
-        if (parenStack.isEmpty()) {
-            ErrorPrint("attempt to decrement parenCount when already 0 : parenHist=" + this.printParenHist(","));
-            return;
-        }
-        FileLocation fl = parenStack.pop();
-        if (fl.fileName.compareTo(cur_file_name) != 0) {
-            ErrorPrint("matching paren in a different file: " + fl.fileName + " != " + cur_file_name + " parenStack=" + this.printParenStack(",") + " parenHist=" + this.printParenHist(","));
-        }
-        parenHist.add("dec @ " + cur_file_name + ":" + cur_file_line + "(" + charPos + ")count="+getParenCount());
-    }
-
-    public void clearParenCount(int _charPos) {
-        if (getParenCount() != 0) {
-            ErrorPrint("clearing parenCount when not zero : parenStack=" + this.printParenStack(",") + " parenHist=" + this.printParenHist(","));
-        }
-        while (getParenCount() > 0) {
-            decParenCount(_charPos);
-        }
-        parenHist = new LinkedList<String>();
-    }
-
-    public void incParenCount(int _charPos) {
-        parenStack.push(new FileLocation(cur_file_name, cur_file_line, _charPos));
-        parenHist.add("inc @ " + cur_file_name + ":" + cur_file_line + "(" + _charPos + ")count="+getParenCount());
-    }
-
-    private final Stack<FileLocation> braceStack = new Stack<FileLocation>();
-
-    public int getBraceCount() {
-        return braceStack.size();
-    }
-
-    private LinkedList<String> braceHist = new LinkedList<String>();
-
-    public void decBraceCount(int charPos) {
-        if (braceStack.isEmpty()) {
-            ErrorPrint("attempt to decrement braceCount when already 0 : braceHist=" + this.printBraceHist(","));
-            return;
-        }
-        FileLocation fl = braceStack.pop();
-        if (fl.fileName.compareTo(cur_file_name) != 0) {
-            ErrorPrint("matching brace in a different file: " + fl.fileName + " != " + cur_file_name + " braceStack=" + this.printBraceStack(",") + " braceHist=" + this.printBraceHist(","));
-        }
-        braceHist.add("dec @ " + cur_file_name + ":" + cur_file_line + "(" + charPos + ")count="+getBraceCount());
-    }
-
-    public void clearBraceCount(int _charPos) {
-        if (getBraceCount() != 0) {
-            ErrorPrint("clearing braceCount when not zero : braceStack=" + this.printBraceStack(",") + " braceHist=" + this.printBraceHist(","));
-        }
-        while (getBraceCount() > 0) {
-            decBraceCount(_charPos);
-        }
-        braceHist = new LinkedList<String>();
-    }
-
-    public void incBraceCount(int _charPos) {
-        braceStack.push(new FileLocation(cur_file_name, cur_file_line, _charPos));
-        braceHist.add("inc @ " + cur_file_name + ":" + cur_file_line + "(" + _charPos + ")count="+getBraceCount());
-    }
-    
-    //int paren_count = 0;
+    int paren_count = 0;
     int paren_index = 0;
-    //int brace_count = 0;
+    int brace_count = 0;
     int brace_index = 0;
     boolean inside_extern_c = false;
     boolean next_brace_starts_extern_c = false;
@@ -2378,7 +2228,6 @@ public class ModuleInfo implements ModuleInfoInterface {
     // @SuppressWarnings("unchecked")
     private int included_file_depth = 0;
     private static LinkedList<String> excludedIncludePatterns = null;
-    private static LinkedList<String> excludedOutputIncludePatterns = null;
 
     private static void initExcludedIncludePatterns() {
         if (null == excludedIncludePatterns) {
@@ -2423,47 +2272,15 @@ public class ModuleInfo implements ModuleInfoInterface {
             excludedIncludePatterns.add("posemath.*");
             excludedIncludePatterns.add("rpc.*");
             excludedIncludePatterns.add(".*Lib.h");
-            excludedIncludePatterns.add("vector");
         }
     }
 
     public static void addExcludedIncludePattern(String p) {
-        if(debug_on) {
-            System.out.println("addExcludedIncludePattern:  " + p);
-        }
+        System.out.println("addExcludedIncludePattern:  " + p);
         initExcludedIncludePatterns();
-        if(excludedIncludePatterns.contains(p)) {
-            return;
-        }
         excludedIncludePatterns.add(p);
     }
 
-    public static boolean checkExcludedOutputIncludePattern(String h) {
-        if(null == excludedOutputIncludePatterns) {
-            return false;
-        }
-        for(int i = 0; i < excludedOutputIncludePatterns.size(); i++) {
-            String p = excludedOutputIncludePatterns.get(i);
-            if(h.matches(p) || p.compareTo(h) == 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public static void addExcludedOutputIncludePattern(String p) {
-        if(debug_on) {
-            System.out.println("addExcludedOutputIncludePattern:  " + p);
-        }
-        if (null == excludedOutputIncludePatterns) {
-            excludedOutputIncludePatterns = new LinkedList<String>();
-        }
-        if(excludedOutputIncludePatterns.contains(p)) {
-            return;
-        }
-        excludedOutputIncludePatterns.add(p);
-    }
-    
     public void CheckIncludedFile(String include_file) {
         try {
             initExcludedIncludePatterns();
@@ -2560,7 +2377,7 @@ public class ModuleInfo implements ModuleInfoInterface {
 //	    cur_file_name=include_file;
             included_file_depth++;
             try {
-                LoadPredefinedTypeFile(include_file,orig_file,orig_line);
+                LoadPredefinedTypeFile(include_file);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -2997,7 +2814,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                 } else if (commentString.indexOf("generate_all_enum_symbol_lookups=false") >= 0) {
                     CodeGenCommon.set_generate_all_enum_symbol_lookups(false);
                 }
-
+                
                 if (commentString.indexOf("add_set_header=true") >= 0) {
                     CodeGenCommon.set_add_set_header(true);
                 } else if (commentString.indexOf("add_set_header=false") >= 0) {
@@ -3095,30 +2912,14 @@ public class ModuleInfo implements ModuleInfoInterface {
                     DebugPrint("parseString = " + parseString);
                 }
             }
-            final String attr_string = "__attribute__((";
-            int att_start_index = parseString.indexOf(attr_string);
-            if (att_start_index >= 0) {
-                int pcount = 2;
-                int att_end_index = att_start_index + attr_string.length();
-                for( ; att_end_index < parseString.length(); att_end_index++) {
-                    char c = parseString.charAt(att_end_index);
-                    if(c == '(') {
-                        pcount++;
-                        continue;
-                    }
-                    if(c == ')') {
-                        pcount--;
-                        if(pcount == 0) {
-                            break;
-                        }
-                    }
-                }
-                if (att_end_index > att_start_index) {
-                    replacedValues.add(cur_file_line+":"+cur_file_line + " "+ parseString.substring(att_start_index,att_end_index) +" replaced with ");
-                    if (att_end_index < parseString.length() - 2) {
-                        parseString = parseString.substring(0, att_start_index) + parseString.substring(att_end_index+1);
+            int att_start_index = parseString.indexOf("__attribute__((");
+            if(att_start_index >= 0) {
+                int att_end_index = parseString.indexOf("))", att_start_index);
+                if(att_end_index > att_start_index) {
+                    if(att_end_index < parseString.length()-3) {
+                            parseString = parseString.substring(0,att_start_index) + parseString.substring(att_end_index+2);
                     } else {
-                        parseString = parseString.substring(0, att_start_index);
+                            parseString = parseString.substring(0,att_start_index);
                     }
                 }
             }
@@ -3152,13 +2953,10 @@ public class ModuleInfo implements ModuleInfoInterface {
     public static boolean codegen_generate_format_only = false;
     // @SuppressWarnings("unchecked")
 
-    private boolean HandleDefines(URL_and_FileLoader file_loader) throws Exception {
+    private boolean HandleDefines() throws Exception {
         try {
             if (parseString.startsWith("#define") && parseString.length() > 7) {
                 String temp = parseString.substring(7);
-                while(parseString.trim().endsWith("\\")) {
-                    parseString += file_loader.readLine();
-                }
                 if (null == temp) {
                     return false;
                 }
@@ -3484,9 +3282,9 @@ public class ModuleInfo implements ModuleInfoInterface {
         startingParseString = "";
         line = 0;
         cur_file_line = line;
-        clearParenCount(0);
+        paren_count = 0;
         paren_index = 0;
-        clearBraceCount(0);
+        brace_count = 0;
         brace_index = 0;
         is_cmd_msg = false;
         is_stat_msg = false;
@@ -3545,7 +3343,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                     }
                     if (typedef
                             && !this.nextBraceStartsStruct
-                            && this.getBraceCount() < 1
+                            && brace_count < 1
                             && currentType != null
                             && currentType.Name != null
                             && currentType.Name.length() > 1) {
@@ -3595,7 +3393,6 @@ public class ModuleInfo implements ModuleInfoInterface {
                                             if (debug_on) {
                                                 DebugPrint("infoToken = " + infoToken + " replaced by DefinedValue =" + dv.value);
                                             }
-                                            
                                             infoToken = dv.value;
                                         }
                                     }
@@ -3696,12 +3493,6 @@ public class ModuleInfo implements ModuleInfoInterface {
                     unboundedInfo = null;
                     currentAttributeInfo = null;
                     startingParseString = parseString;
-//                    if(cur_file_line > 365) {
-//                        System.out.println("startingParseString = " + startingParseString);
-//                    }
-                    if(replacedValues == null || replacedValues.size() != 0) {
-                        replacedValues = new LinkedList<String>();
-                    }
                     if (!HandlePreProcessing()) {
                         if (debug_on) {
                             if (iflevel != trueIfLevel) {
@@ -3734,9 +3525,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                         if (interrupt_loading) {
                             throw new Exception("interrupt_loading=true\n");
                         }
-                        this.incParenCount(paren_index);
+                        paren_count++;
                         if (debug_on) {
-                            DebugPrint("paren_count = " + this.getParenCount());
+                            DebugPrint("paren_count = " + paren_count);
                         }
                     }
                     paren_index = -1;
@@ -3749,13 +3540,13 @@ public class ModuleInfo implements ModuleInfoInterface {
                         if (interrupt_loading) {
                             throw new Exception("interrupt_loading=true\n");
                         }
-                        this.decParenCount(paren_index);
+                        paren_count--;
                         if (debug_on) {
-                            DebugPrint("paren_count = " + this.getParenCount());
+                            DebugPrint("paren_count = " + paren_count);
                         }
                     }
 
-                    while (this.getParenCount() != 0) {
+                    while (paren_count != 0) {
                         parseString = file_loader.readLine();
                         line++;
                         cur_file_line = line;
@@ -3815,9 +3606,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                             if (interrupt_loading) {
                                 throw new Exception("interrupt_loading=true\n");
                             }
-                            this.incParenCount(paren_index);
+                            paren_count++;
                             if (debug_on) {
-                                DebugPrint("paren_count = " + this.getParenCount());
+                                DebugPrint("paren_count = " + paren_count);
                             }
                         }
                         paren_index = -1;
@@ -3830,9 +3621,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                             if (interrupt_loading) {
                                 throw new Exception("interrupt_loading=true\n");
                             }
-                            this.decParenCount(paren_index);
+                            paren_count--;
                             if (debug_on) {
-                                DebugPrint("paren_count = " + this.getParenCount());
+                                DebugPrint("paren_count = " + paren_count);
                             }
                         }
                     }
@@ -3865,7 +3656,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                 //DebugPrint2("combined_line="+combined_line);
                                 if (null != tok3
                                         && tok3.startsWith("{")) {
-                                    this.incBraceCount(combined_line.indexOf('{'));
+
                                     // if(combined_line.matches("[ \t\r\n]*extern[ \t\r\n]*\"C\"[ \t\r\n]*\\{.*")) {}
                                     inside_extern_c = true;
                                     next_brace_starts_extern_c = false;
@@ -3906,8 +3697,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                         if (word.equals("const")) {
                             int eqindex = parseString.indexOf('=');
                             int scolonindex = parseString.indexOf(';');
-                            if (eqindex > 0 && scolonindex > eqindex + 1 && this.getBraceCount() == 0
-                                    && this.getParenCount() == 0 && eqindex < parseString.length() - 1
+                            if (eqindex > 0 && scolonindex > eqindex + 1 && brace_count == 0
+                                    && paren_count == 0 && eqindex < parseString.length() - 1
                                     && parseString.charAt(eqindex - 1) != '<'
                                     && parseString.charAt(eqindex - 1) != '>'
                                     && parseString.charAt(eqindex - 1) != '-'
@@ -3917,8 +3708,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     && parseString.charAt(eqindex - 1) != '!'
                                     && parseString.charAt(eqindex + 1) != '=') {
                                 String preEqString = parseString.substring(0, eqindex);
-                                StringTokenizer preEqTokenizer
-                                        = new StringTokenizer(preEqString, "\r\n \t()=");
+                                StringTokenizer preEqTokenizer =
+                                        new StringTokenizer(preEqString, "\r\n \t()=");
                                 String last_token = null;
                                 while (preEqTokenizer.hasMoreTokens()) {
                                     last_token = preEqTokenizer.nextToken();
@@ -3956,8 +3747,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                         int paren2index = parseString.indexOf(')', paren1index);
                         if (paren1index > 0 && paren2index > paren1index + 1) {
                             String args = parseString.substring(paren1index + 1, paren2index);
-                            StringTokenizer argTokenizer
-                                    = new StringTokenizer(args, ",");
+                            StringTokenizer argTokenizer =
+                                    new StringTokenizer(args, ",");
                             if (argTokenizer.hasMoreTokens()) {
                                 array_type = argTokenizer.nextToken();
                             }
@@ -3987,8 +3778,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                             int paren2index = parseString.indexOf(')', paren1index);
                             if (paren1index > 0 && paren2index > paren1index + 1) {
                                 String args = parseString.substring(paren1index + 1, paren2index);
-                                StringTokenizer argTokenizer
-                                        = new StringTokenizer(args, ",");
+                                StringTokenizer argTokenizer =
+                                        new StringTokenizer(args, ",");
                                 if (argTokenizer.hasMoreTokens()) {
                                     array_type = argTokenizer.nextToken();
                                 }
@@ -3996,7 +3787,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     array_name = RemoveStartingEndingSpace(argTokenizer.nextToken());
                                 }
                                 if (null != array_type && null != array_name) {
-                                    if (application_type == ModuleInfo.RCS_DIAGNOSTICS_APPLICATION_TYPE) {
+                                    if(application_type == ModuleInfo.RCS_DIAGNOSTICS_APPLICATION_TYPE) {
                                         parseString = "int " + array_name + "_length; NML_DYNAMIC_LENGTH_ARRAY " + array_type + " " + array_name + "[2147483648];";
                                         ndlaName = array_name;
                                         ndlaInfo = parseString;
@@ -4070,10 +3861,10 @@ public class ModuleInfo implements ModuleInfoInterface {
                             DebugPrint("parseString = " + parseString);
                         }
                     }
-                    if (typedef && !insideStruct && this.getBraceCount() == 0 && parseString.indexOf(';') > 0 && currentType != null && currentType.Name != null
+                    if (typedef && !insideStruct && brace_count == 0 && parseString.indexOf(';') > 0 && currentType != null && currentType.Name != null
                             && currentType.Name.length() > 0) {
                         typedef = false;
-                    } else if (typedef && !insideStruct && this.getBraceCount() == 0 && parseString.indexOf(';') > 0) {
+                    } else if (typedef && !insideStruct && brace_count == 0 && parseString.indexOf(';') > 0) {
                         String pre_semicolon_string = parseString.substring(0, parseString.indexOf(';'));
                         StringTokenizer spc_tokenizer = new StringTokenizer(pre_semicolon_string, " \t");
                         String last_token = spc_tokenizer.nextToken();
@@ -4130,17 +3921,17 @@ public class ModuleInfo implements ModuleInfoInterface {
                         }
                     }
                     if (debug_on) {
-                        DebugPrint("typedef=" + typedef + ",insideStruct=" + insideStruct + ",brace_count=" + getBraceCount() + ",parseString=" + parseString + ",currentType.Name=" + currentType.Name);
+                        DebugPrint("typedef=" + typedef + ",insideStruct=" + insideStruct + ",brace_count=" + brace_count + ",parseString=" + parseString + ",currentType.Name=" + currentType.Name);
                     }
 
-                    if (!HandleDefines(file_loader)) {
+                    if (!HandleDefines()) {
                         continue;
                     }
 
                     if (parseString.regionMatches(false, 0, "#", 0, 1)) {
                         continue;
                     }
-                    if (parseString.startsWith("enum") && getBraceCount() < 1 && !insideStruct) {
+                    if (parseString.startsWith("enum") && brace_count < 1 && !insideStruct) {
                         default_enum_val = 0;
                         structenum_on_this_line = true;
                         if (!typedef) {
@@ -4202,7 +3993,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                             DebugPrint("current_enum.Name=" + current_enum.Name);
                         }
                     }
-                    if (parseString.startsWith("struct") && getBraceCount() < 1 && !insideStruct) {
+                    if (parseString.startsWith("struct") && brace_count < 1 && !insideStruct) {
                         nextBraceStartsEnum = false;
                         nextBraceStartsUnion = false;
                         nextBraceStartsStruct = true;
@@ -4214,7 +4005,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                             DebugPrint("parseString = " + parseString);
                         }
                     }
-                    if (parseString.startsWith("class") && getBraceCount() < 1 && !insideStruct) {
+                    if (parseString.startsWith("class") && brace_count < 1 && !insideStruct) {
                         nextBraceStartsEnum = false;
                         nextBraceStartsUnion = false;
                         nextBraceStartsStruct = true;
@@ -4295,7 +4086,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                             DebugPrint("nextBraceStartsNameSpace=" + nextBraceStartsNameSpace);
                             DebugPrint("parseString=" + parseString);
                             DebugPrint("brace_index=" + brace_index);
-                            DebugPrint("brace_count=" + getBraceCount());
+                            DebugPrint("brace_count=" + brace_count);
                             DebugPrint("currentNameSpace=" + currentNameSpace);
                         }
 
@@ -4304,7 +4095,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                     while (-1 != (brace_index = parseString.indexOf('{', brace_index + 1))) {
                         if (debug_on && brace_index >= 0) {
                             DebugPrint("brace_index=" + brace_index);
-                            DebugPrint("brace_count=" + getBraceCount());
+                            DebugPrint("brace_count=" + brace_count);
                         }
                         brace_on_this_line = true;
                         if (Thread.interrupted()) {
@@ -4314,9 +4105,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                         if (interrupt_loading) {
                             throw new Exception("interrupt_loading=true\n");
                         }
-                        this.incBraceCount(brace_index);
+                        brace_count++;
                         if (debug_on) {
-                            DebugPrint("brace_count = " + getBraceCount());
+                            DebugPrint("brace_count = " + brace_count);
                         }
                     }
                     if (!brace_on_this_line
@@ -4324,14 +4115,14 @@ public class ModuleInfo implements ModuleInfoInterface {
                             && parseString.indexOf(';') > 0) {
                         next_brace_starts_extern_c = false;
                     }
-                    if (getBraceCount() == 1
+                    if (brace_count == 1
                             && next_brace_starts_extern_c) {
                         next_brace_starts_extern_c = false;
                         inside_extern_c = true;
-                        clearBraceCount(0);
+                        brace_count = 0;
                         continue;
                     }
-                    if (getBraceCount() > 0
+                    if (brace_count > 0
                             && nextBraceStartsNameSpace) {
                         nextBraceStartsNameSpace = false;
                         insideNameSpace = true;
@@ -4347,9 +4138,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                         if (interrupt_loading) {
                             throw new Exception("interrupt_loading=true\n");
                         }
-                        this.decBraceCount(brace_index);
-                        if (getBraceCount() == -1 && insideNameSpace) {
-                            clearBraceCount(0);
+                        brace_count--;
+                        if (brace_count == -1 && insideNameSpace) {
+                            brace_count = 0;
                             currentNameSpace = "";
                             insideNameSpace = false;
                             if (debug_on) {
@@ -4357,7 +4148,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                 DebugPrint("nextBraceStartsNameSpace=" + nextBraceStartsNameSpace);
                                 DebugPrint("parseString=" + parseString);
                                 DebugPrint("brace_index=" + brace_index);
-                                DebugPrint("brace_count=" + getBraceCount());
+                                DebugPrint("brace_count=" + brace_count);
                                 DebugPrint("currentNameSpace=" + currentNameSpace);
                             }
                         }
@@ -4369,21 +4160,21 @@ public class ModuleInfo implements ModuleInfoInterface {
                             }
                             lastInsideNameSpace = insideNameSpace;
                             lastNextBraceStartsNameSpace = nextBraceStartsNameSpace;
-                            DebugPrint("brace_count = " + getBraceCount());
+                            DebugPrint("brace_count = " + brace_count);
                         }
-                        if (getBraceCount() < 0) {
+                        if (brace_count < 0) {
                             if (inside_extern_c) {
                                 inside_extern_c = false;
                                 if (debug_on) {
                                     DebugPrint("inside_extern_c = " + inside_extern_c);
                                 }
                             } else {
-                                ErrorPrint(file_loader.name + ":" + line + ":  WARNING negative brace count(" + getBraceCount() + ").");
+                                ErrorPrint(file_loader.name + ":" + line + ":  WARNING negative brace count(" + brace_count + ").");
                                 if (debug_on) {
                                     DebugPrint("brace_count set to zero to avoid negative brace_count.");
                                 }
                             }
-                            clearBraceCount(0);
+                            brace_count = 0;
                         }
                     }
 
@@ -4394,7 +4185,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                     }
 
                     if (!insideEnum && !insideStruct && !typedef
-                            && (getBraceCount() < 1
+                            && (brace_count < 1
                             || (brace_on_this_line && structenum_on_this_line))) {
                         String pre_brace_line = parseString;
                         if (brace_on_this_line) {
@@ -4521,8 +4312,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                                         currentType.UnqualifiedDerivedFrom = currentType.DerivedFrom;
                                         int doublecolonindex = currentType.UnqualifiedDerivedFrom.lastIndexOf("::");
                                         if (doublecolonindex > 0) {
-                                            currentType.UnqualifiedDerivedFrom
-                                                    = currentType.UnqualifiedDerivedFrom.substring(doublecolonindex + 2);
+                                            currentType.UnqualifiedDerivedFrom =
+                                                    currentType.UnqualifiedDerivedFrom.substring(doublecolonindex + 2);
                                         }
                                         if (debug_on) {
                                             DebugPrint(currentType.Name + " derived from " + currentType.DerivedFrom);
@@ -4724,9 +4515,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                     }
                     if (insideEnum) {
                         if (debug_on) {
-                            DebugPrint("insideEnum=" + insideEnum + ",brace_count=" + getBraceCount() + ",brace_end_index=" + brace_end_index + ",typedef=" + typedef);
+                            DebugPrint("insideEnum=" + insideEnum + ",brace_count=" + brace_count + ",brace_end_index=" + brace_end_index + ",typedef=" + typedef);
                         }
-                        if (getBraceCount() < 1
+                        if (brace_count < 1
                                 && ((brace_end_index >= 0 && !typedef) || (typedef && parseString.indexOf(';') >= 0))) {
                             insideEnum = false;
                             if (debug_on) {
@@ -4912,7 +4703,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                         if (debug_on) {
                             DebugPrint("insideStruct");
                         }
-                        if ((brace_end_index >= 0 || typedef) && getBraceCount() < 1) {
+                        if ((brace_end_index >= 0 || typedef) && brace_count < 1) {
                             if (debug_on) {
                                 DebugPrint("insideStruct=" + insideStruct);
                             }
@@ -5205,7 +4996,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                         }
                                         if (parseString.indexOf('(') > 0
                                                 && parseString.indexOf(')') > 0) {
-                                            while (getBraceCount() > 1 || parseString.indexOf(';') < 0) {
+                                            while (brace_count > 1 || parseString.indexOf(';') < 0) {
                                                 String line_to_add = file_loader.readLine();
                                                 line++;
                                                 cur_file_line = line;
@@ -5254,9 +5045,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                                                     if (interrupt_loading) {
                                                         throw new Exception("interrupt_loading=true\n");
                                                     }
-                                                    this.incBraceCount(brace_index);
+                                                    brace_count++;
                                                     if (debug_on) {
-                                                        DebugPrint("brace_count = " + getBraceCount());
+                                                        DebugPrint("brace_count = " + brace_count);
                                                     }
                                                 }
                                                 brace_index = -1;
@@ -5269,7 +5060,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                                     if (interrupt_loading) {
                                                         throw new Exception("interrupt_loading=true\n");
                                                     }
-                                                    this.decBraceCount(brace_index);
+                                                    brace_count--;
                                                 }
                                                 parseString = origParseString + line_to_add;
                                             }
@@ -5332,26 +5123,26 @@ public class ModuleInfo implements ModuleInfoInterface {
                             }
                             continue;
                         }
-                        if (this.getParenCount() > 0) {
+                        if (paren_count > 0) {
                             continue;
                         }
-                        if (this.getParenCount() < 0) {
-                            ErrorPrint("paren_count = " + this.getParenCount());
-                            this.clearParenCount(0);
+                        if (paren_count < 0) {
+                            ErrorPrint("paren_count = " + paren_count);
+                            paren_count = 0;
                         }
-                        if (getBraceCount() > 1) {
+                        if (brace_count > 1) {
                             continue;
                         }
-                        if (getBraceCount() < 0) {
+                        if (brace_count < 0) {
                             if (inside_extern_c) {
                                 inside_extern_c = false;
                                 if (debug_on) {
                                     DebugPrint("inside_extern_c = " + inside_extern_c);
                                 }
                             } else {
-                                ErrorPrint("brace_count = " + getBraceCount());
+                                ErrorPrint("brace_count = " + brace_count);
                             }
-                            this.clearBraceCount(0);
+                            brace_count = 0;
                         }
                         if (-1 != parseString.indexOf(':')) {
                             continue;
@@ -5496,13 +5287,13 @@ public class ModuleInfo implements ModuleInfoInterface {
                 e.printStackTrace();
             }
         } finally {
-            if (getBraceCount() != 0) {
-                ErrorPrint("End of " + file_loader.name + " reached with non matching braces. brace_count=" + getBraceCount());
-                System.err.println("currentType=" + currentType);
+            if(brace_count != 0) {
+                ErrorPrint("End of "+file_loader.name +" reached with non matching braces. brace_count="+brace_count);
+                System.err.println("currentType="+currentType);
             }
-            if (this.getParenCount() != 0) {
-                ErrorPrint("End of " + file_loader.name + " reached with non matching parenthases. paren_count=" + this.getParenCount() + " : parenStack = " + this.printParenStack(",") + " parenHist=" + this.printParenHist(","));
-                System.err.println("currentType=" + currentType);
+            if(paren_count != 0) {
+                ErrorPrint("End of "+file_loader.name +" reached with non matching parenthases. paren_count="+paren_count);
+                System.err.println("currentType="+currentType);
             }
             if (null != file_loader) {
                 file_loader.close();
@@ -5570,7 +5361,7 @@ public class ModuleInfo implements ModuleInfoInterface {
     }
     // @SuppressWarnings("unchecked")
 
-    public int LoadPredefinedTypeFile(String type_file_string, String orig_file, int orig_line) {
+    public int LoadPredefinedTypeFile(String type_file_string) {
         String file_to_load = null;
         URL_and_FileLoader typeFileLoader = null;
         try {
@@ -5629,11 +5420,9 @@ public class ModuleInfo implements ModuleInfoInterface {
             this.lhui_part = cur_file_line;
             this.lhui_update();
             if (!typeFileLoader.TryNameSucceeded) {
-                if (debug_on) {
+                if(debug_on) {
                     Thread.dumpStack();
                 }
-                cur_file_line = orig_line;
-                cur_file_name = orig_file;
                 ErrorPrint("Can't open file \"" + type_file_string + "\".");
                 ErrorPrint("previous_url_loaded=" + previous_url_loaded);
                 ErrorPrint("URL_and_FileLoader.SearchPath = " + URL_and_FileLoader.get_SearchPath());
@@ -5796,7 +5585,7 @@ public class ModuleInfo implements ModuleInfoInterface {
         for (i = 0; i < num_type_files; i++) {
             try {
                 type_file_string = (String) predefined_type_files.elementAt(i);
-                LoadPredefinedTypeFile(type_file_string,cur_file_name,cur_file_line);
+                LoadPredefinedTypeFile(type_file_string);
             } catch (Exception e) {
                 ErrorPrint("Error parsing predefined type file" + type_file_string);
                 e.printStackTrace();
@@ -5899,8 +5688,8 @@ public class ModuleInfo implements ModuleInfoInterface {
         try {
             if (debug_on) {
                 /*
-                 DebugPrint(Thread.currentThread());
-                 new Throwable().printStackTrace(System.out);; */
+                DebugPrint(Thread.currentThread());
+                new Throwable().printStackTrace(System.out);; */
                 DebugPrint("ModuleInfo.LoadInfo(" + new_cmdsTypeFile + ", " + new_statsTypeFile + ") : Name=" + Name);
             }
             if (null != cmdsTypeFile) {
@@ -5998,7 +5787,7 @@ public class ModuleInfo implements ModuleInfoInterface {
         try {
             if (debug_on) {
                 /*DebugPrint(Thread.currentThread());
-                 new Throwable().printStackTrace(System.out);; */
+                new Throwable().printStackTrace(System.out);; */
                 DebugPrint("ModuleInfo.Name = " + Name);
                 DebugPrint("ModuleInfo.LoadInfo() : Info = ");
                 DebugPrint(Info);
@@ -6527,7 +6316,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                         valueString = valueString.substring(indexQuoteBegin + 1, indexQuoteEnd);
                     }
                     String inputs[] = valueString.split("[, \t]+");
-                    for (String input : inputs) {
+                    for(String input : inputs) {
                         AddAuxInput(input);
                     }
                     continue;
@@ -6554,7 +6343,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                         valueString = valueString.substring(indexQuoteBegin + 1, indexQuoteEnd);
                     }
                     String outputs[] = valueString.split("[, \t]+");
-                    for (String output : outputs) {
+                    for(String output : outputs) {
                         AddAuxOutput(output);
                     }
                     continue;
@@ -6851,6 +6640,44 @@ public class ModuleInfo implements ModuleInfoInterface {
         }
         return 0;
     }
+
+//    public boolean login(String name, String passwd) {
+//        try {
+//            if (!is_connected) {
+//                if (connect() < 0) {
+//                    return false;
+//                }
+//            }
+//            if (!no_cmd) {
+//                if (!m_cmd_read_Connection.loginNoThrow(name, passwd)) {
+//                    return false;
+//                }
+//                if (double_buffer_nml
+//                        && !m_cmd_write_Connection.loginNoThrow(name, passwd)) {
+//                    return false;
+//                }
+//            }
+//            if (!no_stat) {
+//                if (double_buffer_nml
+//                        && !m_stat_write_Connection.loginNoThrow(name, passwd)) {
+//                    return false;
+//                }
+//                if (!m_stat_read_Connection.loginNoThrow(name, passwd)) {
+//                    return false;
+//                }
+//            }
+//            if (!no_errlog && null != m_errlogConnection) {
+//                m_errlogConnection.loginNoThrow(name, passwd);
+//            }
+//            return true;
+//        } catch (Throwable e) {
+//            if (null != e.getMessage()) {
+//                diagapplet.utils.DiagError.println("\r\n" + e.getMessage() + "\r\n");
+//            }
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
     public int disconnect() {
         new_data_count = 0;

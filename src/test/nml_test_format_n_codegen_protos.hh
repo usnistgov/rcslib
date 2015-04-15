@@ -44,7 +44,6 @@ extern void nmlupdate(CMS *cms, struct fwLaserStruct *x);
 extern void nmlupdate(CMS *cms, teststruct *x);
 extern void initialize_teststruct(teststruct *x);
 extern void nmlupdate(CMS *cms, struct c_struct *x);
-extern void nmlupdate(CMS *cms, PmCartesian *x);
 extern void nmlupdate(CMS *cms, c_struct2 *x);
 extern void initialize_c_struct2(c_struct2 *x);
 extern void nmlupdate(CMS *cms, fwLaserStruct *x);

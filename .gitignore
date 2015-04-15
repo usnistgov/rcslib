@@ -1,5 +1,6 @@
 # rcslib specific ignores
-.bin.*
+.bin*
+bin[.][0-9]*
 .lastbuild
 .lastinstall
 .multiplatbuilds/

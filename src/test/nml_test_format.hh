@@ -161,9 +161,7 @@ typedef struct _teststruct {
   DECLARE_NML_DYNAMIC_LENGTH_ARRAY(double,dda, 2);
   float f_pi; //default=3.14159265
   char endtsbuf[16]; //default=endts
-  PmCartesian pm_cart_test;
-  PmCartesian pm_cart_test_array[4];
-
+  
 }teststruct;
 
 typedef struct _teststruct_td2 {

@@ -237,8 +237,6 @@ package nml_test_format_n_ada is
 			dda : Cms.Double_Array(1..2); -- NML_DYNAMIC_LENGTH_ARRAY -- 
 			f_pi : c_float;
 			endtsbuf : Char_Array(1..16);
-			pm_cart_test : PmCartesian;
-			pm_cart_test_array : PmCartesian_Array(1..4);
 		end record;
 
 	type teststruct_Access is access all teststruct;

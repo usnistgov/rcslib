@@ -28,7 +28,6 @@ void cms_PM_CARTESIAN_update(struct cms_c_struct *cms, nml_PM_CARTESIAN_c_t *x);
 void cms_TEST_MESSAGE_update(struct cms_c_struct *cms, nml_TEST_MESSAGE_c_t *x);
 void cms_c_struct_update(struct cms_c_struct *cms, nml_c_struct_c_t *x);
 void cms_c_struct2_update(struct cms_c_struct *cms, nml_c_struct2_c_t *x);
-void cms_PmCartesian_update(struct cms_c_struct *cms, nml_PmCartesian_c_t *x);
 
 #ifdef __cplusplus
 }
@@ -980,21 +979,6 @@ void cms_teststruct_update(struct cms_c_struct *cms, nml_teststruct_c_t *x)
 	cms_update_float(cms,"f_pi",&(x->f_pi));
 	cms_next_update_default(cms,"endts");
 	cms_update_char_array(cms,"endtsbuf",x->endtsbuf,16);
-	cms_begin_class_var(cms,"pm_cart_test");
-	cms_PmCartesian_update(cms, ( nml_PmCartesian_c_t *) &(x->pm_cart_test));
-	cms_end_class_var(cms,"pm_cart_test");
-
-	{
-		int i_pm_cart_test_array=0;
-
-		for(i_pm_cart_test_array = 0;i_pm_cart_test_array < 4 ;i_pm_cart_test_array++)
-		{
-			cms_begin_struct_array_elem(cms,"pm_cart_test_array",i_pm_cart_test_array);
-			cms_PmCartesian_update(cms,&(( x->pm_cart_test_array)[i_pm_cart_test_array]));
-			cms_end_struct_array_elem(cms,"pm_cart_test_array",i_pm_cart_test_array);
-		}
-	}
-
 
 	cms_end_class(cms,"teststruct",0);
 
