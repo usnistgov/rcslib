@@ -284,7 +284,7 @@ endif POSEMATH_FLAGS_SET
 #
 #else  !HAVE_RTL
 #
-INCLUDES= -I@srcdir@/src -I@srcdir@/src/os_intf -I@srcdir@/src/print -I@srcdir@/src/stg_clss -I@srcdir@/src/posemath -I@srcdir@/src/cms -I@srcdir@/src/node -I@srcdir@/last_config/
+AM_CPPFLAGS= -I@srcdir@/src -I@srcdir@/src/os_intf -I@srcdir@/src/print -I@srcdir@/src/stg_clss -I@srcdir@/src/posemath -I@srcdir@/src/cms -I@srcdir@/src/node -I@srcdir@/last_config/
 #
 #endif !HAVE_RTL
 #endif !HAVE_RTAI
@@ -414,22 +414,22 @@ nml_test_server_CFLAGS=@TEST_CFLAGS@
 endif TEST_FLAGS_SET
 
 check_SCRIPTS=\
-	etc/check_testnml_oemem.sh \
-	etc/check_testnml_filemem.sh \
-	etc/check_testnml_shmem.sh \
-	etc/check_testnml_stcpdisp.sh \
-	etc/check_testnml_stcpxml.sh \
-	etc/check_testnml_tcpraw.sh \
-	etc/check_testnml_tcpxdr.sh \
-	etc/check_testnml_tcppacked.sh \
-	etc/check_testnml_tcpxml.sh \
-	etc/check_testnml_extras.sh \
-	etc/check_testnml_udppacked.sh \
-	etc/check_testnml_udpxdr.sh \
-	etc/check_testnml_gdrs_im_packed.sh \
-	etc/check_testnml_gdrs_im_xdr.sh \
-	etc/check_testnml_nmlcfgsvr.sh \
-	etc/check_testnml_locmem_tcp_packed.sh
+	etc/check_testnml_oemem.sh.test \
+	etc/check_testnml_filemem.sh.test \
+	etc/check_testnml_shmem.sh.test \
+	etc/check_testnml_stcpdisp.sh.test \
+	etc/check_testnml_stcpxml.sh.test \
+	etc/check_testnml_tcpraw.sh.test \
+	etc/check_testnml_tcpxdr.sh.test \
+	etc/check_testnml_tcppacked.sh.test \
+	etc/check_testnml_tcpxml.sh.test \
+	etc/check_testnml_extras.sh.test \
+	etc/check_testnml_udppacked.sh.test \
+	etc/check_testnml_udpxdr.sh.test \
+	etc/check_testnml_gdrs_im_packed.sh.test \
+	etc/check_testnml_gdrs_im_xdr.sh.test \
+	etc/check_testnml_nmlcfgsvr.sh.test \
+	etc/check_testnml_locmem_tcp_packed.sh.test
 
 
 TESTS= @CONFIGURED_TESTS@
@@ -1220,23 +1220,23 @@ EXTRA_DIST= \
 	etc/attach_screen.sh \
 	etc/cc_to_cpp.sh \
 	etc/check_core_files.sh \
-	etc/check_testnml_extras.sh \
-	etc/check_testnml_filemem.sh \
-	etc/check_testnml_gdrs_im_packed.sh \
-	etc/check_testnml_gdrs_im_xdr.sh \
-	etc/check_testnml_locmem_tcp_packed.sh \
-	etc/check_testnml_nmlcfgsvr.sh \
-	etc/check_testnml_oemem.sh \
-	etc/check_testnml_shmem.sh \
-	etc/check_testnml_stcpdisp.sh \
-	etc/check_testnml_stcpxml.sh \
-	etc/check_testnml_tcppacked.sh \
-	etc/check_testnml_tcpraw.sh \
-	etc/check_testnml_tcpxdr.sh \
-	etc/check_testnml_tcpxml.sh \
-	etc/check_testnml_udppacked.sh \
-	etc/check_testnml_udpxdr.sh \
-	etc/check_testnml_globmem.sh \
+	etc/check_testnml_extras.sh.test \
+	etc/check_testnml_filemem.sh.test \
+	etc/check_testnml_gdrs_im_packed.sh.test \
+	etc/check_testnml_gdrs_im_xdr.sh.test \
+	etc/check_testnml_locmem_tcp_packed.sh.test \
+	etc/check_testnml_nmlcfgsvr.sh.test \
+	etc/check_testnml_oemem.sh.test \
+	etc/check_testnml_shmem.sh.test \
+	etc/check_testnml_stcpdisp.sh.test \
+	etc/check_testnml_stcpxml.sh.test \
+	etc/check_testnml_tcppacked.sh.test \
+	etc/check_testnml_tcpraw.sh.test \
+	etc/check_testnml_tcpxdr.sh.test \
+	etc/check_testnml_tcpxml.sh.test \
+	etc/check_testnml_udppacked.sh.test \
+	etc/check_testnml_udpxdr.sh.test \
+	etc/check_testnml_globmem.sh.test \
 	etc/clean \
 	etc/CodeGen \
 	etc/splitdebug.sh \

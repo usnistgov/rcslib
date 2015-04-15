@@ -4,7 +4,7 @@
 
 # Process this file with autoconf to produce a configure script.
 AC_INIT(Real-Time Control System Library, 2014.05.14, shackle@nist.gov, rcslib)
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_SRCDIR([src/rcs.hh])
 AC_CONFIG_HEADERS([rcs_config.h])
 AM_MAINTAINER_MODE
@@ -1240,7 +1240,8 @@ if test "x${enable_nmlcfgsvr}" = "xyes" ; then
    CONFIGURED_PROGRAMS="${CONFIGURED_PROGRAMS} "'nmlcfgsvr$(EXEEXT)'
    EXTRA_CHECK_PROGRAMS="${EXTRA_CHECK_PROGRAMS} "nml_test_nmlset'$(EXEEXT)'
    ## AC_MSG_NOTICE([CONFIGURED_PROGRAMS=${CONFIGURED_PROGRAMS}])
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} nmlcfgsvr_clntcalls.lo nmlset.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/nmlcfgsvr_clntcalls.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/nmlset.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_NMLCFGSVR,1,[Define to 1 if nmlcfgsvr is enabled.])
    if test "x${enable_sokintrf}" != "xyes" ; then
@@ -1260,14 +1261,19 @@ if test "x${enable_oedm_xml2nmlh}" = "xyes" ; then
 fi
 
 if test "x${enable_filemem}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} filemem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/filemem.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_FILEMEM,1,[Define to 1 if filemem is enabled.])
    CONFIGURED_TESTS="${CONFIGURED_TESTS} \$(srcdir)/etc/check_testnml_filemem.sh"
 fi
 
 if test "x${enable_shmem}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} shmem.lo _shm.lo shm.lo sem.lo memsem.lo autokey.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/shmem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/os_intf/_shm.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/os_intf/shm.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/os_intf/sem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/memsem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/autokey.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_SHMEM,1,[Define to 1 if shmem is enabled.])
    CONFIGURED_TESTS="${CONFIGURED_TESTS} \$(srcdir)/etc/check_testnml_shmem.sh"
@@ -1278,7 +1284,7 @@ fi
 # testing on Linux. In production only SHMEM should likely be used on 
 # linux. 
 if test "x${enable_globmem}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} globmem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/cms/globmem.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_GLOBMEM,1,[Define to 1 if globmem is enabled.])
    #   CONFIGURED_TESTS="${CONFIGURED_TESTS} \$(srcdir)/etc/check_testnml_globmem.sh"
@@ -1287,33 +1293,45 @@ fi
 CONFIGURED_TESTS="${CONFIGURED_TESTS} \$(srcdir)/etc/check_testnml_extras.sh"
 
 if test "x${enable_posemath_in_rcslib}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} _posemath.lo mathprnt.lo sincos.lo posemath.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/posemath/_posemath.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/posemath/mathprnt.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/posemath/sincos.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/posemath/posemath.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
 fi
 
 if test "x${enable_nmlmod}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} nml_mod.lo cmd_msg.lo stat_msg.lo nml_oi.lo stat_msg_v2_n.lo timetracker_n.lo timetracker_c_n.lo timetracker.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/node/nml_mod.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/node/cmd_msg.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/node/stat_msg.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/node/nml_oi.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/node/stat_msg_v2_n.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/node/timetracker_n.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/node/timetracker_c_n.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/node/timetracker.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_NMLMOD,1,[Define to 1 if nmlmod is enabled.])
 fi
 
 
 if test "x${enable_inifile}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} inifile.lo _inifile.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/os_intf/inifile.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/os_intf/_inifile.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_INIFILE,1,[Define to 1 if inifile support in rcslib is enabled.])
 fi
 
 if test "x${enable_c_binding}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} nmlcms_c.lo posemath_c_n.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/nmlcms_c.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/posemath_c_n.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_C_BINDING,1,[Define to 1 if pure C binding support in rcslib is enabled.])
 fi
 
 if test "x${enable_http}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} httpnml.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/httpnml.lo"
    if test "x${enable_server}" = "xyes" ; then
-      RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} http_srv.lo"
+      RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/http_srv.lo"
    fi
    if test "x${enable_sokintrf}" != "xyes" ; then
       enable_sokintrf=yes
@@ -1328,14 +1346,16 @@ if test "x${enable_http}" = "xyes" ; then
 fi
 
 if test "x${enable_tty}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} ttymem.lo tty_srv.lo ttyintf.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/ttymem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/tty_srv.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/ttyintf.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_TTY,1,[Define to 1 if tty support in rcslib is enabled.])
    CONFIGURED_PROGRAMS="${CONFIGURED_PROGRAMS} "'ttytest$(EXEEXT)'
 fi
 
 if test "x${enable_locmem}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} locmem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/locmem.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_LOCMEM,1,[Define to 1 if locmem support in rcslib is enabled.])
    if test "x${enable_tcp}" = "xyes" -a "x${enable_packed}" = "xyes" ; then
@@ -1345,16 +1365,19 @@ fi
 
 
 if test "x${enable_phantom}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} phantom.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/phantom.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_PHANTOMMEM,1,[Define to 1 if phantommem support in rcslib is enabled.])
 fi
 
 
 if test "x${enable_stcp}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} stcpmem.lo sendline.lo recvline.lo stcpopts.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/stcpmem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/sendline.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/recvline.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/stcpopts.lo"
    if test "x${enable_server}" = "xyes" ; then
-      RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} stcpsvr.lo"
+      RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/stcpsvr.lo"
    fi
    if test "x${enable_sokintrf}" != "xyes" ; then
       enable_sokintrf=yes
@@ -1377,9 +1400,12 @@ fi
 if test "x${enable_tcp}" = "xyes" ; then
    CONFIGURED_PROGRAMS="${CONFIGURED_PROGRAMS} "'nmlGetRemoteTcpServerBufferList$(EXEEXT)'
    CONFIGURED_PROGRAMS="${CONFIGURED_PROGRAMS} "'nmlGetRemoteTcpServerBufferInfo$(EXEEXT)'
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} tcpmem.lo sendn.lo recvn.lo tcp_opts.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/tcpmem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/sendn.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/recvn.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/tcp_opts.lo"
    if test "x${enable_server}" = "xyes" ; then
-      RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} tcp_srv.lo"
+      RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/tcp_srv.lo"
    fi
    if test "x${enable_sokintrf}" != "xyes" ; then
       enable_sokintrf=yes
@@ -1401,9 +1427,12 @@ fi
 
 
 if test "x${enable_udp}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} udpmem.lo sendmsgt.lo recvmsgt.lo udp_opts.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/udpmem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/sendmsgt.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/recvmsgt.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/udp_opts.lo"
    if test "x${enable_server}" = "xyes" ; then
-      RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} udp_srv.lo"
+      RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/udp_srv.lo"
    fi
    if test "x${enable_sokintrf}" != "xyes" ; then
       enable_sokintrf=yes
@@ -1420,9 +1449,9 @@ fi
 
 
 if test "x${enable_gdrs_im}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} gdrs_im_clnt.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/gdrs_im_clnt.lo"
    if test "x${enable_server}" = "xyes" ; then
-      RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} gdrs_im_srv.lo"
+      RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/gdrs_im_srv.lo"
    fi
    if test "x${enable_sokintrf}" != "xyes" ; then
       enable_sokintrf=yes
@@ -1438,24 +1467,25 @@ if test "x${enable_gdrs_im}" = "xyes" ; then
 fi
 
 if test "x${enable_crypt}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} crypt2.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/crypt2.lo"
    AC_DEFINE(ENABLE_RCS_CRYPT2,1,[Define to 1 if crypt2 support in rcslib is enabled.])
 fi
 
 if test "x${enable_xml}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} cms_xml_up.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/cms_xml_up.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_XML,1,[Define to 1 if xml support in rcslib is enabled.])
 fi
 
 if test "x${enable_xdr}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} cms_xup.lo extxdrintf.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/cms_xup.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/extxdrintf.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_XDR,1,[Define to 1 if xdr support in rcslib is enabled.])
 fi
 
 if test "x${enable_packed}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} cms_pup.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/cms_pup.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_PACKED_UP,1,[Define to 1 if packed encoding support in rcslib is enabled.])
 
@@ -1473,20 +1503,21 @@ fi
 
 
 if test "x${enable_disp}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} cms_dup.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/cms_dup.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_DISP,1,[Define to 1 if disp support in rcslib is enabled.])
 fi
 
 if test "x${enable_diag}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} cmsdiag.lo nmldiag.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/cmsdiag.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/nmldiag.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_DIAG,1,[Define to 1 if diag support in rcslib is enabled.]) 
 fi
 
 
 if test "x${enable_print}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} rcs_prnt.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/print/rcs_prnt.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_PRNT,1,[Define to 1 if rcs_prnt support in rcslib is enabled.]) 
 else
@@ -1500,19 +1531,21 @@ if test "x${enable_debug_print}" != "xyes" ; then
 fi
 
 if test "x${enable_nmlqr}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} nmlqr.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/nmlqr.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_NMLQR,1,[Define to 1 if nmlqr support in rcslib is enabled.]) 
 fi
 
 if test "x${enable_cms_mrpq}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} cms_mrpq.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/cms_mrpq.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_CMS_MRPQ,1,[Define to 1 if nmlqr support in rcslib is enabled.]) 
 fi
 
 if test "x${enable_server}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} cms_srv.lo nml_srv.lo cmssvrp.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/cms_srv.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/nml_srv.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/cmssvrp.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_SERVER,1,[Define to 1 if server support in rcslib is enabled.]) 
    if test "x${enable_sokintrf}" != "xyes" ; then
@@ -1522,13 +1555,15 @@ if test "x${enable_server}" = "xyes" ; then
 fi
    
 if test "x${enable_sokintrf}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} sokintrf.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/sokintrf.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_SOKINTRF,1,[Define to 1 if sokintrf support in rcslib is enabled.]) 
 fi
 
 if test "x${enable_oe_intrf}" = "xyes" ; then
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} oemem.lo oemque.lo oedsto.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/oemem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/oemque.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/cms/oedsto.lo"
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
    AC_DEFINE(ENABLE_RCS_OE_INTRF,1,[Define to 1 if sokintrf support in rcslib is enabled.]) 
    CONFIGURED_TESTS="${CONFIGURED_TESTS} \$(srcdir)/etc/check_testnml_oemem.sh"
@@ -1920,39 +1955,6 @@ if test "x${check_for_windows_stuff}" = "xyes" ; then
 else
 # if test "x${check_for_windows_stuff}" = "xyes" ; then
 
-
-#if test "x${with_rtl_rtai}" = "xyes" ; then
-#
-#   AC_LINUX_KERNEL_DIR
-#
-#   AC_HAVE_RTLINUX
-#
-#   if test  "x${ac_cv_have_rtlinux}" = "xYES" -o "x${ac_cv_have_rtlinux}" = "xyes" -o "x${HAVE_RTL}" = "xYES" ; then
-#
-#      CONFIGURED_STATIC_LIBRARIES="${CONFIGURED_STATIC_LIBRARIES} librcsrtl.a";
-#      AC_MSG_NOTICE([CONFIGURED_STATIC_LIBRARIES : ${CONFIGURED_STATIC_LIBRARIES}]);
-#      if test "x${enable_rtlmem}" = "xyes" ; then
-#	 RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} rtlnml.lo	rtlmem.lo rtlinux_user_api_implement.lo"
-#	 AC_DEFINE(ENABLE_RCS_RTLMEM,1,[Define to 1 if rtlmem support in rcslib is enabled.])
-#      fi
-#   else
-#
-#      AC_HAVE_RTAI
-#      
-#      if test "x${ac_cv_have_rtai}" = "xYES" -o "x${ac_cv_have_rtai}" = "xyes" -o "x${HAVE_RTAI}" = "xYES"; then
-#      	 CONFIGURED_STATIC_LIBRARIES="${CONFIGURED_STATIC_LIBRARIES} librcsrtai.a";
-#	 AC_MSG_NOTICE([CONFIGURED_STATIC_LIBRARIES : ${CONFIGURED_STATIC_LIBRARIES}]);
-#	 if test "x${enable_rtlmem}" = "xyes" ; then
-#	    RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} rtlnml.lo	rtlmem.lo rtai_user_api_implement.lo"
-#	    RCSRTAILIB_EXTRA_OBJS="rtlnml.o rtai_kernel_api_implement.o"
-#	    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS=${RCSLIB_EXTRA_OBJS}])
-#	    AC_DEFINE(ENABLE_RCS_RTLMEM,1,[Define to 1 if rtlmem support in rcslib is enabled.])
-#	 fi
-#   fi
-#fi
-#fi
-
-
 # Checks for libraries.
 
 # Checks for header files.
@@ -2099,8 +2101,13 @@ if test "x${build_os}" = "xcygwin"  -a "x${enable_xdr}" = "xyes" ; then
    
    AC_MSG_NOTICE([CPPFLAGS : ${CPPFLAGS} ] )
 
-   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  xdr.lo xdr_arra.lo xdr_floa.lo xdr_mem.lo xdr_rec.lo xdr_refe.lo xdr_stdi.lo";
-
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_arra.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_floa.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_mem.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_rec.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_refe.lo"
+   RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_stdi.lo";
    AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS} ] )
 
 
@@ -2144,8 +2151,15 @@ elif test "x${enable_xdr}" = "xyes" ; then
 	  ac_cv_have_xdr_h=yes
 	  CPPFLAGS="${CPPFLAGS} -I${srcdir}/src/nt_xdr";
 	  ## AC_MSG_NOTICE([CPPFLAGS : ${CPPFLAGS}])
-	  RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  xdr.lo xdr_arra.lo xdr_floa.lo xdr_mem.lo xdr_rec.lo xdr_refe.lo xdr_stdi.lo";
-	  ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
+	  ##RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  xdr.lo xdr_arra.lo xdr_floa.lo xdr_mem.lo xdr_rec.lo xdr_refe.lo xdr_stdi.lo";
+	  RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr.lo"
+          RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_arra.lo"
+          RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_floa.lo"
+          RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_mem.lo"
+          RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_rec.lo"
+          RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_refe.lo"
+          RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS}  src/nt_xdr/xdr_stdi.lo";
+          ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
       fi
 
     
@@ -3491,9 +3505,9 @@ fi
 
 if test "x${enable_shmem}" = "xyes" ; then
    if test "x${windows_semaphores_available}" = "xyes" ; then
-         RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} win32_sem.lo"
+         RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/os_intf/win32_sem.lo"
    else
-         RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} unix_sem.lo"
+         RCSLIB_EXTRA_OBJS="${RCSLIB_EXTRA_OBJS} src/os_intf/unix_sem.lo"
    fi
    ## AC_MSG_NOTICE([RCSLIB_EXTRA_OBJS : ${RCSLIB_EXTRA_OBJS}])
 fi
