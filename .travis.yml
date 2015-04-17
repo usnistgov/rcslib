@@ -2,5 +2,5 @@ language: cpp
 compiler:
   - gcc
 # Change this to your needs
-script: ./configure && make
+script: ./configure && make && make check
 
