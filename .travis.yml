@@ -6,7 +6,5 @@ jdk:
   - oraclejdk8
 
 # Change this to your needs
-script:
-  - jdk_switcher use oraclejdk8
-  ( cd rcsjava_maven/rcslib && mvn -version && mvn test && mvn verify )
+script:( cd rcsjava_maven/rcslib && mvn -version && mvn test && mvn verify )
 
