@@ -1,22 +1,22 @@
 /* 
- The NIST RCS (Real-time Control Systems) 
- library is public domain software, however it is preferred
- that the following disclaimers be attached.
+The NIST RCS (Real-time Control Systems) 
+library is public domain software, however it is preferred
+that the following disclaimers be attached.
 
- Software Copywrite/Warranty Disclaimer
+Software Copywrite/Warranty Disclaimer
 
- This software was developed at the National Institute of Standards and
- Technology by employees of the Federal Government in the course of their
- official duties. Pursuant to title 17 Section 105 of the United States
- Code this software is not subject to copyright protection and is in the
- public domain. NIST Real-Time Control System software is an experimental
- system. NIST assumes no responsibility whatsoever for its use by other
- parties, and makes no guarantees, expressed or implied, about its
- quality, reliability, or any other characteristic. We would appreciate
- acknowledgement if the software is used. This software can be
- redistributed and/or modified freely provided that any derivative works
- bear some notice that they are derived from it, and any modified
- versions bear some notice that they have been modified.
+This software was developed at the National Institute of Standards and
+Technology by employees of the Federal Government in the course of their
+official duties. Pursuant to title 17 Section 105 of the United States
+Code this software is not subject to copyright protection and is in the
+public domain. NIST Real-Time Control System software is an experimental
+system. NIST assumes no responsibility whatsoever for its use by other
+parties, and makes no guarantees, expressed or implied, about its
+quality, reliability, or any other characteristic. We would appreciate
+acknowledgement if the software is used. This software can be
+redistributed and/or modified freely provided that any derivative works
+bear some notice that they are derived from it, and any modified
+versions bear some notice that they have been modified.
 
  */
 package diagapplet.CodeGen;
@@ -24,12 +24,10 @@ package diagapplet.CodeGen;
 import rcs.utils.URL_and_FileLoader;
 
 /**
- * The command line only version of the CodeGenerator and generally newer
- * preferred method of creating format/update functions. Uses fake interfaceses
- * GUI classes to eliminate dependancies on java.awt and javax.swing needed by
- * the older graphical tool. (CodeGen.java)
- *
- * @author Will Shackleford
+ * The command line only version of the CodeGenerator and generally newer preferred
+ * method of creating format/update functions. Uses fake interfaceses GUI classes to eliminate
+ * dependancies on java.awt and javax.swing needed by the older graphical tool. (CodeGen.java)
+ * @author Will Shackleford <shackle@nist.gov>
  */
 public class CodeGenCmdLine {
     //public static String []orig_args=null;
@@ -40,10 +38,8 @@ public class CodeGenCmdLine {
 
     /**
      * Main function, call with "--help" to see full list of possible arguments.
-     * or the name of a C++ header file to generate the default format and
-     * update functions.
-     *
-     * @param args command line arguments
+     * or the name of a C++ header file to generate the defualt format and update functions.
+     * @param args
      */
     public static void main(String args[]) {
         try {
@@ -55,40 +51,25 @@ public class CodeGenCmdLine {
                         CodeGenCommon.printHelp();
                     }
                 }
-                if (args[i].compareTo("-I") == 0 && i < args.length - 1) {
-                    if (args[i].length() < 3) {
-                        String new_dir = args[i + 1];
-                        URL_and_FileLoader.AddToSearchPath(new_dir);
-                        includePath += new_dir + ";";
-                        i++;
-                    } else {
-                        String new_dir = args[i].substring(2);
-                        URL_and_FileLoader.AddToSearchPath(new_dir);
-                        includePath += new_dir + ";";
-                    }
+                if (args[i].compareTo("-I") == 0 && i < args.length-2) {
+                    URL_and_FileLoader.AddToSearchPath(args[i].substring(2));
+                    includePath += args[i+1] + ";";
+                    i++;
                     continue;
-                } else if (args[i].startsWith("-I") && args[i].length() > 2) {
-                    String new_dir = args[i].substring(2);
-                    URL_and_FileLoader.AddToSearchPath(new_dir);
-                    includePath += new_dir + ";";
+                }
+                if (args[i].startsWith("-I") && i < args.length -1) {
+                    URL_and_FileLoader.AddToSearchPath(args[i].substring(2));
+                    includePath += args[i].substring(2) + ";";
                     continue;
                 }
 //                System.out.println("i = " + i);
 //                System.out.println("args[i] = " + args[i]);
-                if (args[i].startsWith("--ExcludeHeader=")) {
-                    ModuleInfo.addExcludedIncludePattern(args[i].substring(args[i].indexOf('=')+1));
+                if (args[i].compareTo("--Exclude") == 0 && i < args.length-1) {
+                    ModuleInfo.addExcludedIncludePattern(args[i+1]);
+                    i++;
                     continue;
                 }
 
-                if (args[i].startsWith("--ExcludeOutput=")) {
-                    ModuleInfo.addExcludedOutputIncludePattern(args[i].substring(args[i].indexOf('=')+1));
-                    continue;
-                }
-                
-                if (args[i].startsWith("--ExtraHeader=")) {
-                    ModuleInfo.AddExtraHeader(args[i].substring(args[i].indexOf('=')+1));
-                    continue;
-                }
                 if (args[i].startsWith("-o") && i < args.length - 1) {
                     i++;
                     CodeGenCommon.SetOutputFileName(args[i]);
@@ -124,6 +105,7 @@ public class CodeGenCmdLine {
             cgc.set_print_prompt(print_prompt);
 
             //orig_args = args;
+
             if (debug_on) {
                 System.out.println("cgc.GetParameters(" + args + ");");
             }

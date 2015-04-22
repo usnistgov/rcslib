@@ -49,7 +49,7 @@ import rcs.utils.StackTracePrinter;
  * functions, C,Java, and Ada class definitions and information for the
  * Diagnostics and Design tools.
  *
- * @author Will Shackleford
+ * @author Will Shackleford <shackle@nist.gov>
  */
 public class CodeGenCommon implements CodeGenCommonInterface2 {
 
@@ -67,7 +67,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
      *
      * @param _output_filename The name of the only output file to generate,
      * must end in .cc or .cpp, sets to generate only C++ code.
-     * @author Will Shackleford  {@literal <shackle@nist.gov> } 
+     * @author Will Shackleford <shackle@nist.gov>
      */
     private static String forced_output_filename = null;
 
@@ -94,7 +94,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
     private volatile boolean generate_cpp_update_functions_needed = false;
     private volatile boolean generate_cpp_format_function_needed = false;
     private volatile boolean generate_cpp_constructors_needed = false;
-    private volatile boolean no_constructors = false;
     private volatile boolean run_needed = true;
     private volatile boolean running_script = false;
     private volatile boolean generating_code = false;
@@ -332,9 +331,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             WriteOutput("#include \"rcs.hh\"\n");
             for (int i = 0; i < ModuleInfo.headerFiles.size(); i++) {
                 String header = (String) ModuleInfo.headerFiles.elementAt(i);
-                if(ModuleInfo.checkExcludedOutputIncludePattern(header)) {
-                    continue;
-                }
                 WriteOutput("#include \"" + header + "\"\n");
             }
             WriteOutput("\n");
@@ -387,7 +383,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
         return null;
     }
 
-    String script_file_name= "";
     public void GetParameters(String args[]) {
         try {
             if (null == args) {
@@ -426,22 +421,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 if (param != null) {
                     m_ConfigFile = param;
                 }
-                param = StringFuncs.GetParameter("no_constructors", args, optionsHashtable, unused_args);
-                if (param != null) {
-                    this.set_no_constructors(Boolean.valueOf(param));
-                }
-                param = StringFuncs.GetParameter("--ExtraHeader", args, optionsHashtable, unused_args);
-                if (param != null) {
-                    ModuleInfo.AddExtraHeader(param);
-                }
-                param = StringFuncs.GetParameter("--ExcludeHeader", args, optionsHashtable, unused_args);
-                if (param != null) {
-                    ModuleInfo.addExcludedIncludePattern(param);
-                }
-                param = StringFuncs.GetParameter("--ExcludeOutput", args, optionsHashtable, unused_args);
-                if (param != null) {
-                    ModuleInfo.addExcludedOutputIncludePattern(param);
-                }
                 param = StringFuncs.GetParameter(PARAM_HFile, args, optionsHashtable, unused_args);
                 if (param != null) {
                     m_ConfigFile = param;
@@ -452,7 +431,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 param = StringFuncs.GetParameter(PARAM_ScriptFile, args, optionsHashtable, unused_args);
                 if (param != null) {
-                    script_file_name = param;
                     script = FileToString(param);
                 }
                 param = StringFuncs.GetParameter(PARAM_DisplayOn, args, optionsHashtable, unused_args);
@@ -872,10 +850,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     sb.append(str);
                     str = "generate C++ update>" + cpp_file + "\n";
                     sb.append(str);
-                    if(!get_no_constructors()) {
-                        str = "generate C++ constructor>" + cpp_file + "\n";
-                        sb.append(str);
-                    }
+                    str = "generate C++ constructor>" + cpp_file + "\n";
+                    sb.append(str);
                 }
             }
             if (generate_for_java || generate_for_all_langs) {
@@ -4364,9 +4340,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
     }
 
     public void WriteOutput(String str) {
-//        if(str.indexOf("initialize") >= 0) {
-//            System.out.println("debug me");
-//        }
         if (null != fos) {
             try {
                 if (debug_on) {
@@ -4584,10 +4557,10 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 } else if (!type_info.constructor_declared && type_info.Id < 1) {
                     GenerateCppInitializer(selected_classes[i]);
                 }
-//                if (type_info.destructor_declared_and_not_inlined) {
-//                    WriteOutput("// Destructor\n");
-//                    WriteOutput(type_info.Name);
-//                }
+                if (type_info.destructor_declared_and_not_inlined) {
+                    WriteOutput("// Destructor\n");
+                    WriteOutput(type_info.Name);
+                }
             }
             generate_cpp_constructors_needed = false;
         } catch (Exception e) {
@@ -4947,7 +4920,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
     }
     // @SuppressWarnings("unchecked")
 
-    
     public void GenerateCppStartOfFile() {
         try {
             boolean is_posemath_class = false;
@@ -5017,9 +4989,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             WriteOutput("// Include command and status message definitions\n");
             for (int i = 0; i < ModuleInfo.headerFiles.size(); i++) {
                 String header = (String) ModuleInfo.headerFiles.elementAt(i);
-                if(ModuleInfo.checkExcludedOutputIncludePattern(header)) {
-                    continue;
-                }
                 WriteOutput("#include \"" + header + "\"\n");
             }
             if (null != ModuleInfo.extraHeaderFiles) {
@@ -5410,9 +5379,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             WriteOutput("// Include command and status message definitions\n");
             for (int i = 0; i < ModuleInfo.headerFiles.size(); i++) {
                 String header = (String) ModuleInfo.headerFiles.elementAt(i);
-                if(ModuleInfo.checkExcludedOutputIncludePattern(header)) {
-                    continue;
-                }
                 WriteOutput("#include \"" + header + "\"\n");
             }
             WriteOutput("\n");
@@ -8960,7 +8926,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     if (last_slash_index > 0) {
                         m_currentModule.Name = currentModule.Name.substring(last_slash_index + 1);
                     }
-                    m_currentModule.LoadPredefinedTypeFile(m_ConfigFile,script_file_name,current_script_line);
+                    m_currentModule.LoadPredefinedTypeFile(m_ConfigFile);
                 }
                 return;
             }
@@ -9088,9 +9054,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         GeneratePrintSizesFile();
                         return;
                     } else if (line_of_script.startsWith("constructor")) {
-                        if(!get_no_constructors()) {
-                            GenerateCppConstructors();
-                        }
+                        GenerateCppConstructors();
                         return;
                     }
                     ErrorPrint("CodeGen: Generate type not recognized. " + line_of_script);
@@ -9429,14 +9393,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
 
     public void set_generate_cpp_constructors_needed(boolean b) {
         generate_cpp_constructors_needed = b;
-    }
-
-    public boolean get_no_constructors() {
-        return no_constructors;
-    }
-
-    public void set_no_constructors(boolean b) {
-        no_constructors = b;
     }
 
     public boolean get_RunIndependantly() {

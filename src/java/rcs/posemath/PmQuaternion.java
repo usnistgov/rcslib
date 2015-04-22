@@ -64,6 +64,14 @@ public class PmQuaternion implements Cloneable
      Posemath.pmRpyQuatConvert(rpy, this);
   }
   
+  public PmQuaternion(PmRotationVector rotv) throws PmException {
+     Posemath.pmRotQuatConvert(rotv, this);
+  }
+  
+  public PmQuaternion(PmRotationMatrix mat) throws PmException {
+     Posemath.pmMatQuatConvert(mat, this);
+  }
+  
   public PmQuaternion(double starts, double startx, double startz, double starty) throws PmException
   {
     s = starts;
@@ -73,6 +81,12 @@ public class PmQuaternion implements Cloneable
     Posemath.pmQuatNorm(this,this);
   }
 
+  public PmQuaternion multipy(PmQuaternion other) throws PmException {
+      PmQuaternion out = new PmQuaternion();
+      Posemath.pmQuatQuatMult(this, other, out);
+      return out;
+  }
+  
   public String toString()
   {
     return " { s = "+s+", x ="+x+", y = "+y+", z = "+z+" } ";

@@ -865,6 +865,31 @@ public class Posemath {
     }
     
     /**
+     * Convert roll-pitch-yaw to rotation matrix
+     * @param rpy roll-pitch-yaw to convert (must be normalized)
+     * @return v as a rotation matrix
+     * @throws PmException when conversion is not possible
+     */
+    static public PM_ROTATION_MATRIX toMat(PM_RPY rpy) throws PmException {
+        PM_ROTATION_MATRIX m = new PM_ROTATION_MATRIX();
+        pmRpyMatConvert(rpy, m);
+        return m;
+    }
+
+    /**
+     * Convert roll-pitch-yaw to rotation matrix
+     * @param rpy roll-pitch-yaw to convert (must be normalized)
+     * @return v as a rotation matrix
+     * @throws PmException when conversion is not possible
+     */
+    static public PmRotationMatrix toMat(PmRpy rpy) throws PmException {
+        PmRotationMatrix m = new PmRotationMatrix();
+        pmRpyMatConvert(rpy, m);
+        return m;
+    }
+    
+    
+    /**
      * Convert a rotation vector to a rotation matrix.
      * @param r rotation vector to convert
      * @param m rotation matrix to store result
@@ -929,6 +954,30 @@ public class Posemath {
         return (r1 != 0) || (r2 != 0) ? pmErrno : 0;
     }
 
+    /**
+     * Convert quaternion to a rotation vector
+     * @param rpy roll-pitch-yaw to convert (must be normalized)
+     * @return v as a rotation vector
+     * @throws PmException when conversion is not possible
+     */
+    static public PM_ROTATION_VECTOR toRot(PM_RPY rpy) throws PmException {
+        PM_ROTATION_VECTOR r = new PM_ROTATION_VECTOR();
+        pmRpyRotConvert(rpy, r);
+        return r;
+    }
+
+    /**
+     * Convert roll-pitch-yaw to a rotation vector
+     * @param rpy roll-pitch-yaw to convert (must be normalized)
+     * @return v as a rotation vector
+     * @throws PmException when conversion is not possible
+     */
+    static public PmRotationVector toRot(PmRpy rpy) throws PmException {
+        PmRotationVector r = new PmRotationVector();
+        pmRpyRotConvert(rpy, r);
+        return r;
+    }
+    
     /**
      * Convert quaternion to a rotation vector
      * @param v quaternion to convert (must be normalized)
@@ -1282,6 +1331,12 @@ public class Posemath {
         return r;
     }
 
+    static public PmRpy toRpy(PmQuaternion v) throws PmException {
+        PmRpy r = new PmRpy();
+        pmQuatRpyConvert(v, r);
+        return r;
+    }
+    
     static public int pmQuatRpyConvert(PmQuaternion q, PmRpy rpy) throws PmException {
         PmRotationMatrix m = new PmRotationMatrix();
         int r1, r2;
@@ -1603,11 +1658,6 @@ public class Posemath {
         return pmErrno = PM_IMPL_ERR;
     }
 
-    static public PM_ROTATION_VECTOR toRot(PM_RPY rpy) throws PmException {
-        PM_ROTATION_VECTOR rv = new PM_ROTATION_VECTOR();
-        pmRpyRotConvert(rpy, rv);
-        return rv;
-    }
 
     static public PM_QUATERNION toQuat(PM_RPY v) throws PmException {
         PM_QUATERNION q = new PM_QUATERNION();

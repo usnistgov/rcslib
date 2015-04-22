@@ -98,5 +98,10 @@ public class PmRotationMatrix
       return product;
   }
   
+  public PmCartesian multiply(PmCartesian cart) throws PmException {
+      PmCartesian out = new PmCartesian();
+      Posemath.pmMatCartMult(this, cart, out);
+      return out;
+  }
   
 }

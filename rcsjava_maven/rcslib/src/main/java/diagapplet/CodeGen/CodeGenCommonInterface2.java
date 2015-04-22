@@ -29,7 +29,7 @@ import rcs.nml.NMLConnectionCreatorInterface;
 /**
  * This includes protected extentions of the CodeGenCommonInterface not intented to
  * be accessed outside the diagapplet directory.
- * @author Will Shackleford  {@literal <shackle@nist.gov> } 
+ * @author Will Shackleford <shackle@nist.gov>
  */
 interface CodeGenCommonInterface2 extends CodeGenCommonInterface {
 
