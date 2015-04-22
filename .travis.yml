@@ -1,7 +1,7 @@
-language: cpp
+language: java
 compiler:
   - gcc
   
 # Change this to your needs
-script: cd rcsjava_maven/rcslib && mvn -version && mvn -e compile &&  mvn test && mvn verify 
+script: ./configure && make && make check && cd rcsjava_maven/rcslib && mvn -version && mvn -e compile &&  mvn test && mvn verify 
 
