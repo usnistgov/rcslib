@@ -2,5 +2,5 @@ language: cpp
 compiler:
   - gcc
 # Change this to your needs
-script: ./configure && make && make check
+script: ./configure && make && make check && ( cd rcsjava_maven/rcslib && mvn test && mvn verify )
 
