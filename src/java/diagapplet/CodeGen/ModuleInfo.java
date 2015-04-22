@@ -38,7 +38,7 @@ import rcs.utils.URL_and_FileLoader;
 /**
  * Class contains references to all information taken from a Module section of 
  * a diag or hierarchy file.
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford  {@literal <william.shackleford@nist.gov>}
  */
 public class ModuleInfo implements ModuleInfoInterface {
 

@@ -27,7 +27,7 @@ import rcs.utils.URL_and_FileLoader;
  * The command line only version of the CodeGenerator and generally newer preferred
  * method of creating format/update functions. Uses fake interfaceses GUI classes to eliminate
  * dependancies on java.awt and javax.swing needed by the older graphical tool. (CodeGen.java)
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford  {@literal <william.shackleford@nist.gov>}
  */
 public class CodeGenCmdLine {
     //public static String []orig_args=null;

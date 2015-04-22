@@ -49,7 +49,7 @@ import rcs.utils.StackTracePrinter;
  * functions, C,Java, and Ada class definitions and information for the
  * Diagnostics and Design tools.
  *
- * @author Will Shackleford <shackle@nist.gov>
+ * @author Will Shackleford  {@literal <william.shackleford@nist.gov>}
  */
 public class CodeGenCommon implements CodeGenCommonInterface2 {
 
