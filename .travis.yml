@@ -3,4 +3,5 @@ compiler:
   - gcc
 
 # Change this to your needs
-script:( cd rcsjava_maven/rcslib && mvn -version && mvn test && mvn verify )
+script: cd rcsjava_maven/rcslib && mvn -version && mvn test && mvn verify 
+
