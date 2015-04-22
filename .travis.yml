@@ -1,6 +1,13 @@
 language: cpp
 compiler:
   - gcc
+
+jdk:
+  - oraclejdk8
+
 # Change this to your needs
-script: ./configure && make && make check && ( cd rcsjava_maven/rcslib && mvn test && mvn verify )
+script: 
+        - jdk_switcher use oraclejdk8
+	#./configure && make && make check && 
+	( cd rcsjava_maven/rcslib && mvn -version && mvn test && mvn verify )
 
