@@ -1,7 +1,10 @@
 language: cpp
 compiler:
   - gcc
-
+  
+jdk:
+  - oraclejdk8
+  
 # Change this to your needs
-script: cd rcsjava_maven/rcslib && mvn -version && mvn test && mvn verify 
+script: cd rcsjava_maven/rcslib && mvn -version && mvn -e compile &&  mvn test && mvn verify 
 
