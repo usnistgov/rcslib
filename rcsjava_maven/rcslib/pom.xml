@@ -28,9 +28,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
-                <compilerArgs>
-                    <arg>-Xdiags:verbose</arg>
-                </compilerArgs>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-Xdiags:verbose</arg>
+                    </compilerArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -59,11 +61,13 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
                         <version>3.3</version>
-                        <compilerArgs>
-                            <arg>-Xdiags:verbose</arg>
-                            <arg>-verbose</arg>
-                            <arg>-Xlint:unchecked</arg>
-                        </compilerArgs>
+                        <configuration>
+                            <compilerArgs>
+                                <arg>-Xdiags:verbose</arg>
+                                <arg>-verbose</arg>
+                                <arg>-Xlint:unchecked</arg>
+                            </compilerArgs>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
