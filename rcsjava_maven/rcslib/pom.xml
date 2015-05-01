@@ -15,6 +15,25 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <licenses>
+        <license>
+            <name>Public Domain(US Government Work)</name>
+            <url>http://www.copyright.gov/title17/92chap1.html#105</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <compilerArgs>
+                    <arg>-Xdiags:verbose</arg>
+                </compilerArgs>
+            </plugin>
+        </plugins>
+    </build>
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
@@ -32,6 +51,23 @@
         </repository>
     </distributionManagement>
     <profiles>
+        <profile>
+            <id>verbose</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.3</version>
+                        <compilerArgs>
+                            <arg>-Xdiags:verbose</arg>
+                            <arg>-verbose</arg>
+                            <arg>-Xlint:unchecked</arg>
+                        </compilerArgs>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>codecoverage</id>
             <build>
