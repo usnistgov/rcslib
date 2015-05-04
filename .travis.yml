@@ -2,6 +2,11 @@ language: java
 compiler:
   - gcc
   
+notifications:
+  email:
+    - william.shackleford@nist.gov
+    - wshackle@gmail.com
+
 # Change this to your needs
 script: ./configure && make && make check && cd rcsjava_maven/rcslib && mvn -version && mvn -e compile &&  mvn test && mvn verify 
 
