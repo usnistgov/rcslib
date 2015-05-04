@@ -4,7 +4,7 @@ set -x;
 
 git pull  || exit 1
 git add -A
-git commit -a -m "pre set_version_number check in" || exit 1
+git commit -a -m "pre set_version_number check in" 
 
 if test "x${AWK}" = "x" ; then
     AWK=awk;
