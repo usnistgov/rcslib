@@ -23,7 +23,7 @@ versions bear some notice that they have been modified.
 /* RCS_VERSION.java
 * Provides a means for Java Applications to check the version of the
 * RCS Library being used.
-* The install_rcs script uses sed to replace 2014.04.29_2313 in
+* The install_rcs script uses sed to replace 2015.05.04 in
 * RCS_VERSION.java.perm  --> RCS_VERSION.java
 * file with the appropriate version number. This is to provide consistency
 * in the version numbers between Java and C++.
@@ -53,20 +53,20 @@ import java.util.StringTokenizer;
 public class RCS_VERSION extends Object
 {
         /**
-        * String in which the version number 2014.04.29_2313 is stored.
+        * String in which the version number 2015.05.04 is stored.
         */
-        public static final String version_string =  "2014.04.29_2313";
+        public static final String version_string =  "2015.05.04";
 
         /**
         * String in which the library was compiled is stored.
         */
-        public static final String date_string =  "Wed May 14 15:49:47 EDT 2014";
+        public static final String date_string =  "Mon May  4 10:51:05 EDT 2015";
 
         /**
         * String in which a brief message describing the library, it's version
         * and compile date etc. is stored.
         */
-        public static final String info_string = "@(#)" + " RCS_LIBRARY_VERSION: 2014.04.29_2313 Compiled on "+ "Wed May 14 15:49:47 EDT 2014" +" for the java platform.\n";
+        public static final String info_string = "@(#)" + " RCS_LIBRARY_VERSION: 2015.05.04 Compiled on "+ "Mon May  4 10:51:05 EDT 2015" +" for the java platform.\n";
 
         /**
         * Function that returns the info_string.
