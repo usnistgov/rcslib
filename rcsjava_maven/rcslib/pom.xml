@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.wshackle</groupId>
     <artifactId>rcslib</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>2015.05.04</version>
     <name>rcslib</name>
     <url>http://maven.apache.org</url>
     <dependencies>
@@ -26,7 +25,8 @@
         <connection>scm:git:git@github.com:usnistgov/rcslib.git</connection>
         <developerConnection>scm:git:git@github.com:usnistgov/rcslib.git</developerConnection>
         <url>https://github.com/usnistgov/rcslib</url>
-    </scm>
+      <tag>rcslib-2015.05.04</tag>
+  </scm>
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
