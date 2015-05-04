@@ -2,6 +2,7 @@
 .bin*
 bin[.][0-9]*
 *.running
+etc/*.trs
 src/cms/.deps/
 src/cms/.dirstamp
 src/node/.deps/
