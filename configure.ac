@@ -3,7 +3,7 @@
 #
 
 # Process this file with autoconf to produce a configure script.
-AC_INIT(Real-Time Control System Library, 2014.05.14, shackle@nist.gov, rcslib)
+AC_INIT(Real-Time Control System Library, 2015.05.04, shackle@nist.gov, rcslib)
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_SRCDIR([src/rcs.hh])
 AC_CONFIG_HEADERS([rcs_config.h])
