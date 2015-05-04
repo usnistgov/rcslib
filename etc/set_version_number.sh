@@ -2,9 +2,9 @@
 
 set -x;
 
-svn update || exit 1
-svn ci -m "pre set_version_number check in" || exit 1
-svn update || exit 1
+git pull  || exit 1
+git add -A
+git commit -a -m "pre set_version_number check in" || exit 1
 
 if test "x${AWK}" = "x" ; then
     AWK=awk;
@@ -75,7 +75,9 @@ sudo \rm -rf .last* lib/* bin/* include/* plat .multiplat* 2>/dev/null >/dev/nul
 autoreconf
 etc/clean_build.sh
 etc/multiplatbuild.sh
-svn ci -m "set new_version = ${new_version}"
+git add -A
+git commit -a -m "set new_version = ${new_version}" || exit 1
+git push || exit 1
 
 set +x;
 
