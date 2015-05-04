@@ -14,6 +14,9 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <description>
+        NIST Real-Time Control Systems Library including Posemath, NML communications and Java Plotter
+    </description>
     <licenses>
         <license>
             <name>Public Domain(US Government Work)</name>
@@ -21,12 +24,27 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    <developers>
+        <developer>
+            <id>wshackle</id>
+            <name>Will Shackleford</name>
+            <email>william.shackleford@nist.gov</email>
+            <url>https://github.com/wshackle</url>
+            <organization>NIST</organization>
+            <organizationUrl>http://www.nist.gov</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>America/New_York</timezone>
+        </developer>
+    </developers>
     <scm>
         <connection>scm:git:git@github.com:usnistgov/rcslib.git</connection>
         <developerConnection>scm:git:git@github.com:usnistgov/rcslib.git</developerConnection>
         <url>https://github.com/usnistgov/rcslib</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
