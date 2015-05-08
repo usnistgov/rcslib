@@ -6,6 +6,7 @@
 package rcs.posemath;
 
 import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
@@ -1162,6 +1163,16 @@ public class PosemathTest extends TestCase {
      * Test of pmQuatCartMult method, of class Posemath.
      */
     public void testPmQuatCartMult() throws Exception {
+        PmCartesian cx = new PmCartesian(1.0,0.0,0.0);
+        PmRpy rpy = new PmRpy(0.0,0.0,Math.PI/2.0);
+        PmQuaternion quat = Posemath.toQuat(rpy);
+        PmRotationMatrix mat = Posemath.toMat(rpy);
+        PmCartesian quatProd = new PmCartesian();
+        Posemath.pmQuatCartMult(quat, cx, quatProd);
+        PmCartesian matProd = new PmCartesian();
+        Posemath.pmMatCartMult(mat, cx, matProd);
+        checkEquals("matProd-quatProd",quatProd,matProd);
+//        fail("find this");
     }
 
     /**
@@ -1536,7 +1547,35 @@ public class PosemathTest extends TestCase {
 //        fail("The test case is a prototype.");
     }
 
-    
-    
+    /**
+     * Test of toRot method, of class Posemath.
+     */
+    @Test
+    public void testToRot_PmRpy() throws Exception {
+        System.out.println("toRot");
+        PmRpy rpy = new PmRpy(0.0,0.0,Math.PI/2.0);
+        PmRotationVector expResult = new PmRotationVector(Math.PI/2.0,0.0,0.0,1.0);
+        PmRotationVector result = Posemath.toRot(rpy);
+        checkEquals("yaw",expResult,result);
+    }
 
+    
+    static final private double ASSERT_TOLERANCE_DELTA = 1e-6;
+
+    private void checkEquals(String msg, double v1, double v2) {
+        assertEquals(msg, v1, v2, ASSERT_TOLERANCE_DELTA);
+    }
+    
+    private void checkEquals(String msg, PmRotationVector v1, PmRotationVector v2) {
+        checkEquals(msg+".s", v1.s, v2.s);
+        checkEquals(msg+".x", v1.x, v2.x);
+        checkEquals(msg+".y", v1.y, v2.y);
+        checkEquals(msg+".z", v1.z, v2.z);
+    }
+
+    private void checkEquals(String msg, PmCartesian v1, PmCartesian v2) {
+        checkEquals(msg+".x", v1.x, v2.x);
+        checkEquals(msg+".y", v1.y, v2.y);
+        checkEquals(msg+".z", v1.z, v2.z);
+    }
 }
