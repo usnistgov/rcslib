@@ -3406,6 +3406,10 @@ public class Posemath {
         return null;
     }
 
+    static public List<PM_POSE> csvToPoseListF(File f) throws Exception {
+        return csvToPoseListF(f,0,1,2,3,4,5);
+    }
+
     static public List<PM_POSE> csvToPoseListF(File f,
             int x_pos,
             int y_pos,
@@ -3605,7 +3609,7 @@ public class Posemath {
         }
         return null;
     }
-
+    
     static public double[][] csvToHomMats(String filename,
             int x_pos,
             int y_pos,
@@ -3629,7 +3633,51 @@ public class Posemath {
         return null;
     }
 
+    static public double[][] csvToHomMats(File f,
+            int x_pos,
+            int y_pos,
+            int z_pos,
+            int roll_pos,
+            int pitch_pos,
+            int yaw_pos) {
+        try {
+            List<PM_POSE> pose_list =
+                    csvToPoseListF(f,
+                    x_pos,
+                    y_pos,
+                    z_pos,
+                    roll_pos,
+                    pitch_pos,
+                    yaw_pos);
+            return poseListToHomMats(pose_list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    static public double[][] csvToHomMats(File f) {
+        try {
+            List<PM_POSE> pose_list =
+                    csvToPoseListF(f);
+            return poseListToHomMats(pose_list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    static public double[][] csvToHomMats(String filename) {
+        try {
+            List<PM_POSE> pose_list =
+                    csvToPoseListF(new File(filename));
+            return poseListToHomMats(pose_list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     /*
     pmCirclePoint() returns the vector to the point at the given angle along
     the circle. If the circle is a helix or spiral or combination, the
