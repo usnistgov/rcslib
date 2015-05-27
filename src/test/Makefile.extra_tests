@@ -411,34 +411,6 @@ clean:
 	-\rm -f nml_test_java_read.class
 	-\rm -f nml_test_java_dl_write.class
 	-\rm -f $(TEST_LIB_DIR)/nml_test_format_n$(OBJEXT)
-	-\rm -f nml_test_format_n.cc
-	-\rm -f echo_types_n.cc
-	-\rm -f echo_types_n_codegen_protos.hh
-	-\rm -f echo_types_c_n.c
-	-\rm -f echo_types_c_n.h
-	-\rm -f nml_test_format_c_n.h
-	-\rm -f nml_test_format_c_n.c
-	-\rm -f otherheader_c_n.c
-	-\rm -f nml_test_format_n_codegen_protos.hh
-	-\rm -f TEST_MESSAGE.java 
-	-\rm -f TEST_MESSAGE_BASE.java 
-	-\rm -f nml_test_format_MsgDict.java 
-	-\rm -f otherheader_MsgDict.java 
-	-\rm -f teststruct.java 
-	-\rm -f QTEST_MSG.java 
-	-\rm -f SIMPLER_MSG.java
-	-\rm -f struct_from_other_header.java
-	-\rm -f teststruct_td2.java
-	-\rm -f BOP_MSG.java
-	-\rm -f MyStat2.java
-	-\rm -f MyStat.java
-	-\rm -f c_struct.java
-	-\rm -f c_struct.java
-	-\rm -f c_struct2.java
-	-\rm -f fwLaserStruct.java
-	-\rm -f ECHO_QUERY.java
-	-\rm -f ECHO_REPLY.java
-	-\rm -f echo_types_MsgDict.java
 	-\rm -f TEST_MESSAGE.class 
 	-\rm -f TEST_MESSAGE_BASE.class 
 	-\rm -f nml_test_format_MsgDict.class 
@@ -479,6 +451,36 @@ clean:
 	-\rm -rf CodeGenCmdLine.jar
 
 
+clean_sources:
+	-\rm -f nml_test_format_n.cc
+	-\rm -f echo_types_n.cc
+	-\rm -f echo_types_n_codegen_protos.hh
+	-\rm -f echo_types_c_n.c
+	-\rm -f echo_types_c_n.h
+	-\rm -f nml_test_format_c_n.h
+	-\rm -f nml_test_format_c_n.c
+	-\rm -f otherheader_c_n.c
+	-\rm -f nml_test_format_n_codegen_protos.hh
+	-\rm -f TEST_MESSAGE.java 
+	-\rm -f TEST_MESSAGE_BASE.java 
+	-\rm -f nml_test_format_MsgDict.java 
+	-\rm -f otherheader_MsgDict.java 
+	-\rm -f teststruct.java 
+	-\rm -f QTEST_MSG.java 
+	-\rm -f SIMPLER_MSG.java
+	-\rm -f struct_from_other_header.java
+	-\rm -f teststruct_td2.java
+	-\rm -f BOP_MSG.java
+	-\rm -f MyStat2.java
+	-\rm -f MyStat.java
+	-\rm -f c_struct.java
+	-\rm -f c_struct.java
+	-\rm -f c_struct2.java
+	-\rm -f fwLaserStruct.java
+	-\rm -f ECHO_QUERY.java
+	-\rm -f ECHO_REPLY.java
+	-\rm -f echo_types_MsgDict.java
+
 
 
 nml_test_unbounded_format_n_codegen_protos.hh nml_test_unbounded_format_n.cc TEST_UNBOUNDED_MSG.java nml_test_unbounded_format_MsgDict.java ntu_s1.java nml_test_format_unbounded_c_n.h nml_test_unbounded_format_c_n.c nml_test_unbounded_format_n_ada.adb nml_test_unbounded_format_n_ada.ads  : nml_test_unbounded_format.hh 
@@ -498,7 +500,7 @@ nml_ex1_n.cc nml_ex1_n_codegen_protos.hh: nml_ex1.hh
 
 
 
-.PHONY:all clean
+.PHONY:all clean clean_sources
 
 $(TEST_LIB_DIR)/nml_test_read_c$(OBJEXT): nml_test_format_c_n.h otherheader_c_n.h
 
