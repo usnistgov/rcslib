@@ -100,7 +100,8 @@ EXTRA_PROGRAMS = nmltest$(EXEEXT) nmlcfg$(EXEEXT) nmlclean$(EXEEXT) \
 	nml_packed_file_to_csv$(EXEEXT) \
 	nmlGetRemoteTcpServerBufferList$(EXEEXT) \
 	nmlGetRemoteTcpServerBufferInfo$(EXEEXT) ttytest$(EXEEXT) \
-	testpmc$(EXEEXT) testpmcpp$(EXEEXT)
+	testpmc$(EXEEXT) testpmcpp$(EXEEXT) nmlperf$(EXEEXT) \
+	perfsvr$(EXEEXT)
 check_PROGRAMS = nml_test_blocking_read$(EXEEXT) \
 	nml_test_write$(EXEEXT) \
 	nml_test_single_process_queue_test$(EXEEXT) \
@@ -302,6 +303,10 @@ nmlcfgsvr_DEPENDENCIES = librcs.la
 am_nmlclean_OBJECTS = src/cms/nmlclean.$(OBJEXT)
 nmlclean_OBJECTS = $(am_nmlclean_OBJECTS)
 nmlclean_DEPENDENCIES = librcs.la
+am_nmlperf_OBJECTS = src/cms/nmlperf.$(OBJEXT) \
+	src/cms/perftype.$(OBJEXT)
+nmlperf_OBJECTS = $(am_nmlperf_OBJECTS)
+nmlperf_DEPENDENCIES = librcs.la
 am_nmltest_OBJECTS = src/cms/nmltest.$(OBJEXT)
 nmltest_OBJECTS = $(am_nmltest_OBJECTS)
 nmltest_DEPENDENCIES = librcs.la
@@ -315,6 +320,10 @@ oedm_xml2nmlh_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(oedm_xml2nmlh_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
+am_perfsvr_OBJECTS = src/cms/perfsvr.$(OBJEXT) \
+	src/cms/perftype.$(OBJEXT)
+perfsvr_OBJECTS = $(am_perfsvr_OBJECTS)
+perfsvr_DEPENDENCIES = librcs.la
 am_plotter_NB_jar_OBJECTS =
 plotter_NB_jar_OBJECTS = $(am_plotter_NB_jar_OBJECTS)
 plotter_NB_jar_LDADD = $(LDADD)
@@ -423,11 +432,11 @@ SOURCES = $(libposemath_la_SOURCES) $(librcs_la_SOURCES) \
 	$(nml_test_server_SOURCES) \
 	$(nml_test_single_process_queue_test_SOURCES) \
 	$(nml_test_write_SOURCES) $(nmlcfg_SOURCES) \
-	$(nmlcfgsvr_SOURCES) $(nmlclean_SOURCES) $(nmltest_SOURCES) \
-	$(oedm_xml2nmlh_SOURCES) $(plotter_NB_jar_SOURCES) \
-	$(posix_sem_unlink_SOURCES) $(posix_shm_unlink_SOURCES) \
-	$(pvjscript_jar_SOURCES) $(rcs_jar_SOURCES) \
-	$(rcsDesign_jar_SOURCES) $(testpmc_SOURCES) \
+	$(nmlcfgsvr_SOURCES) $(nmlclean_SOURCES) $(nmlperf_SOURCES) \
+	$(nmltest_SOURCES) $(oedm_xml2nmlh_SOURCES) $(perfsvr_SOURCES) \
+	$(plotter_NB_jar_SOURCES) $(posix_sem_unlink_SOURCES) \
+	$(posix_shm_unlink_SOURCES) $(pvjscript_jar_SOURCES) \
+	$(rcs_jar_SOURCES) $(rcsDesign_jar_SOURCES) $(testpmc_SOURCES) \
 	$(testpmcpp_SOURCES) $(ttytest_SOURCES) $(xsd2nmlh_SOURCES)
 DIST_SOURCES = $(libposemath_la_SOURCES) $(librcs_la_SOURCES) \
 	$(EXTRA_librcs_la_SOURCES) $(CodeGenCmdLine_jar_SOURCES) \
@@ -442,11 +451,11 @@ DIST_SOURCES = $(libposemath_la_SOURCES) $(librcs_la_SOURCES) \
 	$(nml_test_server_SOURCES) \
 	$(nml_test_single_process_queue_test_SOURCES) \
 	$(nml_test_write_SOURCES) $(nmlcfg_SOURCES) \
-	$(nmlcfgsvr_SOURCES) $(nmlclean_SOURCES) $(nmltest_SOURCES) \
-	$(oedm_xml2nmlh_SOURCES) $(plotter_NB_jar_SOURCES) \
-	$(posix_sem_unlink_SOURCES) $(posix_shm_unlink_SOURCES) \
-	$(pvjscript_jar_SOURCES) $(rcs_jar_SOURCES) \
-	$(rcsDesign_jar_SOURCES) $(testpmc_SOURCES) \
+	$(nmlcfgsvr_SOURCES) $(nmlclean_SOURCES) $(nmlperf_SOURCES) \
+	$(nmltest_SOURCES) $(oedm_xml2nmlh_SOURCES) $(perfsvr_SOURCES) \
+	$(plotter_NB_jar_SOURCES) $(posix_sem_unlink_SOURCES) \
+	$(posix_shm_unlink_SOURCES) $(pvjscript_jar_SOURCES) \
+	$(rcs_jar_SOURCES) $(rcsDesign_jar_SOURCES) $(testpmc_SOURCES) \
 	$(testpmcpp_SOURCES) $(ttytest_SOURCES) $(xsd2nmlh_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
 	ctags-recursive dvi-recursive html-recursive info-recursive \
@@ -1035,6 +1044,10 @@ posix_shm_unlink_SOURCES = src/os_intf/posix_shm_unlink.c
 posix_sem_unlink_SOURCES = src/os_intf/posix_sem_unlink.c
 nmltest_SOURCES = src/cms/nmltest.cc
 nmltest_LDADD = librcs.la
+nmlperf_SOURCES = src/cms/nmlperf.cc src/cms/perftype.cc
+nmlperf_LDADD = librcs.la
+perfsvr_SOURCES = src/cms/perfsvr.cc src/cms/perftype.cc
+perfsvr_LDADD = librcs.la
 nmlcfgsvr_SOURCES = src/cms/nmlcfgsvr.cc
 nmlcfgsvr_LDADD = librcs.la
 nmlclean_SOURCES = src/cms/nmlclean.cc
@@ -4555,6 +4568,14 @@ src/cms/nmlclean.$(OBJEXT): src/cms/$(am__dirstamp) \
 nmlclean$(EXEEXT): $(nmlclean_OBJECTS) $(nmlclean_DEPENDENCIES) $(EXTRA_nmlclean_DEPENDENCIES) 
 	@rm -f nmlclean$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(nmlclean_OBJECTS) $(nmlclean_LDADD) $(LIBS)
+src/cms/nmlperf.$(OBJEXT): src/cms/$(am__dirstamp) \
+	src/cms/$(DEPDIR)/$(am__dirstamp)
+src/cms/perftype.$(OBJEXT): src/cms/$(am__dirstamp) \
+	src/cms/$(DEPDIR)/$(am__dirstamp)
+
+nmlperf$(EXEEXT): $(nmlperf_OBJECTS) $(nmlperf_DEPENDENCIES) $(EXTRA_nmlperf_DEPENDENCIES) 
+	@rm -f nmlperf$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(nmlperf_OBJECTS) $(nmlperf_LDADD) $(LIBS)
 src/cms/nmltest.$(OBJEXT): src/cms/$(am__dirstamp) \
 	src/cms/$(DEPDIR)/$(am__dirstamp)
 
@@ -4575,6 +4596,12 @@ src/stg_clss/oedm_xml2nmlh-linklist.$(OBJEXT):  \
 oedm_xml2nmlh$(EXEEXT): $(oedm_xml2nmlh_OBJECTS) $(oedm_xml2nmlh_DEPENDENCIES) $(EXTRA_oedm_xml2nmlh_DEPENDENCIES) 
 	@rm -f oedm_xml2nmlh$(EXEEXT)
 	$(AM_V_CXXLD)$(oedm_xml2nmlh_LINK) $(oedm_xml2nmlh_OBJECTS) $(oedm_xml2nmlh_LDADD) $(LIBS)
+src/cms/perfsvr.$(OBJEXT): src/cms/$(am__dirstamp) \
+	src/cms/$(DEPDIR)/$(am__dirstamp)
+
+perfsvr$(EXEEXT): $(perfsvr_OBJECTS) $(perfsvr_DEPENDENCIES) $(EXTRA_perfsvr_DEPENDENCIES) 
+	@rm -f perfsvr$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(perfsvr_OBJECTS) $(perfsvr_LDADD) $(LIBS)
 
 plotter_NB.jar$(EXEEXT): $(plotter_NB_jar_OBJECTS) $(plotter_NB_jar_DEPENDENCIES) $(EXTRA_plotter_NB_jar_DEPENDENCIES) 
 	@rm -f plotter_NB.jar$(EXEEXT)
@@ -4733,6 +4760,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/nmlcms_c.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/nmldiag.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/nmlmsg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/nmlperf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/nmlqr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/nmlset.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/nmltest.Po@am__quote@
@@ -4740,6 +4768,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/oedsto.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/oemem.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/oemque.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/perfsvr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/perftype.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/phantom.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/physmem.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/cms/$(DEPDIR)/posemath_c_n.Plo@am__quote@

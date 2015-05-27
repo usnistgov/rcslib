@@ -3431,12 +3431,24 @@ public class Posemath {
             double pitch = 0;
             double yaw = 0;
             try {
-                x = Double.valueOf(toks[x_pos]);
-                y = Double.valueOf(toks[y_pos]);
-                z = Double.valueOf(toks[z_pos]);
-                roll = Math.toRadians(Double.valueOf(toks[roll_pos]));
-                pitch = Math.toRadians(Double.valueOf(toks[pitch_pos]));
-                yaw = Math.toRadians(Double.valueOf(toks[yaw_pos]));
+                if(x_pos >= 0 && x_pos < toks.length) {
+                    x = Double.valueOf(toks[x_pos]);
+                }
+                if(y_pos >= 0 && y_pos < toks.length) {
+                    y = Double.valueOf(toks[y_pos]);
+                }
+                if(z_pos >= 0 && z_pos < toks.length) {
+                    z = Double.valueOf(toks[z_pos]);
+                }
+                if(roll_pos >= 0 && roll_pos < toks.length) {
+                    roll = Math.toRadians(Double.valueOf(toks[roll_pos]));
+                }
+                if(pitch_pos >= 0 && pitch_pos < toks.length) {
+                    pitch = Math.toRadians(Double.valueOf(toks[pitch_pos]));
+                }
+                if(yaw_pos >= 0 && yaw_pos < toks.length) {
+                    yaw = Math.toRadians(Double.valueOf(toks[yaw_pos]));
+                }
             } catch (Exception e) {
                 System.err.println(f.getName() + ":" + line_num + " bad line: " + line);
                 System.err.println("toks.length=" + toks.length);
@@ -3484,6 +3496,7 @@ public class Posemath {
         double last_time = 0;
         while ((line = br.readLine()) != null && time_it.hasNext()) {
             String toks[] = line.split(",");
+            
             double time = Double.valueOf(toks[time_pos]);
             double x = Double.valueOf(toks[x_pos]);
             double y = Double.valueOf(toks[y_pos]);

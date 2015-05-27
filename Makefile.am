@@ -18,7 +18,7 @@ SUBDIRS=@CONFIGURED_SUBDIRS@
 bin_SCRIPTS=etc/jdk_dir.sh etc/ipc-clear.sh etc/diag_NB.sh etc/find_diag_NB_jar.sh etc/check_core_files.sh etc/wait_for.sh etc/first_screen.sh etc/last_screen.sh etc/kill_with_timeout.sh etc/screen_x.sh etc/attach_screen.sh etc/attach_gdb.sh etc/run_cmd_and_wait.sh etc/debug_core.sh etc/CodeGen.sh etc/jre_dir.sh etc/execfile_from_core.sh etc/plot.sh etc/find_plotter_NB_jar.sh
 
 
-EXTRA_PROGRAMS=nmltest nmlcfg nmlclean nmlcfgsvr xsd2nmlh oedm_xml2nmlh posix_shm_unlink posix_sem_unlink nml_test_write nml_test_single_process_queue_test nml_test_get_queue_length etime_print nml_test_get_space_available nml_test_nmlset nml_test_read nml_test_blocking_read CodeGenCmdLine.jar rcs.jar rcsDesign.jar diag_NB.jar pvjscript.jar  plotter_NB.jar nml_packed_file_to_csv nmlGetRemoteTcpServerBufferList  nmlGetRemoteTcpServerBufferInfo ttytest testpmc testpmcpp
+EXTRA_PROGRAMS=nmltest nmlcfg nmlclean nmlcfgsvr xsd2nmlh oedm_xml2nmlh posix_shm_unlink posix_sem_unlink nml_test_write nml_test_single_process_queue_test nml_test_get_queue_length etime_print nml_test_get_space_available nml_test_nmlset nml_test_read nml_test_blocking_read CodeGenCmdLine.jar rcs.jar rcsDesign.jar diag_NB.jar pvjscript.jar  plotter_NB.jar nml_packed_file_to_csv nmlGetRemoteTcpServerBufferList  nmlGetRemoteTcpServerBufferInfo ttytest testpmc testpmcpp nmlperf perfsvr
 
 
 #EXTRA_LIBRARIES= librcsrtai.a librcsrtl.a
@@ -216,6 +216,10 @@ posix_shm_unlink_SOURCES=src/os_intf/posix_shm_unlink.c
 posix_sem_unlink_SOURCES=src/os_intf/posix_sem_unlink.c
 nmltest_SOURCES=src/cms/nmltest.cc
 nmltest_LDADD=librcs.la
+nmlperf_SOURCES=src/cms/nmlperf.cc src/cms/perftype.cc
+nmlperf_LDADD=librcs.la
+perfsvr_SOURCES=src/cms/perfsvr.cc src/cms/perftype.cc
+perfsvr_LDADD=librcs.la
 nmlcfgsvr_SOURCES=src/cms/nmlcfgsvr.cc
 nmlcfgsvr_LDADD=librcs.la
 nmlclean_SOURCES=src/cms/nmlclean.cc

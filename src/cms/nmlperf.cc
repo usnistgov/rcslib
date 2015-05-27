@@ -337,7 +337,7 @@ nml_perf_write_test (NML * nml, int message_size)
 
 #ifdef USE_CLOCK_FUNCTION
   cpu_used_start_time = clock ();
-  rcs_print (" \tclock() = %d\n", cpu_used_start_time);
+  rcs_print (" \tclock() = %ld\n", cpu_used_start_time);
 #endif
 
 #ifdef USE_TIMES_FUNCTION
@@ -409,7 +409,7 @@ nml_perf_write_test (NML * nml, int message_size)
 
 #ifdef USE_CLOCK_FUNCTION
   cpu_used_end_time = clock ();
-  rcs_print (" \tclock() = %d\n", cpu_used_end_time);
+  rcs_print (" \tclock() = %ld\n", cpu_used_end_time);
 #endif
 
 #ifdef USE_TIMES_FUNCTION
@@ -514,7 +514,7 @@ nml_perf_combined_test (NML * nml, int message_size)
 
 #ifdef USE_CLOCK_FUNCTION
   cpu_used_start_time = clock ();
-  rcs_print (" \tclock() = %d\n", cpu_used_start_time);
+  rcs_print (" \tclock() = %ld\n", cpu_used_start_time);
 #endif
 
 #ifdef USE_TIMES_FUNCTION
@@ -631,7 +631,7 @@ nml_perf_combined_test (NML * nml, int message_size)
 
 #ifdef USE_CLOCK_FUNCTION
   cpu_used_end_time = clock ();
-  rcs_print (" \tclock() = %d\n", cpu_used_end_time);
+  rcs_print (" \tclock() = %ld\n", cpu_used_end_time);
 #endif
 
 #ifdef USE_TIMES_FUNCTION
@@ -741,7 +741,7 @@ nml_perf_read_test (NML * nml)
 
 #ifdef USE_CLOCK_FUNCTION
   cpu_used_start_time = clock ();
-  rcs_print (" \tclock() = %d\n", cpu_used_start_time);
+  rcs_print (" \tclock() = %ld\n", cpu_used_start_time);
 #endif
 
 #ifdef USE_TIMES_FUNCTION
@@ -822,7 +822,7 @@ nml_perf_read_test (NML * nml)
 
 #ifdef USE_CLOCK_FUNCTION
   cpu_used_end_time = clock ();
-  rcs_print (" \tclock() = %d\n", cpu_used_end_time);
+  rcs_print (" \tclock() = %ld\n", cpu_used_end_time);
 #endif
 
 #ifdef USE_TIMES_FUNCTION

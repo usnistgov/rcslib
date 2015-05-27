@@ -60,8 +60,8 @@ extern "C"
 #endif
 
 #define MAX_NML_CHANNELS 100
-char *default_perfsvr_config_file = "test.nml";
-char *default_perfsvr_host_name = "localhost";
+const char *default_perfsvr_config_file = "test.nml";
+const char *default_perfsvr_host_name = "localhost";
 
 
 
@@ -232,6 +232,9 @@ run_perfsvr (char *config_file, char *host_name)
 		  buffer_name);
 	  nml_channel[num_nml_channels] =
 	    new NML (perf_types_format, buffer_name, "perfsvr", config_file);
+	  if(nml_channel[num_nml_channels]->valid()) {
+	    printf("ok\n");
+	  }
 	  num_nml_channels++;
 	}
     }

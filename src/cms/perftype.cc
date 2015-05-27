@@ -45,17 +45,19 @@ void *test_msg_buffer = NULL;
 int
 perf_types_format (NMLTYPE type, void *buffer, CMS * cms)
 {
+
   switch (type)
     {
     case NML_PERFORMANCE_TEST_MSG_TYPE:
       ((NML_PERFORMANCE_TEST_MSG *) buffer)->update (cms);
       break;
     default:
-      rcs_print_error ("perf_types_format: Unknown Type.(%ld) (mode = %d)\n",
-		       (long) type, cms->mode);
-      return (-1);
+      //rcs_print_error ("perf_types_format: Unknown Type.(%ld) (mode = %d)\n",
+      //		       (long) type, cms->mode);
+      //return (-1);
+      return 0;
     }
-  return (0);
+  return (1);
 }
 
 
@@ -91,9 +93,7 @@ NML_PERFORMANCE_TEST_MSG::update (CMS * cms)
 void
 NML_PERFORMANCE_TEST_MSG::compute_array_length ()
 {
-  long array_unit_size, base_size, org_size;
-  org_size = size;
-
+  long array_unit_size, base_size;
   switch (test_type)
     {
     case CHAR_TEST:

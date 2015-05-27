@@ -390,6 +390,7 @@ clean:
 	-\rm -f $(TEST_BIN_DIR)/nml_test_get_read_count$(EXEEXT)
 	-\rm -f $(TEST_BIN_DIR)/nml_test_get_is_clear$(EXEEXT)
 	-\rm -f $(TEST_BIN_DIR)/nml_test_server$(EXEEXT)
+	-\rm -f $(TEST_BIN_DIR)/nml_test_print$(EXEEXT)
 	-\rm -f $(TEST_BIN_DIR)/nml_printing_server$(EXEEXT)
 	-\rm -f $(TEST_BIN_DIR)/nml_test_unbounded_server$(EXEEXT)
 	-\rm -f $(TEST_BIN_DIR)/nml_test_sizes$(EXEEXT)
@@ -474,6 +475,10 @@ clean:
 	-\rm -rf META-INF
 	-\rm -rf rcs
 	-\rm -f b~nml_test_*{$(OBJEXT),.ali,.ads,.adb}
+	-\rm -rf rcs.jar
+	-\rm -rf CodeGenCmdLine.jar
+
+
 
 
 nml_test_unbounded_format_n_codegen_protos.hh nml_test_unbounded_format_n.cc TEST_UNBOUNDED_MSG.java nml_test_unbounded_format_MsgDict.java ntu_s1.java nml_test_format_unbounded_c_n.h nml_test_unbounded_format_c_n.c nml_test_unbounded_format_n_ada.adb nml_test_unbounded_format_n_ada.ads  : nml_test_unbounded_format.hh 

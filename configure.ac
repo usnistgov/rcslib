@@ -43,7 +43,7 @@ if echo "x${CPPFLAGS} | grep 'I~' ; then
    AC_MSG_WARN([CPPFLAGS=${CPPFLAGS} : tilde expansion for this variable is not fully supported. -- it is recommended that you rerun configure with only full absolute paths in CPPFLAGS])
 fi
  
-CONFIGURED_PROGRAMS='nmltest$(EXEEXT) nmlcfg$(EXEEXT) nmlclean$(EXEEXT) nml_packed_file_to_csv$(EXEEXT)'
+CONFIGURED_PROGRAMS='nmltest$(EXEEXT) nmlcfg$(EXEEXT) nmlclean$(EXEEXT) nml_packed_file_to_csv$(EXEEXT) nmlperf$(EXEEXT) perfsvr$(EXEEXT)'
 #CONFIGURED_STATIC_LIBRARIES=""
 CONFIGURED_SUBDIRS=
 CONFIGURED_TESTS=
