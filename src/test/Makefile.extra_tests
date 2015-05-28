@@ -447,11 +447,11 @@ clean:
 	-\rm -rf META-INF
 	-\rm -rf rcs
 	-\rm -f b~nml_test_*{$(OBJEXT),.ali,.ads,.adb}
-	-\rm -rf rcs.jar
-	-\rm -rf CodeGenCmdLine.jar
 
 
 clean_sources:
+	-\rm -rf rcs.jar
+	-\rm -rf CodeGenCmdLine.jar
 	-\rm -f nml_test_format_n.cc
 	-\rm -f echo_types_n.cc
 	-\rm -f echo_types_n_codegen_protos.hh

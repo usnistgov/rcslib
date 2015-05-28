@@ -44,6 +44,7 @@ lib
 plat/
 NetBeans/librcs_cxx/nbproject/private/
 rcsjava_maven/rcslib/release.properties
+testtmp
 
 # Compiled Object files
 *.slo
