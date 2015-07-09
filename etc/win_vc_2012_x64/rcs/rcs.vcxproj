@@ -148,7 +148,6 @@ copy ..\..\..\src\posemath\*.h "$(OutDir)"\include
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>.\Release\rcs.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
     <Bscmake>
@@ -241,7 +240,6 @@ copy ..\..\..\src\posemath\*.h "$(OutDir)"\include
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>.\Debug\rcs.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
     <Bscmake>
