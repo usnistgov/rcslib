@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8FF923E6-7825-4AD8-939F-AEDD75D0FEDF}</ProjectGuid>
+    <RootNamespace>rcs</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(MSBuildProjectDirectory)\..\..\..\src\;$(MSBuildProjectDirectory)\..\..\..\src\os_intf;$(MSBuildProjectDirectory)\..\..\..\src\nt_xdr;$(MSBuildProjectDirectory)\..\..\..\src\posemath;$(MSBuildProjectDirectory)\..\..\..\src\cms;$(MSBuildProjectDirectory)\..\..\..\src\stg_clss;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(MSBuildProjectDirectory)\..\..\..\src\;$(MSBuildProjectDirectory)\..\..\..\src\os_intf;$(MSBuildProjectDirectory)\..\..\..\src\nt_xdr;$(MSBuildProjectDirectory)\..\..\..\src\posemath;$(MSBuildProjectDirectory)\..\..\..\src\cms;$(MSBuildProjectDirectory)\..\..\..\src\stg_clss;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(MSBuildProjectDirectory)\..\..\..\src\;$(MSBuildProjectDirectory)\..\..\..\src\os_intf;$(MSBuildProjectDirectory)\..\..\..\src\nt_xdr;$(MSBuildProjectDirectory)\..\..\..\src\posemath;$(MSBuildProjectDirectory)\..\..\..\src\cms;$(MSBuildProjectDirectory)\..\..\..\src\stg_clss;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(MSBuildProjectDirectory)\..\..\..\src\;$(MSBuildProjectDirectory)\..\..\..\src\os_intf;$(MSBuildProjectDirectory)\..\..\..\src\nt_xdr;$(MSBuildProjectDirectory)\..\..\..\src\posemath;$(MSBuildProjectDirectory)\..\..\..\src\cms;$(MSBuildProjectDirectory)\..\..\..\src\stg_clss;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\..\..\..\src;$(SolutionDir)\..\..\..\src\os_intf;$(SolutionDir)\..\..\..\src\nt_xdr;$(SolutionDir)\..\..\..\src\cms;$(SolutionDir)\..\..\..\src\print;$(SolutionDir)\..\..\..\src\stg_clss;$(SolutionDir)\..\..\..\src\node;$(SolutionDir)\..\..\..\src\posemath;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/rcs.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>.\Release\rcs.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/rcs.bsc</OutputFile>
+    </Bscmake>
+    <PostBuildEvent>
+      <Command>mkdir "$(OutDir)"\include
+copy ..\..\..\src\*.h "$(OutDir)"\include
+copy ..\..\..\src\*.hh "$(OutDir)"\include
+copy ..\..\..\src\cms\*.h "$(OutDir)"\include
+copy ..\..\..\src\cms\*.hh "$(OutDir)"\include
+copy ..\..\..\src\os_intf\*.h "$(OutDir)"\include
+copy ..\..\..\src\os_intf\*.hh "$(OutDir)"\include
+copy ..\..\..\src\print\*.h "$(OutDir)"\include
+copy ..\..\..\src\print\*.hh "$(OutDir)"\include
+copy ..\..\..\src\stg_clss\*.h "$(OutDir)"\include
+copy ..\..\..\src\stg_clss\*.hh "$(OutDir)"\include
+copy ..\..\..\src\node\*.h "$(OutDir)"\include
+copy ..\..\..\src\node\*.hh "$(OutDir)"\include
+copy ..\..\..\src\posemath\*.h "$(OutDir)"\include
+
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\..\..\..\src;$(SolutionDir)\..\..\..\src\os_intf;$(SolutionDir)\..\..\..\src\nt_xdr;$(SolutionDir)\..\..\..\src\cms;$(SolutionDir)\..\..\..\src\print;$(SolutionDir)\..\..\..\src\stg_clss;$(SolutionDir)\..\..\..\src\node;$(SolutionDir)\..\..\..\src\posemath;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>HAVE_CONFIG_H;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/rcs.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>.\Release\rcs.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/rcs.bsc</OutputFile>
+    </Bscmake>
+    <PostBuildEvent>
+      <Command>mkdir "$(OutDir)"\include
+copy ..\..\..\src\*.h "$(OutDir)"\include
+copy ..\..\..\src\*.hh "$(OutDir)"\include
+copy ..\..\..\src\cms\*.h "$(OutDir)"\include
+copy ..\..\..\src\cms\*.hh "$(OutDir)"\include
+copy ..\..\..\src\os_intf\*.h "$(OutDir)"\include
+copy ..\..\..\src\os_intf\*.hh "$(OutDir)"\include
+copy ..\..\..\src\print\*.h "$(OutDir)"\include
+copy ..\..\..\src\print\*.hh "$(OutDir)"\include
+copy ..\..\..\src\stg_clss\*.h "$(OutDir)"\include
+copy ..\..\..\src\stg_clss\*.hh "$(OutDir)"\include
+copy ..\..\..\src\node\*.h "$(OutDir)"\include
+copy ..\..\..\src\node\*.hh "$(OutDir)"\include
+copy ..\..\..\src\posemath\*.h "$(OutDir)"\include
+
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\..\..\..\src;$(SolutionDir)\..\..\..\src\os_intf;$(SolutionDir)\..\..\..\src\nt_xdr;$(SolutionDir)\..\..\..\src\cms;$(SolutionDir)\..\..\..\src\print;$(SolutionDir)\..\..\..\src\stg_clss;$(SolutionDir)\..\..\..\src\node;$(SolutionDir)\..\..\..\src\posemath;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/rcs.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>.\Debug\rcs.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/rcs.bsc</OutputFile>
+    </Bscmake>
+    <PostBuildEvent>
+      <Command>mkdir "$(OutDir)"\include
+copy ..\..\..\src\*.h "$(OutDir)"\include
+copy ..\..\..\src\*.hh "$(OutDir)"\include
+copy ..\..\..\src\cms\*.h "$(OutDir)"\include
+copy ..\..\..\src\cms\*.hh "$(OutDir)"\include
+copy ..\..\..\src\os_intf\*.h "$(OutDir)"\include
+copy ..\..\..\src\os_intf\*.hh "$(OutDir)"\include
+copy ..\..\..\src\print\*.h "$(OutDir)"\include
+copy ..\..\..\src\print\*.hh "$(OutDir)"\include
+copy ..\..\..\src\stg_clss\*.h "$(OutDir)"\include
+copy ..\..\..\src\stg_clss\*.hh "$(OutDir)"\include
+copy ..\..\..\src\node\*.h "$(OutDir)"\include
+copy ..\..\..\src\node\*.hh "$(OutDir)"\include
+copy ..\..\..\src\posemath\*.h "$(OutDir)"\include
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\..\..\..\src;$(SolutionDir)\..\..\..\src\os_intf;$(SolutionDir)\..\..\..\src\nt_xdr;$(SolutionDir)\..\..\..\src\cms;$(SolutionDir)\..\..\..\src\print;$(SolutionDir)\..\..\..\src\stg_clss;$(SolutionDir)\..\..\..\src\node;$(SolutionDir)\..\..\..\src\posemath;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>HAVE_CONFIG_H;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/rcs.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>.\Debug\rcs.lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/rcs.bsc</OutputFile>
+    </Bscmake>
+    <PostBuildEvent>
+      <Command>mkdir "$(OutDir)"\include
+copy ..\..\..\src\*.h "$(OutDir)"\include
+copy ..\..\..\src\*.hh "$(OutDir)"\include
+copy ..\..\..\src\cms\*.h "$(OutDir)"\include
+copy ..\..\..\src\cms\*.hh "$(OutDir)"\include
+copy ..\..\..\src\os_intf\*.h "$(OutDir)"\include
+copy ..\..\..\src\os_intf\*.hh "$(OutDir)"\include
+copy ..\..\..\src\print\*.h "$(OutDir)"\include
+copy ..\..\..\src\print\*.hh "$(OutDir)"\include
+copy ..\..\..\src\stg_clss\*.h "$(OutDir)"\include
+copy ..\..\..\src\stg_clss\*.hh "$(OutDir)"\include
+copy ..\..\..\src\node\*.h "$(OutDir)"\include
+copy ..\..\..\src\node\*.hh "$(OutDir)"\include
+copy ..\..\..\src\posemath\*.h "$(OutDir)"\include
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\cms\ttyintf.c" />
+    <ClCompile Include="..\..\..\src\cms\ttymem.cc" />
+    <ClCompile Include="..\..\..\src\cms\tty_srv.cc" />
+    <ClCompile Include="..\..\..\src\os_intf\_inifile.c" />
+    <ClCompile Include="..\..\..\src\posemath\_mathprnt.c" />
+    <ClCompile Include="..\..\..\src\posemath\_posemath.c" />
+    <ClCompile Include="..\..\..\src\os_intf\_shm.c" />
+    <ClCompile Include="..\..\..\src\os_intf\_timer.c" />
+    <ClCompile Include="..\..\..\src\cms\autokey.c" />
+    <ClCompile Include="..\..\..\src\node\cmd_msg.cc" />
+    <ClCompile Include="..\..\..\src\cms\cms.cc" />
+    <ClCompile Include="..\..\..\src\cms\cms_cfg.cc" />
+    <ClCompile Include="..\..\..\src\cms\cms_datetime.cc" />
+    <ClCompile Include="..\..\..\src\cms\cms_dup.cc" />
+    <ClCompile Include="..\..\..\src\cms\cms_in.cc" />
+    <ClCompile Include="..\..\..\src\cms\cms_pm.cc" />
+    <ClCompile Include="..\..\..\src\cms\cms_pup.cc" />
+    <ClCompile Include="..\..\..\src\cms\cms_srv.cc" />
+    <ClCompile Include="..\..\..\src\cms\cms_up.cc" />
+    <ClCompile Include="..\..\..\src\cms\cms_xml_up.cc" />
+    <ClCompile Include="..\..\..\src\cms\cms_xup.cc" />
+    <ClCompile Include="..\..\..\src\cms\cmssvrp.cc" />
+    <ClCompile Include="..\..\..\src\os_intf\dbg_mem.cc" />
+    <ClCompile Include="..\..\..\src\cms\extxdrintf.c" />
+    <ClCompile Include="..\..\..\src\os_intf\inetnull.cc" />
+    <ClCompile Include="..\..\..\src\os_intf\inifile.cc" />
+    <ClCompile Include="..\..\..\src\stg_clss\linklist.cc" />
+    <ClCompile Include="..\..\..\src\cms\memsem.cc" />
+    <ClCompile Include="..\..\..\src\cms\msg_to_encoded_data.cc" />
+    <ClCompile Include="..\..\..\src\cms\nml.cc" />
+    <ClCompile Include="..\..\..\src\node\nml_mod.cc" />
+    <ClCompile Include="..\..\..\src\node\nml_oi.cc" />
+    <ClCompile Include="..\..\..\src\cms\nml_srv.cc" />
+    <ClCompile Include="..\..\..\src\cms\nmlcfgsvr_clntcalls.cc" />
+    <ClCompile Include="..\..\..\src\cms\nmlcms_c.cc" />
+    <ClCompile Include="..\..\..\src\cms\nmlmsg.cc" />
+    <ClCompile Include="..\..\..\src\cms\nmlqr.cc" />
+    <ClCompile Include="..\..\..\src\cms\nmlset.cc" />
+    <ClCompile Include="..\..\..\src\cms\physmem.cc" />
+    <ClCompile Include="..\..\..\src\posemath\posemath.cc" />
+    <ClCompile Include="..\..\..\src\cms\posemath_c_n.c" />
+    <ClCompile Include="..\..\..\src\os_intf\rcs_exit.cc" />
+    <ClCompile Include="..\..\..\src\print\rcs_prnt.cc" />
+    <ClCompile Include="..\..\..\src\rcsvers.c" />
+    <ClCompile Include="..\..\..\src\cms\recvline.c" />
+    <ClCompile Include="..\..\..\src\cms\recvmsgt.c" />
+    <ClCompile Include="..\..\..\src\cms\recvn.c" />
+    <ClCompile Include="..\..\..\src\os_intf\sem.cc" />
+    <ClCompile Include="..\..\..\src\cms\sendline.c" />
+    <ClCompile Include="..\..\..\src\cms\sendmsgt.c" />
+    <ClCompile Include="..\..\..\src\cms\sendn.c" />
+    <ClCompile Include="..\..\..\src\print\sepwords.cc" />
+    <ClCompile Include="..\..\..\src\os_intf\shm.cc" />
+    <ClCompile Include="..\..\..\src\cms\shmem.cc" />
+    <ClCompile Include="..\..\..\src\posemath\sincos.c" />
+    <ClCompile Include="..\..\..\src\cms\sokintrf.c" />
+    <ClCompile Include="..\..\..\src\node\stat_msg.cc" />
+    <ClCompile Include="..\..\..\src\node\stat_msg_v2_n.cc" />
+    <ClCompile Include="..\..\..\src\cms\stcpmem.cc" />
+    <ClCompile Include="..\..\..\src\cms\stcpopts.cc" />
+    <ClCompile Include="..\..\..\src\cms\stcpsvr.cc" />
+    <ClCompile Include="..\..\..\src\cms\tcp_opts.cc" />
+    <ClCompile Include="..\..\..\src\cms\tcp_srv.cc" />
+    <ClCompile Include="..\..\..\src\cms\tcpmem.cc" />
+    <ClCompile Include="..\..\..\src\os_intf\timer.cc" />
+    <ClCompile Include="..\..\..\src\node\timetracker.cc" />
+    <ClCompile Include="..\..\..\src\node\timetracker_c_n.c" />
+    <ClCompile Include="..\..\..\src\node\timetracker_n.cc" />
+    <ClCompile Include="..\..\..\src\cms\udp_opts.cc" />
+    <ClCompile Include="..\..\..\src\cms\udp_srv.cc" />
+    <ClCompile Include="..\..\..\src\cms\udpmem.cc" />
+    <ClCompile Include="..\..\..\src\os_intf\win32_sem.c" />
+    <ClCompile Include="..\..\..\src\print\win_prnt.cc" />
+    <ClCompile Include="..\..\..\src\os_intf\winver.cc" />
+    <ClCompile Include="..\..\..\src\nt_xdr\xdr.c" />
+    <ClCompile Include="..\..\..\src\nt_xdr\xdr_arra.c" />
+    <ClCompile Include="..\..\..\src\nt_xdr\xdr_floa.c" />
+    <ClCompile Include="..\..\..\src\nt_xdr\xdr_mem.c" />
+    <ClCompile Include="..\..\..\src\nt_xdr\xdr_rec.c" />
+    <ClCompile Include="..\..\..\src\nt_xdr\xdr_refe.c" />
+    <ClCompile Include="..\..\..\src\nt_xdr\xdr_stdi.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="rcs_config.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

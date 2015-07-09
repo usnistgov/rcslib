@@ -2703,7 +2703,8 @@ CMS::write_memory_map_string(long pos,
    if(this->set_memory_map_pos_offset_from_to_next_var)
     {
       this->memory_map_offset = pos;
-      long sz = (cur_var_struct ? strlen(cur_var_struct) : 0)+strlen(name)+1;
+      long sz = (long)
+		  ((cur_var_struct ? strlen(cur_var_struct) : 0)+strlen(name)+1);
       this->memory_map_pos_offset_from = (char *)
 	malloc(sz);
       SNPRINTF_FUNC( SNPRINTF_ARGS(this->memory_map_pos_offset_from,sz),

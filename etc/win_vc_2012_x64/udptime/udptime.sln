@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "udptimesend", "udptimesend\udptimesend.vcxproj", "{6D671016-1D5E-4984-87DA-87E5BB381273}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "udptimerecv", "udptimerecv\udptimerecv.vcxproj", "{E1DB4D27-6979-4FE1-9687-BA49F7361AC8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6D671016-1D5E-4984-87DA-87E5BB381273}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6D671016-1D5E-4984-87DA-87E5BB381273}.Debug|Win32.Build.0 = Debug|Win32
+		{6D671016-1D5E-4984-87DA-87E5BB381273}.Release|Win32.ActiveCfg = Release|Win32
+		{6D671016-1D5E-4984-87DA-87E5BB381273}.Release|Win32.Build.0 = Release|Win32
+		{E1DB4D27-6979-4FE1-9687-BA49F7361AC8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E1DB4D27-6979-4FE1-9687-BA49F7361AC8}.Debug|Win32.Build.0 = Debug|Win32
+		{E1DB4D27-6979-4FE1-9687-BA49F7361AC8}.Release|Win32.ActiveCfg = Release|Win32
+		{E1DB4D27-6979-4FE1-9687-BA49F7361AC8}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

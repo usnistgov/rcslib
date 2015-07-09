@@ -1178,7 +1178,7 @@ CMS_UPDATER::check_type_info (long type, void *buffer, const char *nsname,
 	{
 	  if(type == idlist[i])
 	    {
-	      ((NMLmsg *)buffer)->size = sizelist[i];
+	      ((NMLmsg *)buffer)->size = (long) sizelist[i];
 	      break;
 	    }
 	}

@@ -5950,8 +5950,8 @@ n",
 	  return CMS_STATUS_NOT_SET;
 	}
 
-      long space = len*10+1;
-      char *x = (char *) stringSpaceAlloc(space);
+      size_t space = len*10+1;
+      char *x = (char *) stringSpaceAlloc((long)space);
       char *xendP = x;
       for(int i = 0; i < ((int) len) && xendP; i++)
 	{
@@ -5963,7 +5963,7 @@ n",
 	    {
 	      SNPRINTF_FUNC ( SNPRINTF_ARGS(xendP,space),"%d",ixP[i]);
 	    }
-	  int xilen = strlen(xendP);
+	  size_t xilen = strlen(xendP);
 	  space -= xilen;
 	  xendP += xilen;
 	}
@@ -6095,8 +6095,8 @@ n",
 	  return CMS_STATUS_NOT_SET;
 	}
 
-      long space = len*10+1;
-      char *x = (char *) stringSpaceAlloc(space);
+      size_t space = len*10+1;
+      char *x = (char *) stringSpaceAlloc((long) space);
       char *xendP = x;
       for(int i = 0; i < ((int) len) && xendP; i++)
 	{
@@ -6108,7 +6108,7 @@ n",
 	    {
 	      SNPRINTF_FUNC ( SNPRINTF_ARGS(xendP,space),"%d",ixP[i]);
 	    }
-	  int xilen = strlen(xendP);
+	  size_t xilen = strlen(xendP);
 	  space -= xilen;
 	  xendP += xilen;
 	}
@@ -6240,8 +6240,8 @@ n",
 	  return CMS_STATUS_NOT_SET;
 	}
 
-      long space = len*10+1;
-      char *x = (char *) stringSpaceAlloc(space);
+      size_t space = len*10+1;
+      char *x = (char *) stringSpaceAlloc((long)space);
       char *xendP = x;
       for(int i = 0; i < ((int) len) && xendP; i++)
 	{
@@ -6253,7 +6253,7 @@ n",
 	    {
 	      SNPRINTF_FUNC( SNPRINTF_ARGS(xendP,space),"%d",ixP[i]);
 	    }
-	  int xilen = strlen(xendP);
+	  size_t xilen = strlen(xendP);
 	  space -= xilen;
 	  xendP += xilen;
 	}
@@ -6384,8 +6384,8 @@ n",
 	  return CMS_STATUS_NOT_SET;
 	}
 
-      long space = len*10+1;
-      char *x = (char *) stringSpaceAlloc(space);
+      size_t space = len*10+1;
+      char *x = (char *) stringSpaceAlloc((long)space);
       char *xendP = x;
       for(int i = 0; i < ((int) len) && xendP; i++)
 	{
@@ -6397,7 +6397,7 @@ n",
 	    {
 	      SNPRINTF_FUNC ( SNPRINTF_ARGS(xendP,space),"%d",ixP[i]);
 	    }
-	  int xilen = strlen(xendP);
+	  size_t xilen = strlen(xendP);
 	  space -= xilen;
 	  xendP += xilen;
 	}
@@ -6529,8 +6529,8 @@ n",
 	  return CMS_STATUS_NOT_SET;
 	}
 
-      long space = len*10+1;
-      char *x = (char *) stringSpaceAlloc(space);
+      size_t space = len*10+1;
+      char *x = (char *) stringSpaceAlloc((long)space);
       char *xendP = x;
       for(int i = 0; i < ((int) len) && xendP; i++)
 	{
@@ -6542,7 +6542,7 @@ n",
 	    {
 	      SNPRINTF_FUNC ( SNPRINTF_ARGS(xendP,space),"%ld",ixP[i]);
 	    }
-	  int xilen = strlen(xendP);
+	  size_t xilen = strlen(xendP);
 	  space -= xilen;
 	  xendP += xilen;
 	}
@@ -6673,8 +6673,8 @@ n",
 	  return CMS_STATUS_NOT_SET;
 	}
 
-      long space = len*10+1;
-      char *x = (char *) stringSpaceAlloc(space);
+      size_t space = len*10+1;
+      char *x = (char *) stringSpaceAlloc((long)space);
       char *xendP = x;
       for(int i = 0; i < ((int) len) && xendP; i++)
 	{
@@ -6686,7 +6686,7 @@ n",
 	    {
 	      SNPRINTF_FUNC ( SNPRINTF_ARGS(xendP,space),"%lu",ixP[i]);
 	    }
-	  int xilen = strlen(xendP);
+	  size_t xilen = strlen(xendP);
 	  space -= xilen;
 	  xendP += xilen;
 	}
@@ -6818,8 +6818,8 @@ n",
 	  return CMS_STATUS_NOT_SET;
 	}
 
-      long space = len*10+1;
-      char *x = (char *) stringSpaceAlloc(space);
+      size_t space = len*10+1;
+      char *x = (char *) stringSpaceAlloc((long)space);
       char *xendP = x;
       for(int i = 0; i < ((int) len) && xendP; i++)
 	{
@@ -6831,7 +6831,7 @@ n",
 	    {
 	      SNPRINTF_FUNC ( SNPRINTF_ARGS(xendP,space),"%f",ixP[i]);
 	    }
-	  int xilen = strlen(xendP);
+	  size_t xilen = strlen(xendP);
 	  space -= xilen;
 	  xendP += xilen;
 	}
@@ -6963,8 +6963,8 @@ n",
 	  return CMS_STATUS_NOT_SET;
 	}
 
-      long space = len*10+1;
-      char *x = (char *) stringSpaceAlloc(space);
+      size_t space = len*10+1;
+      char *x = (char *) stringSpaceAlloc((long)space);
       char *xendP = x;
       for(int i = 0; i < ((int) len) && xendP; i++)
 	{
@@ -6976,7 +6976,7 @@ n",
 	    {
 	      SNPRINTF_FUNC ( SNPRINTF_ARGS(xendP,space),"%f",ixP[i]);
 	    }
-	  int xilen = strlen(xendP);
+	  size_t xilen = strlen(xendP);
 	  space -= xilen;
 	  xendP += xilen;
 	}

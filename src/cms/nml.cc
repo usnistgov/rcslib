@@ -290,11 +290,11 @@ static char NML_ERROR_TYPE_STRINGS[17][80] = {
   "NML_REQUIRED_MSG_TYPE_ERROR"
 };
 
-static inline size_t round_up_size(long val, long round_number)
+static inline size_t round_up_size(size_t val, size_t round_number)
 {
-  long r1;
-  long mod1;
-  long lfinal;
+  size_t r1;
+  size_t mod1;
+  size_t lfinal;
   size_t retval;
   r1 = val + round_number;
   mod1 = r1%round_number;
@@ -5823,7 +5823,7 @@ NML::msg2xml (
 	{
 	  new_size = round_up_size(nml_msg->size,8192);
 	  if(((size_t)NML::forced_min_size) > new_size) {
-	    new_size = round_up_size(NML::forced_min_size,8192);
+	    new_size = (long) round_up_size(NML::forced_min_size,8192);
 	  }
 	  ni->cms_for_msg_string_conversions = new CMS ( (unsigned long) new_size);
 	}
@@ -5925,7 +5925,7 @@ NML::msg_to_encoded_data(NMLmsg *nml_msg,
     {
       long size_needed = nml_msg->size;
       if(((long)NML::forced_min_size) > size_needed) {
-	size_needed = round_up_size(NML::forced_min_size,8192);
+	size_needed = (long) round_up_size(NML::forced_min_size,8192);
       }
       if (NULL != ni->cms_for_msg_string_conversions)
 	{
@@ -5937,7 +5937,7 @@ NML::msg_to_encoded_data(NMLmsg *nml_msg,
 	}
       if (NULL == ni->cms_for_msg_string_conversions)
 	{
-	  new_size = round_up_size(size_needed,8192);
+	  new_size = (long) round_up_size(size_needed,8192);
 	  ni->cms_for_msg_string_conversions = new CMS ( (unsigned long) new_size);
 	}
       ni->cms_for_msg_string_conversions->xml_style_properties =
@@ -6597,7 +6597,7 @@ NML::readMsgFromXmlFile (
 	}
       if (NULL == ni->cms_for_msg_string_conversions)
 	{
-	  ni->cms_for_msg_string_conversions = new CMS (size_needed);
+	  ni->cms_for_msg_string_conversions = new CMS ((long) size_needed);
 	}
       cms = ni->cms_for_msg_string_conversions;
     }
@@ -8882,7 +8882,7 @@ nmlGetRemoteTcpServerBufferList(const char *hostName,
 {
 #ifdef ENABLE_RCS_TCP
   struct dl_sa *server_saP = dl_create_sa(hostName,port,use_ipv6);
-  int socket_fd = dl_tcp_socket(use_ipv6);
+  int socket_fd = (int) dl_tcp_socket(use_ipv6);
   char *bind_to_host = 
     getenv("NML_BINDTO_HOST");
   struct dl_sa *client_saP = dl_create_sa(bind_to_host,0,use_ipv6);
@@ -8949,7 +8949,7 @@ nmlGetRemoteTcpServerBufferInfo(const char *bufferName,
 {
 #ifdef ENABLE_RCS_TCP
   struct dl_sa *server_saP = dl_create_sa(hostName,port,use_ipv6);
-  int socket_fd = dl_tcp_socket(use_ipv6);
+  int socket_fd = (int) dl_tcp_socket(use_ipv6);
   struct dl_sa *client_saP = dl_create_sa(0,0,use_ipv6);
   if(dl_bind (socket_fd, dl_sa_addr(client_saP), dl_sa_len(client_saP)) < 0)
     {

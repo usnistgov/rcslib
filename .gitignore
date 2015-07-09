@@ -96,3 +96,21 @@ Doxyfile
 
 
 /rcsjava_maven/rcslib/target/
+etc/win_vc_2010_express/rcs/rcs.v11.suo
+etc/win_vc_2010_express/rcs/Debug/
+etc/win_vc_2010_express/rcs/Release/
+etc/win_vc_2010_express/rcs/nml_test_read/Debug/
+etc/win_vc_2010_express/rcs/nml_test_read/Release/
+etc/win_vc_2010_express/rcs/nml_test_server/Debug/
+etc/win_vc_2010_express/rcs/nml_test_server/Release/
+etc/win_vc_2010_express/rcs/nml_test_write/Debug/
+etc/win_vc_2010_express/rcs/nml_test_write/Release/
+etc/win_vc_2010_express/rcs/nmlcfg/Debug/
+etc/win_vc_2010_express/rcs/nmlcfg/Release/
+etc/win_vc_2010_express/rcs/nmlcfgsvr/Debug/
+etc/win_vc_2010_express/rcs/nmlcfgsvr/Release/
+etc/win_vc_2010_express/rcs/nmltest/Debug/
+etc/win_vc_2010_express/rcs/nmltest/Release/
+etc/win_vc_2010_express/rcs/rcs.sdf
+etc/win_vc_2010_express/rcs/testpmcpp/Debug/
+etc/win_vc_2010_express/rcs/testpmcpp/Release/

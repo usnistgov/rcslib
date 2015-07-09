@@ -333,9 +333,9 @@ UDPMEM::UDPMEM (const char *_bufline, const char *_procline):
   memset(internals->throwaway_buf1,0,internals->buf_size);
   memset(internals->throwaway_buf2,0,internals->buf_size);
   internals->throwaway_iov2[0].iov_base = internals->throwaway_buf1;
-  internals->throwaway_iov2[0].iov_len = internals->buf_size;
+  internals->throwaway_iov2[0].iov_len = (int) internals->buf_size;
   internals->throwaway_iov2[1].iov_base = internals->throwaway_buf2;
-  internals->throwaway_iov2[1].iov_len = internals->buf_size;
+  internals->throwaway_iov2[1].iov_len = (int) internals->buf_size;
   internals->throwaway_header.msg_iov = internals->throwaway_iov2;
   internals->throwaway_header.msg_iovlen = 2;
   internals->throwaway_socket_address = 0;
@@ -474,7 +474,7 @@ UDPMEM::~UDPMEM ()
 	  internals->request_message_header.msg_iovlen = 1;
 	  sendmsgt (socket_fd, &internals->request_message_header, 0, timeout,
 		    internals->sendmsgt_collection_buffer,
-		    internals->buf_size);
+		    (long) internals->buf_size);
 	}
 
       hton_uint32_array_set(request_buffer,0,
@@ -485,7 +485,7 @@ UDPMEM::~UDPMEM ()
       internals->request_message_header.msg_iovlen = 1;
       sendmsgt (socket_fd, &internals->request_message_header, 0, timeout,
 		internals->sendmsgt_collection_buffer,
-		internals->buf_size);
+		(long) internals->buf_size);
       dl_closesocket (socket_fd);
       socket_fd = 0;
     }
@@ -1152,7 +1152,7 @@ UDPMEM::call_on_server ()
 			     &internals->request_message_header, 0,
 			     retry_timeout,
 			     internals->sendmsgt_collection_buffer,
-			     internals->buf_size)) != request_size_expected)
+			     (long) internals->buf_size)) != request_size_expected)
 		{
 		  if(request_size > 0)
 		    {

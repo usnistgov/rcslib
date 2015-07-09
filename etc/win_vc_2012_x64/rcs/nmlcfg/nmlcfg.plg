@@ -1,0 +1,659 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: rcs - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP23.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "HAVE_CONFIG_H" /Fp"Release/rcs.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\_inifile.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\_mathprnt.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\_posemath.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\_shm.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\_timer.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\autokey.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\bcopy.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cmd_msg.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_cfg.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_datetime.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_dup.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_in.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_pm.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_pup.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_srv.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_up.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_xml_up.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_xup.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cmssvrp.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\dbg_mem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\extxdrintf.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\inetnull.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\inifile.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\linklist.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\mathprnt.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\memsem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nml.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nml_mod.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nml_oi.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nml_srv.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlcfgsvr_clntcalls.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlcms_c.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlmsg.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlqr.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlset.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\physmem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\posemath.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\rcs_exit.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\rcs_prnt.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\rcsvers.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\recvline.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\recvmsgt.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\recvn.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sendline.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sendmsgt.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sendn.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sepwords.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\shm.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\shmem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sincos.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sokintrf.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\stat_msg.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\stat_msg_v2_n.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\stcpmem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\stcpopts.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\stcpsvr.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\tcp_opts.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\tcp_srv.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\tcpmem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\timer.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\timetracker.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\timetracker_c_n.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\timetracker_n.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\udp_opts.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\udp_srv.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\udpmem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\win32_sem.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\winver.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr_arra.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr_floa.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr_mem.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr_refe.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr_stdi.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP23.tmp" 
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP24.tmp" with contents
+[
+/nologo /out:"Release\rcs.lib" 
+.\Release\_inifile.obj
+.\Release\_mathprnt.obj
+.\Release\_posemath.obj
+.\Release\_shm.obj
+.\Release\_timer.obj
+.\Release\autokey.obj
+.\Release\bcopy.obj
+.\Release\cmd_msg.obj
+.\Release\cms.obj
+.\Release\cms_cfg.obj
+.\Release\cms_datetime.obj
+.\Release\cms_dup.obj
+.\Release\cms_in.obj
+.\Release\cms_pm.obj
+.\Release\cms_pup.obj
+.\Release\cms_srv.obj
+.\Release\cms_up.obj
+.\Release\cms_xml_up.obj
+.\Release\cms_xup.obj
+.\Release\cmssvrp.obj
+.\Release\dbg_mem.obj
+.\Release\extxdrintf.obj
+.\Release\inetnull.obj
+.\Release\inifile.obj
+.\Release\linklist.obj
+.\Release\mathprnt.obj
+.\Release\memsem.obj
+.\Release\nml.obj
+.\Release\nml_mod.obj
+.\Release\nml_oi.obj
+.\Release\nml_srv.obj
+.\Release\nmlcfgsvr_clntcalls.obj
+.\Release\nmlcms_c.obj
+.\Release\nmlmsg.obj
+.\Release\nmlqr.obj
+.\Release\nmlset.obj
+.\Release\physmem.obj
+.\Release\posemath.obj
+.\Release\rcs_exit.obj
+.\Release\rcs_prnt.obj
+.\Release\rcsvers.obj
+.\Release\recvline.obj
+.\Release\recvmsgt.obj
+.\Release\recvn.obj
+.\Release\sem.obj
+.\Release\sendline.obj
+.\Release\sendmsgt.obj
+.\Release\sendn.obj
+.\Release\sepwords.obj
+.\Release\shm.obj
+.\Release\shmem.obj
+.\Release\sincos.obj
+.\Release\sokintrf.obj
+.\Release\stat_msg.obj
+.\Release\stat_msg_v2_n.obj
+.\Release\stcpmem.obj
+.\Release\stcpopts.obj
+.\Release\stcpsvr.obj
+.\Release\tcp_opts.obj
+.\Release\tcp_srv.obj
+.\Release\tcpmem.obj
+.\Release\timer.obj
+.\Release\timetracker.obj
+.\Release\timetracker_c_n.obj
+.\Release\timetracker_n.obj
+.\Release\udp_opts.obj
+.\Release\udp_srv.obj
+.\Release\udpmem.obj
+.\Release\win32_sem.obj
+.\Release\winver.obj
+.\Release\xdr.obj
+.\Release\xdr_arra.obj
+.\Release\xdr_floa.obj
+.\Release\xdr_mem.obj
+.\Release\xdr_refe.obj
+.\Release\xdr_stdi.obj
+]
+Creating command line "link.exe -lib @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP24.tmp"
+<h3>Output Window</h3>
+Compiling...
+_inifile.c
+_mathprnt.c
+_posemath.c
+_shm.c
+_timer.c
+autokey.c
+bcopy.c
+cmd_msg.cpp
+cms.cpp
+cms_cfg.cpp
+cms_datetime.cpp
+cms_dup.cpp
+cms_in.cpp
+cms_pm.cpp
+cms_pup.cpp
+cms_srv.cpp
+cms_up.cpp
+cms_xml_up.cpp
+cms_xup.cpp
+cmssvrp.cpp
+dbg_mem.cpp
+extxdrintf.c
+inetnull.cpp
+inifile.cpp
+linklist.cpp
+mathprnt.cpp
+memsem.cpp
+nml.cpp
+nml_mod.cpp
+nml_oi.cpp
+nml_srv.cpp
+nmlcfgsvr_clntcalls.cpp
+nmlcms_c.cpp
+nmlmsg.cpp
+nmlqr.cpp
+nmlset.cpp
+physmem.cpp
+posemath.cpp
+rcs_exit.cpp
+rcs_prnt.cpp
+rcsvers.c
+recvline.c
+recvmsgt.c
+recvn.c
+sem.cpp
+sendline.c
+sendmsgt.c
+sendn.c
+sepwords.cpp
+shm.cpp
+shmem.cpp
+sincos.c
+sokintrf.c
+stat_msg.cpp
+stat_msg_v2_n.cpp
+stcpmem.cpp
+stcpopts.cpp
+stcpsvr.cpp
+tcp_opts.cpp
+tcp_srv.cpp
+tcpmem.cpp
+timer.cpp
+timetracker.cpp
+timetracker_c_n.c
+timetracker_n.cpp
+udp_opts.cpp
+udp_srv.cpp
+udpmem.cpp
+win32_sem.c
+winver.cpp
+xdr.c
+xdr_arra.c
+xdr_floa.c
+xdr_mem.c
+xdr_refe.c
+xdr_stdi.c
+Creating library...
+<h3>
+--------------------Configuration: nmlcfg - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP25.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "NO_SNPRINTF" /Fp"Release/nmlcfg.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlcfg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP25.tmp" 
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP26.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/nmlcfg.pdb" /machine:I386 /out:"Release/nmlcfg.exe" 
+.\Release\nmlcfg.obj
+..\Release\rcs.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP26.tmp"
+<h3>Output Window</h3>
+Compiling...
+nmlcfg.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+nmlcfg.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: rcs - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP28.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "HAVE_CONFIG_H" /Fp"Debug/rcs.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\_inifile.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\_mathprnt.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\_posemath.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\_shm.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\_timer.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\autokey.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\bcopy.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cmd_msg.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_cfg.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_datetime.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_dup.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_in.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_pm.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_pup.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_srv.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_up.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_xml_up.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cms_xup.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\cmssvrp.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\dbg_mem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\extxdrintf.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\inetnull.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\inifile.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\linklist.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\mathprnt.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\memsem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nml.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nml_mod.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nml_oi.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nml_srv.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlcfgsvr_clntcalls.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlcms_c.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlmsg.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlqr.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlset.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\physmem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\posemath.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\rcs_exit.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\rcs_prnt.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\rcsvers.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\recvline.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\recvmsgt.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\recvn.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sendline.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sendmsgt.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sendn.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sepwords.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\shm.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\shmem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sincos.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\sokintrf.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\stat_msg.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\stat_msg_v2_n.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\stcpmem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\stcpopts.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\stcpsvr.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\tcp_opts.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\tcp_srv.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\tcpmem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\timer.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\timetracker.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\timetracker_c_n.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\timetracker_n.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\udp_opts.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\udp_srv.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\udpmem.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\win32_sem.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\winver.cpp"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr_arra.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr_floa.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr_mem.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr_refe.c"
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\xdr_stdi.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP28.tmp" 
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP29.tmp" with contents
+[
+/nologo /out:"Debug\rcs.lib" 
+.\Debug\_inifile.obj
+.\Debug\_mathprnt.obj
+.\Debug\_posemath.obj
+.\Debug\_shm.obj
+.\Debug\_timer.obj
+.\Debug\autokey.obj
+.\Debug\bcopy.obj
+.\Debug\cmd_msg.obj
+.\Debug\cms.obj
+.\Debug\cms_cfg.obj
+.\Debug\cms_datetime.obj
+.\Debug\cms_dup.obj
+.\Debug\cms_in.obj
+.\Debug\cms_pm.obj
+.\Debug\cms_pup.obj
+.\Debug\cms_srv.obj
+.\Debug\cms_up.obj
+.\Debug\cms_xml_up.obj
+.\Debug\cms_xup.obj
+.\Debug\cmssvrp.obj
+.\Debug\dbg_mem.obj
+.\Debug\extxdrintf.obj
+.\Debug\inetnull.obj
+.\Debug\inifile.obj
+.\Debug\linklist.obj
+.\Debug\mathprnt.obj
+.\Debug\memsem.obj
+.\Debug\nml.obj
+.\Debug\nml_mod.obj
+.\Debug\nml_oi.obj
+.\Debug\nml_srv.obj
+.\Debug\nmlcfgsvr_clntcalls.obj
+.\Debug\nmlcms_c.obj
+.\Debug\nmlmsg.obj
+.\Debug\nmlqr.obj
+.\Debug\nmlset.obj
+.\Debug\physmem.obj
+.\Debug\posemath.obj
+.\Debug\rcs_exit.obj
+.\Debug\rcs_prnt.obj
+.\Debug\rcsvers.obj
+.\Debug\recvline.obj
+.\Debug\recvmsgt.obj
+.\Debug\recvn.obj
+.\Debug\sem.obj
+.\Debug\sendline.obj
+.\Debug\sendmsgt.obj
+.\Debug\sendn.obj
+.\Debug\sepwords.obj
+.\Debug\shm.obj
+.\Debug\shmem.obj
+.\Debug\sincos.obj
+.\Debug\sokintrf.obj
+.\Debug\stat_msg.obj
+.\Debug\stat_msg_v2_n.obj
+.\Debug\stcpmem.obj
+.\Debug\stcpopts.obj
+.\Debug\stcpsvr.obj
+.\Debug\tcp_opts.obj
+.\Debug\tcp_srv.obj
+.\Debug\tcpmem.obj
+.\Debug\timer.obj
+.\Debug\timetracker.obj
+.\Debug\timetracker_c_n.obj
+.\Debug\timetracker_n.obj
+.\Debug\udp_opts.obj
+.\Debug\udp_srv.obj
+.\Debug\udpmem.obj
+.\Debug\win32_sem.obj
+.\Debug\winver.obj
+.\Debug\xdr.obj
+.\Debug\xdr_arra.obj
+.\Debug\xdr_floa.obj
+.\Debug\xdr_mem.obj
+.\Debug\xdr_refe.obj
+.\Debug\xdr_stdi.obj
+]
+Creating command line "link.exe -lib @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP29.tmp"
+<h3>Output Window</h3>
+Compiling...
+_inifile.c
+_mathprnt.c
+_posemath.c
+_shm.c
+_timer.c
+autokey.c
+bcopy.c
+cmd_msg.cpp
+cms.cpp
+cms_cfg.cpp
+cms_datetime.cpp
+cms_dup.cpp
+cms_in.cpp
+cms_pm.cpp
+cms_pup.cpp
+cms_srv.cpp
+cms_up.cpp
+cms_xml_up.cpp
+cms_xup.cpp
+cmssvrp.cpp
+dbg_mem.cpp
+extxdrintf.c
+inetnull.cpp
+inifile.cpp
+linklist.cpp
+mathprnt.cpp
+memsem.cpp
+nml.cpp
+nml_mod.cpp
+nml_oi.cpp
+nml_srv.cpp
+nmlcfgsvr_clntcalls.cpp
+nmlcms_c.cpp
+nmlmsg.cpp
+nmlqr.cpp
+nmlset.cpp
+physmem.cpp
+posemath.cpp
+rcs_exit.cpp
+rcs_prnt.cpp
+rcsvers.c
+recvline.c
+recvmsgt.c
+recvn.c
+sem.cpp
+sendline.c
+sendmsgt.c
+sendn.c
+sepwords.cpp
+shm.cpp
+shmem.cpp
+sincos.c
+sokintrf.c
+stat_msg.cpp
+stat_msg_v2_n.cpp
+stcpmem.cpp
+stcpopts.cpp
+stcpsvr.cpp
+tcp_opts.cpp
+tcp_srv.cpp
+tcpmem.cpp
+timer.cpp
+timetracker.cpp
+timetracker_c_n.c
+timetracker_n.cpp
+udp_opts.cpp
+udp_srv.cpp
+udpmem.cpp
+win32_sem.c
+winver.cpp
+xdr.c
+xdr_arra.c
+xdr_floa.c
+xdr_mem.c
+xdr_refe.c
+xdr_stdi.c
+Creating library...
+<h3>
+--------------------Configuration: nmlcfg - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP2A.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "NO_SNPRINTF" /Fp"Debug/nmlcfg.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlcfg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP2A.tmp" 
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP2B.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/nmlcfg.pdb" /debug /machine:I386 /out:"Debug/nmlcfg.exe" /pdbtype:sept 
+.\Debug\nmlcfg.obj
+..\Release\rcs.lib
+\cygwin\home\shackle\rcslib\etc\win32msc\rcs\Debug\rcs.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP2B.tmp"
+<h3>Output Window</h3>
+Compiling...
+nmlcfg.cpp
+Linking...
+LINK : warning LNK4098: defaultlib "LIBCMT" conflicts with use of other libs; use /NODEFAULTLIB:library
+
+
+
+<h3>Results</h3>
+nmlcfg.exe - 0 error(s), 1 warning(s)
+<h3>
+--------------------Configuration: nmlcfgsvr - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP2D.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "HAVE_CONFIG_H" /Fp"Release/nmlcfgsvr.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlcfgsvr.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP2D.tmp" 
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP2E.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/nmlcfgsvr.pdb" /machine:I386 /out:"Release/nmlcfgsvr.exe" 
+.\Release\nmlcfgsvr.obj
+..\Release\rcs.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP2E.tmp"
+<h3>Output Window</h3>
+Compiling...
+nmlcfgsvr.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+nmlcfgsvr.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: nmlcfgsvr - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP30.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "HAVE_CONFIG_H" /Fp"Debug/nmlcfgsvr.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmlcfgsvr.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP30.tmp" 
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP31.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/nmlcfgsvr.pdb" /debug /machine:I386 /out:"Debug/nmlcfgsvr.exe" /pdbtype:sept 
+.\Debug\nmlcfgsvr.obj
+..\Release\rcs.lib
+\cygwin\home\shackle\rcslib\etc\win32msc\rcs\Debug\rcs.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP31.tmp"
+<h3>Output Window</h3>
+Compiling...
+nmlcfgsvr.cpp
+Linking...
+LINK : warning LNK4098: defaultlib "LIBCMT" conflicts with use of other libs; use /NODEFAULTLIB:library
+
+
+
+<h3>Results</h3>
+nmlcfgsvr.exe - 0 error(s), 1 warning(s)
+<h3>
+--------------------Configuration: nmltest - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP33.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"Release/nmltest.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmltest.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP33.tmp" 
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP34.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/nmltest.pdb" /machine:I386 /out:"Release/nmltest.exe" 
+.\Release\nmltest.obj
+..\Release\rcs.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP34.tmp"
+<h3>Output Window</h3>
+Compiling...
+nmltest.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+nmltest.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: nmltest - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP36.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"Debug/nmltest.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\cygwin\home\shackle\rcslib\etc\win32msc\rcs\nmltest.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP36.tmp" 
+Creating temporary file "C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP37.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/nmltest.pdb" /debug /machine:I386 /out:"Debug/nmltest.exe" /pdbtype:sept 
+.\Debug\nmltest.obj
+..\Release\rcs.lib
+\cygwin\home\shackle\rcslib\etc\win32msc\rcs\Debug\rcs.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\shackle\LOCALS~1\Temp\RSP37.tmp"
+<h3>Output Window</h3>
+Compiling...
+nmltest.cpp
+Linking...
+LINK : warning LNK4098: defaultlib "LIBCMT" conflicts with use of other libs; use /NODEFAULTLIB:library
+
+
+
+<h3>Results</h3>
+nmltest.exe - 0 error(s), 1 warning(s)
+</pre>
+</body>
+</html>

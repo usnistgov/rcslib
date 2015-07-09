@@ -725,7 +725,7 @@ CMS_SERVER_REMOTE_STCP_PORT::handle_request (CLIENT_STCP_PORT *
 	    {
 	      if ((bytes_read = recvline
 		  (_client_stcp_port->socket_fd, last_line, 
-		   temp_buffer_size-(last_line-temp_buffer), 0, -1,
+		   (int) (temp_buffer_size-(last_line-temp_buffer)), 0, -1,
 		   NULL)) <= 0)
 		{
 		  rcs_print_error ("Can not read from client port.\n");
@@ -799,7 +799,7 @@ CMS_SERVER_REMOTE_STCP_PORT::handle_request (CLIENT_STCP_PORT *
 		{
 		  if ((bytes_read = recvline
 		      (_client_stcp_port->socket_fd, last_line, 
-		       temp_buffer_size-(last_line-temp_buffer), 0, -1,
+		       (int) (temp_buffer_size-(last_line-temp_buffer)), 0, -1,
 		       NULL)) <= 0)
 		    {
 		      rcs_print_error ("Can not read from client port.\n");
