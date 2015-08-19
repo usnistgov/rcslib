@@ -368,7 +368,7 @@ public class PackedFileReader {
         ArrayList<rcs.nml.LogTimeEntry> l =
                     new ArrayList<rcs.nml.LogTimeEntry>(indexes_ia.length + 1);
         NMLmsg msg0 = ReadFileSection(combinedFile,0,maxlen);
-        double ts = mtts.MsgToTimeStamp(msg0);
+        double ts = mtts.getTimestampFromMessage(msg0);
         String cp = combinedFile.getCanonicalPath();
         int indexNum = 0;
         if(indexes_ia[0] == 0) {
@@ -381,7 +381,7 @@ public class PackedFileReader {
         while(indexNum < indexes_ia.length && pos < cfl) {
             int ml = maxlen;
             NMLmsg msg = ReadFileSection(combinedFile,pos,maxlen);
-            ts = mtts.MsgToTimeStamp(msg);
+            ts = mtts.getTimestampFromMessage(msg);
             int ms = 0;
             if(indexNum < indexes_ia.length-1) {
                 int nextPos = indexes_ia[indexNum+1];
