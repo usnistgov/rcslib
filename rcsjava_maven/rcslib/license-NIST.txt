@@ -1,0 +1,25 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}This software is public domain software, however it is preferred
+${licensePrefix}that the following disclaimers be attached.
+${licensePrefix}Software Copywrite/Warranty Disclaimer
+${licensePrefix}
+${licensePrefix}This software was developed at the National Institute of Standards and
+${licensePrefix}Technology by employees of the Federal Government in the course of their
+${licensePrefix}official duties. Pursuant to title 17 Section 105 of the United States
+${licensePrefix}Code this software is not subject to copyright protection and is in the
+${licensePrefix}public domain. NIST Real-Time Control System software is an experimental
+${licensePrefix}system. NIST assumes no responsibility whatsoever for its use by other
+${licensePrefix}parties, and makes no guarantees, expressed or implied, about its
+${licensePrefix}quality, reliability, or any other characteristic. We would appreciate
+${licensePrefix}acknowledgement if the software is used. This software can be
+${licensePrefix}redistributed and/or modified freely provided that any derivative works
+${licensePrefix}bear some notice that they are derived from it, and any modified
+${licensePrefix}versions bear some notice that they have been modified.
+${licensePrefix}
+${licensePrefix} See http://www.copyright.gov/title17/92chap1.html#105
+${licensePrefix}
+<#if licenseLast??>
+${licenseLast}
+</#if>
