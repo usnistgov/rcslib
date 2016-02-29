@@ -18,8 +18,6 @@ redistributed and/or modified freely provided that any derivative works
 bear some notice that they are derived from it, and any modified
 versions bear some notice that they have been modified.
 
-
-
  */
 
 /*
@@ -1212,6 +1210,14 @@ public class Posemath {
         return out;
     }
 
+    static public PmCartesian[] multiply(PmPose pose, PmCartesian l[]) throws PmException {
+        PmCartesian out[] = new PmCartesian[l.length];
+        for (int i = 0; i < l.length; i++) {
+            out[i] = Posemath.multiply(pose, l[i]);
+        }
+        return out;
+    }
+    
     static public PmCartesian pmCartCentroid(List<? extends PmCartesian> l) {
         PmCartesian result = new PmCartesian();
         int count = 0;
@@ -2874,6 +2880,12 @@ public class Posemath {
 
     static public PM_CARTESIAN multiply(PM_POSE p1, PM_CARTESIAN v2) throws PmException {
         PM_CARTESIAN vout = new PM_CARTESIAN();
+        pmPoseCartMult(p1, v2, vout);
+        return vout;
+    }
+
+    static public PmCartesian multiply(PmPose p1, PmCartesian v2) throws PmException {
+        PmCartesian vout = new PmCartesian();
         pmPoseCartMult(p1, v2, vout);
         return vout;
     }
