@@ -3,7 +3,7 @@
     <groupId>com.github.wshackle</groupId>
     <artifactId>rcslib</artifactId>
     <packaging>jar</packaging>
-    <version>2015.05.04.03-SNAPSHOT</version>
+    <version>2016.11.18</version>
     <name>rcslib</name>
     <url>http://maven.apache.org</url>
     <dependencies>
@@ -43,7 +43,7 @@
         <connection>scm:git:git@github.com:usnistgov/rcslib.git</connection>
         <developerConnection>scm:git:git@github.com:usnistgov/rcslib.git</developerConnection>
         <url>https://github.com/usnistgov/rcslib</url>
-        <tag>HEAD</tag>
+        <tag>rcslib-2016.11.18</tag>
     </scm>
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
