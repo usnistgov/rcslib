@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Created-By: 1.8.0_73 (Oracle Corporation)
+Main-Class: rcs.RCS_VERSION
+
+Name: rcs
+Package-Version: "RCS_VERSION_STRING"
+Implementation-Title: "rcs"
+Package-Title: "rcs"
+Implementation-Version: "RCS_VERSION_STRING"
+Sealed: true
+Specification-Vendor: "National Institute of Standards and Technology 
+ (Will Shackleford)"
+Specification-Title: "RCS-Library Classes"
+Specification-Version: "1.0"
+Package-Vendor: National Institute of Standards and Technology (Will S
+ hackleford)"
+Implementation-Vendor: National Institute of Standards and Technology 
+ (Will Shackleford)"
+

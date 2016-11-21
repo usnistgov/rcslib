@@ -1274,7 +1274,7 @@ int pmMatNorm(PmRotationMatrix m, PmRotationMatrix * mout)
   if (r1 != 0) return r1;
 
   /* z = x cross y */
-  (void) pmCartCartCross(mout->y, mout->y, &mout->z);
+  (void) pmCartCartCross(mout->x, mout->y, &mout->z);
   
   return pmErrno = 0;
 }
