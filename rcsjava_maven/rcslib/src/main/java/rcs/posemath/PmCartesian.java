@@ -113,6 +113,10 @@ public class PmCartesian extends java.awt.geom.Point2D.Double  implements Clonea
     public PmCartesian multiply(final double d) {
         return new PmCartesian(this.x*d,this.y*d,this.z*d);
     }
+    
+    public double dot(PmCartesian c) {
+        return c.x*x+c.y*y+c.z*z;
+    }
 
     static public PmCartesian valueOf(String s) {
         PmCartesian c = new PmCartesian();

@@ -60,6 +60,10 @@ public class PM_CARTESIAN extends PmCartesian implements Cloneable {
        return new PM_CARTESIAN(d*x,d*y,d*z);
     }
 
+    public double dot(PM_CARTESIAN c) {
+        return c.x*x+c.y*y+c.z*z;
+    }
+    
     public double distFrom(PM_CARTESIAN p) {
         double dx = (x - p.x);
         double dy = (y - p.y);
