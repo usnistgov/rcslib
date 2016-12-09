@@ -48,22 +48,20 @@ public class PM_CARTESIAN extends PmCartesian implements Cloneable {
     }
 
     public PM_CARTESIAN add(PM_CARTESIAN c) {
-        return new PM_CARTESIAN(x+c.x,y+c.y,z+c.z);
-    }
-    
-    public PM_CARTESIAN subtract(final PM_CARTESIAN c) {
-        return new PM_CARTESIAN(x-c.x,y-c.y,z-c.z);
+        x += c.x;
+        y += c.y;
+        z += c.z;
+        return this;
     }
 
     @Override
     public PM_CARTESIAN multiply(double d) {
-       return new PM_CARTESIAN(d*x,d*y,d*z);
+        x *= d;
+        y *= d;
+        z *= d;
+        return this;
     }
 
-    public double dot(PM_CARTESIAN c) {
-        return c.x*x+c.y*y+c.z*z;
-    }
-    
     public double distFrom(PM_CARTESIAN p) {
         double dx = (x - p.x);
         double dy = (y - p.y);

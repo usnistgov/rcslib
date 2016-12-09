@@ -14,6 +14,6 @@ public interface MsgToTimeStamp {
      * @param msg message to extract timestamp from
      * @return time in seconds associated with this message since Jan 1,1970.
      */
-    public double MsgToTimeStamp(rcs.nml.NMLmsg msg);
+    public double getTimestampFromMessage(rcs.nml.NMLmsg msg);
     
 }

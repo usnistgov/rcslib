@@ -18,9 +18,11 @@ redistributed and/or modified freely provided that any derivative works
 bear some notice that they are derived from it, and any modified
 versions bear some notice that they have been modified.
 
+
+
  */
 
-/*
+ /*
 _posemath.c
 
 C definitions for pose math library data types and
@@ -54,9 +56,9 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Class created only for its static functions to convert and manipulate
- * the pose representations in the rest of the package.
- * Adapted from _posemath.c and posemath.cc.
+ * Class created only for its static functions to convert and manipulate the
+ * pose representations in the rest of the package. Adapted from _posemath.c and
+ * posemath.cc.
  *
  * @author shackle
  */
@@ -199,11 +201,11 @@ public class Posemath {
             }
         }
         double total = 0;
-        for(int i = 0; i < l1.size(); i++) {
-            if(!l1_it.hasNext()) {
+        for (int i = 0; i < l1.size(); i++) {
+            if (!l1_it.hasNext()) {
                 l1_it = l1.iterator();
             }
-            if(!l2_it.hasNext()) {
+            if (!l2_it.hasNext()) {
                 l2_it = l2.iterator();
             }
             double l1_val = l1_it.next();
@@ -222,8 +224,8 @@ public class Posemath {
         double mean_l2 = Posemath.mean(l2);
         double dev_l1 = Posemath.stddev(l1);
         double dev_l2 = Posemath.stddev(l2);
-        double mean_prod = mean_l1*mean_l2;
-        double dev_prod = dev_l1*dev_l2;
+        double mean_prod = mean_l1 * mean_l2;
+        double dev_prod = dev_l1 * dev_l2;
         ps.println("shift,correlation");
         for (double dshift = start_shift; dshift <= end_shift; dshift += inc) {
             double sop = Posemath.shiftedSumOfProducts(l1, l2, dshift);
@@ -270,11 +272,11 @@ public class Posemath {
                     tlist,
                     0, 1, 2, 3, 4, 5, 6);
             List<Double> stillTimesList = new LinkedList<Double>();
-            List<PM_POSE> stillList =
-                    Posemath.findStillPoints(tlist, posList,
-                    Double.valueOf(args[1]),
-                    Integer.valueOf(args[2]),
-                    stillTimesList);
+            List<PM_POSE> stillList
+                    = Posemath.findStillPoints(tlist, posList,
+                            Double.valueOf(args[1]),
+                            Integer.valueOf(args[2]),
+                            stillTimesList);
             Posemath.writeTimeAndPoseList(stillTimesList, stillList,
                     System.out);
         } catch (Exception e) {
@@ -283,8 +285,9 @@ public class Posemath {
     }
 
     /**
-     * Ignores the z value in each element of the list and returns a line
-     * fit with least-squares error to x,y points
+     * Ignores the z value in each element of the list and returns a line fit
+     * with least-squares error to x,y points
+     *
      * @param l list of PmCartesian points to fit
      * @return PM_LINE with start,end and unit vector of the line.
      */
@@ -352,8 +355,8 @@ public class Posemath {
     }
 
     /**
-     * Adds two PM_CARTESIANS and returns a weightedAvg
-     *  ie. c1*s1+c2*s2;
+     * Adds two PM_CARTESIANS and returns a weightedAvg ie. c1*s1+c2*s2;
+     *
      * @param c1 first PM_CARTESIAN to add
      * @param s1 weighting scale factor for c1
      * @param c2 second PM_CARTESIAN to add
@@ -366,8 +369,8 @@ public class Posemath {
     }
 
     /**
-     * Adds two PM_POSES and returns a weightedAvg
-     *  ie. c1*s1+c2*s2;
+     * Adds two PM_POSES and returns a weightedAvg ie. c1*s1+c2*s2;
+     *
      * @param p1 first PM_POSE to add
      * @param s1 weighting scale factor for c1
      * @param p2 second PM_POSE to add
@@ -390,8 +393,9 @@ public class Posemath {
     }
 
     /**
-     * Compute an array of errors or the distance between 
-     *  each point in list l to line line.
+     * Compute an array of errors or the distance between each point in list l
+     * to line line.
+     *
      * @param line line points should be near
      * @param l list of points near line
      * @return array of errors
@@ -408,8 +412,9 @@ public class Posemath {
     }
 
     /**
-     * Ignores the z value in each element of the list and returns a circle
-     * fit with least-squares error to x,y points
+     * Ignores the z value in each element of the list and returns a circle fit
+     * with least-squares error to x,y points
+     *
      * @param l list of PmCartesian points to fit
      * @return PM_CIRCLE with center and radius of the fitted circle.
      */
@@ -493,8 +498,9 @@ public class Posemath {
 
     /**
      * Print an error if PM_PRINT_ERROR is set and throw an exception.
+     *
      * @param str string to print
-     * @param new_errno integer error code  to put in pmErrno
+     * @param new_errno integer error code to put in pmErrno
      * @throws PmException
      */
     static private void pmPrintError(String str, int new_errno) throws PmException {
@@ -517,11 +523,12 @@ public class Posemath {
 
     /* Pose Math Basis Functions */
 
-    /* Scalar functions */
+ /* Scalar functions */
     /**
-     * Square root function that adds some extra checks similiar to the
-     *  C++ pmSqrt() primarily only exists for converting C++ apps.
-     *  Otherwise use Math.sqrt().
+     * Square root function that adds some extra checks similiar to the C++
+     * pmSqrt() primarily only exists for converting C++ apps. Otherwise use
+     * Math.sqrt().
+     *
      * @param x number to take square root of
      * @return square root of x
      * @throws PmException when x less than zero
@@ -541,6 +548,7 @@ public class Posemath {
 
     /**
      * Square of x or x*x.
+     *
      * @param x number to square
      * @return square of x
      */
@@ -550,10 +558,11 @@ public class Posemath {
 
     /**
      * Determine if a within eps of b.
+     *
      * @param a value to check if close to b
      * @param b value to check if close to b
      * @param eps allowed difference between two values
-     * @return {@code (Math.abs(a - b) < eps) } 
+     * @return {@code (Math.abs(a - b) < eps) }
      */
     public static boolean pmClose(double a, double b, double eps) {
         return (Math.abs(a - b) < eps);
@@ -562,7 +571,7 @@ public class Posemath {
 
     /* Translation rep conversion functions */
 
-    /*
+ /*
      * Convert PM_CARTESIAN to a PM_CYLINDRICAL
      * @param v cartesian to convert    
      * @return v in cylindrical coords
@@ -591,6 +600,7 @@ public class Posemath {
 
     /**
      * Convert a PM_CARTESIAN to PM_SPHERICAL
+     *
      * @param v cartesian to convert
      * @return v in spherical coords
      */
@@ -602,6 +612,7 @@ public class Posemath {
 
     /**
      * Convert a PmCartesian to PmSpherical
+     *
      * @param v cartesian to convert
      * @param s spherical to store converted results in
      * @return 0
@@ -621,6 +632,7 @@ public class Posemath {
 
     /**
      * Convert PM_SPHERICAL to PM_CARTESIAN
+     *
      * @param v cartesian to convert
      * @return v in spherical coords
      */
@@ -632,6 +644,7 @@ public class Posemath {
 
     /**
      * Convert PmSherical to PmCartesian
+     *
      * @param s spherical to convert
      * @param v cartesian to store converted result
      * @return 0
@@ -649,6 +662,7 @@ public class Posemath {
 
     /**
      * Convert a spherical to cylindrical
+     *
      * @param s spherical to convert
      * @return s in cylindrical coordinates.
      */
@@ -660,6 +674,7 @@ public class Posemath {
 
     /**
      * Convert a spherical to cylindrical
+     *
      * @param s spherical to convert
      * @param c cylindrical to store converted value
      * @return 0
@@ -673,6 +688,7 @@ public class Posemath {
 
     /**
      * Convert a cylindrical to a cartesian
+     *
      * @param v cylindrical to convert
      * @return v in cartesian coords
      */
@@ -684,6 +700,7 @@ public class Posemath {
 
     /**
      * Convert cylindrical to cartesian.
+     *
      * @param c cylindrical to convert
      * @param v cartesian to store result
      * @return 0
@@ -697,6 +714,7 @@ public class Posemath {
 
     /**
      * Convert a cylindrical to a spherical
+     *
      * @param c cylindrical to convert
      * @return c in spherical coordinates
      */
@@ -708,6 +726,7 @@ public class Posemath {
 
     /**
      * Convert a cylindrical to a spherical
+     *
      * @param c cylindrical to convert
      * @param s spherical to store result
      * @return 0
@@ -724,6 +743,7 @@ public class Posemath {
     /* Rotation rep conversion functions */
     /**
      * Store a quaternion based on a single rotation about an axis
+     *
      * @param axis either PM_X,PM_Y, or PM_Z
      * @param a angle in radians for rotation
      * @param q quaternion to store result
@@ -773,6 +793,7 @@ public class Posemath {
 
     /**
      * Convert a rotation vector to a quaternion
+     *
      * @param v rotation vector to convert
      * @return v as a quaternion
      * @throws PmException when conversion is not possible
@@ -785,6 +806,7 @@ public class Posemath {
 
     /**
      * Convert a rotation vector to a quaternion
+     *
      * @param v rotation vector to convert
      * @return v as a quaternion
      * @throws PmException when conversion is not possible
@@ -794,9 +816,10 @@ public class Posemath {
         pmRotQuatConvert(v, q);
         return q;
     }
-    
+
     /**
      * Convert a rotation vector to a quaternion
+     *
      * @param r rotation vector to convert
      * @param q quaternion to store result
      * @return 0
@@ -812,7 +835,6 @@ public class Posemath {
 
             return pmErrno = PM_NORM_ERR;
         }
-
 
         if (pmClose(r.s, 0.0, 1e-3)) {
             q.s = 1.0;
@@ -840,6 +862,7 @@ public class Posemath {
 
     /**
      * Convert rotation vector to rotation matrix
+     *
      * @param v rotation vector to convert (must be normalized)
      * @return v as a rotation matrix
      * @throws PmException when conversion is not possible
@@ -852,6 +875,7 @@ public class Posemath {
 
     /**
      * Convert rotation vector to rotation matrix
+     *
      * @param v rotation vector to convert (must be normalized)
      * @return v as a rotation matrix
      * @throws PmException when conversion is not possible
@@ -861,9 +885,10 @@ public class Posemath {
         pmRotMatConvert(v, m);
         return m;
     }
-    
+
     /**
      * Convert roll-pitch-yaw to rotation matrix
+     *
      * @param rpy roll-pitch-yaw to convert (must be normalized)
      * @return v as a rotation matrix
      * @throws PmException when conversion is not possible
@@ -876,6 +901,7 @@ public class Posemath {
 
     /**
      * Convert roll-pitch-yaw to rotation matrix
+     *
      * @param rpy roll-pitch-yaw to convert (must be normalized)
      * @return v as a rotation matrix
      * @throws PmException when conversion is not possible
@@ -885,10 +911,10 @@ public class Posemath {
         pmRpyMatConvert(rpy, m);
         return m;
     }
-    
-    
+
     /**
      * Convert a rotation vector to a rotation matrix.
+     *
      * @param r rotation vector to convert
      * @param m rotation matrix to store result
      * @return 0
@@ -896,7 +922,6 @@ public class Posemath {
      */
     static public int pmRotMatConvert(PmRotationVector r, PmRotationMatrix m) throws PmException {
         double s, c, omc;
-
 
         if (!pmRotIsNorm(r)) {
 
@@ -909,7 +934,8 @@ public class Posemath {
         c = Math.cos(r.s);
 
         /* from space book */
-        m.x.x = c + pmSq(r.x) * (omc = 1 - c);      /* omc = One Minus Cos */
+        m.x.x = c + pmSq(r.x) * (omc = 1 - c);
+        /* omc = One Minus Cos */
         m.y.x = -r.z * s + r.x * r.y * omc;
         m.z.x = r.y * s + r.x * r.z * omc;
 
@@ -954,6 +980,7 @@ public class Posemath {
 
     /**
      * Convert quaternion to a rotation vector
+     *
      * @param rpy roll-pitch-yaw to convert (must be normalized)
      * @return v as a rotation vector
      * @throws PmException when conversion is not possible
@@ -966,6 +993,7 @@ public class Posemath {
 
     /**
      * Convert roll-pitch-yaw to a rotation vector
+     *
      * @param rpy roll-pitch-yaw to convert (must be normalized)
      * @return v as a rotation vector
      * @throws PmException when conversion is not possible
@@ -975,9 +1003,10 @@ public class Posemath {
         pmRpyRotConvert(rpy, r);
         return r;
     }
-    
+
     /**
      * Convert quaternion to a rotation vector
+     *
      * @param v quaternion to convert (must be normalized)
      * @return v as a rotation vector
      * @throws PmException when conversion is not possible
@@ -990,6 +1019,7 @@ public class Posemath {
 
     /**
      * Convert quaternion to a rotation vector
+     *
      * @param v quaternion to convert (must be normalized)
      * @return v as a rotation vector
      * @throws PmException when conversion is not possible
@@ -999,9 +1029,10 @@ public class Posemath {
         pmQuatRotConvert(v, r);
         return r;
     }
-    
+
     /**
      * Convert quaternion to a rotation vector
+     *
      * @param m matrix to convert (must be normalized)
      * @return v as a rotation vector
      * @throws PmException when conversion is not possible
@@ -1009,9 +1040,10 @@ public class Posemath {
     static public PmRotationVector toRot(PmRotationMatrix m) throws PmException {
         return toRot(toQuat(m));
     }
-    
+
     /**
      * Convert a quaternion to a rotation vector
+     *
      * @param q quaternion to convert
      * @param r rotation vector to store result
      * @return 0
@@ -1020,14 +1052,12 @@ public class Posemath {
     static public int pmQuatRotConvert(PmQuaternion q, PmRotationVector r) throws PmException {
         double sh;
 
-
         if (!pmQuatIsNorm(q)) {
 
             pmPrintError("Bad quaternion in pmQuatRotConvert\n", PM_NORM_ERR);
 
             return pmErrno = PM_NORM_ERR;
         }
-
 
         sh = pmSqrt(pmSq(q.x) + pmSq(q.y) + pmSq(q.z));
 
@@ -1048,6 +1078,7 @@ public class Posemath {
 
     /**
      * Convert a quaternion to a rotation matrix.
+     *
      * @param v quaternion to convert (must be normalized)
      * @return v as a rotation matrix
      * @throws PmException when conversion is not possible
@@ -1059,12 +1090,14 @@ public class Posemath {
     }
 
     /**
-     * Return the minimum distance of the point p from the path specified by
-     * the array of waypoints. The distance is the distance to the closest line
+     * Return the minimum distance of the point p from the path specified by the
+     * array of waypoints. The distance is the distance to the closest line
      * segment specified by each pair of consecutive points.
-     * @param p  point we want to know how close it is to a path
+     *
+     * @param p point we want to know how close it is to a path
      * @param waypoints array of waypoints to specify a path.
-     * @return distance to nearest line segment in whatever units (p and waypoints are in)
+     * @return distance to nearest line segment in whatever units (p and
+     * waypoints are in)
      */
     public static double distFromPath(PM_CARTESIAN p, PM_CARTESIAN[] waypoints) {
         double min_diff = Double.POSITIVE_INFINITY;
@@ -1210,14 +1243,6 @@ public class Posemath {
         return out;
     }
 
-    static public PmCartesian[] multiply(PmPose pose, PmCartesian l[]) throws PmException {
-        PmCartesian out[] = new PmCartesian[l.length];
-        for (int i = 0; i < l.length; i++) {
-            out[i] = Posemath.multiply(pose, l[i]);
-        }
-        return out;
-    }
-    
     static public PmCartesian pmCartCentroid(List<? extends PmCartesian> l) {
         PmCartesian result = new PmCartesian();
         int count = 0;
@@ -1342,7 +1367,7 @@ public class Posemath {
         pmQuatRpyConvert(v, r);
         return r;
     }
-    
+
     static public int pmQuatRpyConvert(PmQuaternion q, PmRpy rpy) throws PmException {
         PmRotationMatrix m = new PmRotationMatrix();
         int r1, r2;
@@ -1366,7 +1391,7 @@ public class Posemath {
         pmMatQuatConvert(m, q);
         PmRotationVector v = new PmRotationVector();
         pmQuatRotConvert(q, r);
-        
+
         return pmErrno;
     }
 
@@ -1381,7 +1406,7 @@ public class Posemath {
         pmMatQuatConvert(m, qout);
         return qout;
     }
-    
+
     static public int pmMatQuatConvert(PmRotationMatrix m, PmQuaternion q) throws PmException {
         /*
         from Stephe's "space" book
@@ -1413,13 +1438,11 @@ public class Posemath {
 
         double a;
 
-
         if (!pmMatIsNorm(m)) {
             Posemath.last_bad_rotmat = m;
             pmPrintError("Bad matrix in pmMatQuatConvert:\n" + m.toString(), PM_NORM_ERR);
             return pmErrno = PM_NORM_ERR;
         }
-
 
         q.s = 0.5 * pmSqrt(1.0 + m.x.x + m.y.y + m.z.z);
 
@@ -1465,11 +1488,13 @@ public class Posemath {
 
         if (Math.abs(zyz.y) < ZYZ_Y_FUZZ) {
             zyz.z = 0.0;
-            zyz.y = 0.0;            /* force Y to 0 */
+            zyz.y = 0.0;
+            /* force Y to 0 */
             zyz.zp = Math.atan2(-m.y.x, m.x.x);
         } else if (Math.abs(zyz.y - PM_PI) < ZYZ_Y_FUZZ) {
             zyz.z = 0.0;
-            zyz.y = PM_PI;          /* force Y to 180 */
+            zyz.y = PM_PI;
+            /* force Y to 180 */
             zyz.zp = Math.atan2(m.y.x, -m.x.x);
         } else {
             zyz.z = Math.atan2(m.z.y, m.z.x);
@@ -1484,11 +1509,13 @@ public class Posemath {
 
         if (Math.abs(zyx.y - PM_PI_2) < ZYX_Y_FUZZ) {
             zyx.z = 0.0;
-            zyx.y = PM_PI_2;                /* force it */
+            zyx.y = PM_PI_2;
+            /* force it */
             zyx.x = Math.atan2(m.y.x, m.y.y);
         } else if (Math.abs(zyx.y + PM_PI_2) < ZYX_Y_FUZZ) {
             zyx.z = 0.0;
-            zyx.y = -PM_PI_2;               /* force it */
+            zyx.y = -PM_PI_2;
+            /* force it */
             zyx.x = -Math.atan2(m.y.z, m.y.y);
         } else {
             zyx.z = Math.atan2(m.x.y, m.x.x);
@@ -1503,11 +1530,13 @@ public class Posemath {
 
         if (Math.abs(rpy.p - PM_PI_2) < RPY_P_FUZZ) {
             rpy.r = Math.atan2(m.y.x, m.y.y);
-            rpy.p = PM_PI_2;         /* force it */
+            rpy.p = PM_PI_2;
+            /* force it */
             rpy.y = 0.0;
         } else if (Math.abs(rpy.p + PM_PI_2) < RPY_P_FUZZ) {
             rpy.r = -Math.atan2(m.y.z, m.y.y);
-            rpy.p = -PM_PI_2;               /* force it */
+            rpy.p = -PM_PI_2;
+            /* force it */
             rpy.y = 0.0;
         } else {
             rpy.r = Math.atan2(m.y.z, m.z.z);
@@ -1524,8 +1553,18 @@ public class Posemath {
     }
 
     static public int pmZyzRotConvert(PmEulerZyz zyz, PmRotationVector r) throws PmException {
-        pmPrintError("error: pmZyzRotConvert not implemented\n", PM_IMPL_ERR);
-        return pmErrno = PM_IMPL_ERR;
+        PmRotationMatrix mat = new PmRotationMatrix();
+        int c1 = pmZyzMatConvert(zyz, mat);
+        if (c1 < 0) {
+            pmPrintError("error: pmZyzRotConvert failed calling pmZyzMatConvert\n", c1);
+            return c1;
+        }
+        int c2 = pmMatRotConvert(mat, r);
+        if (c2 < 0) {
+            pmPrintError("error: pmZyzRotConvert failed calling pmMatRotConvert\n", c2);
+            return c2;
+        }
+        return pmErrno;
     }
 
     static public PM_QUATERNION toQuat(PM_EULER_ZYZ v) throws PmException {
@@ -1579,17 +1618,34 @@ public class Posemath {
     }
 
     static public int pmZyzRpyConvert(PmEulerZyz zyz, PmRpy rpy) throws PmException {
-
-        pmPrintError("error: pmZyzRpyConvert not implemented\n", PM_IMPL_ERR);
-
-        return pmErrno = PM_IMPL_ERR;
+        PmRotationMatrix mat = new PmRotationMatrix();
+        int c1 = pmZyzMatConvert(zyz, mat);
+        if (c1 < 0) {
+            pmPrintError("error: pmZyxZyzConvert failed calling pmZyzMatConvert\n", c1);
+            return c1;
+        }
+        int c2 = pmMatRpyConvert(mat, rpy);
+        if (c2 < 0) {
+            pmPrintError("error: pmZyxZyzConvert failed calling pmMatZyzConvert\n", c2);
+            return c2;
+        }
+        return pmErrno;
     }
 
     static public int pmZyxRotConvert(PmEulerZyx zyx, PmRotationVector r) throws PmException {
-
-        pmPrintError("error: pmZyxRotConvert not implemented\n", PM_IMPL_ERR);
-
-        return pmErrno = PM_IMPL_ERR;
+        
+        PmRotationMatrix mat = new PmRotationMatrix();
+        int c1 = pmZyxMatConvert(zyx, mat);
+        if (c1 < 0) {
+            pmPrintError("error: pmZyxRotConvert failed calling pmZyxMatConvert\n", c1);
+            return c1;
+        }
+        int c2 = pmMatRotConvert(mat, r);
+        if (c2 < 0) {
+            pmPrintError("error: pmZyxRotConvert failed calling pmMatRotConvert\n", c2);
+            return c2;
+        }
+        return pmErrno;
     }
 
     static public PM_QUATERNION toQuat(PM_EULER_ZYX v) throws PmException {
@@ -1643,16 +1699,34 @@ public class Posemath {
 
     static public int pmZyxZyzConvert(PmEulerZyx zyx, PmEulerZyz zyz) throws PmException {
 
-        pmPrintError("error: pmZyxZyzConvert not implemented\n", PM_IMPL_ERR);
-
-        return pmErrno = PM_IMPL_ERR;
+        PmRotationMatrix mat = new PmRotationMatrix();
+        int c1 = pmZyzMatConvert(zyz, mat);
+        if (c1 < 0) {
+            pmPrintError("error: pmZyxZyzConvert failed calling pmZyzMatConvert\n", c1);
+            return c1;
+        }
+        int c2 = pmMatZyzConvert(mat, zyz);
+        if (c2 < 0) {
+            pmPrintError("error: pmZyxZyzConvert failed calling pmMatZyzConvert\n", c2);
+            return c2;
+        }
+        return pmErrno;
     }
 
     static public int pmZyxRpyConvert(PmEulerZyx zyx, PmRpy rpy) throws PmException {
 
-        pmPrintError("error: pmZyxRpyConvert not implemented\n", PM_IMPL_ERR);
-
-        return pmErrno = PM_IMPL_ERR;
+        PmRotationMatrix mat = new PmRotationMatrix();
+        int c1 = pmZyxMatConvert(zyx, mat);
+        if (c1 < 0) {
+            pmPrintError("error: pmZyxZyzConvert failed calling pmZyxMatConvert\n", c1);
+            return c1;
+        }
+        int c2 = pmMatRpyConvert(mat, rpy);
+        if (c2 < 0) {
+            pmPrintError("error: pmZyxZyzConvert failed calling pmMatRpyConvert\n", c2);
+            return c2;
+        }
+        return pmErrno;
     }
 
     static public int pmRpyRotConvert(PmRpy rpy, PmRotationVector r) throws PmException {
@@ -1663,7 +1737,6 @@ public class Posemath {
         Posemath.pmQuatRotConvert(q, r);
         return pmErrno = PM_IMPL_ERR;
     }
-
 
     static public PM_QUATERNION toQuat(PM_RPY v) throws PmException {
         PM_QUATERNION q = new PM_QUATERNION();
@@ -1676,7 +1749,7 @@ public class Posemath {
         pmRpyQuatConvert(v, q);
         return q;
     }
-    
+
     static public int pmRpyQuatConvert(PmRpy rpy, PmQuaternion q) throws PmException {
         PmRotationMatrix m = new PmRotationMatrix();
         int r1, r2;
@@ -1730,17 +1803,33 @@ public class Posemath {
     }
 
     static public int pmRpyZyzConvert(PmRpy rpy, PmEulerZyz zyz) throws PmException {
-
-        pmPrintError("error: pmRpyZyzConvert not implemented\n", PM_IMPL_ERR);
-
-        return pmErrno = PM_IMPL_ERR;
+        PmRotationMatrix mat = new PmRotationMatrix();
+        int c1 = pmRpyMatConvert(rpy, mat);
+        if (c1 < 0) {
+            pmPrintError("error: pmRpyZyzConvert failed calling pmRpyMatConvert\n", c1);
+            return c1;
+        }
+        int c2 = pmMatZyzConvert(mat, zyz);
+        if (c1 < 0) {
+            pmPrintError("error: pmRpyZyzConvert failed calling pmMatZyzConvert\n", c1);
+            return c1;
+        }
+        return pmErrno;
     }
 
     static public int pmRpyZyxConvert(PmRpy rpy, PmEulerZyx zyx) throws PmException {
-
-        pmPrintError("error: pmRpyZyxConvert not implemented\n", PM_IMPL_ERR);
-
-        return pmErrno = PM_IMPL_ERR;
+        PmRotationMatrix mat = new PmRotationMatrix();
+        int c1 = pmRpyMatConvert(rpy, mat);
+        if (c1 < 0) {
+            pmPrintError("error: pmRpyZyxConvert failed calling pmRpyMatConvert\n", c1);
+            return c1;
+        }
+        int c2 = pmMatZyxConvert(mat, zyx);
+        if (c1 < 0) {
+            pmPrintError("error: pmRpyZyxConvert failed calling pmMatZyxConvert\n", c1);
+            return c1;
+        }
+        return pmErrno;
     }
 
     static public PM_POSE toPose(PM_HOMOGENEOUS h) throws PmException {
@@ -1812,6 +1901,7 @@ public class Posemath {
         pmCartCartCross(v1, v2, vout);
         return vout;
     }
+
     static public int pmCartCartCross(PmCartesian v1, PmCartesian v2, PmCartesian vout) throws PmException {
         vout.x = v1.y * v2.z - v1.z * v2.y;
         vout.y = v1.z * v2.x - v1.x * v2.z;
@@ -1971,7 +2061,6 @@ public class Posemath {
 
             pmPrintError("Zero vector in pmCartInv\n", PM_NORM_ERR);
 
-
             vout.x = DBL_MAX;
             vout.y = DBL_MAX;
             vout.z = DBL_MAX;
@@ -2000,7 +2089,6 @@ public class Posemath {
         if (size == 0.0) {
 
             pmPrintError("Zero vector in pmCartNorm\n", PM_NORM_ERR);
-
 
             vout.x = DBL_MAX;
             vout.y = DBL_MAX;
@@ -2262,7 +2350,6 @@ public class Posemath {
 
             pmPrintError("Zero vector in pmCylNorm\n", PM_NORM_ERR);
 
-
             vout.r = 0;
             vout.z = 0;
 
@@ -2338,14 +2425,12 @@ public class Posemath {
     static public int pmQuatAxisAngleMult(PmQuaternion q, int axis, double angle, PmQuaternion pq) throws PmException {
         double sh, ch;
 
-
         if (!pmQuatIsNorm(q)) {
 
             pmPrintError("error: non-unit quaternion in pmQuatAxisAngleMult\n", PM_NORM_ERR);
 
             return -1;
         }
-
 
         angle *= 0.5;
         sh = Math.sin(angle);
@@ -2423,7 +2508,6 @@ public class Posemath {
 
             pmPrintError("Divide by zero in pmRotScalDiv\n", PM_NORM_ERR);
 
-
             rout.s = DBL_MAX;
             rout.x = r.x;
             rout.y = r.y;
@@ -2477,7 +2561,6 @@ public class Posemath {
 
             pmPrintError("error: pmRotNorm size is zero\n", PM_NORM_ERR);
 
-
             rout.s = 0.0;
             rout.x = 0.0;
             rout.y = 0.0;
@@ -2494,14 +2577,35 @@ public class Posemath {
         return pmErrno = 0;
     }
 
-    /* PmRotationMatrix functions */
-    static public int pmMatNorm(PmRotationMatrix m, PmRotationMatrix mout) throws PmException {
-        mout = m;
-        pmPrintError("error: pmMatNorm not implemented\n", PM_IMPL_ERR);
-
-        return pmErrno = PM_IMPL_ERR;
-    }
-
+//    /* PmRotationMatrix functions */
+//    static public int pmMatNorm(PmRotationMatrix m, PmRotationMatrix mout) throws PmException {
+//        PmCartesian vout = new PmCartesian();
+//        PmCartesian xunit = new PmCartesian();
+//        PmCartesian yunit = new PmCartesian();
+//        PmCartesian zunit = new PmCartesian();
+//        int r1;
+//
+//        /* make x a unit vector*/
+//        r1 = pmCartNorm(m.x,  mout.x);
+//        if (r1 != 0) {
+//            return r1;
+//        }
+//
+//        /* make y orthonormal to x */
+//        r1 = pmCartCartProj(m.y, mout.x, vout);
+//        if (r1 != 0) {
+//            return r1;
+//        }
+//        pmCartCartSub(m.y, vout, vout);
+//        r1 = pmCartNorm(vout,  mout.y);
+//        if (r1 != 0) {
+//            return r1;
+//        }
+//        /* z = x cross y */
+//        pmCartCartCross(mout.x, mout.y,mout.z);
+//
+//        return pmErrno = 0;
+//    }
     static public boolean isNorm(PM_ROTATION_MATRIX m) throws PmException {
         return pmMatIsNorm(m);
     }
@@ -2582,7 +2686,6 @@ public class Posemath {
             pmPrintError("Bad quaternion in pmQuatQuatCompare\n", PM_ERR);
 
         }
-
 
         if (Math.abs(q1.s - q2.s) < Q_FUZZ
                 && Math.abs(q1.x - q2.x) < Q_FUZZ
@@ -2666,14 +2769,12 @@ public class Posemath {
         qout.y = -q1.y;
         qout.z = -q1.z;
 
-
         if (!pmQuatIsNorm(q1)) {
 
             pmPrintError("Bad quaternion in pmQuatInv\n", PM_NORM_ERR);
 
             return pmErrno = PM_NORM_ERR;
         }
-
 
         return pmErrno = 0;
     }
@@ -2795,14 +2896,12 @@ public class Posemath {
         vout.y = v2.y + 2.0 * (q1.s * c.y + q1.z * c.x - q1.x * c.z);
         vout.z = v2.z + 2.0 * (q1.s * c.z + q1.x * c.y - q1.y * c.x);
 
-
         if (!pmQuatIsNorm(q1)) {
 
             pmPrintError("Bad quaternion in pmQuatCartMult\n", PM_NORM_ERR);
 
             return pmErrno = PM_NORM_ERR;
         }
-
 
         return pmErrno = 0;
     }
@@ -2816,7 +2915,6 @@ public class Posemath {
             pmPrintError("Bad quaternion in pmPosePoseCompare\n", PM_ERR);
 
         }
-
 
         return (pmQuatQuatCompare(p1.rot, p2.rot)
                 && pmCartCartCompare(p1.tran, p2.tran));
@@ -2884,15 +2982,8 @@ public class Posemath {
         return vout;
     }
 
-    static public PmCartesian multiply(PmPose p1, PmCartesian v2) throws PmException {
-        PmCartesian vout = new PmCartesian();
-        pmPoseCartMult(p1, v2, vout);
-        return vout;
-    }
-
     static public int pmPoseCartMult(PmPose p1, PmCartesian v2, PmCartesian vout) throws PmException {
         int r1, r2;
-
 
         if (!pmQuatIsNorm(p1.rot)) {
 
@@ -2900,7 +2991,6 @@ public class Posemath {
 
             return pmErrno = PM_NORM_ERR;
         }
-
 
         r1 = pmQuatCartMult(p1.rot, v2, vout);
         r2 = pmCartCartAdd(p1.tran, vout, vout);
@@ -2923,7 +3013,6 @@ public class Posemath {
     static public int pmPosePoseMult(PmPose p1, PmPose p2, PmPose pout) throws PmException {
         int r1, r2, r3;
 
-
         if (!pmQuatIsNorm(p1.rot)
                 || !pmQuatIsNorm(p2.rot)) {
 
@@ -2931,7 +3020,6 @@ public class Posemath {
 
             return pmErrno = PM_NORM_ERR;
         }
-
 
         r1 = pmQuatCartMult(p1.rot, p2.tran, pout.tran);
         r2 = pmCartCartAdd(p1.tran, pout.tran, pout.tran);
@@ -2956,13 +3044,11 @@ public class Posemath {
     static public int pmHomInv(PmHomogeneous h1, PmHomogeneous h2) throws PmException {
         int r1, r2;
 
-
         if (!pmMatIsNorm(h1.rot)) {
 
             pmPrintError("Bad rotation matrix in pmHomInv\n", PM_ERR);
 
         }
-
 
         r1 = pmMatInv(h1.rot, h2.rot);
         r2 = pmMatCartMult(h2.rot, h1.tran, h2.tran);
@@ -3026,7 +3112,7 @@ public class Posemath {
 
     /* circle functions */
 
-    /*
+ /*
     pmCircleInit() takes the defining parameters of a generalized circle
     and sticks them in the structure. It also computes the radius and vectors
     in the plane that are useful for other functions and that don't need
@@ -3047,7 +3133,6 @@ public class Posemath {
         PmCartesian v = new PmCartesian();
         double d;
         int r1;
-
 
         if (null == circle) {
 
@@ -3210,8 +3295,8 @@ public class Posemath {
             List<? extends PM_POSE> B) throws PmException {
         return poseListPoseListMultiply(
                 prePostMultiplyList(A,
-                inv(Y),
-                X),
+                        inv(Y),
+                        X),
                 poseListInv(B));
     }
 
@@ -3418,10 +3503,6 @@ public class Posemath {
         return null;
     }
 
-    static public List<PM_POSE> csvToPoseListF(File f) throws Exception {
-        return csvToPoseListF(f,0,1,2,3,4,5);
-    }
-
     static public List<PM_POSE> csvToPoseListF(File f,
             int x_pos,
             int y_pos,
@@ -3443,24 +3524,12 @@ public class Posemath {
             double pitch = 0;
             double yaw = 0;
             try {
-                if(x_pos >= 0 && x_pos < toks.length) {
-                    x = Double.valueOf(toks[x_pos]);
-                }
-                if(y_pos >= 0 && y_pos < toks.length) {
-                    y = Double.valueOf(toks[y_pos]);
-                }
-                if(z_pos >= 0 && z_pos < toks.length) {
-                    z = Double.valueOf(toks[z_pos]);
-                }
-                if(roll_pos >= 0 && roll_pos < toks.length) {
-                    roll = Math.toRadians(Double.valueOf(toks[roll_pos]));
-                }
-                if(pitch_pos >= 0 && pitch_pos < toks.length) {
-                    pitch = Math.toRadians(Double.valueOf(toks[pitch_pos]));
-                }
-                if(yaw_pos >= 0 && yaw_pos < toks.length) {
-                    yaw = Math.toRadians(Double.valueOf(toks[yaw_pos]));
-                }
+                x = Double.valueOf(toks[x_pos]);
+                y = Double.valueOf(toks[y_pos]);
+                z = Double.valueOf(toks[z_pos]);
+                roll = Math.toRadians(Double.valueOf(toks[roll_pos]));
+                pitch = Math.toRadians(Double.valueOf(toks[pitch_pos]));
+                yaw = Math.toRadians(Double.valueOf(toks[yaw_pos]));
             } catch (Exception e) {
                 System.err.println(f.getName() + ":" + line_num + " bad line: " + line);
                 System.err.println("toks.length=" + toks.length);
@@ -3508,7 +3577,6 @@ public class Posemath {
         double last_time = 0;
         while ((line = br.readLine()) != null && time_it.hasNext()) {
             String toks[] = line.split(",");
-            
             double time = Double.valueOf(toks[time_pos]);
             double x = Double.valueOf(toks[x_pos]);
             double y = Double.valueOf(toks[y_pos]);
@@ -3524,11 +3592,11 @@ public class Posemath {
             }
             while (time_from_list < time) {
                 if (last_pose != null) {
-                    PM_POSE avgPose =
-                            Posemath.weightedAvg(last_pose,
-                            Math.abs(last_time - time_from_list) / (time - last_time),
-                            p,
-                            Math.abs(time - time_from_list) / (time - last_time));
+                    PM_POSE avgPose
+                            = Posemath.weightedAvg(last_pose,
+                                    Math.abs(last_time - time_from_list) / (time - last_time),
+                                    p,
+                                    Math.abs(time - time_from_list) / (time - last_time));
                     pose_list.add(avgPose);
                 } else {
                     pose_list.add(p);
@@ -3617,14 +3685,14 @@ public class Posemath {
             int pitch_pos,
             int yaw_pos) {
         try {
-            List<PM_POSE> pose_list =
-                    csvToPoseList(filename,
-                    x_pos,
-                    y_pos,
-                    z_pos,
-                    roll_pos,
-                    pitch_pos,
-                    yaw_pos);
+            List<PM_POSE> pose_list
+                    = csvToPoseList(filename,
+                            x_pos,
+                            y_pos,
+                            z_pos,
+                            roll_pos,
+                            pitch_pos,
+                            yaw_pos);
             pose_list = prePostMultiplyList(pose_list,
                     getCk1Pose(),
                     getCk2Pose());
@@ -3634,7 +3702,7 @@ public class Posemath {
         }
         return null;
     }
-    
+
     static public double[][] csvToHomMats(String filename,
             int x_pos,
             int y_pos,
@@ -3643,14 +3711,14 @@ public class Posemath {
             int pitch_pos,
             int yaw_pos) {
         try {
-            List<PM_POSE> pose_list =
-                    csvToPoseList(filename,
-                    x_pos,
-                    y_pos,
-                    z_pos,
-                    roll_pos,
-                    pitch_pos,
-                    yaw_pos);
+            List<PM_POSE> pose_list
+                    = csvToPoseList(filename,
+                            x_pos,
+                            y_pos,
+                            z_pos,
+                            roll_pos,
+                            pitch_pos,
+                            yaw_pos);
             return poseListToHomMats(pose_list);
         } catch (Exception e) {
             e.printStackTrace();
@@ -3658,51 +3726,7 @@ public class Posemath {
         return null;
     }
 
-    static public double[][] csvToHomMats(File f,
-            int x_pos,
-            int y_pos,
-            int z_pos,
-            int roll_pos,
-            int pitch_pos,
-            int yaw_pos) {
-        try {
-            List<PM_POSE> pose_list =
-                    csvToPoseListF(f,
-                    x_pos,
-                    y_pos,
-                    z_pos,
-                    roll_pos,
-                    pitch_pos,
-                    yaw_pos);
-            return poseListToHomMats(pose_list);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
-    static public double[][] csvToHomMats(File f) {
-        try {
-            List<PM_POSE> pose_list =
-                    csvToPoseListF(f);
-            return poseListToHomMats(pose_list);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    static public double[][] csvToHomMats(String filename) {
-        try {
-            List<PM_POSE> pose_list =
-                    csvToPoseListF(new File(filename));
-            return poseListToHomMats(pose_list);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    
     /*
     pmCirclePoint() returns the vector to the point at the given angle along
     the circle. If the circle is a helix or spiral or combination, the
@@ -3712,7 +3736,6 @@ public class Posemath {
         PmCartesian par = new PmCartesian();
         PmCartesian perp = new PmCartesian();
         double scale;
-
 
         if (null == circle
                 || null == point) {
@@ -3731,7 +3754,6 @@ public class Posemath {
         pmCartCartAdd(par, perp, point.tran);
 
         /* get scale for spiral, helix interpolation */
-
         if (circle.angle == 0.0) {
             pmPrintError("error: pmCirclePoint angle is zero\n", PM_ERR);
 
@@ -3784,7 +3806,7 @@ public class Posemath {
     }
 
     public static double dist_from_line(PM_LINE line, PM_CARTESIAN c) {
-        PM_CARTESIAN p = point_on_line(line.start,line.uVec,c);
+        PM_CARTESIAN p = point_on_line(line.start, line.uVec, c);
         return Posemath.mag(Posemath.subtract(p, c));
     }
 
@@ -3812,17 +3834,15 @@ public class Posemath {
         try {
             pose_list.add(
                     new PM_POSE(new PmCartesian(1.0, 2.0, 3.0),
-                    new PmRpy(0, 0, Math.PI / 6)));
+                            new PmRpy(0, 0, Math.PI / 6)));
             pose_list.add(
                     new PM_POSE(new PmCartesian(1.0, 2.0, 3.0),
-                    new PmRpy(0, 0, Math.PI / 6)));
+                            new PmRpy(0, 0, Math.PI / 6)));
         } catch (PmException pmException) {
             pmException.printStackTrace();
         }
         return Posemath.poseListToHomMats(pose_list);
     }
-
-
 
     static public PM_CARTESIAN intersection(PM_LINE l1, PM_LINE l2) throws PmException {
         double udot = dot(l1.uVec, l2.uVec);
@@ -3847,19 +3867,19 @@ public class Posemath {
 
     public static boolean in_line_segment(PM_LINE l,
             PM_CARTESIAN c1, double tol) throws Exception {
-        PM_CARTESIAN diff = subtract(c1,l.start);
-        if(mag(diff) <= Double.MIN_NORMAL) {
+        PM_CARTESIAN diff = subtract(c1, l.start);
+        if (mag(diff) <= Double.MIN_NORMAL) {
             return true;
         }
         PM_CARTESIAN diffnorm = norm(diff);
-        double vvdot = dot(diffnorm,l.uVec);
-        if(vvdot <= 0) {
+        double vvdot = dot(diffnorm, l.uVec);
+        if (vvdot <= 0) {
             return false;
         }
-        if(mag(diff) > mag(subtract(l.end,l.start))) {
+        if (mag(diff) > mag(subtract(l.end, l.start))) {
             return false;
         }
-        PM_CARTESIAN p = point_on_line_segment(l.start,l.end,c1);
+        PM_CARTESIAN p = point_on_line_segment(l.start, l.end, c1);
         return (Posemath.mag(Posemath.subtract(c1, p)) < tol);
     }
 
