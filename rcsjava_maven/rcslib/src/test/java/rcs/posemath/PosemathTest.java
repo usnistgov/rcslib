@@ -6,7 +6,6 @@
 package rcs.posemath;
 
 import junit.framework.TestCase;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
