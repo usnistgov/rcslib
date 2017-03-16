@@ -165,7 +165,7 @@ public class JListFastListPanel implements FastListPanelInterface
 					int old_index = selected_indexes.elementAt(i).intValue();
 					if(old_index >= index)
 					    {
-						selected_indexes.setElementAt(new Integer(old_index+1),i);
+						selected_indexes.setElementAt(old_index+1,i);
 					    }
 				    }
 			    }
@@ -290,7 +290,7 @@ public class JListFastListPanel implements FastListPanelInterface
 		    }
 		else
 		    {
-			selected_indexes.addElement(new Integer(index));
+			selected_indexes.addElement(index);
 		    }
 		count++;
 		repaint_needed = true;

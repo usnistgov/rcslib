@@ -741,13 +741,13 @@ public class ModuleInfo implements ModuleInfoInterface {
         Integer enum_value = null;
         enumInfoToAdd.Name = "RCS_STATUS";
         enumInfoToAdd.Info = "UNINITIALIZED_STATUS =-1,RCS_DONE = 1, RCS_EXEC = 2, RCS_ERROR = 3";
-        enumInfoToAdd.hashtable.put(enum_value = new Integer(-1), "UNINITIALIZED_STATUS");
+        enumInfoToAdd.hashtable.put(enum_value = Integer.valueOf(-1), "UNINITIALIZED_STATUS");
         enumInfoToAdd.reverse_hashtable.put("UNINITIALIZED_STATUS", enum_value);
-        enumInfoToAdd.hashtable.put(enum_value = new Integer(1), "RCS_DONE");
+        enumInfoToAdd.hashtable.put(enum_value = Integer.valueOf(1), "RCS_DONE");
         enumInfoToAdd.reverse_hashtable.put("RCS_DONE", enum_value);
-        enumInfoToAdd.hashtable.put(enum_value = new Integer(2), "RCS_EXEC");
+        enumInfoToAdd.hashtable.put(enum_value = Integer.valueOf(2), "RCS_EXEC");
         enumInfoToAdd.reverse_hashtable.put("RCS_EXEC", enum_value);
-        enumInfoToAdd.hashtable.put(enum_value = new Integer(3), "RCS_ERROR");
+        enumInfoToAdd.hashtable.put(enum_value = Integer.valueOf(3), "RCS_ERROR");
         enumInfoToAdd.reverse_hashtable.put("RCS_ERROR", enum_value);
         m_enumInfoHashTable.put((Object) enumInfoToAdd.Name, (Object) enumInfoToAdd);
 
@@ -755,13 +755,13 @@ public class ModuleInfo implements ModuleInfoInterface {
         enum_value = null;
         enumInfoToAdd.Name = "RCS_ADMIN_STATE";
         enumInfoToAdd.Info = "RCS_ADMIN_ZERO=0,ADMIN_UNINITIALIZED=1,ADMIN_INITIALIZED=2,ADMIN_SHUT_DOWN=3";
-        enumInfoToAdd.hashtable.put(enum_value = new Integer(0), "RCS_ADMIN_ZERO");
+        enumInfoToAdd.hashtable.put(enum_value = Integer.valueOf(0), "RCS_ADMIN_ZERO");
         enumInfoToAdd.reverse_hashtable.put("RCS_ADMIN_ZERO", enum_value);
-        enumInfoToAdd.hashtable.put(enum_value = new Integer(1), "ADMIN_UNINITIALIZED");
+        enumInfoToAdd.hashtable.put(enum_value = Integer.valueOf(1), "ADMIN_UNINITIALIZED");
         enumInfoToAdd.reverse_hashtable.put("ADMIN_UNINITIALIZED", enum_value);
-        enumInfoToAdd.hashtable.put(enum_value = new Integer(2), "ADMIN_INITIALIZED");
+        enumInfoToAdd.hashtable.put(enum_value = Integer.valueOf(2), "ADMIN_INITIALIZED");
         enumInfoToAdd.reverse_hashtable.put("ADMIN_INITIALIZED", enum_value);
-        enumInfoToAdd.hashtable.put(enum_value = new Integer(3), "ADMIN_SHUT_DOWN");
+        enumInfoToAdd.hashtable.put(enum_value = Integer.valueOf(3), "ADMIN_SHUT_DOWN");
         enumInfoToAdd.reverse_hashtable.put("ADMIN_SHUT_DOWN", enum_value);
         m_enumInfoHashTable.put((Object) enumInfoToAdd.Name, (Object) enumInfoToAdd);
 
@@ -781,7 +781,7 @@ public class ModuleInfo implements ModuleInfoInterface {
         typeInfoToAdd.DerivedFrom = "NMLmsg";
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
         m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
-        m_structInfoHashTable.put(new Long(1), typeInfoToAdd);
+        m_structInfoHashTable.put(Long.valueOf(1), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
         typeInfoToAdd.Name = "NML_TEXT";
         typeInfoToAdd.setInfo("char text[256];");
@@ -789,7 +789,7 @@ public class ModuleInfo implements ModuleInfoInterface {
         typeInfoToAdd.Id = 2;
         typeInfoToAdd.DerivedFrom = "NMLmsg";
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoHashTable.put(new Long(2), typeInfoToAdd);
+        m_structInfoHashTable.put(Long.valueOf(2), typeInfoToAdd);
         m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
         typeInfoToAdd.Name = "NML_DISPLAY";
@@ -798,7 +798,7 @@ public class ModuleInfo implements ModuleInfoInterface {
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = "NMLmsg";
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoHashTable.put(new Long(3), typeInfoToAdd);
+        m_structInfoHashTable.put(Long.valueOf(3), typeInfoToAdd);
         m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
         typeInfoToAdd.Name = "NMLmsg";
@@ -1578,7 +1578,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                 // }
                 if (breakers_index >= 0 || i == inStr.length() - 1) {
                     if (i == inStr.length() - 1 && breakers_index == -1) {
-                        word += new Character(cur_char).toString();
+                        word += Character.toString(cur_char);
                     }
                     if (debug_on) {
                         DebugPrint("ReplaceDefinedValues : rdv_recurse_count=" + rdv_recurse_count);
@@ -1623,10 +1623,10 @@ public class ModuleInfo implements ModuleInfoInterface {
                         word = "";
                     }
                     if (i != inStr.length() - 1 || breakers_index != -1) {
-                        outStr += new Character(cur_char).toString();
+                        outStr += Character.valueOf(cur_char).toString();
                     }
                 } else {
-                    word += new Character(cur_char).toString();
+                    word += Character.valueOf(cur_char).toString();
                 }
             }
             if (word.length() > 0) {
@@ -4354,7 +4354,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     definedValues.put(dv.name, dv);
                                 }
                                 StringTokenizer idTokenizer = new StringTokenizer(dv.value, " (),:;\t\r.*\n\\");
-                                Long idLong = new Long(0);
+                                Long idLong = Long.valueOf(0);
                                 while (idTokenizer.hasMoreTokens()) {
                                     if (Thread.interrupted()) {
                                         interrupt_loading = true;
@@ -4374,7 +4374,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                         DebugPrint("dv=" + dv + ",idString=" + idString);
                                     }
                                     try {
-                                        idLong = new Long(doSimpleLongMath(idString));
+                                        idLong = Long.valueOf(doSimpleLongMath(idString));
                                         if ((currentType.Id = idLong.intValue()) > 0) {
                                             break;
                                         }
@@ -4627,13 +4627,13 @@ public class ModuleInfo implements ModuleInfoInterface {
                                 if (infoToken.length() < 1) {
                                     continue;
                                 }
-                                Integer enum_value = new Integer(default_enum_val);
+                                Integer enum_value = Integer.valueOf(default_enum_val);
                                 String enum_string = infoToken;
                                 int eqIndex = infoToken.indexOf('=');
                                 if (eqIndex != -1) {
                                     enum_string = infoToken.substring(0, eqIndex);
                                     String enum_v_temp = ReplaceDefinedValues(infoToken.substring(eqIndex + 1), 0, null);
-                                    enum_value = new Integer(rcs.utils.StrToInt.convert(enum_v_temp));
+                                    enum_value =Integer.valueOf(rcs.utils.StrToInt.convert(enum_v_temp));
                                 }
                                 default_enum_val = enum_value.intValue() + 1;
                                 current_enum.insideNameSpace = insideNameSpace;
@@ -4750,7 +4750,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                 DebugPrint(" Original  currentType.RawInfo = " + currentType.RawInfo);
                                 DebugPrint(" Original  currentType.HiddenInfo = " + currentType.HiddenInfo);
                             }
-                            Long key = new Long(currentType.Id);
+                            Long key = Long.valueOf(currentType.Id);
                             if (currentType.Id > 10) {
                                 if (m_structInfoHashTable.containsKey(key)) {
                                     try {
@@ -4780,7 +4780,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     }
                                 }
                             }
-                            m_structInfoHashTable.put((new Long(currentType.Id)), currentType);
+                            m_structInfoHashTable.put((Long.valueOf(currentType.Id)), currentType);
                             if (currentType.Id > 0) {
                                 if (is_stat_msg) {
                                     statData = currentType.Id + ",0,unknown,";
@@ -4903,7 +4903,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     if (type_id_string_rv != null && type_id_string_rv.length() > 1
                                             && !type_id_string_rv.equals(currentType.type_id_string)) {
                                         try {
-                                            Long idLong = new Long(doSimpleLongMath(type_id_string_rv));
+                                            Long idLong = Long.valueOf(doSimpleLongMath(type_id_string_rv));
                                             long new_id = idLong.longValue();
                                             if (new_id != currentType.Id) {
                                                 if (debug_on) {
@@ -5088,7 +5088,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                                         if (currentType.DerivedFrom != null || currentType.is_nml_msg) {
                                                             bad_simple_long_math = false;
                                                             String idString = ReplaceDefinedValues(type_id_string, 0, null);
-                                                            Long idLong = new Long(doSimpleLongMath(idString));
+                                                            Long idLong = Long.valueOf(doSimpleLongMath(idString));
                                                             type_id = idLong.longValue();
                                                             if (rcs.utils.StrToLong.bad_token || bad_simple_long_math) {
                                                                 ErrorPrint("Bad type_id_string for " + currentType.Name + "  : " + type_id_string + " --> " + idString + " --> " + type_id);

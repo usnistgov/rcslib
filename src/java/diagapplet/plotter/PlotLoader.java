@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.swing.JOptionPane;
@@ -287,27 +286,6 @@ class PlotLoader {
         }
         FIELD_SEPARATOR_SET = true;
     }
-    
-        private Set<String> groupValues;
-
-    /**
-     * Get the value of groupValues
-     *
-     * @return the value of groupValues
-     */
-    public Set<String> getGroupValues() {
-        return groupValues;
-    }
-
-    /**
-     * Set the value of groupValues
-     *
-     * @param groupValues new value of groupValues
-     */
-    public void setGroupValues(Set<String> groupValues) {
-        this.groupValues = groupValues;
-    }
-
 
     private void ParseFirstLine(PlotData pd_to_use, List<PlotData> extra_coord_plot_vector, final String parseString) throws Exception {
         skip_coords = null;
@@ -353,8 +331,10 @@ class PlotLoader {
             }
             if (url_string != null && url_string.length() > 1) {
                 pd_to_use.name = url_string + "._" + second_string;
-            } else if (pd_to_use.name == null || pd_to_use.name.length() < 1) {
-                pd_to_use.name = "unnamed_" + unnamed_num + "._" + second_string;
+            } else {
+                if (pd_to_use.name == null || pd_to_use.name.length() < 1) {
+                    pd_to_use.name = "unnamed_" + unnamed_num + "._" + second_string;
+                }
             }
             pd_to_use.heading_string = first_string;
             AddPlot(pd_to_use, pd_to_use.name);
@@ -542,46 +522,6 @@ class PlotLoader {
         return Double.NEGATIVE_INFINITY;
     }
     private int pre_counted_line_count = -1;
-
-        private Set<String> groupByFieldNames;
-
-    /**
-     * Get the value of groupByFieldNames
-     *
-     * @return the value of groupByFieldNames
-     */
-    public Set<String> getGroupByFieldNames() {
-        return groupByFieldNames;
-    }
-
-    /**
-     * Set the value of groupByFieldNames
-     *
-     * @param groupByFieldNames new value of groupByFieldNames
-     */
-    public void setGroupByFieldNames(Set<String> groupByFieldNames) {
-        this.groupByFieldNames = groupByFieldNames;
-    }
-
-    private List<Integer> groupByFields;
-
-    /**
-     * Get the value of groupByFields
-     *
-     * @return the value of groupByFields
-     */
-    public List<Integer> getGroupByFields() {
-        return groupByFields;
-    }
-
-    /**
-     * Set the value of groupByFields
-     *
-     * @param groupByFields new value of groupByFields
-     */
-    public void setGroupByFields(List<Integer> groupByFields) {
-        this.groupByFields = groupByFields;
-    }
 
     @SuppressWarnings("unchecked")
     private void ParseString(PlotData pd_to_use,

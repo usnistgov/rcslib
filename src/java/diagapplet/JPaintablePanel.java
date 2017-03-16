@@ -27,7 +27,7 @@ versions bear some notice that they have been modified.
  * Created on December 10, 2006, 8:29 AM
  *
  * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * 
  */
 
 package diagapplet;

@@ -48,18 +48,12 @@ public class PM_CARTESIAN extends PmCartesian implements Cloneable {
     }
 
     public PM_CARTESIAN add(PM_CARTESIAN c) {
-        x += c.x;
-        y += c.y;
-        z += c.z;
-        return this;
+        return new PM_CARTESIAN(x+c.x, y+c.y, z+c.z);
     }
 
     @Override
     public PM_CARTESIAN multiply(double d) {
-        x *= d;
-        y *= d;
-        z *= d;
-        return this;
+        return new PM_CARTESIAN(x*d, y*d, z*d);
     }
 
     public double distFrom(PM_CARTESIAN p) {
@@ -87,6 +81,50 @@ public class PM_CARTESIAN extends PmCartesian implements Cloneable {
         Posemath.pmCylCartConvert(c, this);
     }
 
+     public PM_CARTESIAN subtract(final PmCartesian c) {
+        return new PM_CARTESIAN(this.x-c.x,this.y-c.y,this.z-c.z);
+    }
+    
+     public PM_CARTESIAN cross(final PmCartesian other) throws PmException {
+        PM_CARTESIAN ret = new PM_CARTESIAN();
+        Posemath.pmCartCartCross(this, other, ret);
+        return ret;
+    }
+     
+     public PM_CARTESIAN project(PmCartesian other) throws PmException {
+        double magv = this.mag();
+        if(magv < Posemath.DOUBLE_FUZZ) {
+            throw new PmException(Posemath.PM_DIV_ERR, "project of vector with near zero mag() = "+magv);
+        }
+        return this.multiply(this.dot(other)/(magv*magv));
+    }
+     
+    public PM_CARTESIAN unit() throws PmException {
+        final double magv = mag();
+        if(magv < Posemath.DOUBLE_FUZZ) {
+            throw new PmException(Posemath.PM_DIV_ERR, "unit of vector with near zero mag() = "+magv);
+        }
+        return multiply(1.0/magv);
+    }
+    
+    public PM_CARTESIAN rotate(PmRotationMatrix mat) throws PmException {
+        PM_CARTESIAN ret = new PM_CARTESIAN();
+        Posemath.pmMatCartMult(mat, this, ret);
+        return ret;
+    }
+    
+    public PM_CARTESIAN rotate(PmQuaternion quat) throws PmException {
+        PM_CARTESIAN ret = new PM_CARTESIAN();
+        Posemath.pmQuatCartMult(quat, this, ret);
+        return ret;
+    }
+    
+    public PM_CARTESIAN rotate(PmRotationVector v) throws PmException {
+        PM_CARTESIAN ret = new PM_CARTESIAN();
+        Posemath.pmQuatCartMult(Posemath.toQuat(v), this, ret);
+        return ret;
+    }
+    
     @Override
     public PM_CARTESIAN clone() {
         PM_CARTESIAN cloned_object = null;

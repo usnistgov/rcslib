@@ -19,7 +19,7 @@
  * versions bear some notice that they have been modified.
  *
  * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * 
  */
 package diagapplet.CodeGen;
 
