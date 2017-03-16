@@ -1413,7 +1413,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         }
                         int this_dim_length = ModuleInfo.doArrayLengthMath(this_dim_array_string);
                         array_length *= this_dim_length;
-                        new_array_length_string += (new Integer(this_dim_length)).toString();
+                        new_array_length_string += Integer.toString(this_dim_length); 
                         l_squareParamIndex = array_length_string.indexOf('[', l_squareParamIndex + 1);
                         r_squareParamIndex = array_length_string.indexOf(']', l_squareParamIndex + 1);
                         if (-1 != r_squareParamIndex && -1 != l_squareParamIndex) {
@@ -1424,7 +1424,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                             DebugPrint("this_dim_length=" + this_dim_length + ", r_squareParamIndex=" + r_squareParamIndex + ", l_squareParamIndex=" + l_squareParamIndex + ", num_dims=" + num_dims);
                         }
                     }
-                    array_length_string = (new Integer(array_length)).toString();
+                    array_length_string = Integer.toString(array_length);
                     num_dims = 1;
                 }
                 lastSpaceIndex = info_token.lastIndexOf(' ');
@@ -1576,7 +1576,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                 keystring = (String) enum_keys.nextElement();
                                 Ival = (Integer) enum_info.reverse_hashtable.get(keystring);
                                 ival2 = Ival.intValue();
-                                type_info.JavaClassArrayInitializers += "\t\t\tI_" + enum_info.Name + "= new Integer(" + ival2 + ");\n";
+                                type_info.JavaClassArrayInitializers += "\t\t\tI_" + enum_info.Name + "=  (" + ival2 + ");\n";
                                 type_info.JavaClassArrayInitializers += "\t\t\tStr_" + enum_info.Name + "= \"" + keystring + "\";\n";
                                 type_info.JavaClassArrayInitializers += "\t\t\tnml_enum_info_for_" + enum_info.Name + ".int_to_string_hash.put(I_" + enum_info.Name + ",Str_" + enum_info.Name + ");\n";
                                 type_info.JavaClassArrayInitializers += "\t\t\tnml_enum_info_for_" + enum_info.Name + ".string_to_int_hash.put(Str_" + enum_info.Name + ",I_" + enum_info.Name + ");\n";
@@ -4739,7 +4739,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         if (null != var_class_type_info.type_id_string) {
                             String idString = m_currentModule.ReplaceDefinedValues(var_class_type_info.type_id_string, 0, null);
                             if (Character.isDigit(idString.charAt(0)) || idString.charAt(0) == '+') {
-                                Long idLong = new Long(rcs.utils.StrToLong.convert(idString));
+                                Long idLong = Long.valueOf(rcs.utils.StrToLong.convert(idString));
                                 long new_id = idLong.longValue();
                                 if (new_id >= 1) {
                                     var_class_type_info.Id = new_id;
@@ -7211,7 +7211,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         WriteOutput("\n\t\t// Conflict for type " + type_info.Name + " with ID " + type_info.Id + "\n");
                         continue;
                     }
-                    WriteOutput("\t\tI=new Integer(" + selected_classes[i] + "_TYPE);\n");
+                    WriteOutput("\t\tI= (" + selected_classes[i] + "_TYPE);\n");
                     WriteOutput("\t\tS=\"" + selected_classes[i] + "\";\n");
                     WriteOutput("\t\th1.put(I,S); h2.put(S,I);\n");
 
@@ -8197,7 +8197,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         if (ifdef_vector.size() < ifdef_level + 1) {
                             ifdef_vector.setSize(ifdef_level + 1);
                         }
-                        ifdef_vector.setElementAt(new Boolean(lastIfdefFalse), ifdef_level);
+                        ifdef_vector.setElementAt(Boolean.valueOf(lastIfdefFalse), ifdef_level);
                         ifdef_level++;
                     } else if (parseString.startsWith("#ifndef")) {
                         String varname = parseString.substring(7).trim();
@@ -8211,7 +8211,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         if (ifdef_vector.size() < ifdef_level + 1) {
                             ifdef_vector.setSize(ifdef_level + 1);
                         }
-                        ifdef_vector.setElementAt(new Boolean(lastIfdefFalse), ifdef_level);
+                        ifdef_vector.setElementAt(Boolean.valueOf(lastIfdefFalse), ifdef_level);
                         ifdef_level++;
                     } else if (parseString.startsWith("#define")) {
                         if (insideFalseIfdef) {
@@ -8255,7 +8255,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         Boolean lastIfdefFalseBoolean = (Boolean) ifdef_vector.get(ifdef_level - 1);
                         lastIfdefFalse = lastIfdefFalseBoolean.booleanValue();
                         lastIfdefFalse = !lastIfdefFalse;
-                        lastIfdefFalseBoolean = new Boolean(lastIfdefFalse);
+                        lastIfdefFalseBoolean = Boolean.valueOf(lastIfdefFalse);
                         ifdef_vector.setElementAt(lastIfdefFalseBoolean, ifdef_level - 1);
                         insideFalseIfdef = lastIfdefFalse;
                     } else if (parseString.startsWith("#endif")) {

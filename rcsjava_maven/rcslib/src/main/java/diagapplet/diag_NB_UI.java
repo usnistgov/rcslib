@@ -933,7 +933,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
         }
 //        System.out.println("cls=" + cls);
         ExtraTabInfo eti = new ExtraTabInfo();
-        eti.jp = (JPanel) cls.newInstance();
+        eti.jp = (JPanel) cls.getDeclaredConstructor().newInstance();
         eti.cls = cls;
         eti.connect_method = cls.getMethod("Connect");
         eti.disconnect_method = cls.getMethod("Disconnect");
@@ -1240,7 +1240,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
                                     cls = ClassLoader.getSystemClassLoader().loadClass(cls_name);
                                 }
                                 ExtraTabInfo eti = new ExtraTabInfo();
-                                eti.jp = (JPanel) cls.newInstance();
+                                eti.jp = (JPanel) cls.getDeclaredConstructor().newInstance();
                                 eti.cls = cls;
                                 eti.connect_method = cls.getMethod("Connect");
                                 eti.disconnect_method = cls.getMethod("Disconnect");
@@ -2701,7 +2701,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
 //        String bufName = ni.name;
         int row = ni.row;
         NMLConnectionInterface nml = ni.nml;
-        table_model.setValueAt(new Boolean(nml.is_connected()), row, 0);
+        table_model.setValueAt(Boolean.valueOf(nml.is_connected()), row, 0);
         if (nml.is_connected()) {
             String typeName = null;
             try {
@@ -2879,11 +2879,11 @@ public class diag_NB_UI extends javax.swing.JFrame {
 
     private void AddNmlByNameToTable(DefaultTableModel table_model, String name) {
         Object obj[] = new Object[table_model.getColumnCount()];
-        obj[0] = new Boolean(false);
+        obj[0] = Boolean.valueOf(false);
         obj[1] = name;
         obj[2] = "";
         obj[3] = "";
-        obj[4] = new Integer(-1);
+        obj[4] = Integer.valueOf(-1);
         table_model.addRow(obj);
     }
 
@@ -2896,7 +2896,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
         if (true) {
             Hashtable ht = ni.ht;
             Object obj[] = new Object[table_model.getColumnCount()];
-            obj[0] = new Boolean(nml.is_connected());
+            obj[0] = Boolean.valueOf(nml.is_connected());
             if (nml.is_connected()) {
                 num_connected++;
             }
@@ -5814,7 +5814,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
         } else if (is_cmd) {
             pt.nml_for_get_single_var_log = mi.createExtraCommandChannel();
             pt.name = mi.Name + ".cmd." + vname;
-            mi.cmd_plotting_variables.put(new Integer(var_num), pt);
+            mi.cmd_plotting_variables.put(Integer.valueOf(var_num), pt);
             if (var_num > mi.max_cmd_var_number) {
                 mi.max_cmd_var_number = var_num;
             }
@@ -5823,7 +5823,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
         } else {
             pt.nml_for_get_single_var_log = mi.createExtraStatusChannel();
             pt.name = mi.Name + ".stat." + vname;
-            mi.stat_plotting_variables.put(new Integer(var_num), pt);
+            mi.stat_plotting_variables.put(Integer.valueOf(var_num), pt);
             if (var_num > mi.max_stat_var_number) {
                 mi.max_stat_var_number = var_num;
             }
@@ -6545,7 +6545,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
             DefaultTableModel nml_table_model = (DefaultTableModel) jTableNML.getModel();
             for (int i = 0; i
                     < jTableNML.getRowCount(); i++) {
-                nml_table_model.setValueAt(new Boolean(false), i, 0);
+                nml_table_model.setValueAt(Boolean.valueOf(false), i, 0);
             }
 
             if (null != cgc) {
@@ -6670,7 +6670,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
 
         this.jTextFieldCmdToSendMsgType.setText(s2);
         curModule.last_selected_command_index = jListCmdsAvailable.getSelectedIndex();
-        Long idLong = new Long(0);
+        Long idLong = Long.valueOf(0);
         String idString;
 
         int index = statusString.indexOf("=");
@@ -6826,7 +6826,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
         }
 
         this.jLabelAuxMsgToSendType.setText(auxMsgString);
-        Long idLong = new Long(0);
+        Long idLong = Long.valueOf(0);
         String idString;
 
         int index = auxMsgString.indexOf("=");
@@ -7736,7 +7736,7 @@ private void jMenuItemOpenInputHeaderActionPerformed(java.awt.event.ActionEvent 
 
 private void jMenuItemHelpRcsLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemHelpRcsLibraryActionPerformed
     try {
-        Desktop.getDesktop().browse(new URI("http://www.isd.mel.nist.gov/projects/rcslib/"));
+        Desktop.getDesktop().browse(new URI("https://www.nist.gov/el/intelligent-systems-division-73500/networked-control-systems-group/real-time-control-systems"));
     } catch (Exception exception) {
         exception.printStackTrace();
     }

@@ -257,19 +257,19 @@ class diagappletJFrame extends javax.swing.JFrame implements WindowListener, Com
     public void windowClosing(WindowEvent evt)
     {
 	
-	try
-	    {
-		if(null != innerApplet)
-		    {
-			innerApplet.stop();
-			innerApplet = null;
-			removeAll();
-		    }
-	    }
-	catch(Exception e)
-	    {
-		e.printStackTrace();
-	    }
+//	try
+//	    {
+//		if(null != innerApplet)
+//		    {
+//			innerApplet.stop();
+//			innerApplet = null;
+//			removeAll();
+//		    }
+//	    }
+//	catch(Exception e)
+//	    {
+//		e.printStackTrace();
+//	    }
 	try
 	    {
 		dispose();

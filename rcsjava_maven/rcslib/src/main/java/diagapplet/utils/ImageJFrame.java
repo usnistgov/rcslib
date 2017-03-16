@@ -65,8 +65,8 @@ public class ImageJFrame extends javax.swing.JFrame
     public ImageJFrame()
     {
 	initComponents();
-	jSpinnerZoom.setValue(new Integer(1));
-	jSpinnerSpeed.setValue(new Integer(2));
+	jSpinnerZoom.setValue(1);
+	jSpinnerSpeed.setValue(2);
 	ReadLastDir();
     }
     
