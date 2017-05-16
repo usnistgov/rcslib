@@ -72,6 +72,12 @@ public class PmCartesian extends java.awt.geom.Point2D.Double  implements Clonea
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 
+    public double distFromXY(PmCartesian p) {
+        double dx = (x - p.x);
+        double dy = (y - p.y);
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+    
     public boolean equals(PmCartesian v) throws PmException {
         if (null == v) {
             return false;
