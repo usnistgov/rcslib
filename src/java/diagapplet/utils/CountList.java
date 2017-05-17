@@ -58,28 +58,28 @@ public class CountList extends List implements ItemListener, CountListInterface
     public void itemStateChanged(ItemEvent  event)
     {
 	count++;
-	try
-	    {
-		if(null != parent_applet)
-		    {
-			if(!parent_applet.m_fStandAlone)
-			    {
-				AppletContext context = parent_applet.getAppletContext();
-				if(null != context)
-				    {
-					int selected_index = getSelectedIndex();
-					if(null != context && -1 != selected_index)
-					    {
-						System.out.println("Setting status to "+getSelectedItem());
-						context.showStatus(getSelectedItem());
-					    }
-				    }
-			    }
-		    }
-	    }
-	catch(Exception e)
-	    {
-		e.printStackTrace();
-	    }
+//	try
+//	    {
+//		if(null != parent_applet)
+//		    {
+//			if(!parent_applet.m_fStandAlone)
+//			    {
+//				AppletContext context = parent_applet.getAppletContext();
+//				if(null != context)
+//				    {
+//					int selected_index = getSelectedIndex();
+//					if(null != context && -1 != selected_index)
+//					    {
+//						System.out.println("Setting status to "+getSelectedItem());
+//						context.showStatus(getSelectedItem());
+//					    }
+//				    }
+//			    }
+//		    }
+//	    }
+//	catch(Exception e)
+//	    {
+//		e.printStackTrace();
+//	    }
     }
 }

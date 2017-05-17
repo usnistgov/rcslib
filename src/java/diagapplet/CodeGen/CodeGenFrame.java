@@ -48,7 +48,7 @@ class CodeGenFrame extends Frame implements WindowListener
 
     static public int codegen_frames = 0;
     static public boolean in_an_applet = false;
-    Applet innerApplet = null;
+//    Container innerApplet = null;
 
 
     // CodeGenFrame constructor
@@ -111,19 +111,19 @@ class CodeGenFrame extends Frame implements WindowListener
 
     public void windowClosing(WindowEvent evt)
     {
-	try
-	    {
-		if(null != innerApplet)
-		    {
-			innerApplet.stop();
-			innerApplet = null;
-			removeAll();
-		    }
-	    }
-	catch(Exception e)
-	    {
-		e.printStackTrace();
-	    }
+//	try
+//	    {
+//		if(null != innerApplet)
+//		    {
+//			innerApplet.stop();
+//			innerApplet = null;
+//			removeAll();
+//		    }
+//	    }
+//	catch(Exception e)
+//	    {
+//		e.printStackTrace();
+//	    }
 	try
 	    {
 		dispose();

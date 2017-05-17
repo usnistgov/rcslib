@@ -26,7 +26,6 @@ versions bear some notice that they have been modified.
 //******************************************************************************
 package diagapplet.CodeGen;
 
-import java.applet.Applet;
 import java.awt.Button;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
@@ -50,6 +49,7 @@ import diagapplet.utils.FastListContainer;
 import diagapplet.utils.CountButton;
 import diagapplet.utils.ModifiedFileDialog;
 import diagapplet.utils.URLLoadInfoPanel;
+import java.awt.Container;
 
 import rcs.utils.URL_and_FileLoader;
 
@@ -58,7 +58,7 @@ import rcs.utils.URL_and_FileLoader;
  * not needed for newer recommended CodeGenCmdLine
  * @author shackle
  */
-public class CodeGen extends Applet implements Runnable, ActionListener {
+public class CodeGen extends Container implements Runnable, ActionListener {
 
     /**
      *   Unique id for this class.
@@ -252,7 +252,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
         if (debug_on) {
             System.out.println("applet_CodeGen.start();");
         }
-        applet_CodeGen.start();
+//        applet_CodeGen.start();
     }
 
     private static void ShowCodeGenStandalone() {
@@ -579,7 +579,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
         if (cgc.get_display_on()) {
 
             if (!m_fStandAlone) {
-                resize(1000, 400);
+                setSize(1000, 400);
             }
             if (null == cgc.get_m_modulesHashTable()) {
                 cgc.set_m_modulesHashTable(new Hashtable());
@@ -908,7 +908,7 @@ public class CodeGen extends Applet implements Runnable, ActionListener {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                stop();
+//                stop();
             }
         }
         cgc.set_running(false);

@@ -525,7 +525,7 @@ public class HierarchyPanel extends Panel implements MouseListener, MouseMotionL
 						modulesListSelect(k);
 						if(modulesCountList != null)
 						    {
-							ItemEvent select_event = new ItemEvent(modulesCountList, Event.LIST_SELECT, new Integer(k),  ItemEvent.SELECTED);
+							ItemEvent select_event = new ItemEvent(modulesCountList, ItemEvent.ITEM_STATE_CHANGED, Integer.valueOf(k),  ItemEvent.SELECTED);
 							modulesCountList.dispatchEvent(select_event);
 						    }
 					    }
@@ -624,7 +624,7 @@ public class HierarchyPanel extends Panel implements MouseListener, MouseMotionL
 						modulesListSelect(k);
 						if(modulesCountList != null)
 						    {
-							ItemEvent select_event = new ItemEvent(modulesCountList, Event.LIST_SELECT, new Integer(k),  ItemEvent.SELECTED);
+							ItemEvent select_event = new ItemEvent(modulesCountList, ItemEvent.ITEM_STATE_CHANGED, Integer.valueOf(k),  ItemEvent.SELECTED);
 							modulesCountList.dispatchEvent(select_event);
 						    }
 					    }
@@ -824,7 +824,7 @@ public class HierarchyPanel extends Panel implements MouseListener, MouseMotionL
 					try
 					    {
 						//DebugPrint("Retrieving PrevCmd. Id = "+cmd_id);
-						String prevCmdString = (String) moduleShowingCommands.previous_commands.get(new Long(cmd_id));
+						String prevCmdString = (String) moduleShowingCommands.previous_commands.get(Long.valueOf(cmd_id));
 						if(debug_on)
 						    {
 							DebugPrint("prevCmdString="+prevCmdString);
@@ -1130,7 +1130,7 @@ public class HierarchyPanel extends Panel implements MouseListener, MouseMotionL
 						    }
 						idString = idString.substring(1);
 					    }
-					Long idLong = new Long(rcs.utils.StrToLong.convert(idString));
+					Long idLong = Long.valueOf(rcs.utils.StrToLong.convert(idString));
 					if(moduleToUpdate != null &&
 					   ModuleInfo.m_cmd_structInfoHashTable != null)
 					    {
@@ -1225,10 +1225,10 @@ public class HierarchyPanel extends Panel implements MouseListener, MouseMotionL
 						    }
 						idString = idString.substring(1);
 					    }
-					Long idLong = new Long(0);
+					Long idLong = Long.valueOf(0);
 					try
 					    {
-						idLong = new Long(rcs.utils.StrToLong.convert(idString));
+						idLong = Long.valueOf(rcs.utils.StrToLong.convert(idString));
 					    }
 					catch(Exception e)
 					    {
@@ -1297,10 +1297,10 @@ public class HierarchyPanel extends Panel implements MouseListener, MouseMotionL
 									    }
 									dataString = dataString.substring(1);
 								    }
-								Long statLong = new Long(0);
+								Long statLong = Long.valueOf(0);
 								try
 								    {
-									statLong = new Long(rcs.utils.StrToLong.convert(dataString));
+									statLong = Long.valueOf(rcs.utils.StrToLong.convert(dataString));
 									switch(statLong.intValue())
 									    {
 									    case -1:

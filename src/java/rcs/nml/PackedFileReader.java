@@ -357,7 +357,7 @@ public class PackedFileReader {
                         | (((int) ba[2] & 0xFF) << 8)
                         | ((int) ba[3] & 0xFF);
             }
-            lli.add(new Integer(i));
+            lli.add(i);
         }
         ia = new int[lli.size()];
         for (int i = 0; i < lli.size(); i++) {

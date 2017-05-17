@@ -381,7 +381,7 @@ class DiagNMLmsg extends NMLmsg {
 		NMLfc.msg_type = type;
 	    } else {
 		if (cmd_stream) {
-		    ltype = new Long(type);
+		    ltype = Long.valueOf(type);
 		    typeInfo = (StructureTypeInfo) ModuleInfo.m_cmd_structInfoHashTable.get(ltype);
 		    if (typeInfo == null && null != ModuleInfo.m_structInfoHashTable) {
 			typeInfo = (StructureTypeInfo) ModuleInfo.m_structInfoHashTable.get(ltype);
@@ -395,7 +395,7 @@ class DiagNMLmsg extends NMLmsg {
 		    }
 
 		} else if (stat_stream && ModuleInfo.m_stat_structInfoHashTable != null) {
-		    ltype = new Long(type);
+		    ltype = Long.valueOf(type);
 		    typeInfo = (StructureTypeInfo) ModuleInfo.m_stat_structInfoHashTable.get(ltype);
 		    if (typeInfo == null && null != ModuleInfo.m_structInfoHashTable) {
 			typeInfo = (StructureTypeInfo) ModuleInfo.m_structInfoHashTable.get(ltype);
@@ -408,7 +408,7 @@ class DiagNMLmsg extends NMLmsg {
 			}
 		    }
 		} else {
-		    ltype = new Long(type);
+		    ltype = Long.valueOf(type);
 		    typeInfo = (StructureTypeInfo) ModuleInfo.m_structInfoHashTable.get(ltype);
 		    if (typeInfo == null && null != ModuleInfo.m_stat_structInfoHashTable) {
 			typeInfo = (StructureTypeInfo) ModuleInfo.m_stat_structInfoHashTable.get(ltype);
@@ -734,7 +734,7 @@ class DiagNMLmsg extends NMLmsg {
 			    }
 			    if (debug_on) {
 				for (int ii = 0; ii < array_length; ii++) {
-				    System.out.print((new Integer((int) bao.array[ii])).toString() + " ");
+				    System.out.print((Integer.toString((int) bao.array[ii])) + " ");
 				}
 				DebugPrint("");
 			    }
@@ -938,7 +938,7 @@ class DiagNMLmsg extends NMLmsg {
 		    if (debug_on) {
 			DebugPrint("lengths_hashtable.put(" + fullvarname.substring(0, fullvarname.length() - 7) + ", " + ints[ints_in_message] + ")");
 		    }
-		    lengths_hashtable.put(fullvarname.substring(0, fullvarname.length() - 7), new Integer(ints[ints_in_message]));
+		    lengths_hashtable.put(fullvarname.substring(0, fullvarname.length() - 7), (ints[ints_in_message]));
 		}
 		ints_in_message++;
 		continue;

@@ -237,12 +237,12 @@ class diagappletFrame extends Frame implements WindowListener, ComponentListener
     {
 	try
 	    {
-		if(null != innerApplet)
-		    {
-			innerApplet.stop();
-			innerApplet = null;
-			removeAll();
-		    }
+//		if(null != innerApplet)
+//		    {
+//			innerApplet.stop();
+//			innerApplet = null;
+//			removeAll();
+//		    }
 	    }
 	catch(Exception e)
 	    {

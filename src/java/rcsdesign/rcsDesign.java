@@ -39,6 +39,7 @@ import diagapplet.utils.CountButton;
 import diagapplet.utils.ModifiedFileDialog;
 import diagapplet.utils.StandAloneApplet;
 import diagapplet.utils.URLLoadInfoPanel;
+import java.awt.AWTEvent;
 import java.awt.Button;
 import java.awt.CardLayout;
 import java.awt.Checkbox;
@@ -48,7 +49,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Event;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -360,35 +360,35 @@ public class rcsDesign extends rcsDesignGui     implements Runnable, ActionListe
     {
 	try
 	    {
-		if (args == null)
-		    {
-			String retval = null;
-			// Running within an HTML page, so call original getParameter().
-			//-------------------------------------------------------------------
-			try
-			    {
-				retval = getParameter(strName);
-			    }
-			catch(Exception e)
-			    {
-				e.printStackTrace();
-			    }
-			if(null != retval)
-			    {
-				if(true)
-				    {
-					System.out.println("Setting parameter "+strName+" to "+retval);
-				    }
-			    }
-			else
-			    {
-				if(null != codeGenerationApplet)
-				    {
-					retval = codeGenerationApplet.GetParameter(strName,null);
-				    }
-			    }
-			return retval;
-		    }
+//		if (args == null)
+//		    {
+//			String retval = null;
+//			// Running within an HTML page, so call original getParameter().
+//			//-------------------------------------------------------------------
+//			try
+//			    {
+//				retval = getParameter(strName);
+//			    }
+//			catch(Exception e)
+//			    {
+//				e.printStackTrace();
+//			    }
+//			if(null != retval)
+//			    {
+//				if(true)
+//				    {
+//					System.out.println("Setting parameter "+strName+" to "+retval);
+//				    }
+//			    }
+//			else
+//			    {
+//				if(null != codeGenerationApplet)
+//				    {
+//					retval = codeGenerationApplet.GetParameter(strName,null);
+//				    }
+//			    }
+//			return retval;
+//		    }
 
 		// Running as standalone application, so parameter values are obtained from
 		// the command line. The user specifies them as follows:
@@ -2155,7 +2155,7 @@ public class rcsDesign extends rcsDesignGui     implements Runnable, ActionListe
 			    {
 				Thread.sleep(50);
 				d = getSize();
-				resize(resize_width, resize_height);
+				setSize(resize_width, resize_height);
 				if(debug_on)
 				    {
 					System.out.println("d = size(); = "+d);
@@ -2188,7 +2188,7 @@ public class rcsDesign extends rcsDesignGui     implements Runnable, ActionListe
 					    {
 						System.out.println("d = size(); = "+d);
 					    }
-					resize(min_width, min_height);
+					setSize(min_width, min_height);
 					tries++;
 				    }
 			    }
@@ -5160,7 +5160,7 @@ public class rcsDesign extends rcsDesignGui     implements Runnable, ActionListe
 				writer.curModule=modInfo;
 				LoadListsFromCurModule();
 				modulesList.select(i);
-				ItemEvent select_event = new ItemEvent(modulesList, Event.LIST_SELECT, new Integer(i),  ItemEvent.SELECTED);
+				ItemEvent select_event = new ItemEvent(modulesList, ItemEvent.ITEM_STATE_CHANGED, i,  ItemEvent.SELECTED);
 				modulesList.dispatchEvent(select_event);
 				break;
 			    }
@@ -6112,7 +6112,7 @@ public class rcsDesign extends rcsDesignGui     implements Runnable, ActionListe
 			    {
 				modulesList.select(i);
 				writer.curModule = null;
-				ItemEvent select_event = new ItemEvent(modulesList, Event.LIST_SELECT, new Integer(i), ItemEvent.SELECTED);
+				ItemEvent select_event = new ItemEvent(modulesList, ItemEvent.ITEM_STATE_CHANGED, i, ItemEvent.SELECTED);
 				modulesList.dispatchEvent(select_event);
 				break;
 			    }

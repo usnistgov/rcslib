@@ -50,8 +50,6 @@ The java programs need to be able to find the RCS java classes which I ussually 
 
 i.e.
 
-ln -s ~/rcslib/plat/java/lib/rcs .
-
 
 The SERVER must be started first, leave it running in the background.
 
@@ -64,9 +62,10 @@ in more or less any order
 
 ./nml_ex1_read
 
-java nml_ex1_j_write
+java -cp  ~/rcslib/plat/java/lib/rcs.jar:. nml_ex1_j_write
 
-java nml_ex1_j_read
+java -cp  ~/rcslib/plat/java/lib/rcs.jar:. nml_ex1_j_read 
+
 
 To run the diagnostics tool:
 

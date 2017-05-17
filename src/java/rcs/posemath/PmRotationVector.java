@@ -65,7 +65,53 @@ public class PmRotationVector implements Cloneable {
         z = startz;
         Posemath.pmRotNorm(this, this);
     }
+    
+    public PmRotationVector(PmRotationVector rv) throws PmException {
+        this(rv.s, rv.x, rv.y, rv.z);
+    }
 
+    public PmRotationVector(PmRotationMatrix rm) throws PmException {
+        this(Posemath.toRot(rm));
+    }
+
+    public PmRotationVector(PmRpy rpy) throws PmException {
+        this(Posemath.toRot(rpy));
+    }
+    
+    public PmRotationVector(PmQuaternion quat) throws PmException {
+        this(Posemath.toRot(quat));
+    }
+
+    
+    public PmRotationVector multiply(PmRotationMatrix other) throws PmException {
+        PmRotationVector ret = new PmRotationVector();
+        PmQuaternion qthis = Posemath.toQuat(this);
+        PmQuaternion qother = Posemath.toQuat(other);
+        PM_QUATERNION qret = new PM_QUATERNION();
+        Posemath.pmQuatQuatMult(qthis, qother, qret);
+        Posemath.pmQuatRotConvert(qret,ret);
+        return ret;
+    }
+    
+    public PmRotationVector multiply(PmRpy other) throws PmException {
+        PmRotationVector ret = new PmRotationVector();
+        PmQuaternion qthis = Posemath.toQuat(this);
+        PmQuaternion qother = Posemath.toQuat(other);
+        PM_QUATERNION qret = new PM_QUATERNION();
+        Posemath.pmQuatQuatMult(qthis, qother, qret);
+        Posemath.pmQuatRotConvert(qret,ret);
+        return ret;
+    }
+    
+    public PmRotationVector multiply(PmQuaternion qother) throws PmException {
+        PmRotationVector ret = new PmRotationVector();
+        PmQuaternion qthis = Posemath.toQuat(this);
+        PM_QUATERNION qret = new PM_QUATERNION();
+        Posemath.pmQuatQuatMult(qthis, qother, qret);
+        Posemath.pmQuatRotConvert(qret,ret);
+        return ret;
+    }
+    
     public PmRotationVector multiply(double s) {
         PmRotationVector out = this.clone();
         out.s *= s;

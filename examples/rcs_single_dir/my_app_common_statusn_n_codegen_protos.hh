@@ -28,6 +28,9 @@
 // Forward Function Prototypes
 
 
+ // Format function name set from common root of selected classes. (MY_APP_COMMON_STAT_MSG
+ // You may want to add a function prototype to a header or an explicit set_format_function line to the CodeGen script to set this explicitly.
+
 #ifndef MAX_MY_APP_COMMON_STAT_MSG_NAME_LENGTH
 #define MAX_MY_APP_COMMON_STAT_MSG_NAME_LENGTH 1
 #endif

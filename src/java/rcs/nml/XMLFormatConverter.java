@@ -1897,7 +1897,7 @@ public class XMLFormatConverter extends NMLFormatConverterBase {
 		Integer I = (Integer) info.string_to_int_hash.get(root_name);
 		msg_type = I.intValue();
 	    } else {
-		root_name = (String) info.int_to_string_hash.get(new Integer(msg_type));
+		root_name = (String) info.int_to_string_hash.get(msg_type);
 	    }
 	} catch (Exception e) {
 	    rcs.nml.debugInfo.debugPrintStream.println("XMLFormatConvert.check_type_info(" + info + ") failed with root_name=" + root_name);
@@ -1958,7 +1958,7 @@ public class XMLFormatConverter extends NMLFormatConverterBase {
 		if (null == beginclassvar_output_string_lengthStack) {
 		    beginclassvar_output_string_lengthStack = new Stack();
 		}
-		Integer I = new Integer(beginclassvar_output_string_length);
+		Integer I = Integer.valueOf(beginclassvar_output_string_length);
 		beginclassvar_output_string_lengthStack.push(I);
 		if (debug_on) {
 		    rcs.nml.debugInfo.debugPrintStream.println("beginclassvar_output_string_lengthStack.push(" + I + ")");
@@ -2254,7 +2254,7 @@ public class XMLFormatConverter extends NMLFormatConverterBase {
 		if (null == beginclassvar_output_string_lengthStack) {
 		    beginclassvar_output_string_lengthStack = new Stack();
 		}
-		Integer I = new Integer(beginclassvar_output_string_length);
+		Integer I = Integer.valueOf(beginclassvar_output_string_length);
 		beginclassvar_output_string_lengthStack.push(I);
 		if (debug_on) {
 		    rcs.nml.debugInfo.debugPrintStream.println("beginclassvar_output_string_lengthStack.push(" + I + ")");
@@ -2405,7 +2405,7 @@ public class XMLFormatConverter extends NMLFormatConverterBase {
 			//output_string += ","+enumin;
 		    } else {
 			if (null != info.int_to_string_hash) {
-			    String str = (String) info.int_to_string_hash.get(new Integer(enumin));
+			    String str = (String) info.int_to_string_hash.get(Integer.valueOf(enumin));
 			    if (null != str) {
 				output_string_buffer.append('<');
 				output_string_buffer.append(name);

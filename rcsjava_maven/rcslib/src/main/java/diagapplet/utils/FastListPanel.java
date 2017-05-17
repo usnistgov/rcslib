@@ -421,7 +421,7 @@ public class FastListPanel extends Panel implements MouseListener, ItemSelectabl
 							for (int i = 0; i < selected_indexes.size(); i++) {
 								int old_index = ((Integer) selected_indexes.elementAt(i)).intValue();
 								if (old_index >= index) {
-									selected_indexes.setElementAt(new Integer(old_index + 1), i);
+									selected_indexes.setElementAt(old_index + 1, i);
 								}
 							}
 						}
@@ -576,7 +576,7 @@ public class FastListPanel extends Panel implements MouseListener, ItemSelectabl
 						}
 					}
 				} else {
-					selected_indexes.addElement(new Integer(index));
+					selected_indexes.addElement(index);
 				}
 				count++;
 				repaint_needed = true;
@@ -738,7 +738,7 @@ public class FastListPanel extends Panel implements MouseListener, ItemSelectabl
 								new ItemEvent(
 								(ItemSelectable) this, // source
 								ItemEvent.ITEM_STATE_CHANGED, // id
-								(Object) new Integer(new_selected_index), // item
+								(Object) Integer.valueOf(new_selected_index), // item
 								ItemEvent.SELECTED); // state-change
 						//DebugPrint("Posting "+tempEvt+" to "+trueParent);
 						_ItemListener.itemStateChanged(tempEvt);
@@ -760,7 +760,7 @@ public class FastListPanel extends Panel implements MouseListener, ItemSelectabl
 											new ItemEvent(
 											(ItemSelectable) this, // source
 											ItemEvent.ITEM_STATE_CHANGED, // id
-											(Object) new Integer(i), // item
+											(Object) Integer.valueOf(i), // item
 											ItemEvent.SELECTED); // state-change
 									//DebugPrint("Posting "+tempEvt+" to "+trueParent);
 									_ItemListener.itemStateChanged(tempEvt);
@@ -773,7 +773,7 @@ public class FastListPanel extends Panel implements MouseListener, ItemSelectabl
 										new ItemEvent(
 										(ItemSelectable) this, // source
 										ItemEvent.ITEM_STATE_CHANGED, // id
-										(Object) new Integer(new_selected_index), // item
+										(Object) Integer.valueOf(new_selected_index), // item
 										ItemEvent.SELECTED); // state-change
 								//DebugPrint("Posting "+tempEvt+" to "+trueParent);
 								_ItemListener.itemStateChanged(tempEvt);
@@ -786,7 +786,7 @@ public class FastListPanel extends Panel implements MouseListener, ItemSelectabl
 									new ItemEvent(
 									(ItemSelectable) this, // source
 									ItemEvent.ITEM_STATE_CHANGED, // id
-									(Object) new Integer(new_selected_index), // item
+									(Object) Integer.valueOf(new_selected_index), // item
 									ItemEvent.DESELECTED); // state-change
 							//DebugPrint("Posting "+tempEvt+" to "+trueParent);
 							_ItemListener.itemStateChanged(tempEvt);

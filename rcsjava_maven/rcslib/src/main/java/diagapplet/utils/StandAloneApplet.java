@@ -24,18 +24,32 @@ versions bear some notice that they have been modified.
 
 package diagapplet.utils;
 
-import java.applet.Applet;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+
+
 
 
 /**
  * Wrapper that allows a class to be run as an applet or standalone outside a browser.
  * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
-public class StandAloneApplet extends Applet implements ComponentListener
+public class StandAloneApplet extends Container implements ComponentListener
 {
 
+    public void init() {
+        
+    }
+    
+    public void start() {
+        
+    }
+    
+    public void stop() {
+        
+    }
     /**
      *   Unique id for this class, Exception implements Serializable interface see documentation
      * for serializable interface for recommendations regarding this variable.
@@ -92,12 +106,12 @@ public class StandAloneApplet extends Applet implements ComponentListener
 			if(Math.abs(last_size.width - new_width) > 35 ||
 			   Math.abs(last_size.height - new_height) > 35)
 			    {
-				super.resize(new_width,new_height);
-				if(initialized && !inside_init)
-				    {
-					removeAll();
-					init();
-				    }
+				super.setSize(new_width,new_height);
+//				if(initialized && !inside_init)
+//				    {
+//					removeAll();
+//					init();
+//				    }
 				last_size.width = new_width;
 				last_size.height = new_height;                                                }
 		    }

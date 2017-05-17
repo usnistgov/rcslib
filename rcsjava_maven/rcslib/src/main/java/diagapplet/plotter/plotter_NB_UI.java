@@ -2658,8 +2658,8 @@ public class plotter_NB_UI extends javax.swing.JPanel {
         rowObject[0] = pd.short_name;
         rowObject[1] = pd.getLine_color();
         rowObject[2] = pd.getPoint_color();
-        rowObject[3] = new Boolean(pd.getShow(plotGraphJPanel1.plotter_num));
-        rowObject[4] = new Boolean(false);
+        rowObject[3] = Boolean.valueOf(pd.getShow(plotGraphJPanel1.plotter_num));
+        rowObject[4] = Boolean.valueOf(false);
         rowObject[5] = pd.name;
         rowObject[6] = pd.getPointSize();
         ((DefaultTableModel) jTableOptions.getModel()).addRow(rowObject);

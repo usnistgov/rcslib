@@ -2018,41 +2018,6 @@ public class NMLConnection implements NMLConnectionInterface {
             output_buffer = null;
             disconnect_time = System.currentTimeMillis();
             read_request_sent = false;
-            /* SocketSet set;
-            Integer portInteger = new Integer(port);
-            set = (SocketSet) m_socketSetHashtable.get(portInteger);
-            if(null != set)
-            {
-            set.count--;
-            if(set.count <= 0)
-            {
-            if(set.m_OutputStream != null)
-            {
-            set.m_OutputStream.close();
-            set.m_OutputStream = null;
-            }
-            if(set.m_InputStream != null);
-            {
-            set.m_InputStream.close();
-            set.m_InputStream = null;
-            }
-            if(set.m_Socket != null)
-            {
-            set.m_Socket.close();
-            set.m_Socket = null;
-            }
-            m_socketSetHashtable.remove(portInteger);
-            m_OutputStream = null;
-            m_InputStream = null;
-            m_Socket = null;
-            rcs.nml.debugInfo.debugPrintStream.print("\r\n Socket "+set.port+" closed. \r\n");
-            return;
-            }
-
-            rcs.nml.debugInfo.debugPrintStream.print("\r\n Socket "+port+" closed.\r\n");
-            return;
-            }
-             */
 
             if (protocol_option == NML_UDP_PROTOCOL_TYPE
                     && use_subscription && subscription_id > 0) {

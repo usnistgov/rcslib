@@ -1,0 +1,16 @@
+# ex1.nml
+# INPUT_FILENAME=ex1.cfg
+ 
+
+# Buffers:
+#       name 	   type  	      host 	size 	neut 	0 	buf# 	max_proc 	. . .
+B    ex1_buf 	SHMEM    	  ying-220 	320 	0 	* 	1 	* 	27001 	TCP=22000  format_source=nml_ex1_n.cc header=nml_ex1.hh format_name=ex packed 
+ 
+
+# Processes: 
+#       Name 	    Buffer 	      type 	      host 	       ops 	server 	timeout 	master 	c_num  	 . . .
+P nml_ex1_svr 	   default 	     LOCAL 	 localhost 	        RW 	1 	INF     	1 	0 	
+ 
+P    default 	   default 	      AUTO 	 localhost 	        RW 	0 	INF     	0 	1 	
+ 
+

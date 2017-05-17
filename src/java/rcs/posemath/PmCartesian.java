@@ -97,6 +97,24 @@ public class PmCartesian extends java.awt.geom.Point2D.Double  implements Clonea
         return Posemath.pmCartCartCompare(this, v);
     }
 
+    public PmCartesian rotate(PmRotationMatrix mat) throws PmException {
+        PmCartesian ret = new PmCartesian();
+        Posemath.pmMatCartMult(mat, this, ret);
+        return ret;
+    }
+    
+    public PmCartesian rotate(PmQuaternion quat) throws PmException {
+        PmCartesian ret = new PmCartesian();
+        Posemath.pmQuatCartMult(quat, this, ret);
+        return ret;
+    }
+    
+    public PmCartesian rotate(PmRotationVector v) throws PmException {
+        PmCartesian ret = new PmCartesian();
+        Posemath.pmQuatCartMult(Posemath.toQuat(v), this, ret);
+        return ret;
+    }
+    
     @Override
     public String toString() {
         return String.format(" { x=%+.3g, y=%+.3g, z=%+.3g } ", x, y, z);
@@ -114,6 +132,32 @@ public class PmCartesian extends java.awt.geom.Point2D.Double  implements Clonea
         return new PmCartesian(this.x*d,this.y*d,this.z*d);
     }
 
+    public PmCartesian unit() throws PmException {
+        final double magv = mag();
+        if(magv < Posemath.DOUBLE_FUZZ) {
+            throw new PmException(Posemath.PM_DIV_ERR, "unit of vector with near zero mag() = "+magv);
+        }
+        return multiply(1.0/magv);
+    }
+    
+    public PmCartesian cross(final PmCartesian other) throws PmException {
+        PmCartesian ret = new PmCartesian();
+        Posemath.pmCartCartCross(this, other, ret);
+        return ret;
+    }
+    
+    public double dot(PmCartesian other) {
+        return Posemath.pmCartCartDot(this, other);
+    }
+    
+    public PmCartesian project(PmCartesian other) throws PmException {
+        double magv = this.mag();
+        if(magv < Posemath.DOUBLE_FUZZ) {
+            throw new PmException(Posemath.PM_DIV_ERR, "project of vector with near zero mag() = "+magv);
+        }
+        return this.multiply(this.dot(other)/(magv*magv));
+    }
+    
     static public PmCartesian valueOf(String s) {
         PmCartesian c = new PmCartesian();
         StringTokenizer st = new StringTokenizer(s, "{}[];: ,\t\r\n");
