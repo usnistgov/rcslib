@@ -245,24 +245,48 @@ public class Posemath {
     }
 
     static public void main(String args[]) throws Exception {
-        if (args[0].compareTo("--csvShiftCorrel") == 0) {
-            printCorrelationShifts(args[1],
-                    Integer.valueOf(args[2]),
-                    args[3],
-                    Integer.valueOf(args[4]),
-                    Double.valueOf(args[5]),
-                    Double.valueOf(args[6]),
-                    Double.valueOf(args[7]),
-                    System.out);
-        } else if (args[0].compareTo("--findStillTimes") == 0) {
-            findStillTimes(Arrays.copyOfRange(args, 1, args.length));
-        } else if (args[0].compareTo("--csvSync") == 0) {
-            csvSync(new File(args[1]),
-                    new File(args[2]),
-                    System.out);
-        } else {
-            System.err.println("Unrecognized args " + args[0]);
-        }
+        
+        
+       PmRotationVector rv = new PmRotationVector(PM_PI, 1, 0, 1);
+       PmRotationMatrix mat = toMat(rv);
+        System.out.println("mat = " + mat);
+        
+        
+        PmEulerZyz zyz = new PmEulerZyz(PM_PI, 0, PM_PI);
+        System.out.println("zyz = " + zyz);
+        mat = toMat(zyz);
+        System.out.println("mat = " + mat);
+        
+        
+        PmEulerZyx zyx = new PmEulerZyx(PM_PI, 0, PM_PI);
+        System.out.println("zyx = " + zyx);
+        mat = toMat(zyx);
+        System.out.println("mat = " + mat);
+        
+        zyx = new PmEulerZyx(PM_PI/2, 0, PM_PI);
+        System.out.println("zyx = " + zyx);
+        mat = toMat(zyx);
+        System.out.println("mat = " + mat);
+        
+        
+//        if (args[0].compareTo("--csvShiftCorrel") == 0) {
+//            printCorrelationShifts(args[1],
+//                    Integer.valueOf(args[2]),
+//                    args[3],
+//                    Integer.valueOf(args[4]),
+//                    Double.valueOf(args[5]),
+//                    Double.valueOf(args[6]),
+//                    Double.valueOf(args[7]),
+//                    System.out);
+//        } else if (args[0].compareTo("--findStillTimes") == 0) {
+//            findStillTimes(Arrays.copyOfRange(args, 1, args.length));
+//        } else if (args[0].compareTo("--csvSync") == 0) {
+//            csvSync(new File(args[1]),
+//                    new File(args[2]),
+//                    System.out);
+//        } else {
+//            System.err.println("Unrecognized args " + args[0]);
+//        }
     }
 
     static public void findStillTimes(String args[]) {
@@ -860,18 +884,18 @@ public class Posemath {
         return pmErrno = 0;
     }
 
-    /**
-     * Convert rotation vector to rotation matrix
-     *
-     * @param v rotation vector to convert (must be normalized)
-     * @return v as a rotation matrix
-     * @throws PmException when conversion is not possible
-     */
-    static public PM_ROTATION_MATRIX toMat(PM_ROTATION_VECTOR v) throws PmException {
-        PM_ROTATION_MATRIX m = new PM_ROTATION_MATRIX();
-        pmRotMatConvert(v, m);
-        return m;
-    }
+//    /**
+//     * Convert rotation vector to rotation matrix
+//     *
+//     * @param v rotation vector to convert (must be normalized)
+//     * @return v as a rotation matrix
+//     * @throws PmException when conversion is not possible
+//     */
+//    static public PM_ROTATION_MATRIX toMat(PM_ROTATION_VECTOR v) throws PmException {
+//        PM_ROTATION_MATRIX m = new PM_ROTATION_MATRIX();
+//        pmRotMatConvert(v, m);
+//        return m;
+//    }
 
     /**
      * Convert rotation vector to rotation matrix
@@ -886,6 +910,34 @@ public class Posemath {
         return m;
     }
 
+    
+    /**
+     * Convert Euler zyx to rotation matrix
+     *
+     * @param zyx Euler zyx to convert (must be normalized)
+     * @return v as a rotation matrix
+     * @throws PmException when conversion is not possible
+     */
+    static public PM_ROTATION_MATRIX toMat(PmEulerZyx zyx) throws PmException {
+        PM_ROTATION_MATRIX m = new PM_ROTATION_MATRIX();
+        pmZyxMatConvert(zyx, m);
+        return m;
+    }
+    
+    
+    /**
+     * Convert Euler zyz to rotation matrix
+     *
+     * @param zyz rEuler zyz to convert (must be normalized)
+     * @return v as a rotation matrix
+     * @throws PmException when conversion is not possible
+     */
+    static public PM_ROTATION_MATRIX toMat(PmEulerZyz zyz) throws PmException {
+        PM_ROTATION_MATRIX m = new PM_ROTATION_MATRIX();
+        pmZyzMatConvert(zyz, m);
+        return m;
+    }
+    
     /**
      * Convert roll-pitch-yaw to rotation matrix
      *
@@ -893,24 +945,24 @@ public class Posemath {
      * @return v as a rotation matrix
      * @throws PmException when conversion is not possible
      */
-    static public PM_ROTATION_MATRIX toMat(PM_RPY rpy) throws PmException {
+    static public PM_ROTATION_MATRIX toMat(PmRpy rpy) throws PmException {
         PM_ROTATION_MATRIX m = new PM_ROTATION_MATRIX();
         pmRpyMatConvert(rpy, m);
         return m;
     }
 
-    /**
-     * Convert roll-pitch-yaw to rotation matrix
-     *
-     * @param rpy roll-pitch-yaw to convert (must be normalized)
-     * @return v as a rotation matrix
-     * @throws PmException when conversion is not possible
-     */
-    static public PmRotationMatrix toMat(PmRpy rpy) throws PmException {
-        PmRotationMatrix m = new PmRotationMatrix();
-        pmRpyMatConvert(rpy, m);
-        return m;
-    }
+//    /**
+//     * Convert roll-pitch-yaw to rotation matrix
+//     *
+//     * @param rpy roll-pitch-yaw to convert (must be normalized)
+//     * @return v as a rotation matrix
+//     * @throws PmException when conversion is not possible
+//     */
+//    static public PmRotationMatrix toMat(PmRpy rpy) throws PmException {
+//        PmRotationMatrix m = new PmRotationMatrix();
+//        pmRpyMatConvert(rpy, m);
+//        return m;
+//    }
 
     /**
      * Convert a rotation vector to a rotation matrix.
@@ -933,9 +985,11 @@ public class Posemath {
         s = Math.sin(r.s);
         c = Math.cos(r.s);
 
-        /* from space book */
-        m.x.x = c + pmSq(r.x) * (omc = 1 - c);
         /* omc = One Minus Cos */
+        omc = 1-c;
+        /* from space book */
+        m.x.x = c + pmSq(r.x) * omc;
+        
         m.y.x = -r.z * s + r.x * r.y * omc;
         m.z.x = r.y * s + r.x * r.z * omc;
 
@@ -1083,7 +1137,7 @@ public class Posemath {
      * @return v as a rotation matrix
      * @throws PmException when conversion is not possible
      */
-    static public PM_ROTATION_MATRIX toMat(PM_QUATERNION v) throws PmException {
+    static public PM_ROTATION_MATRIX toMat(PmQuaternion v) throws PmException {
         PM_ROTATION_MATRIX m = new PM_ROTATION_MATRIX();
         pmQuatMatConvert(v, m);
         return m;
@@ -3895,4 +3949,7 @@ public class Posemath {
         rpy_clone.norm();
         return rpy_clone;
     }
+    
+    
+    
 }
