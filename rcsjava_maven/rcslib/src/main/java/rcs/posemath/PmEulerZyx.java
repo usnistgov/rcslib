@@ -66,4 +66,10 @@ public class PmEulerZyx
   {
   }
 
+    @Override
+    public String toString() {
+        return "PmEulerZyx{" + "z=" + String.format("%+.3f", z) + ", y=" +  String.format("%+.3f", y) + ", x=" +  String.format("%+.3f", x) + '}';
+    }
+
+  
 }
