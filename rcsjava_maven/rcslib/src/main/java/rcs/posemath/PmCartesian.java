@@ -123,7 +123,7 @@ public class PmCartesian extends java.awt.geom.Point2D.Double  implements Clonea
     
     @Override
     public String toString() {
-        return String.format(" { x=%+.3g, y=%+.3g, z=%+.3g } ", x, y, z);
+        return String.format(" { x=%+.3f, y=%+.3f, z=%+.3f } ", x, y, z);
     }
 
     public PmCartesian add(final PmCartesian c) {

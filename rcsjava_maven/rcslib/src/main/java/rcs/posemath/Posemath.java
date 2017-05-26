@@ -1552,6 +1552,11 @@ public class Posemath {
         return rpy;
     }
 
+    static public PM_RPY toRpy(PmRotationVector rv) throws PmException {
+        PM_RPY rpy = new PM_RPY();
+        pmRotRpyConvert(rv, rpy);
+        return rpy;
+    }
     static public int pmZyzRotConvert(PmEulerZyz zyz, PmRotationVector r) throws PmException {
         PmRotationMatrix mat = new PmRotationMatrix();
         int c1 = pmZyzMatConvert(zyz, mat);

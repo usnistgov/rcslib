@@ -83,7 +83,7 @@ public class PmRotationMatrix
 
   public String toString()
   {
-    return " { \n\tx = "+x+",\n\ty ="+y+",\n\tz = "+z+"\n } ";
+    return " { \n\tx ="+x+",\n\ty ="+y+",\n\tz ="+z+"\n } ";
   }
 
   public PmRotationMatrix inv() throws PmException {

@@ -154,4 +154,10 @@ public class PmRotationVector implements Cloneable {
         return cloned_object;
     }
 
+    @Override
+    public String toString() {
+        return "PmRotationVector{" + "s=" + s + ", x=" + x + ", y=" + y + ", z=" + z + '}';
+    }
+
+    
 }
