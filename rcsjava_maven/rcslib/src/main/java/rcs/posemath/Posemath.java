@@ -924,18 +924,6 @@ public class Posemath {
     }
 
     
-    /**
-     * Convert Euler zyx to rotation matrix
-     *
-     * @param zyx Euler zyx to convert (must be normalized)
-     * @return v as a rotation matrix
-     * @throws PmException when conversion is not possible
-     */
-    static public PM_ROTATION_MATRIX toMat(PmEulerZyx zyx) throws PmException {
-        PM_ROTATION_MATRIX m = new PM_ROTATION_MATRIX();
-        pmZyxMatConvert(zyx, m);
-        return m;
-    }
     
     
     /**
