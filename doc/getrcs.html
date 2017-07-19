@@ -11,21 +11,21 @@
 <H1>Instructions for getting and making the <BR>Real-time Control Systems(RCS) Library.</H1>
 </center>
 <hr>
-<!--RCS_VERSION= 2016.11.21 -->
+<!--RCS_VERSION= 2017.07.19 -->
 <ol> 
 <li>Get the source at 
-    <a href="http://www.isd.mel.nist.gov/projects/rcslib/rcslib-2016.11.21.tar.gz">
-      http://www.isd.mel.nist.gov/projects/rcslib/rcslib-2016.11.21.tar.gz</a>
+    <a href="http://www.isd.mel.nist.gov/projects/rcslib/rcslib-2017.07.19.tar.gz">
+      http://www.isd.mel.nist.gov/projects/rcslib/rcslib-2017.07.19.tar.gz</a>
     </a> 
 </li>
-<li>Extract files from rcslib-2016.11.21.tar.gz</li>
+<li>Extract files from rcslib-2017.07.19.tar.gz</li>
 <ol>
 <li>Uncompress the file by using 
-&quot;<a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.gnu.org/directory/gzip.html">gunzip</a> rcslib-2016.11.21.tar.gz
+&quot;<a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.gnu.org/directory/gzip.html">gunzip</a> rcslib-2017.07.19.tar.gz
 <li>Extract all of the files from the tar file by using &quot;
-<a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.gnu.org/directory/tar.html">tar</a> -xf rcslib-2016.11.21.tar
+<a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.gnu.org/directory/tar.html">tar</a> -xf rcslib-2017.07.19.tar
 <p>With newer versions of GNU tar one can uncompress and extract with one
-command.&quot;tar -xzf rcslib-2016.11.21.tar&quot;
+command.&quot;tar -xzf rcslib-2017.07.19.tar&quot;
 </p></li>
 </ol>
 <li>Build the RCS library.
@@ -34,7 +34,7 @@ command.&quot;tar -xzf rcslib-2016.11.21.tar&quot;
 <ul>
 <li>
 <pre>
-<p>cd rcslib-2016.11.21
+<p>cd rcslib-2017.07.19
 ./configure
 make
 # The make check is optional, but gives a little more confidence that
@@ -61,7 +61,7 @@ the top level directory. This should also eliminate the need for root access.
 <li>
 <pre>
 <p>
-<p>cd rcslib-2016.11.21
+<p>cd rcslib-2017.07.19
 make USE_OLD_RCSLIB_MAKEFILES=1
 </pre>
 </li>
@@ -91,9 +91,9 @@ use the definitions in rcslib/etc/sunos5.def.</p>
 <li>Use MinGW:
 <p> Download and install first MinGW and then MSYS from <a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.mingw.org">http://www.mingw.org</a>.Be sure to save the rcslib  tar file under the &quot;root&quot; directory of MSYS ie &quot;C:\msys\1.0\&quot; or a sub-directory of this. Then, from within the MSYS tool either run:</p>
 <pre>
-tar -xzf rcslib-2016.11.21.tar
+tar -xzf rcslib-2017.07.19.tar
 <p>
-<p>cd rcslib-2016.11.21
+<p>cd rcslib-2017.07.19
 ./configure 
 make
 make install
@@ -101,13 +101,13 @@ make install
 <p> or use the older makefiles :</p>
 <pre>
 <p>
-<p>cd rcslib-2016.11.21
+<p>cd rcslib-2017.07.19
 export PLAT=mingw32
 make PLAT=mingw32
 </pre>
 </li>
 <li>If you must use VC++, there is a solutions file in 
-  rcslib-2016.11.21/etc/win_vc_2010_express/rcs/rcs.sln.
+  rcslib-2017.07.19/etc/win_vc_2010_express/rcs/rcs.sln.
 </li>
 </p>
 
@@ -149,7 +149,7 @@ the instructions for each tool.) The diagnotics tool now requires JDK or JRE 1.6
 <p><a href="http://www.isd.mel.nist.gov/projects/rcslib/rcsjava.jar">http://www.isd.mel.nist.gov/projects/rcslib/rcsjava.jar</a></p>
 
 <HR>
-<p>Last Modified: 2016.11.21 </p>
+<p>Last Modified: 2017.07.19 </p>
 <ul>
 <li><a href="index.html">See other RCS Library Documents.</a></li>
 </ul>

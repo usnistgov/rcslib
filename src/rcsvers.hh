@@ -30,10 +30,10 @@ versions bear some notice that they have been modified.
 #define RCSVERS_HH
 
 /* Version Info */
-#define RCS_VERSION "2016.11.21"
-#define RCS_MAJOR_VERSION (2016)
-#define RCS_MINOR_VERSION (11)
-#define RCS_VERSION_NUMBER 20161121
+#define RCS_VERSION "2017.07.19"
+#define RCS_MAJOR_VERSION (2017)
+#define RCS_MINOR_VERSION (7)
+#define RCS_VERSION_NUMBER 20170719
 
 extern int rcs_version_printed;
 extern const int rcs_major_version_number;

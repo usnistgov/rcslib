@@ -1067,8 +1067,8 @@ libposemath_la_SOURCES = src/posemath/_posemath.c \
 	src/posemath/sincos.c
 
 
-#libposemath_la_LDFLAGS= -version-number 2016:11:21
-libposemath_la_LDFLAGS = -release 2016-11-21
+#libposemath_la_LDFLAGS= -version-number 2017:7:19
+libposemath_la_LDFLAGS = -release 2017-07-19
 @POSEMATH_FLAGS_SET_TRUE@libposemath_la_CXXFLAGS = @POSEMATH_CXXFLAGS@
 @POSEMATH_FLAGS_SET_TRUE@libposemath_la_CFLAGS = @POSEMATH_CFLAGS@
 
@@ -1218,8 +1218,8 @@ check_SCRIPTS = \
 
 TESTS = @CONFIGURED_TESTS@
 
-#librcs_la_LDFLAGS= -version-number 2016:11:21
-librcs_la_LDFLAGS = -release 2016-11-21
+#librcs_la_LDFLAGS= -version-number 2017:7:19
+librcs_la_LDFLAGS = -release 2017-07-19
 librcs_la_DEPENDENCIES = @RCSLIB_EXTRA_OBJS@
 librcs_la_LIBADD = @RCSLIB_EXTRA_OBJS@
 EXTRA_librcs_la_SOURCES = \
