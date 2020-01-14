@@ -170,7 +170,7 @@ class C_Generator {
                         }
                     }
                 }
-                String class_name = type_info.Name;
+                String class_name = type_info.getName();
                 already_prototyped = false;
                 for (int j = 0; j < class_prototypes.size(); j++) {
                     String prototype_class = (String) class_prototypes.elementAt(j);
@@ -342,12 +342,12 @@ class C_Generator {
                 }
                 cgc.WriteOutput("\n");
                 if (type_info.Id > 0) {
-                    cgc.WriteOutput("#ifndef " + type_info.Name + "_TYPE\n");
-                    cgc.WriteOutput("#define " + type_info.Name + "_TYPE\t" + type_info.Id + "\n");
+                    cgc.WriteOutput("#ifndef " + type_info.getName() + "_TYPE\n");
+                    cgc.WriteOutput("#define " + type_info.getName() + "_TYPE\t" + type_info.Id + "\n");
                     cgc.WriteOutput("#endif\n");
 
                     if (type_info.type_id_string != null
-                            && !type_info.type_id_string.equals(type_info.Name + "_TYPE")
+                            && !type_info.type_id_string.equals(type_info.getName() + "_TYPE")
                             && Character.isLetter(type_info.type_id_string.charAt(0))) {
                         cgc.WriteOutput("#ifndef " + type_info.type_id_string + "\n");
                         cgc.WriteOutput("#define " + type_info.type_id_string + "\t" + type_info.Id + "\n");
@@ -364,7 +364,7 @@ class C_Generator {
                         cgc.WriteOutput("\t" + c_tok + ";\n");
                     }
                 }
-                cgc.WriteOutput("} nml_" + type_info.Name + "_c_t;\n");
+                cgc.WriteOutput("} nml_" + type_info.getName() + "_c_t;\n");
             }
 
             cgc.WriteOutput("\n");
@@ -517,8 +517,8 @@ class C_Generator {
                     type_info = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(selected_classes[i]);
                     if (type_info != null && type_info.Id > 0) {
                         cgc.WriteOutput("\n");
-                        cgc.WriteOutput("extern int nml_" + swig_module_name + "_" + type_info.Name + "_write(long nml_id, " + "const nml_" + type_info.Name + "_c_t *msg);\n");
-                        cgc.WriteOutput("extern nml_" + type_info.Name + "_c_t * nml_" + swig_module_name + "_" + type_info.Name + "_get_msg(long nml_id);\n");
+                        cgc.WriteOutput("extern int nml_" + swig_module_name + "_" + type_info.getName() + "_write(long nml_id, " + "const nml_" + type_info.getName() + "_c_t *msg);\n");
+                        cgc.WriteOutput("extern nml_" + type_info.getName() + "_c_t * nml_" + swig_module_name + "_" + type_info.getName() + "_get_msg(long nml_id);\n");
                     }
                 }
 
@@ -615,15 +615,15 @@ class C_Generator {
                 for (int i = 0; i < selected_classes.length; i++) {
                     type_info = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(selected_classes[i]);
                     if (type_info != null && type_info.Id > 0) {
-                        cgc.WriteOutput("int nml_" + swig_module_name + "_" + type_info.Name + "_write(long nml_id, " + "const nml_" + type_info.Name + "_c_t *msg)");
+                        cgc.WriteOutput("int nml_" + swig_module_name + "_" + type_info.getName() + "_write(long nml_id, " + "const nml_" + type_info.getName() + "_c_t *msg)");
                         cgc.WriteOutput("{\n");
-                        cgc.WriteOutput("\treturn (int) nml_write( (nml_c_t) nml_id,(void *) msg, (nmltype_c_t) " + type_info.Id + ",sizeof(nml_" + type_info.Name + "_c_t));\n");
+                        cgc.WriteOutput("\treturn (int) nml_write( (nml_c_t) nml_id,(void *) msg, (nmltype_c_t) " + type_info.Id + ",sizeof(nml_" + type_info.getName() + "_c_t));\n");
                         cgc.WriteOutput("}\n");
                         cgc.WriteOutput("\n");
 
-                        cgc.WriteOutput("nml_" + type_info.Name + "_c_t * nml_" + swig_module_name + "_" + type_info.Name + "_get_msg(long nml_id)");
+                        cgc.WriteOutput("nml_" + type_info.getName() + "_c_t * nml_" + swig_module_name + "_" + type_info.getName() + "_get_msg(long nml_id)");
                         cgc.WriteOutput("{\n");
-                        cgc.WriteOutput("\treturn (nml_" + type_info.Name + "_c_t *) nml_get_address( (nml_c_t) nml_id);\n");
+                        cgc.WriteOutput("\treturn (nml_" + type_info.getName() + "_c_t *) nml_get_address( (nml_c_t) nml_id);\n");
                         cgc.WriteOutput("}\n");
                         cgc.WriteOutput("\n");
 
@@ -1020,7 +1020,7 @@ class C_Generator {
         String stringToAdd = "";
 
         if (debug_on) {
-            DebugPrint("CreateC_UpdateFunction: type_info.Name = " + type_info.Name);
+            DebugPrint("CreateC_UpdateFunction: type_info.Name = " + type_info.getName());
             DebugPrint("CreateC_UpdateFunction: type_info.RawInfo = " + type_info.RawInfo);
             DebugPrint("CreateC_UpdateFunction: type_info.HiddenInfo = " + type_info.HiddenInfo);
             DebugPrint("CreateC_UpdateFunction: type_info.PreFinalPassInfo = " + type_info.PreFinalPassInfo);
@@ -1035,14 +1035,14 @@ class C_Generator {
             if (!type_info.is_union) {
                 if (null != type_info.DerivedFrom) {
                     stringToAdd =
-                            "\n\tcms_begin_class(cms,\"" + type_info.Name + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
+                            "\n\tcms_begin_class(cms,\"" + type_info.getName() + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
                     if (debug_on) {
                         DebugPrint("stringToAdd=" + stringToAdd);
                     }
                     type_info.C_UpdateFunction += stringToAdd;
                 } else {
                     stringToAdd =
-                            "\n\tcms_begin_class(cms,\"" + type_info.Name + "\",0);\n";
+                            "\n\tcms_begin_class(cms,\"" + type_info.getName() + "\",0);\n";
                     if (debug_on) {
                         DebugPrint("stringToAdd=" + stringToAdd);
                     }
@@ -1093,7 +1093,7 @@ class C_Generator {
                             DebugPrint("CreateC_UpdateFunction: var_class_is_nml_msg = " + var_class_is_nml_msg);
                         }
                         if (var_class_is_nml_msg != type_info.is_nml_msg) {
-                            String tmperrstring = type_info.Name + " appears to be derived from " + type_info.DerivedFrom + " but IsNMLMsg(\"" + type_info.DerivedFrom + "\") returned " + var_class_is_nml_msg + " and type_info.is_nml_msg = " + type_info.is_nml_msg;
+                            String tmperrstring = type_info.getName() + " appears to be derived from " + type_info.DerivedFrom + " but IsNMLMsg(\"" + type_info.DerivedFrom + "\") returned " + var_class_is_nml_msg + " and type_info.is_nml_msg = " + type_info.is_nml_msg;
                             System.err.println(tmperrstring);
                             type_info.C_UpdateFunction = "\n#error " + tmperrstring + "\n";
                             return;
@@ -1236,7 +1236,7 @@ class C_Generator {
                 }
                 lastSpaceIndex = pre_array_string.lastIndexOf(' ');
                 if (lastSpaceIndex < 0) {
-                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     System.err.println("\t\t-- pre_array_string (" + pre_array_string + ") needs a space. *2");
                     cgc.RingBell();
                     continue;
@@ -1251,7 +1251,7 @@ class C_Generator {
                 if (variable_name.length() < 1) {
                     lastSpaceIndex = info_token.lastIndexOf(' ', lastSpaceIndex - 1);
                     if (lastSpaceIndex < 0) {
-                        System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                        System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                         System.err.println("\t\t-- info_token (" + info_token + ") needs another space. L2313--28%");
                         cgc.RingBell();
                         continue;
@@ -1263,13 +1263,13 @@ class C_Generator {
                     }
                 }
                 if (variable_name.length() < 1) {
-                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     System.err.println("\t\t-- no variable_name.");
                     cgc.RingBell();
                     continue;
                 }
                 if (variable_name.indexOf('*') >= 0 || variable_name.indexOf('&') >= 0) {
-                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     System.err.println("\t\t-- variable (" + variable_name + ") appears to be a pointer or reference.");
                     stringToAdd = "\n#error Can not create update for pointer or reference type (" + orig_info_token + ")\n";
                     if (debug_on) {
@@ -1294,7 +1294,7 @@ class C_Generator {
                         || variable_name.indexOf('{') >= 0 || variable_name.indexOf('}') >= 0
                         || variable_name.indexOf(',') >= 0
                         || variable_name.indexOf('&') >= 0) {
-                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     System.err.println("\t\t-- variable_name (" + variable_name + ") contains an illegal character.");
                     cgc.RingBell();
                     continue;
@@ -1345,7 +1345,7 @@ class C_Generator {
                 }
                 if (cpp_type.indexOf('*') >= 0
                         || cpp_type.indexOf('&') >= 0) {
-                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     System.err.println("\t\t-- cpp_type (" + cpp_type + ") appears to be a pointer or reference.");
                     stringToAdd = "\n#error Can not create update for pointer or reference type (" + cpp_type + ")\n";
                     if (debug_on) {
@@ -1369,7 +1369,7 @@ class C_Generator {
                         || cpp_type.indexOf('{') >= 0 || cpp_type.indexOf('}') >= 0
                         || cpp_type.indexOf(',') >= 0
                         || cpp_type.indexOf('&') >= 0) {
-                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    System.err.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     System.err.println("\t\t-- cpp_type (" + cpp_type + ") contains an illegal character.");
 
                     continue;
@@ -1636,14 +1636,14 @@ class C_Generator {
             }
             if (null != type_info.DerivedFrom) {
                 stringToAdd =
-                        "\n\tcms_end_class(cms,\"" + type_info.Name + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
+                        "\n\tcms_end_class(cms,\"" + type_info.getName() + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
                 if (debug_on) {
                     DebugPrint("stringToAdd=" + stringToAdd);
                 }
                 type_info.C_UpdateFunction += stringToAdd;
             } else {
                 stringToAdd =
-                        "\n\tcms_end_class(cms,\"" + type_info.Name + "\",0);\n";
+                        "\n\tcms_end_class(cms,\"" + type_info.getName() + "\",0);\n";
                 if (debug_on) {
                     DebugPrint("stringToAdd=" + stringToAdd);
                 }
@@ -1651,7 +1651,7 @@ class C_Generator {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error Generating C++ Update function for " + type_info.Name);
+            System.err.println("Error Generating C++ Update function for " + type_info.getName());
             System.err.println("type_info.DerivedFrom = " + type_info.DerivedFrom);
             System.err.println("type_info.PreFinalPassInfo = " + type_info.PreFinalPassInfo);
             System.err.println("type_info.RawInfo = " + type_info.RawInfo);

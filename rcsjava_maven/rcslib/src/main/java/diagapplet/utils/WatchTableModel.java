@@ -82,7 +82,7 @@ class WatchTableModel
 		if (null == sti) {
 			return null;
 		}
-		return sti.Name;
+		return sti.getName();
 	}
 
 	public void ExpandAll() {

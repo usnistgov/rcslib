@@ -47,12 +47,12 @@ public class StrToInt {
 			e.printStackTrace();
 		}
 	}
-	static public boolean bad_token = false;
+//	static public boolean bad_token = false;
 
 	public static int convert(String str) throws NumberFormatException {
 		int multiplier = 1;
 		StringTokenizer tokenizer = new StringTokenizer(str, " \t\r\n\b:;[]()+");
-		bad_token = false;
+//		bad_token = false;
 		while (tokenizer.hasMoreTokens()) {
 			multiplier = 1;
 			String token = tokenizer.nextToken();
@@ -65,9 +65,9 @@ public class StrToInt {
 			}
 			int point_index = token.indexOf(".");
 			if (!Character.isDigit(token.charAt(0))) {
-				ErrorPrint("StrToInt.convert(" + str + ") contains bad token{" + token + "}.\n");
-				bad_token = true;
-				return 0;
+				throw new NumberFormatException("StrToInt.convert(" + str + ") contains bad token{" + token + "}.\n");
+//				bad_token = true;
+//				return 0;
 			}
 			if (point_index > 0) {
 				token = token.substring(0, point_index);

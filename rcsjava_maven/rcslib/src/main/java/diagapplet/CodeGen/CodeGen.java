@@ -147,7 +147,7 @@ public class CodeGen extends Container implements Runnable, ActionListener {
      * This method is called by GetParameters().
      *---------------------------------------------------------------------------
      * @param strName name of parameter to retrieve
-     * @param args  command line args if run from main()
+     * @param args  command lineNumber args if run from main()
      * @return value corresponding to strName
      */
     public String GetParameter(String strName, String args[]) {
@@ -158,13 +158,13 @@ public class CodeGen extends Container implements Runnable, ActionListener {
      * From old VisualJ STANDALONE APPLICATION SUPPORT
      *    The GetParameters() method retrieves the values of each of the applet's
      * parameters and stores them in variables. This method works both when the
-     * applet is run as a standalone application and when it's run within an HTML
-     * page.  When the applet is run as a standalone application, this method is
-     * called by the main() method, which passes it the command-line arguments.
-     * When the applet is run within an HTML page, this method is called by the
-     * init() method with args == null.
-     *---------------------------------------------------------------------------
-     * @param args  command line args if called from main()
+ applet is run as a standalone application and when it's run within an HTML
+ page.  When the applet is run as a standalone application, this method is
+ called by the main() method, which passes it the command-lineNumber arguments.
+ When the applet is run within an HTML page, this method is called by the
+ init() method with args == null.
+---------------------------------------------------------------------------
+     * @param args  command lineNumber args if called from main()
      */
     public void GetParameters(String args[]) {
         cgc.GetParameters(args);
@@ -179,7 +179,7 @@ public class CodeGen extends Container implements Runnable, ActionListener {
     /**
      * Run the graphical tool.
      * @deprecated Use CodeGenCmdLine instead.
-     * @param args cmd line arguments
+     * @param args cmd lineNumber arguments
      */
     public static void main(String args[]) {
         boolean print_prompt = true;

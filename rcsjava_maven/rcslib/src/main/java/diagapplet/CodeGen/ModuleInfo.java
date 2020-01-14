@@ -28,17 +28,22 @@ import java.util.StringTokenizer;
 import rcs.nml.NMLConnectionInterface;
 import rcs.nml.NMLConnectionCreatorInterface;
 import diagapplet.utils.URLLoadInfoPanelInterface;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import rcs.nml.NMLMessageDictionary;
 import rcs.utils.StackTracePrinter;
 import rcs.utils.URL_and_FileLoader;
 
 /**
- * Class contains references to all information taken from a Module section of 
- * a diag or hierarchy file.
- * @author Will Shackleford  {@literal <william.shackleford@nist.gov>}
+ * Class contains references to all information taken from a Module section of a
+ * diag or hierarchy file.
+ *
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public class ModuleInfo implements ModuleInfoInterface {
 
@@ -59,6 +64,7 @@ public class ModuleInfo implements ModuleInfoInterface {
 
     /**
      * Get a string for debuggin purposes.
+     *
      * @return last_loading_module_string;
      */
     static public String get_last_loading_module_string() {
@@ -69,9 +75,10 @@ public class ModuleInfo implements ModuleInfoInterface {
     }
     static private volatile ModuleInfo last_loading_module = null;
     /**
-     * Variable temporarily set to true only by the diagnostics hierarchy view when
-     * sending a message string that only contains the type and size placeholder.
-     * Other variables in the message are set to zero or taken from the last message.
+     * Variable temporarily set to true only by the diagnostics hierarchy view
+     * when sending a message string that only contains the type and size
+     * placeholder. Other variables in the message are set to zero or taken from
+     * the last message.
      */
     public boolean sending_short_string = false;
     public boolean preset_x = false;
@@ -93,7 +100,8 @@ public class ModuleInfo implements ModuleInfoInterface {
      */
     public boolean no_stat = false;
     /**
-     * A list of deleted commands used by the Design tool when remerging old code.
+     * A list of deleted commands used by the Design tool when remerging old
+     * code.
      */
     public Vector deleted_commands = null;
     public String designLog = "";
@@ -180,8 +188,8 @@ public class ModuleInfo implements ModuleInfoInterface {
             String cur_file_name = null;
             int cur_file_line = 0;
             if (last_loading_module != null) {
-                cur_file_name = last_loading_module.cur_file_name;
-                cur_file_line = last_loading_module.cur_file_line;
+                cur_file_name = last_loading_module.curFileName;
+                cur_file_line = last_loading_module.curFileLineNumber;
             }
             if (cur_file_name != null && cur_file_name.length() > 0 && cur_file_line > 0) {
                 System.out.println(cur_file_name + ":" + cur_file_line + " " + s);
@@ -202,8 +210,8 @@ public class ModuleInfo implements ModuleInfoInterface {
             String cur_file_name = null;
             int cur_file_line = 0;
             if (last_loading_module != null) {
-                cur_file_name = last_loading_module.cur_file_name;
-                cur_file_line = last_loading_module.cur_file_line;
+                cur_file_name = last_loading_module.curFileName;
+                cur_file_line = last_loading_module.curFileLineNumber;
             }
             if (cur_file_name != null && cur_file_name.length() > 0 && cur_file_line > 0) {
                 if (debug_on) {
@@ -227,7 +235,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                     && null != last_loading_module.last_file_loader) {
                 System.out.println("last_loading_module.last_file_loader = " + last_loading_module.last_file_loader);
             }
-            if(debug_on) {
+            if (debug_on) {
                 Thread.dumpStack();
             }
         }
@@ -239,8 +247,8 @@ public class ModuleInfo implements ModuleInfoInterface {
             String cur_file_name = null;
             int cur_file_line = 0;
             if (last_loading_module != null) {
-                cur_file_name = last_loading_module.cur_file_name;
-                cur_file_line = last_loading_module.cur_file_line;
+                cur_file_name = last_loading_module.curFileName;
+                cur_file_line = last_loading_module.curFileLineNumber;
             }
             String cf = cur_file_name;
             if (cf == null) {
@@ -368,7 +376,7 @@ public class ModuleInfo implements ModuleInfoInterface {
     public static Hashtable m_structInfoHashTable = new Hashtable();
     public static Hashtable m_cmd_structInfoHashTable = new Hashtable();
     public static Hashtable m_stat_structInfoHashTable = new Hashtable();
-    public static Hashtable m_structInfoByNameHashTable = new Hashtable();
+    public static Hashtable<String, StructureTypeInfo> m_structInfoByNameHashTable = new Hashtable<>();
     public static Hashtable m_enumInfoHashTable = new Hashtable();
     public static Hashtable cmdsAvailHashtable = new Hashtable();
     public static Hashtable m_loadedPreDefinedTypes = new Hashtable();
@@ -407,8 +415,8 @@ public class ModuleInfo implements ModuleInfoInterface {
         str += "\tcmdsTypeFile=" + cmdsTypeFile + ",\n";
         str += "\tstatsTypeFile=" + statsTypeFile + ",\n";
         str += "\tcmdsAvailable=" + cmdsAvailable + ",\n";
-        str += "\tcur_file_name=" + cur_file_name + "\n";
-        str += "\tcur_file_line=" + cur_file_line + "\n";
+        str += "\tcur_file_name=" + curFileName + "\n";
+        str += "\tcur_file_line=" + curFileLineNumber + "\n";
         str += "\tlast_file_loader=" + last_file_loader + "\n";
         str += "\tmodule_number=" + module_number + ", generation=" + generation + ", x=" + x + ", y=" + y + ",\n";
         str += "\tno_cmd=" + no_cmd + ", no_stat=" + no_stat + ",\n";
@@ -549,7 +557,6 @@ public class ModuleInfo implements ModuleInfoInterface {
                 }
             }
 
-
             predefined_type_files = new Vector();
             cmd_plotting_variables = new Hashtable();
             stat_plotting_variables = new Hashtable();
@@ -582,8 +589,8 @@ public class ModuleInfo implements ModuleInfoInterface {
             if (no_cmd) {
                 return null;
             }
-            DiagNMLMsgDictInterface dict =
-                    diag_dict_creator.create(true, false);
+            DiagNMLMsgDictInterface dict
+                    = diag_dict_creator.create(true, false);
             dict.SetModuleInfoObject(this);
             nci = nml_creator.NewNMLConnection();
             nci.SetMessageDictionary(dict);
@@ -619,8 +626,8 @@ public class ModuleInfo implements ModuleInfoInterface {
             if (no_stat) {
                 return null;
             }
-            DiagNMLMsgDictInterface dict =
-                    diag_dict_creator.create(false, true);
+            DiagNMLMsgDictInterface dict
+                    = diag_dict_creator.create(false, true);
             dict.SetModuleInfoObject(this);
             nci = nml_creator.NewNMLConnection();
             nci.SetMessageDictionary(dict);
@@ -766,72 +773,72 @@ public class ModuleInfo implements ModuleInfoInterface {
         m_enumInfoHashTable.put((Object) enumInfoToAdd.Name, (Object) enumInfoToAdd);
 
         StructureTypeInfo typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "NMLmsg";
+        typeInfoToAdd.setName("NMLmsg");
         typeInfoToAdd.setInfo("");
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "NML_ERROR";
+        typeInfoToAdd.setName("NML_ERROR");
         typeInfoToAdd.setInfo("char error[256];");
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.Id = 1;
         typeInfoToAdd.DerivedFrom = "NMLmsg";
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         m_structInfoHashTable.put(Long.valueOf(1), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "NML_TEXT";
+        typeInfoToAdd.setName("NML_TEXT");
         typeInfoToAdd.setInfo("char text[256];");
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.Id = 2;
         typeInfoToAdd.DerivedFrom = "NMLmsg";
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
         m_structInfoHashTable.put(Long.valueOf(2), typeInfoToAdd);
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "NML_DISPLAY";
+        typeInfoToAdd.setName("NML_DISPLAY");
         typeInfoToAdd.setInfo("char display[256];");
         typeInfoToAdd.Id = 3;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = "NMLmsg";
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
         m_structInfoHashTable.put(Long.valueOf(3), typeInfoToAdd);
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "NMLmsg";
+        typeInfoToAdd.setName("NMLmsg");
         typeInfoToAdd.setInfo("");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.is_nml_msg = true;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
 
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "RCS_CMD_MSG";
+        typeInfoToAdd.setName("RCS_CMD_MSG");
         typeInfoToAdd.setInfo("int serial_number;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = "NMLmsg";
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
         typeInfoToAdd.is_nml_msg = true;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
 
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "RCS_STAT_MSG";
+        typeInfoToAdd.setName("RCS_STAT_MSG");
         typeInfoToAdd.setInfo("long command_type;int echo_serial_number;enum RCS_STATUS status;int state;int line;int source_line;char source_file[64];");
-        //typeInfoToAdd.setInfo("long command_type;int echo_serial_number;int status;int state;int line;\n");
+        //typeInfoToAdd.setInfo("long command_type;int echo_serial_number;int status;int state;int lineNumber;\n");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = "NMLmsg";
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
         typeInfoToAdd.is_nml_msg = true;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
 
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "RCS_STAT_MSG_V2";
+        typeInfoToAdd.setName("RCS_STAT_MSG_V2");
         typeInfoToAdd.setInfo(" long command_type;int echo_serial_number;enum RCS_STATUS status;int state;int line;int source_line;char source_file[64];enum RCS_ADMIN_STATE admin_state;int tt.count;double tt.last;double tt.now;double tt.start;double tt.elapsed;double tt.min;double tt.max;double tt.avg;int message_length;NML_DYNAMIC_LENGTH_ARRAY char message[80];");
-        //typeInfoToAdd.setInfo("long command_type;int echo_serial_number;int status;int state;int line;\n");
+        //typeInfoToAdd.setInfo("long command_type;int echo_serial_number;int status;int state;int lineNumber;\n");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.PreFinalPassInfo = "enum RCS_ADMIN_STATE admin_state;struct time_tracker tt;int message_length;NML_DYNAMIC_LENGTH_ARRAY char message[80];";
         typeInfoToAdd.DerivedFrom = "RCS_STAT_MSG";
@@ -839,178 +846,176 @@ public class ModuleInfo implements ModuleInfoInterface {
         typeInfoToAdd.setInfo(" long command_type;int echo_serial_number;enum RCS_STATUS status;int state;int line;int source_line;char source_file[64];enum RCS_ADMIN_STATE admin_state;int tt.count;double tt.last;double tt.now;double tt.start;double tt.elapsed;double tt.min;double tt.max;double tt.avg;int message_length;NML_DYNAMIC_LENGTH_ARRAY char message[80];");
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
         typeInfoToAdd.is_nml_msg = true;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
 
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "time_tracker";
+        typeInfoToAdd.setName("time_tracker");
         typeInfoToAdd.setInfo("int count;double last;double now;double start;double elapsed;double min;double max;double avg;");
-        //typeInfoToAdd.setInfo("long command_type;int echo_serial_number;int status;int state;int line;\n");
+        //typeInfoToAdd.setInfo("long command_type;int echo_serial_number;int status;int state;int lineNumber;\n");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
         typeInfoToAdd.is_nml_msg = false;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
 
         /*
         StructureTypeInfo stat_type_info = typeInfoToAdd;
         typeInfoToAdd = new StructureTypeInfo();
         typeInfoToAdd.Name = "RCS_STAT_MSG_V2";
-        typeInfoToAdd.setInfo("long command_type;int echo_serial_number; enum RCS_STATUS status; int state; int line; int source_line; char source_file[64]; enum RCS_ADMIN_STATE admin_state; ");
+        typeInfoToAdd.setInfo("long command_type;int echo_serial_number; enum RCS_STATUS status; int state; int lineNumber; int source_line; char source_file[64]; enum RCS_ADMIN_STATE admin_state; ");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.PreFinalPassInfo = "PM_CARTESIAN x;PM_CARTESIAN y;PM_CARTESIAN z;";
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
          */
-
-
         // POSEMATH types
         // translation types
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "CMS_DATE_TIME";
+        typeInfoToAdd.setName("CMS_DATE_TIME");
         typeInfoToAdd.setInfo("long years;long months;long days;long hours;long minutes;double seconds;int timezoneoffsethours;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "CMS_DATE";
+        typeInfoToAdd.setName("CMS_DATE");
         typeInfoToAdd.setInfo("long years;long months;long days");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "CMS_TIME";
+        typeInfoToAdd.setName("CMS_TIME");
         typeInfoToAdd.setInfo("long hours;long minutes;double seconds;int timezoneoffsethours;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "CMS_DURATION";
+        typeInfoToAdd.setName("CMS_DURATION");
         typeInfoToAdd.setInfo("long years;long months;long days;long hours;long minutes;double seconds;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_CARTESIAN";
+        typeInfoToAdd.setName("PM_CARTESIAN");
         typeInfoToAdd.setInfo("double x;double y;double z;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PmCartesian";
+        typeInfoToAdd.setName("PmCartesian");
         typeInfoToAdd.setInfo("double x;double y;double z;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        typeInfoToAdd.fromFile = "posemath.h";
+        typeInfoToAdd.fromFileName = "posemath.h";
 
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
-        typeInfoToAdd.fromFile = "";
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
+        typeInfoToAdd.fromFileName = "";
 
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_SPHERICAL";
+        typeInfoToAdd.setName("PM_SPHERICAL");
         typeInfoToAdd.setInfo("double theta;double phi;double r;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_CYLINDRICAL";
+        typeInfoToAdd.setName("PM_CYLINDRICAL");
         typeInfoToAdd.setInfo("double theta;double r;double z;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
 
         // rotation types
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_ROTATION_VECTOR";
+        typeInfoToAdd.setName("PM_ROTATION_VECTOR");
         typeInfoToAdd.setInfo("double s;double x;double y;double z;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_ROTATION_MATRIX";
+        typeInfoToAdd.setName("PM_ROTATION_MATRIX");
         typeInfoToAdd.setInfo("double x.x; double x.y; double x.z; double y.x; double y.y; double y.z; double z.x; double z.y; double z.z;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.PreFinalPassInfo = "PM_CARTESIAN x;PM_CARTESIAN y;PM_CARTESIAN z;";
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_QUATERNION";
+        typeInfoToAdd.setName("PM_QUATERNION");
         typeInfoToAdd.setInfo("double s;double x;double y;double z;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_EULER_ZYZ";
+        typeInfoToAdd.setName("PM_EULER_ZYZ");
         typeInfoToAdd.setInfo("double z;double y;double zp;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_EULER_ZYX";
+        typeInfoToAdd.setName("PM_EULER_ZYX");
         typeInfoToAdd.setInfo("double z;double y;double x;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_RPY";
+        typeInfoToAdd.setName("PM_RPY");
         typeInfoToAdd.setInfo("double r;double p;double y;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
 
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_XYA";
+        typeInfoToAdd.setName("PM_XYA");
         typeInfoToAdd.setInfo("double x;double y;double a;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.setPreFinalPassInfoToInfo();
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
 
         // pose types
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_POSE";
+        typeInfoToAdd.setName("PM_POSE");
         typeInfoToAdd.setInfo("double tran.x;double tran.y;double tran.z;double rot.s;double rot.x;double rot.y;double rot.z;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.PreFinalPassInfo = "PM_CARTESIAN tran;PM_QUATERNION rot;";
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
         typeInfoToAdd = new StructureTypeInfo();
-        typeInfoToAdd.Name = "PM_HOMOGENEOUS";
+        typeInfoToAdd.setName("PM_HOMOGENEOUS");
         typeInfoToAdd.setInfo("double tran.x;double tran.y;double tran.z;double rot.x.x;double rot.x.y;double rot.x.z;double rot.y.x;double rot.y.y;double rot.y.z;double rot.z.x;double rot.z.y;double rot.z.z;");
         typeInfoToAdd.Id = -2;
         typeInfoToAdd.PreFinalPassInfo = "PM_CARTESIAN tran;PM_ROTATION_MATRIX rot;";
         typeInfoToAdd.DerivedFrom = null;
         typeInfoToAdd.UnqualifiedDerivedFrom = typeInfoToAdd.DerivedFrom;
-        m_structInfoByNameHashTable.put(typeInfoToAdd.Name, typeInfoToAdd);
+        m_structInfoByNameHashTable.put(typeInfoToAdd.getName(), typeInfoToAdd);
 
         default_types_added = true;
     }
@@ -1555,9 +1560,10 @@ public class ModuleInfo implements ModuleInfoInterface {
 
     public String ReplaceDefinedValues(String inStr, int rdv_recurse_count, Hashtable usedDefines) {
         String outStr = "";
-        String breakers = " \t\r\n+-/*\\,()";
+        String breakers = " \t\r\n+-/*\\,(){};";
         String word = "";
         int breakers_index = -1;
+        String arrayLengthString = "";
 
         try {
             Hashtable newUsedDefines = null;
@@ -1637,6 +1643,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                         DebugPrint(word + " replaced with " + dv.value);
                     }
                     outStr += dv.value;
+                    arrayLengthString = dv.arrayLenSting;
                 } else {
                     outStr += word;
                 }
@@ -1665,6 +1672,12 @@ public class ModuleInfo implements ModuleInfoInterface {
         } catch (Exception e) {
             e.printStackTrace();
             outStr = inStr;
+        }
+        if (arrayLengthString.length() > 0) {
+            System.out.println("inStr = " + inStr);
+            System.out.println("outStr = " + outStr);
+            System.out.println("arrayLengthString = " + arrayLengthString);
+            return outStr + arrayLengthString;
         }
         return outStr;
     }
@@ -1740,8 +1753,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                 return return_value;
             }
         } catch (Exception e) {
-            DebugPrint("str = " + str);
-            e.printStackTrace();
+            ErrorPrint("str = " + str + ", e=" + e);
+//            e.printStackTrace();
             return -1;
         }
         return 1;
@@ -2185,8 +2198,8 @@ public class ModuleInfo implements ModuleInfoInterface {
         }
         return info;
     }
-    public static Hashtable startingDefinedValues = null;
-    public Hashtable definedValues = null;
+    public static Hashtable<String, DefinedValue> startingDefinedValues = null;
+    public Hashtable<String, DefinedValue> definedValues = null;
     String parseString;
     boolean typedef = false;
     boolean insideComment = false;
@@ -2211,9 +2224,10 @@ public class ModuleInfo implements ModuleInfoInterface {
     int trueIfLevel = 0;
     StringTokenizer infoTokenizer;
     String startingParseString = "";
-    public static volatile String cur_file_name = null;
-    public static volatile int cur_file_line = 0;
-    int line = 0;
+    public static volatile String curFileName = null;
+    public static volatile String curFileLineText = null;
+    public static volatile int curFileLineNumber = 0;
+    int lineNumber = 0;
     int paren_count = 0;
     int paren_index = 0;
     int brace_count = 0;
@@ -2370,11 +2384,12 @@ public class ModuleInfo implements ModuleInfoInterface {
                 DebugPrint("");
                 DebugPrint("Notice: Loading " + include_file + " . . . ");
             }
-            int orig_line = line;
+            int origLineNumber = lineNumber;
+            String origFileLineText = curFileLineText;
             String orig_file = current_file;
-            line = 0;
-//	    cur_file_line=line;
-//	    cur_file_name=include_file;
+            lineNumber = 0;
+//	    curFileLineNumber=lineNumber;
+//	    curFileName=include_file;
             included_file_depth++;
             try {
                 LoadPredefinedTypeFile(include_file);
@@ -2384,14 +2399,16 @@ public class ModuleInfo implements ModuleInfoInterface {
                 included_file_depth--;
             }
             current_file = orig_file;
-            line = orig_line;
-            cur_file_line = line;
+            lineNumber = origLineNumber;
+            curFileLineNumber = lineNumber;
+            curFileLineText = origFileLineText;
             last_loading_module = this;
-            cur_file_name = orig_file;
+            curFileName = orig_file;
             currentType = new StructureTypeInfo();
             currentType.first_module_used_in = this;
-            currentType.fromFile = orig_file;
-            currentType.fromLine = line;
+            currentType.fromFileName = orig_file;
+            currentType.fromLineNumber = lineNumber;
+            currentType.fromLineText = curFileLineText;
             if (debug_on) {
                 DebugPrint("");
             }
@@ -2532,7 +2549,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                     }
                 }
                 if (!included_file_ok) {
-                    ErrorPrint(current_file + ":" + line + ": ERROR bad include.");
+                    ErrorPrint(current_file + ":" + lineNumber + ": ERROR bad include.");
                 }
                 included_file_ok = true;
                 return false;
@@ -2707,7 +2724,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                         CodeGenCommon.RunLineOfScriptStatic(commentString.substring(commentString.indexOf("CodeGenCommand=")));
                     }
                     int defindex = commentString.indexOf("default=");
-                    if (defindex > 0 && line > 0) {
+                    if (defindex > 0 && lineNumber > 0) {
                         String defvalue = commentString.substring(defindex + 8);
                         int dvendindex = defvalue.indexOf(' ');
                         if (dvendindex > 0) {
@@ -2739,14 +2756,14 @@ public class ModuleInfo implements ModuleInfoInterface {
                         }
                     }
                     int attributeindex = commentString.indexOf("attribute");
-                    if (attributeindex > 0 && line > 0) {
+                    if (attributeindex > 0 && lineNumber > 0) {
                         currentAttributeInfo = commentString;
                         if (debug_on) {
                             DebugPrint("currentAttributeInfo=" + currentAttributeInfo);
                         }
                     }
                     int nameindex = commentString.indexOf("name=");
-                    if (nameindex > 0 && line > 0) {
+                    if (nameindex > 0 && lineNumber > 0) {
                         String overridename = commentString.substring(nameindex + 5);
                         int onendindex = overridename.indexOf(' ');
                         if (onendindex > 0) {
@@ -2814,7 +2831,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                 } else if (commentString.indexOf("generate_all_enum_symbol_lookups=false") >= 0) {
                     CodeGenCommon.set_generate_all_enum_symbol_lookups(false);
                 }
-                
+
                 if (commentString.indexOf("add_set_header=true") >= 0) {
                     CodeGenCommon.set_add_set_header(true);
                 } else if (commentString.indexOf("add_set_header=false") >= 0) {
@@ -2838,7 +2855,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                     return false;
                 }
                 int defindex = commentString.indexOf("default=");
-                if (defindex > 0 && line > 0) {
+                if (defindex > 0 && lineNumber > 0) {
                     String defvalue = commentString.substring(defindex + 8);
                     int dvendindex = defvalue.indexOf(' ');
                     if (dvendindex > 0) {
@@ -2870,14 +2887,14 @@ public class ModuleInfo implements ModuleInfoInterface {
                     }
                 }
                 int attributeindex = commentString.indexOf("attribute");
-                if (attributeindex > 0 && line > 0) {
+                if (attributeindex > 0 && lineNumber > 0) {
                     currentAttributeInfo = commentString;
                     if (debug_on) {
                         DebugPrint("currentAttributeInfo=" + currentAttributeInfo);
                     }
                 }
                 int nameindex = commentString.indexOf("name=");
-                if (nameindex > 0 && line > 0) {
+                if (nameindex > 0 && lineNumber > 0) {
                     String overridename = commentString.substring(nameindex + 5);
                     int onendindex = overridename.indexOf(' ');
                     if (onendindex > 0) {
@@ -2913,13 +2930,13 @@ public class ModuleInfo implements ModuleInfoInterface {
                 }
             }
             int att_start_index = parseString.indexOf("__attribute__((");
-            if(att_start_index >= 0) {
+            if (att_start_index >= 0) {
                 int att_end_index = parseString.indexOf("))", att_start_index);
-                if(att_end_index > att_start_index) {
-                    if(att_end_index < parseString.length()-3) {
-                            parseString = parseString.substring(0,att_start_index) + parseString.substring(att_end_index+2);
+                if (att_end_index > att_start_index) {
+                    if (att_end_index < parseString.length() - 3) {
+                        parseString = parseString.substring(0, att_start_index) + parseString.substring(att_end_index + 2);
                     } else {
-                            parseString = parseString.substring(0,att_start_index);
+                        parseString = parseString.substring(0, att_start_index);
                     }
                 }
             }
@@ -3153,7 +3170,7 @@ public class ModuleInfo implements ModuleInfoInterface {
             ErrorPrint("Attempt to add extern type name.");
         } else if (m_structInfoByNameHashTable.containsKey(currentType.CppQualifiedName)) {
             StructureTypeInfo prevSti = (StructureTypeInfo) m_structInfoByNameHashTable.get(currentType.CppQualifiedName);
-            ErrorPrint("Attempt to add type already on the hashtable. (" + currentType.CppQualifiedName + " from " + prevSti.fromFile + ":" + prevSti.fromLine + ")");
+            ErrorPrint("Attempt to add type already on the hashtable. (" + currentType.CppQualifiedName + " from " + prevSti.fromFileName + ":" + prevSti.fromLineNumber + ")");
         } else {
             m_structInfoByNameHashTable.put(currentType.CppQualifiedName, currentType);
         }
@@ -3168,17 +3185,17 @@ public class ModuleInfo implements ModuleInfoInterface {
             return;
         }
         if (!(is_cmd_stream
-                || (currentType.fromFile != null && cmdsTypeFile != null
-                && (currentType.fromFile.equals(cmdsTypeFile) || currentType.fromFile.equals(baseClassCmdsTypeFile))))) {
+                || (currentType.fromFileName != null && cmdsTypeFile != null
+                && (currentType.fromFileName.equals(cmdsTypeFile) || currentType.fromFileName.equals(baseClassCmdsTypeFile))))) {
             return;
         }
-        if (null != cmd_name_pattern && !currentType.Name.matches(cmd_name_pattern)) {
+        if (null != cmd_name_pattern && !currentType.getName().matches(cmd_name_pattern)) {
             return;
         }
-        if (null != cmd_name_exclude_pattern && currentType.Name.matches(cmd_name_exclude_pattern)) {
+        if (null != cmd_name_exclude_pattern && currentType.getName().matches(cmd_name_exclude_pattern)) {
             return;
         }
-        cmdsAvailable.addElement(currentType.Name + "=" + currentType.Id);
+        cmdsAvailable.addElement(currentType.getName() + "=" + currentType.Id);
         try {
             if (cmdsAvailable.size() < 2) {
                 common_cmd_base = null;
@@ -3208,7 +3225,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                     common_cmd_base = null;
                 }
             } else if (null != common_cmd_base) {
-                String c2 = currentType.Name;
+                String c2 = currentType.getName();
                 if (c2 == null
                         || c2.length() < 2) {
                     common_cmd_base = null;
@@ -3260,7 +3277,7 @@ public class ModuleInfo implements ModuleInfoInterface {
         }
         this.lhui_name = file_loader.name;
         this.lhui_total = file_loader.content_length;
-        this.lhui_part = cur_file_line;
+        this.lhui_part = curFileLineNumber;
         this.lhui_update();
         insideComment = false;
         insideStruct = false;
@@ -3280,8 +3297,9 @@ public class ModuleInfo implements ModuleInfoInterface {
         trueIfLevel = 0;
         infoTokenizer = null;
         startingParseString = "";
-        line = 0;
-        cur_file_line = line;
+        lineNumber = 0;
+        curFileLineNumber = lineNumber;
+        curFileLineText = "";
         paren_count = 0;
         paren_index = 0;
         brace_count = 0;
@@ -3298,17 +3316,17 @@ public class ModuleInfo implements ModuleInfoInterface {
             }
             currentType = new StructureTypeInfo();
             currentType.first_module_used_in = this;
-            currentType.fromFile = file_loader.name;
-            currentType.fromLine = line;
+            currentType.fromFileName = file_loader.name;
+            currentType.fromLineNumber = lineNumber;
             current_file = file_loader.name;
             last_loading_module = this;
-            cur_file_name = current_file;
+            curFileName = current_file;
             current_enum = new EnumTypeInfo();
             current_enum.generate_symbol_lookup = generate_enum_symbol_lookup;
             dv = new DefinedValue();
             if (null != startingDefinedValues && null == definedValues) {
                 try {
-                    definedValues = new Hashtable(startingDefinedValues);
+                    definedValues = new Hashtable<>(startingDefinedValues);
                     recheck_defined_values();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3345,8 +3363,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                             && !this.nextBraceStartsStruct
                             && brace_count < 1
                             && currentType != null
-                            && currentType.Name != null
-                            && currentType.Name.length() > 1) {
+                            && currentType.getName() != null
+                            && currentType.getName().length() > 1) {
                         insideStruct = false;
                         if (debug_on) {
                             DebugPrint("insideStruct=" + insideStruct);
@@ -3354,9 +3372,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                         if (insideNameSpace) {
                             currentType.inside_namespace = true;
                             currentType.NameSpace = new String(currentNameSpace);
-                            currentType.CppQualifiedName = currentType.NameSpace + "::" + currentType.Name;
+                            currentType.CppQualifiedName = currentType.NameSpace + "::" + currentType.getName();
                         } else {
-                            currentType.CppQualifiedName = currentType.Name;
+                            currentType.CppQualifiedName = currentType.getName();
                         }
                         if (null != currentType.RawInfo
                                 && (null == currentType.PreFinalPassInfo || currentType.PreFinalPassInfo.length() < 1)) {
@@ -3395,6 +3413,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                             }
                                             infoToken = dv.value;
                                         }
+                                        currentType.usedDefinedValues.add(dv);
                                     }
                                 }
                                 int lSquareParamIndex = infoToken.indexOf('[');
@@ -3404,7 +3423,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     checkString = ReplaceDefinedValues(checkString, 0, null);
                                     int array_length = doArrayLengthMath(checkString);
                                     if (array_length < 1) {
-                                        ErrorPrint(file_loader.name + ":" + line + ": Bad array length(" + array_length + ") checkString=\"" + checkString + "\",infoToken=\"" + infoToken + "\"");
+                                        ErrorPrint(file_loader.name + ":" + lineNumber + ": Bad array length(" + array_length + ") checkString=\"" + checkString + "\",infoToken=\"" + infoToken + "\"");
                                         array_length = 1;
                                     }
                                     String array_length_string = Integer.toString(array_length);
@@ -3424,6 +3443,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                             if (debug_on) {
                                 DebugPrint(" First pass data (DefinedValues substituted). = " + tempInfoString);
                             }
+                            currentType.StepTwoInfo = tempInfoString;
                             currentType.PreFinalPassInfo = PerformFirstPassOnInfoString(tempInfoString);
                             if (debug_on) {
                                 DebugPrint(" Second pass data (Extra White space eliminated and Enums identified.) = " + currentType.PreFinalPassInfo);
@@ -3441,8 +3461,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                         is_cmd_msg = false;
                         is_stat_msg = false;
                         currentType = new StructureTypeInfo();
-                        currentType.fromFile = file_loader.name;
-                        currentType.fromLine = file_loader.lines_read;
+                        currentType.fromFileName = file_loader.name;
+                        currentType.fromLineNumber = file_loader.lines_read;
                         currentType.first_module_used_in = this;
                         currentType.DerivedFrom = null;
                         currentType.UnqualifiedDerivedFrom = null;
@@ -3457,8 +3477,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                     paren_on_this_line = false;
                     brace_on_this_line = false;
                     parseString = file_loader.readLine();
-                    line++;
-                    cur_file_line = line;
+                    lineNumber++;
+                    curFileLineNumber = lineNumber;
+                    curFileLineText = parseString;
                     if (debug_on) {
                         DebugPrint("parseString = file_loader.readLine() = " + parseString);
                     }
@@ -3485,7 +3506,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                     }
                     this.lhui_name = file_loader.name;
                     this.lhui_total = file_loader.content_length;
-                    this.lhui_part = cur_file_line;
+                    this.lhui_part = curFileLineNumber;
                     this.lhui_update();
                     ndlaName = null;
                     ndlaInfo = null;
@@ -3496,18 +3517,18 @@ public class ModuleInfo implements ModuleInfoInterface {
                     if (!HandlePreProcessing()) {
                         if (debug_on) {
                             if (iflevel != trueIfLevel) {
-                                DebugPrint("***" + line + "*** " + parseString);
+                                DebugPrint("***" + lineNumber + "*** " + parseString);
                             } else {
-                                DebugPrint("---" + line + "--- " + parseString);
+                                DebugPrint("---" + lineNumber + "--- " + parseString);
                             }
                         }
                         continue;
                     }
                     if (debug_on) {
                         if (iflevel != trueIfLevel) {
-                            DebugPrint("***" + line + "*** " + parseString);
+                            DebugPrint("***" + lineNumber + "*** " + parseString);
                         } else {
-                            DebugPrint("---" + line + "--- " + parseString);
+                            DebugPrint("---" + lineNumber + "--- " + parseString);
                         }
                     }
                     if (!HandleComments()) {
@@ -3548,8 +3569,9 @@ public class ModuleInfo implements ModuleInfoInterface {
 
                     while (paren_count != 0) {
                         parseString = file_loader.readLine();
-                        line++;
-                        cur_file_line = line;
+                        lineNumber++;
+                        curFileLineNumber = lineNumber;
+                        curFileLineText = parseString;
                         if (debug_on) {
                             DebugPrint("parseString = file_loader.readLine() = " + parseString);
                         }
@@ -3570,23 +3592,23 @@ public class ModuleInfo implements ModuleInfoInterface {
 
                         this.lhui_name = file_loader.name;
                         this.lhui_total = file_loader.content_length;
-                        this.lhui_part = cur_file_line;
+                        this.lhui_part = curFileLineNumber;
                         this.lhui_update();
                         if (!HandlePreProcessing()) {
                             if (debug_on) {
                                 if (iflevel != trueIfLevel) {
-                                    DebugPrint("***" + line + "*** " + parseString);
+                                    DebugPrint("***" + lineNumber + "*** " + parseString);
                                 } else {
-                                    DebugPrint("---" + line + "--- " + parseString);
+                                    DebugPrint("---" + lineNumber + "--- " + parseString);
                                 }
                             }
                             continue;
                         }
                         if (debug_on) {
                             if (iflevel != trueIfLevel) {
-                                DebugPrint("***" + line + "*** " + parseString);
+                                DebugPrint("***" + lineNumber + "*** " + parseString);
                             } else {
-                                DebugPrint("---" + line + "--- " + parseString);
+                                DebugPrint("---" + lineNumber + "--- " + parseString);
                             }
                         }
                         if (!HandleComments()) {
@@ -3708,8 +3730,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     && parseString.charAt(eqindex - 1) != '!'
                                     && parseString.charAt(eqindex + 1) != '=') {
                                 String preEqString = parseString.substring(0, eqindex);
-                                StringTokenizer preEqTokenizer =
-                                        new StringTokenizer(preEqString, "\r\n \t()=");
+                                StringTokenizer preEqTokenizer
+                                        = new StringTokenizer(preEqString, "\r\n \t()=");
                                 String last_token = null;
                                 while (preEqTokenizer.hasMoreTokens()) {
                                     last_token = preEqTokenizer.nextToken();
@@ -3747,8 +3769,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                         int paren2index = parseString.indexOf(')', paren1index);
                         if (paren1index > 0 && paren2index > paren1index + 1) {
                             String args = parseString.substring(paren1index + 1, paren2index);
-                            StringTokenizer argTokenizer =
-                                    new StringTokenizer(args, ",");
+                            StringTokenizer argTokenizer
+                                    = new StringTokenizer(args, ",");
                             if (argTokenizer.hasMoreTokens()) {
                                 array_type = argTokenizer.nextToken();
                             }
@@ -3778,8 +3800,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                             int paren2index = parseString.indexOf(')', paren1index);
                             if (paren1index > 0 && paren2index > paren1index + 1) {
                                 String args = parseString.substring(paren1index + 1, paren2index);
-                                StringTokenizer argTokenizer =
-                                        new StringTokenizer(args, ",");
+                                StringTokenizer argTokenizer
+                                        = new StringTokenizer(args, ",");
                                 if (argTokenizer.hasMoreTokens()) {
                                     array_type = argTokenizer.nextToken();
                                 }
@@ -3787,7 +3809,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     array_name = RemoveStartingEndingSpace(argTokenizer.nextToken());
                                 }
                                 if (null != array_type && null != array_name) {
-                                    if(application_type == ModuleInfo.RCS_DIAGNOSTICS_APPLICATION_TYPE) {
+                                    if (application_type == ModuleInfo.RCS_DIAGNOSTICS_APPLICATION_TYPE) {
                                         parseString = "int " + array_name + "_length; NML_DYNAMIC_LENGTH_ARRAY " + array_type + " " + array_name + "[2147483648];";
                                         ndlaName = array_name;
                                         ndlaInfo = parseString;
@@ -3811,10 +3833,10 @@ public class ModuleInfo implements ModuleInfoInterface {
                     // }
                     if (parseString.regionMatches(false, 0, "typedef", 0, 7)) {
                         if (currentType == null
-                                || (currentType.Name != null && currentType.Name.length() > 0)) {
+                                || (currentType.getName() != null && currentType.getName().length() > 0)) {
                             currentType = new StructureTypeInfo();
-                            currentType.fromFile = file_loader.name;
-                            currentType.fromLine = file_loader.lines_read;
+                            currentType.fromFileName = file_loader.name;
+                            currentType.fromLineNumber = file_loader.lines_read;
                             currentType.first_module_used_in = this;
                         }
                         if (parseString.indexOf('{') < 0
@@ -3861,8 +3883,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                             DebugPrint("parseString = " + parseString);
                         }
                     }
-                    if (typedef && !insideStruct && brace_count == 0 && parseString.indexOf(';') > 0 && currentType != null && currentType.Name != null
-                            && currentType.Name.length() > 0) {
+                    if (typedef && !insideStruct && brace_count == 0 && parseString.indexOf(';') > 0 && currentType != null && currentType.getName() != null
+                            && currentType.getName().length() > 0) {
                         typedef = false;
                     } else if (typedef && !insideStruct && brace_count == 0 && parseString.indexOf(';') > 0) {
                         String pre_semicolon_string = parseString.substring(0, parseString.indexOf(';'));
@@ -3900,12 +3922,33 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     || type_def_body.indexOf('[') >= 0
                                     || type_def_body.indexOf(',') >= 0
                                     || type_def_body.indexOf(']') >= 0) {
-                                ErrorPrint("typedef too complicated : CodeGen doesn't do pointer or array typedefs, parsString=" + parseString);
-                                typedef = false;
-                                if (debug_on) {
-                                    DebugPrint("typedef=" + typedef);
+                                int lti = last_token.indexOf('[');
+                                if (lti > 0
+                                        && last_token.charAt(last_token.length() - 1) == ']'
+                                        && type_def_body.indexOf('(') < 0
+                                        && type_def_body.indexOf(')') < 0
+                                        && type_def_body.indexOf('*') < 0
+                                        && type_def_body.indexOf('[') < 0
+                                        && type_def_body.indexOf(',') < 0
+                                        && type_def_body.indexOf(']') < 0) {
+                                    DefinedValue typedef_dv = new DefinedValue();
+                                    typedef_dv.value = type_def_body;
+                                    typedef_dv.name = last_token.substring(0, lti);
+                                    typedef_dv.tag = cur_tag();
+                                    typedef_dv.arrayLenSting = last_token.substring(lti);
+                                    definedValues.put(typedef_dv.name, typedef_dv);
+                                    typedef = false;
+                                } else {
+                                    ErrorPrint("typedef too complicated : CodeGen doesn't do pointer or array typedefs,\n"
+                                            + "    parseString=\"" + parseString + "\"\n"
+                                            + "    last_token=\"" + last_token + "\"\n"
+                                            + "    type_def_body=\"" + type_def_body + "\"\n");
+                                    typedef = false;
+                                    if (debug_on) {
+                                        DebugPrint("typedef=" + typedef);
+                                    }
+                                    continue MAIN_PARSE_LOOP;
                                 }
-                                continue MAIN_PARSE_LOOP;
                             }
 
                             DefinedValue typedef_dv = new DefinedValue();
@@ -3921,7 +3964,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                         }
                     }
                     if (debug_on) {
-                        DebugPrint("typedef=" + typedef + ",insideStruct=" + insideStruct + ",brace_count=" + brace_count + ",parseString=" + parseString + ",currentType.Name=" + currentType.Name);
+                        DebugPrint("typedef=" + typedef + ",insideStruct=" + insideStruct + ",brace_count=" + brace_count + ",parseString=" + parseString + ",currentType.Name=" + currentType.getName());
                     }
 
                     if (!HandleDefines()) {
@@ -4169,7 +4212,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     DebugPrint("inside_extern_c = " + inside_extern_c);
                                 }
                             } else {
-                                ErrorPrint(file_loader.name + ":" + line + ":  WARNING negative brace count(" + brace_count + ").");
+                                ErrorPrint(file_loader.name + ":" + lineNumber + ":  WARNING negative brace count(" + brace_count + ").");
                                 if (debug_on) {
                                     DebugPrint("brace_count set to zero to avoid negative brace_count.");
                                 }
@@ -4206,9 +4249,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                             if (!nameTokenizer.hasMoreTokens()) {
                                 continue;
                             }
-                            currentType.Name = nameTokenizer.nextToken();
+                            currentType.setName(nameTokenizer.nextToken());
                             if (debug_on) {
-                                DebugPrint("currentType.Name=" + currentType.Name);
+                                DebugPrint("currentType.Name=" + currentType.getName());
                                 new Throwable().printStackTrace(System.out);
                             }
                             if (typedef) {
@@ -4217,47 +4260,47 @@ public class ModuleInfo implements ModuleInfoInterface {
                             if (insideNameSpace) {
                                 currentType.inside_namespace = true;
                                 currentType.NameSpace = new String(currentNameSpace);
-                                currentType.CppQualifiedName = currentType.NameSpace + "::" + currentType.Name;
+                                currentType.CppQualifiedName = currentType.NameSpace + "::" + currentType.getName();
                             } else {
-                                currentType.CppQualifiedName = currentType.Name;
+                                currentType.CppQualifiedName = currentType.getName();
                             }
-                            currentType.type_id_string = DefaultTypeIdString(currentType.Name);
+                            currentType.type_id_string = DefaultTypeIdString(currentType.getName());
                             if (debug_on) {
                                 DebugPrint("currentType.Id = " + currentType.Id);
                             }
-                            if (null == currentType.Name) {
+                            if (null == currentType.getName()) {
                                 continue;
                             }
                             if (debug_on) {
-                                DebugPrint("currentType.Name = " + currentType.Name);
+                                DebugPrint("currentType.Name = " + currentType.getName());
                             }
-                            while (currentType.Name.equals("RCS_EXPORT") || currentType.Name.equals("EXPORT")
-                                    || currentType.Name.equals("static") || currentType.Name.equals("__attribute__")
-                                    || currentType.Name.equals("__export") || currentType.Name.equals("_export")
-                                    || currentType.Name.equals("__declspec") || currentType.Name.equals("dllimport")
-                                    || currentType.Name.equals("dllexport") || currentType.Name.equals("public")
-                                    || currentType.Name.equals("extern")) {
-                                currentType.Name = null;
+                            while (currentType.getName().equals("RCS_EXPORT") || currentType.getName().equals("EXPORT")
+                                    || currentType.getName().equals("static") || currentType.getName().equals("__attribute__")
+                                    || currentType.getName().equals("__export") || currentType.getName().equals("_export")
+                                    || currentType.getName().equals("__declspec") || currentType.getName().equals("dllimport")
+                                    || currentType.getName().equals("dllexport") || currentType.getName().equals("public")
+                                    || currentType.getName().equals("extern")) {
+                                currentType.setName(null);
                                 if (nameTokenizer == null || !nameTokenizer.hasMoreTokens()) {
                                     continue MAIN_PARSE_LOOP;
                                 }
-                                currentType.Name = nameTokenizer.nextToken();
+                                currentType.setName(nameTokenizer.nextToken());
                                 if (debug_on) {
-                                    DebugPrint("currentType.Name=" + currentType.Name);
+                                    DebugPrint("currentType.Name=" + currentType.getName());
                                     new Throwable().printStackTrace();
                                 }
-                                currentType.type_id_string = DefaultTypeIdString(currentType.Name);
+                                currentType.type_id_string = DefaultTypeIdString(currentType.getName());
                                 if (debug_on) {
-                                    DebugPrint("currentType.Name = " + currentType.Name);
+                                    DebugPrint("currentType.Name = " + currentType.getName());
                                 }
-                                if (null == currentType.Name) {
+                                if (null == currentType.getName()) {
                                     continue MAIN_PARSE_LOOP;
                                 }
                             }
-                            if (currentType.Name.length() < 1) {
+                            if (currentType.getName().length() < 1) {
                                 continue;
                             }
-                            currentType.type_id_string = DefaultTypeIdString(currentType.Name);
+                            currentType.type_id_string = DefaultTypeIdString(currentType.getName());
                             int index1 = pre_brace_line.indexOf(":");
                             if (index1 > 0) {
                                 String parentsString = pre_brace_line.substring(index1 + 1);
@@ -4285,8 +4328,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                                                 break;
                                             }
                                             if (0 == top_parent.compareTo("NMLmsg")) {
-                                                if (currentType.Name.endsWith("_WM")
-                                                        || currentType.Name.endsWith("_STAT")) {
+                                                if (currentType.getName().endsWith("_WM")
+                                                        || currentType.getName().endsWith("_STAT")) {
                                                     is_cmd_msg = false;
                                                     is_stat_msg = true;
                                                 } else {
@@ -4312,11 +4355,11 @@ public class ModuleInfo implements ModuleInfoInterface {
                                         currentType.UnqualifiedDerivedFrom = currentType.DerivedFrom;
                                         int doublecolonindex = currentType.UnqualifiedDerivedFrom.lastIndexOf("::");
                                         if (doublecolonindex > 0) {
-                                            currentType.UnqualifiedDerivedFrom =
-                                                    currentType.UnqualifiedDerivedFrom.substring(doublecolonindex + 2);
+                                            currentType.UnqualifiedDerivedFrom
+                                                    = currentType.UnqualifiedDerivedFrom.substring(doublecolonindex + 2);
                                         }
                                         if (debug_on) {
-                                            DebugPrint(currentType.Name + " derived from " + currentType.DerivedFrom);
+                                            DebugPrint(currentType.getName() + " derived from " + currentType.DerivedFrom);
                                         }
                                     }
                                 }
@@ -4342,9 +4385,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                                 }
                             }
                         }
-                        dv = (DefinedValue) definedValues.get(currentType.Name + "_TYPE");
+                        dv = (DefinedValue) definedValues.get(currentType.getName() + "_TYPE");
                         if (debug_on) {
-                            DebugPrint("dv =" + dv + " (DefinedValue) definedValues.get(" + currentType.Name + "_TYPE)");
+                            DebugPrint("dv =" + dv + " (DefinedValue) definedValues.get(" + currentType.getName() + "_TYPE)");
                         }
                         if (null != dv) {
                             if (null != dv.value) {
@@ -4388,7 +4431,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                             }
                         }
                         if (debug_on) {
-                            DebugPrint("currentType.Name = " + currentType.Name);
+                            DebugPrint("currentType.Name = " + currentType.getName());
                             DebugPrint("currentType.Id = " + currentType.Id);
                             DebugPrint("is_cmd_stream = " + is_cmd_stream);
                             DebugPrint("is_cmd_msg = " + is_cmd_msg);
@@ -4400,10 +4443,10 @@ public class ModuleInfo implements ModuleInfoInterface {
                             }
                             if (adding_aux_channel && !currentType.on_aux_msg_list) {
                                 if (debug_on) {
-                                    DebugPrint("auxMessages.addElement(currentType.Name=" + currentType.Name + "=currentType.Id=" + currentType.Id + ");");
+                                    DebugPrint("auxMessages.addElement(currentType.Name=" + currentType.getName() + "=currentType.Id=" + currentType.Id + ");");
                                 }
                                 //Thread.dumpStack();
-                                auxMessages.addElement(currentType.Name + "=" + currentType.Id);
+                                auxMessages.addElement(currentType.getName() + "=" + currentType.Id);
                                 currentType.on_aux_msg_list = true;
                             }
                         }
@@ -4633,7 +4676,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                 if (eqIndex != -1) {
                                     enum_string = infoToken.substring(0, eqIndex);
                                     String enum_v_temp = ReplaceDefinedValues(infoToken.substring(eqIndex + 1), 0, null);
-                                    enum_value =Integer.valueOf(rcs.utils.StrToInt.convert(enum_v_temp));
+                                    enum_value = Integer.valueOf(rcs.utils.StrToInt.convert(enum_v_temp));
                                 }
                                 default_enum_val = enum_value.intValue() + 1;
                                 current_enum.insideNameSpace = insideNameSpace;
@@ -4711,32 +4754,33 @@ public class ModuleInfo implements ModuleInfoInterface {
                                 if (debug_on) {
                                     DebugPrint("StringTokenizer temptokenizerb = new StringTokenizer(parseString=" + parseString + ",\":;{}, \t\r\n\");");
                                 }
+                                parseString = ReplaceDefinedValues(parseString, 0, null);
                                 StringTokenizer temptokenizerb = new StringTokenizer(parseString, ":;{}, \t\r\n");
                                 while (temptokenizerb.hasMoreTokens()
-                                        && (currentType.Name == null
-                                        || currentType.Name.length() < 1
-                                        || currentType.Name.indexOf('*') >= 0)) {
-                                    currentType.Name = temptokenizerb.nextToken();
-                                    if (currentType.Name.compareTo("struct") == 0) {
-                                        currentType.Name = null;
+                                        && (currentType.getName() == null
+                                        || currentType.getName().length() < 1
+                                        || currentType.getName().indexOf('*') >= 0)) {
+                                    currentType.setName(temptokenizerb.nextToken());
+                                    if (currentType.getName().compareTo("struct") == 0) {
+                                        currentType.setName(null);
                                         continue;
                                     }
                                     if (debug_on) {
-                                        DebugPrint("currentType.Name=" + currentType.Name);
+                                        DebugPrint("currentType.Name=" + currentType.getName());
                                     }
                                     if (insideNameSpace) {
                                         currentType.inside_namespace = true;
                                         currentType.NameSpace = new String(currentNameSpace);
-                                        currentType.CppQualifiedName = currentType.NameSpace + "::" + currentType.Name;
+                                        currentType.CppQualifiedName = currentType.NameSpace + "::" + currentType.getName();
                                     } else {
-                                        currentType.CppQualifiedName = currentType.Name;
+                                        currentType.CppQualifiedName = currentType.getName();
                                     }
                                     if (debug_on) {
-                                        DebugPrint("currentType.Name = " + currentType.Name);
+                                        DebugPrint("currentType.Name = " + currentType.getName());
                                     }
                                 }
-                                if (currentType.Name != null
-                                        && currentType.Name.length() > 0) {
+                                if (currentType.getName() != null
+                                        && currentType.getName().length() > 0) {
                                     continue MAIN_PARSE_LOOP;
                                 }
                             } else {
@@ -4746,7 +4790,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                 }
                             }
                             if (debug_on) {
-                                DebugPrint("ModuleInfo.ParseInfoString: Preparing info for class " + currentType.Name);
+                                DebugPrint("ModuleInfo.ParseInfoString: Preparing info for class " + currentType.getName());
                                 DebugPrint(" Original  currentType.RawInfo = " + currentType.RawInfo);
                                 DebugPrint(" Original  currentType.HiddenInfo = " + currentType.HiddenInfo);
                             }
@@ -4755,10 +4799,10 @@ public class ModuleInfo implements ModuleInfoInterface {
                                 if (m_structInfoHashTable.containsKey(key)) {
                                     try {
                                         StructureTypeInfo conflictType = (StructureTypeInfo) m_structInfoHashTable.get(key);
-                                        if (0 != conflictType.Name.compareTo(currentType.Name)) {
+                                        if (0 != conflictType.getName().compareTo(currentType.getName())) {
                                             ErrorPrint("NMLTYPE " + currentType.Id + " reused.");
-                                            ErrorPrint("currentType= " + currentType.Name + " conflicts with conflictType= " + conflictType.Name);
-                                            parse_error_string += "\nNMLTYPE " + currentType.Id + " reused.\n" + currentType.Name + " conflicts with " + conflictType.Name;
+                                            ErrorPrint("currentType= " + currentType.getName() + " conflicts with conflictType= " + conflictType.getName());
+                                            parse_error_string += "\nNMLTYPE " + currentType.Id + " reused.\n" + currentType.getName() + " conflicts with " + conflictType.getName();
                                             parse_error_to_send = true;
                                             ErrorPrint("currentType.type_id_string=" + currentType.type_id_string + ", conflictType.type_id_string=" + conflictType.type_id_string);
                                             conflictType.conflicts = true;
@@ -4787,10 +4831,10 @@ public class ModuleInfo implements ModuleInfoInterface {
                                 }
                                 if (adding_aux_channel && !currentType.on_aux_msg_list) {
                                     if (debug_on) {
-                                        DebugPrint("auxMessages.addElement(currentType.Name=" + currentType.Name + "=currentType.Id=" + currentType.Id + ");");
+                                        DebugPrint("auxMessages.addElement(currentType.Name=" + currentType.getName() + "=currentType.Id=" + currentType.Id + ");");
                                     }
                                     //Thread.dumpStack();
-                                    auxMessages.addElement(currentType.Name + "=" + currentType.Id);
+                                    auxMessages.addElement(currentType.getName() + "=" + currentType.Id);
                                     currentType.on_aux_msg_list = true;
                                 }
                             }
@@ -4841,7 +4885,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                         checkString = ReplaceDefinedValues(checkString, 0, null);
                                         int array_length = doArrayLengthMath(checkString);
                                         if (array_length < 1) {
-                                            ErrorPrint(file_loader.name + ":" + line + ": Bad array length(" + array_length + ")");
+                                            ErrorPrint(file_loader.name + ":" + lineNumber + ": Bad array length(" + array_length + ")");
                                             array_length = 1;
                                         }
                                         String array_length_string = Integer.toString(array_length);
@@ -4861,6 +4905,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                 if (debug_on) {
                                     DebugPrint(" First pass data (DefinedValues substituted). = " + tempInfoString);
                                 }
+                                currentType.StepTwoInfo = tempInfoString;
                                 currentType.PreFinalPassInfo = PerformFirstPassOnInfoString(tempInfoString);
                                 if (debug_on) {
                                     DebugPrint(" Second pass data (Extra White space eliminated and Enums identified.) = " + currentType.PreFinalPassInfo);
@@ -4895,7 +4940,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     }
                                     String type_id_string_rv = ReplaceDefinedValues(currentType.type_id_string, 0, null);
                                     if (debug_on) {
-                                        DebugPrint("currentType.Name = " + currentType.Name);
+                                        DebugPrint("currentType.Name = " + currentType.getName());
                                         DebugPrint("currentType.Id = " + currentType.Id);
                                         DebugPrint("currentType.type_id_string = " + currentType.type_id_string);
                                         DebugPrint("type_id_string_rv = type_id_string_rv");
@@ -4932,16 +4977,16 @@ public class ModuleInfo implements ModuleInfoInterface {
 
                                     if (currentType.Id > 0 && is_stat_msg
                                             && (statsTypeFile == null || statsTypeFile.length() < 1
-                                            || currentType.fromFile.equals(statsTypeFile)
-                                            || currentType.fromFile.equals(baseClassStatsTypeFile)
+                                            || currentType.fromFileName.equals(statsTypeFile)
+                                            || currentType.fromFileName.equals(baseClassStatsTypeFile)
                                             || statsTypeFile.compareTo(cmdsTypeFile) == 0)) {
-                                        statMsgsAvailable.addElement(currentType.Name + "=" + currentType.Id);
+                                        statMsgsAvailable.addElement(currentType.getName() + "=" + currentType.Id);
                                         if (primaryStatusType == null) {
-                                            primaryStatusType = currentType.Name;
+                                            primaryStatusType = currentType.getName();
                                         }
                                     }
                                     if (debug_on) {
-                                        DebugPrint("currentType.Name = " + currentType.Name);
+                                        DebugPrint("currentType.Name = " + currentType.getName());
                                         DebugPrint("currentType.Id = " + currentType.Id);
                                         DebugPrint("is_cmd_stream = " + is_cmd_stream);
                                         DebugPrint("is_cmd_msg = " + is_cmd_msg);
@@ -4952,8 +4997,8 @@ public class ModuleInfo implements ModuleInfoInterface {
                                     }
                                     this.AddCppQualifiedType(currentType);
                                     currentType = new StructureTypeInfo();
-                                    currentType.fromFile = file_loader.name;
-                                    currentType.fromLine = file_loader.lines_read;
+                                    currentType.fromFileName = file_loader.name;
+                                    currentType.fromLineNumber = file_loader.lines_read;
                                     currentType.first_module_used_in = this;
                                     is_cmd_msg = false;
                                     is_stat_msg = false;
@@ -4972,14 +5017,14 @@ public class ModuleInfo implements ModuleInfoInterface {
 
                         if (tilde_index >= 0) {
                             if (null != currentType) {
-                                if (null != currentType.Name) {
-                                    if (parseString.indexOf(currentType.Name) > 0) {
+                                if (null != currentType.getName()) {
+                                    if (parseString.indexOf(currentType.getName()) > 0) {
                                         currentType.destructor_declared = true;
                                         if (parseString.indexOf(';') > 0
                                                 && parseString.indexOf('{') < 0) {
                                             currentType.destructor_declared_and_not_inlined = true;
                                             if (debug_on) {
-                                                DebugPrint("Destructor for " + currentType.Name + " declared but not inlined.");
+                                                DebugPrint("Destructor for " + currentType.getName() + " declared but not inlined.");
                                             }
                                         }
                                     }
@@ -4988,9 +5033,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                             continue;
                         }
                         if (null != currentType) {
-                            if (null != currentType.Name && !typedef) {
-                                if (currentType.Name.length() > 0) {
-                                    if (parseString.indexOf(currentType.Name) >= 0) {
+                            if (null != currentType.getName() && !typedef) {
+                                if (currentType.getName().length() > 0) {
+                                    if (parseString.indexOf(currentType.getName()) >= 0) {
                                         if (debug_on) {
                                             DebugPrint(" Possible constructor :" + parseString);
                                         }
@@ -4998,8 +5043,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                                                 && parseString.indexOf(')') > 0) {
                                             while (brace_count > 1 || parseString.indexOf(';') < 0) {
                                                 String line_to_add = file_loader.readLine();
-                                                line++;
-                                                cur_file_line = line;
+                                                lineNumber++;
+                                                curFileLineNumber = lineNumber;
+                                                curFileLineText = parseString;
                                                 String origParseString = parseString;
                                                 parseString = line_to_add;
                                                 DebugPrint("line_to_add=file_loader.readLine() =" + line_to_add);
@@ -5016,9 +5062,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                                                 if (!HandlePreProcessing()) {
                                                     if (debug_on) {
                                                         if (iflevel != trueIfLevel) {
-                                                            DebugPrint("***" + line + "*** " + parseString);
+                                                            DebugPrint("***" + lineNumber + "*** " + parseString);
                                                         } else {
-                                                            DebugPrint("---" + line + "--- " + parseString);
+                                                            DebugPrint("---" + lineNumber + "--- " + parseString);
                                                         }
                                                     }
                                                     parseString = origParseString;
@@ -5026,9 +5072,9 @@ public class ModuleInfo implements ModuleInfoInterface {
                                                 }
                                                 if (debug_on) {
                                                     if (iflevel != trueIfLevel) {
-                                                        DebugPrint("***" + line + "*** " + parseString);
+                                                        DebugPrint("***" + lineNumber + "*** " + parseString);
                                                     } else {
-                                                        DebugPrint("---" + line + "--- " + parseString);
+                                                        DebugPrint("---" + lineNumber + "--- " + parseString);
                                                     }
                                                 }
                                                 if (!HandleComments()) {
@@ -5069,7 +5115,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                                     && parseString.indexOf(':') < 0) {
                                                 currentType.constructor_declared_and_not_inlined = true;
                                                 if (debug_on) {
-                                                    DebugPrint("Constructor for " + currentType.Name + " declared but not inlined.");
+                                                    DebugPrint("Constructor for " + currentType.getName() + " declared but not inlined.");
                                                 }
                                                 continue;
                                             } else {
@@ -5091,7 +5137,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                                                             Long idLong = Long.valueOf(doSimpleLongMath(idString));
                                                             type_id = idLong.longValue();
                                                             if (rcs.utils.StrToLong.bad_token || bad_simple_long_math) {
-                                                                ErrorPrint("Bad type_id_string for " + currentType.Name + "  : " + type_id_string + " --> " + idString + " --> " + type_id);
+                                                                ErrorPrint("Bad type_id_string for " + currentType.getName() + "  : " + type_id_string + " --> " + idString + " --> " + type_id);
                                                             }
                                                         }
                                                     } catch (Exception e) {
@@ -5262,7 +5308,14 @@ public class ModuleInfo implements ModuleInfoInterface {
                 } catch (Exception e) {
                     ErrorPrint("startingParseString=" + startingParseString);
                     ErrorPrint("parseString=" + parseString);
-                    ErrorPrint("line = " + line);
+//                    debug_on = true;
+//                    String s2 = ReplaceDefinedValues(parseString, 0, null);
+//                    ErrorPrint("s2 = " + s2);
+                    ErrorPrint("line = " + lineNumber);
+                    final Set<String> definedValueskeySet = definedValues.keySet();
+                    List<String> definedValuesKeyList = new ArrayList<>(definedValueskeySet);
+                    Collections.sort(definedValuesKeyList);
+                    ErrorPrint("definedValuesKeyList=" + definedValuesKeyList);
                     if (interrupt_loading) {
                         throw e;
                     } else {
@@ -5276,10 +5329,10 @@ public class ModuleInfo implements ModuleInfoInterface {
             }
             this.lhui_name = file_loader.name;
             this.lhui_total = file_loader.content_length;
-            this.lhui_part = cur_file_line;
+            this.lhui_part = curFileLineNumber;
             this.lhui_update();
         } catch (Exception e) {
-            ErrorPrint("line=" + line);
+            ErrorPrint("line=" + lineNumber);
             ErrorPrint("parseString=" + parseString);
             if (interrupt_loading) {
                 throw e;
@@ -5287,20 +5340,20 @@ public class ModuleInfo implements ModuleInfoInterface {
                 e.printStackTrace();
             }
         } finally {
-            if(brace_count != 0) {
-                ErrorPrint("End of "+file_loader.name +" reached with non matching braces. brace_count="+brace_count);
-                System.err.println("currentType="+currentType);
+            if (brace_count != 0) {
+                ErrorPrint("End of " + file_loader.name + " reached with non matching braces. brace_count=" + brace_count);
+                System.err.println("currentType=" + currentType);
             }
-            if(paren_count != 0) {
-                ErrorPrint("End of "+file_loader.name +" reached with non matching parenthases. paren_count="+paren_count);
-                System.err.println("currentType="+currentType);
+            if (paren_count != 0) {
+                ErrorPrint("End of " + file_loader.name + " reached with non matching parenthases. paren_count=" + paren_count);
+                System.err.println("currentType=" + currentType);
             }
             if (null != file_loader) {
                 file_loader.close();
             }
         }
-//	cur_file_name=null;
-//	cur_file_line=0;
+//	curFileName=null;
+//	curFileLineNumber=0;
     }
 
     static public void ClearStaticData() {
@@ -5414,13 +5467,13 @@ public class ModuleInfo implements ModuleInfoInterface {
                 typeFileLoader = new URL_and_FileLoader(type_file_string);
             }
             last_file_loader = typeFileLoader;
-            cur_file_line = 0;
-            this.lhui_name = cur_file_name = last_file_loader.name;
+            curFileLineNumber = 0;
+            this.lhui_name = curFileName = last_file_loader.name;
             this.lhui_total = last_file_loader.content_length;
-            this.lhui_part = cur_file_line;
+            this.lhui_part = curFileLineNumber;
             this.lhui_update();
             if (!typeFileLoader.TryNameSucceeded) {
-                if(debug_on) {
+                if (debug_on) {
                     Thread.dumpStack();
                 }
                 ErrorPrint("Can't open file \"" + type_file_string + "\".");
@@ -5523,10 +5576,10 @@ public class ModuleInfo implements ModuleInfoInterface {
             }
             typeFileLoader = new URL_and_FileLoader(file_to_load);
             last_file_loader = typeFileLoader;
-            cur_file_line = 0;
-            this.lhui_name = cur_file_name = last_file_loader.name;
+            curFileLineNumber = 0;
+            this.lhui_name = curFileName = last_file_loader.name;
             this.lhui_total = last_file_loader.content_length;
-            this.lhui_part = cur_file_line;
+            this.lhui_part = curFileLineNumber;
             this.lhui_update();
             if (!typeFileLoader.TryNameSucceeded) {
                 Thread.dumpStack();
@@ -5612,11 +5665,13 @@ public class ModuleInfo implements ModuleInfoInterface {
         for (i = 0; i < num_type_files; i++) {
             try {
                 type_file_string = (String) aux_type_files.elementAt(i);
-                String cur_file_name_orig = cur_file_name;
-                int cur_file_line_orig = cur_file_line;
+                String fileNameOrig = curFileName;
+                int fileLineNumberOrig = curFileLineNumber;
+                String fileLineTextOrig = curFileLineText;
                 LoadAuxTypeFile(type_file_string);
-                cur_file_name = cur_file_name_orig;
-                cur_file_line = cur_file_line_orig;
+                curFileName = fileNameOrig;
+                curFileLineNumber = fileLineNumberOrig;
+                curFileLineText = fileLineTextOrig;
             } catch (Exception e) {
                 ErrorPrint("Error parsing predefined type file" + type_file_string);
                 e.printStackTrace();
@@ -5697,10 +5752,11 @@ public class ModuleInfo implements ModuleInfoInterface {
                 m_cmd_structInfoHashTable = null;
                 cmdsTypeFileLoader = new URL_and_FileLoader(file_to_load);
                 last_file_loader = cmdsTypeFileLoader;
-                cur_file_line = 0;
-                this.lhui_name = cur_file_name = last_file_loader.name;
+                curFileLineNumber = 0;
+                curFileLineText = "";
+                this.lhui_name = curFileName = last_file_loader.name;
                 this.lhui_total = last_file_loader.content_length;
-                this.lhui_part = cur_file_line;
+                this.lhui_part = curFileLineNumber;
                 this.lhui_update();
                 if (!cmdsTypeFileLoader.TryNameSucceeded) {
                     ErrorPrint("Can't open file \"" + file_to_load + "\".");
@@ -5741,10 +5797,11 @@ public class ModuleInfo implements ModuleInfoInterface {
                 file_to_load = statsTypeFile;
                 statsTypeFileLoader = new URL_and_FileLoader(file_to_load);
                 last_file_loader = statsTypeFileLoader;
-                cur_file_line = 0;
-                this.lhui_name = cur_file_name = last_file_loader.name;
+                curFileLineNumber = 0;
+                curFileLineText = "";
+                this.lhui_name = curFileName = last_file_loader.name;
                 this.lhui_total = last_file_loader.content_length;
-                this.lhui_part = cur_file_line;
+                this.lhui_part = curFileLineNumber;
                 this.lhui_update();
                 if (!statsTypeFileLoader.TryNameSucceeded) {
                     ErrorPrint("Can't open file \"" + file_to_load + "\".");
@@ -5783,7 +5840,6 @@ public class ModuleInfo implements ModuleInfoInterface {
         String varString;
         int indexQuoteBegin;
         int indexQuoteEnd;
-        int info_line = cur_file_line;
         try {
             if (debug_on) {
                 /*DebugPrint(Thread.currentThread());
@@ -5813,8 +5869,6 @@ public class ModuleInfo implements ModuleInfoInterface {
                 if (varString == null) {
                     break;
                 }
-                info_line++;
-                cur_file_line = info_line;
                 if (varString.length() < 1) {
                     continue;
                 }
@@ -6316,7 +6370,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                         valueString = valueString.substring(indexQuoteBegin + 1, indexQuoteEnd);
                     }
                     String inputs[] = valueString.split("[, \t]+");
-                    for(String input : inputs) {
+                    for (String input : inputs) {
                         AddAuxInput(input);
                     }
                     continue;
@@ -6343,7 +6397,7 @@ public class ModuleInfo implements ModuleInfoInterface {
                         valueString = valueString.substring(indexQuoteBegin + 1, indexQuoteEnd);
                     }
                     String outputs[] = valueString.split("[, \t]+");
-                    for(String output : outputs) {
+                    for (String output : outputs) {
                         AddAuxOutput(output);
                     }
                     continue;
@@ -6678,7 +6732,6 @@ public class ModuleInfo implements ModuleInfoInterface {
 //            return false;
 //        }
 //    }
-
     public int disconnect() {
         new_data_count = 0;
         try {
@@ -6725,26 +6778,26 @@ public class ModuleInfo implements ModuleInfoInterface {
                 boolean in_aux_messages = false;
                 for (int i = 0; i < auxMessages.size(); i++) {
                     String s = (String) auxMessages.get(i);
-                    if (s.startsWith(sti.Name + "=")) {
+                    if (s.startsWith(sti.getName() + "=")) {
                         in_aux_messages = true;
                         break;
                     }
                 }
-                if (sti.fromFile == null) {
+                if (sti.fromFileName == null) {
                     ErrorPrint("sti.fromFile == null");
                 }
                 boolean in_header = false;
-                if (null != aux_type_files && null != sti && null != sti.fromFile) {
+                if (null != aux_type_files && null != sti && null != sti.fromFileName) {
                     for (int i = 0; i < this.aux_type_files.size(); i++) {
                         String h = (String) aux_type_files.elementAt(i);
-                        if (sti.fromFile.equals(h)) {
+                        if (sti.fromFileName.equals(h)) {
                             in_header = true;
                             break;
                         }
                     }
                 }
                 if (!in_aux_messages && in_header && sti.Id > 0) {
-                    auxMessages.add(sti.Name + "=" + sti.Id);
+                    auxMessages.add(sti.getName() + "=" + sti.Id);
                     sti.on_aux_msg_list = true;
                 }
             }
@@ -6764,13 +6817,13 @@ public class ModuleInfo implements ModuleInfoInterface {
                 boolean in_aux_messages = false;
                 for (int i = 0; i < auxMessages.size(); i++) {
                     String s = (String) auxMessages.get(i);
-                    if (s.startsWith(sti.Name + "=")) {
+                    if (s.startsWith(sti.getName() + "=")) {
                         in_aux_messages = true;
                         break;
                     }
                 }
                 if (!in_aux_messages && sti.Id > 0) {
-                    auxMessages.add(sti.Name + "=" + sti.Id);
+                    auxMessages.add(sti.getName() + "=" + sti.Id);
                     sti.on_aux_msg_list = true;
                 }
             }

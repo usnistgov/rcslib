@@ -28,6 +28,7 @@ class DefinedValue {
 	String name;
 	String value;
 	String tag = "(noname)";
+        String arrayLenSting="";
 
 	public String toString() {
 		String s = super.toString();

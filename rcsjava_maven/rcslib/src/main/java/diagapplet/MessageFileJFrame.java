@@ -261,7 +261,7 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
 		try {
 			this.watchJPanel1.SetTypeInfo(_sti, _ht);
 			if (null != _sti) {
-				this.jTextFieldMessageType.setText(_sti.Name);
+				this.jTextFieldMessageType.setText(_sti.getName());
 			}
 		} catch (Exception e) {
 		}

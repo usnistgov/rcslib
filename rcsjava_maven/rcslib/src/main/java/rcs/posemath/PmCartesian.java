@@ -170,31 +170,36 @@ public class PmCartesian extends java.awt.geom.Point2D.Double  implements Clonea
         int tok_num = 0;
         while (st.hasMoreTokens()) {
             String tok = st.nextToken();
-            if (tok == null || tok.length() < 1) {
-                continue;
-            }
-            tok_num++;
-            if (tok.startsWith("x=")) {
-                c.x = java.lang.Double.valueOf(tok.substring(2));
-            } else if (tok.startsWith("y=")) {
-                c.y = java.lang.Double.valueOf(tok.substring(2));
-            } else if (tok.startsWith("z=")) {
-                c.z = java.lang.Double.valueOf(tok.substring(2));
-            } else {
-                double d = java.lang.Double.valueOf(tok);
-                switch (tok_num) {
-                    case 1:
-                        c.x = d;
-                        break;
-
-                    case 2:
-                        c.y = d;
-                        break;
-
-                    case 3:
-                        c.z = d;
-                        break;
+            try {
+                if (tok == null || tok.length() < 1) {
+                    continue;
                 }
+                tok_num++;
+                if (tok.startsWith("x=")) {
+                    c.x = java.lang.Double.valueOf(tok.substring(2));
+                } else if (tok.startsWith("y=")) {
+                    c.y = java.lang.Double.valueOf(tok.substring(2));
+                } else if (tok.startsWith("z=")) {
+                    c.z = java.lang.Double.valueOf(tok.substring(2));
+                } else {
+                    double d = java.lang.Double.valueOf(tok);
+                    switch (tok_num) {
+                        case 1:
+                            c.x = d;
+                            break;
+                        
+                        case 2:
+                            c.y = d;
+                            break;
+                        
+                        case 3:
+                            c.z = d;
+                            break;
+                    }
+                }
+            } catch (NumberFormatException numberFormatException) {
+                numberFormatException.printStackTrace();
+                throw new NumberFormatException("s="+"s,tok="+tok+",tok_num="+tok_num+" : "+numberFormatException.getMessage());
             }
         }
         return c;

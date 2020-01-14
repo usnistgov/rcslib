@@ -571,18 +571,18 @@ class Ada_Generator
 			cgc.WriteOutput("\n");
 			if(type_info.Id > 0)
 			    {
-				cgc.WriteOutput("\tprocedure Initialize(Msg : in out "+type_info.Name+") is\n");
+				cgc.WriteOutput("\tprocedure Initialize(Msg : in out "+type_info.getName()+") is\n");
 				cgc.WriteOutput("\tbegin\n");
 				cgc.WriteOutput("\t\tMsg.NmlType := "+type_info.type_id_string+";\n");
-				cgc.WriteOutput("\t\tMsg.Size := "+type_info.Name+"'Size/8;\n");
+				cgc.WriteOutput("\t\tMsg.Size := "+type_info.getName()+"'Size/8;\n");
 				
 				cgc.WriteOutput("\tend Initialize;\n");
 				
 				cgc.WriteOutput("\n");
 			    }				
-			cgc.WriteOutput("\tprocedure Update_"+type_info.Name+"(Cms_Ptr : in Cms.Cms_Access; Msg : in "+type_info.Name+"_Access) is\n");
+			cgc.WriteOutput("\tprocedure Update_"+type_info.getName()+"(Cms_Ptr : in Cms.Cms_Access; Msg : in "+type_info.getName()+"_Access) is\n");
 			cgc.WriteOutput("\tbegin\n");
-			cgc.WriteOutput("\t\tCms.Begin_Class(Cms_Ptr,\""+type_info.Name+"\",\"\");\n");
+			cgc.WriteOutput("\t\tCms.Begin_Class(Cms_Ptr,\""+type_info.getName()+"\",\"\");\n");
 			if(type_info.DerivedFrom != null && 
 			   !type_info.DerivedFrom.equals("NMLmsg"))
 			    {
@@ -593,7 +593,7 @@ class Ada_Generator
 			if(type_info.Id > 0)
 			    {
 				cgc.WriteOutput("\t\tMsg.NmlType := "+type_info.type_id_string+";\n");
-				cgc.WriteOutput("\t\tMsg.Size := "+type_info.Name+"'Size/8;\n");
+				cgc.WriteOutput("\t\tMsg.Size := "+type_info.getName()+"'Size/8;\n");
 			    }
 			StringTokenizer st = new StringTokenizer(def1,";");
 			while(st.hasMoreTokens())
@@ -605,13 +605,13 @@ class Ada_Generator
 					cgc.WriteOutput(ada_tok);
 				    }
 			    }
-			cgc.WriteOutput("\t\tCms.End_Class(Cms_Ptr,\""+type_info.Name+"\",\"\");\n");
-			cgc.WriteOutput("\tend Update_"+type_info.Name+";\n");
+			cgc.WriteOutput("\t\tCms.End_Class(Cms_Ptr,\""+type_info.getName()+"\",\"\");\n");
+			cgc.WriteOutput("\tend Update_"+type_info.getName()+";\n");
 			cgc.WriteOutput("\n");
 
-			cgc.WriteOutput("\tprocedure Update_Internal_"+type_info.Name+"(Cms_Ptr : in Cms.Cms_Access; Msg : in out "+type_info.Name+") is\n");
+			cgc.WriteOutput("\tprocedure Update_Internal_"+type_info.getName()+"(Cms_Ptr : in Cms.Cms_Access; Msg : in out "+type_info.getName()+") is\n");
 			cgc.WriteOutput("\tbegin\n");
-			cgc.WriteOutput("\t\tCms.Begin_Class(Cms_Ptr,\""+type_info.Name+"\",\"\");\n");
+			cgc.WriteOutput("\t\tCms.Begin_Class(Cms_Ptr,\""+type_info.getName()+"\",\"\");\n");
 			if(type_info.DerivedFrom != null &&
 			   !type_info.DerivedFrom.equals("NMLmsg"))
 			    {
@@ -622,7 +622,7 @@ class Ada_Generator
 			if(type_info.Id > 0)
 			    {
 				cgc.WriteOutput("\t\tMsg.NmlType := "+type_info.type_id_string+";\n");
-				cgc.WriteOutput("\t\tMsg.Size := "+type_info.Name+"'Size/8;\n");
+				cgc.WriteOutput("\t\tMsg.Size := "+type_info.getName()+"'Size/8;\n");
 			    }
 			st = new StringTokenizer(def1,";");
 			while(st.hasMoreTokens())
@@ -634,8 +634,8 @@ class Ada_Generator
 					cgc.WriteOutput(ada_tok);
 				    }
 			    }
-			cgc.WriteOutput("\t\tCms.End_Class(Cms_Ptr,\""+type_info.Name+"\",\"\");\n");
-			cgc.WriteOutput("\tend Update_Internal_"+type_info.Name+";\n");
+			cgc.WriteOutput("\t\tCms.End_Class(Cms_Ptr,\""+type_info.getName()+"\",\"\");\n");
+			cgc.WriteOutput("\tend Update_Internal_"+type_info.getName()+";\n");
 
 			cgc.WriteOutput("\n");
 		    }
@@ -729,7 +729,7 @@ class Ada_Generator
 			    StructureTypeInfo typeInfo = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(s);
 			    if(null != typeInfo)
 				{
-				    cgc.WriteOutput("\t\t"+typeInfo.Name+"\'Size/8,\n");
+				    cgc.WriteOutput("\t\t"+typeInfo.getName()+"\'Size/8,\n");
 				}
 			    pos++;
 			}
@@ -807,7 +807,7 @@ class Ada_Generator
 				    {
 					continue;
 				    }
-				cgc.WriteOutput("\t\t\twhen "+typeInfo.type_id_string+"\t=>\tUpdate_"+typeInfo.Name+"(Cms_Ptr, NmlMsg_to_"+typeInfo.Name+"(Msg));\n");
+				cgc.WriteOutput("\t\t\twhen "+typeInfo.type_id_string+"\t=>\tUpdate_"+typeInfo.getName()+"(Cms_Ptr, NmlMsg_to_"+typeInfo.getName()+"(Msg));\n");
 			    }
 			cgc.WriteOutput("\t\t\twhen others\t=>\treturn 0;\n");
 			cgc.WriteOutput("\t\tend case;\n");
@@ -1006,11 +1006,11 @@ class Ada_Generator
 			    }
 			if(type_info.DerivedFrom != null)
 			    {
-				cgc.WriteOutput("\ttype "+type_info.Name+" is new "+type_info.DerivedFrom+" with ");
+				cgc.WriteOutput("\ttype "+type_info.getName()+" is new "+type_info.DerivedFrom+" with ");
 			    }
 			else
 			    {
-				cgc.WriteOutput("\ttype "+type_info.Name+" is ");
+				cgc.WriteOutput("\ttype "+type_info.getName()+" is ");
 			    }				
 			cgc.WriteOutput("\n\t\trecord\n");
 			StringTokenizer st = new StringTokenizer(def1,";");
@@ -1032,16 +1032,16 @@ class Ada_Generator
 			    }
 			cgc.WriteOutput("\t\tend record;\n");
 			cgc.WriteOutput("\n");
-			cgc.WriteOutput("\ttype "+type_info.Name+"_Access is access all "+type_info.Name+";\n");
+			cgc.WriteOutput("\ttype "+type_info.getName()+"_Access is access all "+type_info.getName()+";\n");
 
 			if(type_info.Id > 0)
 			    {
-				cgc.WriteOutput("\tprocedure Initialize(Msg : in out "+type_info.Name+");\n");
-				cgc.WriteOutput("\tfunction NmlMsg_to_"+type_info.Name+" is new Unchecked_Conversion(NmlMsg_Access,"+type_info.Name+"_Access);\n");
+				cgc.WriteOutput("\tprocedure Initialize(Msg : in out "+type_info.getName()+");\n");
+				cgc.WriteOutput("\tfunction NmlMsg_to_"+type_info.getName()+" is new Unchecked_Conversion(NmlMsg_Access,"+type_info.getName()+"_Access);\n");
 			    }
-			cgc.WriteOutput("\tprocedure Update_Internal_"+type_info.Name+"(Cms_Ptr : in Cms.Cms_Access; Msg : in out "+type_info.Name+");\n");
-			cgc.WriteOutput("\tprocedure Free is new Unchecked_Deallocation("+type_info.Name+","+type_info.Name+"_Access);\n");
-			cgc.WriteOutput("\ttype "+type_info.Name+"_Array is array(Integer range <>) of "+type_info.Name+";\n");
+			cgc.WriteOutput("\tprocedure Update_Internal_"+type_info.getName()+"(Cms_Ptr : in Cms.Cms_Access; Msg : in out "+type_info.getName()+");\n");
+			cgc.WriteOutput("\tprocedure Free is new Unchecked_Deallocation("+type_info.getName()+","+type_info.getName()+"_Access);\n");
+			cgc.WriteOutput("\ttype "+type_info.getName()+"_Array is array(Integer range <>) of "+type_info.getName()+";\n");
 		    }
 
 		cgc.WriteOutput("\n");		

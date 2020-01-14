@@ -39,8 +39,8 @@ public class StringFuncs {
     static void ErrorPrint(String s) {
         try {
             Throwable t = new Throwable();
-            if (ModuleInfo.cur_file_name != null && ModuleInfo.cur_file_name.length() > 0 && ModuleInfo.cur_file_line > 0) {
-                System.err.println(ModuleInfo.cur_file_name + ":" + ModuleInfo.cur_file_line + " (" + StackTracePrinter.ThrowableToShortList(t) + ")  " + s);
+            if (ModuleInfo.curFileName != null && ModuleInfo.curFileName.length() > 0 && ModuleInfo.curFileLineNumber > 0) {
+                System.err.println(ModuleInfo.curFileName + ":" + ModuleInfo.curFileLineNumber + " (" + StackTracePrinter.ThrowableToShortList(t) + ")  " + s);
                 return;
             }
             System.err.println(StackTracePrinter.ThrowableToShortList(t) + " " + s);
@@ -104,7 +104,7 @@ public class StringFuncs {
             int k = 0;
             while (itr.hasNext()) {
                 StructureTypeInfo ti3 = (StructureTypeInfo) itr.next();
-                new_array[k] = ti3.Name;
+                new_array[k] = ti3.getName();
                 k++;
             }
             return new_array;
@@ -133,7 +133,7 @@ public class StringFuncs {
 
                     if (strArg.equalsIgnoreCase(args[i].substring(0, strArg.length()))) {
 
-                        // Found matching parameter on command line, so extract its value.
+                        // Found matching parameter on command lineNumber, so extract its value.
                         // If in double quotes, remove the quotes.
                         //---------------------------------------------------------------
                         strValue = args[i].substring(strArg.length());

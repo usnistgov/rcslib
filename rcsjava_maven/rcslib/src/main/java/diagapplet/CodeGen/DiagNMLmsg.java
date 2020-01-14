@@ -437,9 +437,9 @@ class DiagNMLmsg extends NMLmsg {
 	    String lastclassvarname = "";
 	    boolean ndla_var = false;
 	    if (debug_on) {
-		DebugPrint("DiagNMLMsg.update(), NMLfc.beginClass(" + typeInfo.Name + "," + typeInfo.DerivedFrom + ");");
+		DebugPrint("DiagNMLMsg.update(), NMLfc.beginClass(" + typeInfo.getName() + "," + typeInfo.DerivedFrom + ");");
 	    }
-	    NMLfc.beginClass(typeInfo.Name, typeInfo.DerivedFrom);
+	    NMLfc.beginClass(typeInfo.getName(), typeInfo.DerivedFrom);
 	    String info_token = null;
 	    NMLfc.error_in_update = false;
 	    NMLfc.sending_short = module_info.sending_short_string;
@@ -972,9 +972,9 @@ class DiagNMLmsg extends NMLmsg {
 		    NMLfc.endClassVar(classtoend);
 		}
 	    }
-	    NMLfc.endClass(typeInfo.Name, typeInfo.DerivedFrom);
+	    NMLfc.endClass(typeInfo.getName(), typeInfo.DerivedFrom);
 	    if (debug_on) {
-		DebugPrint("DiagNMLMsg.update(), NMLfc.endClass(" + typeInfo.Name + "," + typeInfo.DerivedFrom + ");");
+		DebugPrint("DiagNMLMsg.update(), NMLfc.endClass(" + typeInfo.getName() + "," + typeInfo.DerivedFrom + ");");
 	    }
 	    NMLfc.error_in_update = false;
 	    NMLfc.sending_short = false;

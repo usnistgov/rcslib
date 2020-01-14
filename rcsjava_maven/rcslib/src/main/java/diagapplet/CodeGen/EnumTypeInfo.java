@@ -40,7 +40,7 @@ public class EnumTypeInfo
     public String CppQualifiedName="";
     public boolean insideNameSpace=false;
     public Hashtable hashtable  = null;
-    public Hashtable reverse_hashtable = null;
+    public final Hashtable<String,Integer> reverse_hashtable ;
     public Hashtable override_names_hashtable = null;
     public boolean typedef=false;
     public boolean generate_symbol_lookup=false;
@@ -75,7 +75,7 @@ public class EnumTypeInfo
   public EnumTypeInfo()
   {
       hashtable = new Hashtable();
-      reverse_hashtable = new Hashtable();
+      reverse_hashtable = new Hashtable<>();
       override_names_hashtable = new Hashtable();
   }
 }

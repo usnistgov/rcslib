@@ -606,7 +606,7 @@ import diagapplet.HierarchyPanel;
 					    {
 						System.out.println("si = "+si);
 					    }
-					pos.println("");// blank line
+					pos.println("");// blank lineNumber
 					pos.println(si.Name+"{");
 					pos.println("\tis_server=true; // indicates that this is a server and not a control module.");
 					if(si.Host != null)
@@ -625,7 +625,7 @@ import diagapplet.HierarchyPanel;
 						pos.println("\tbuf=\""+si.bufferNames.elementAt(j)+"\";");
 					    }
 					pos.println("}");
-					pos.println("");// blank line
+					pos.println("");// blank lineNumber
 				    }
 			    }
 		    }
@@ -875,9 +875,9 @@ import diagapplet.HierarchyPanel;
 				pos.println("\tmodule_number="+modInfo.module_number+";");
 			    }
 			pos.println("}");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.close();
 		fos.close();
 		pos = null;
@@ -933,44 +933,44 @@ import diagapplet.HierarchyPanel;
 				term_start=term_start.substring(0,de_index);
 			    }
 			pos.println("#! /bin/sh");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("# CD to the User Directory, just in-case we're not already there.");
 			pos.println("cd "+userDirFile.getAbsolutePath());
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("if test \"x${HOST}\" = \"x\" ;  then");
 			pos.println("\techo Setting HOST to `hostname`");
 			pos.println("\tHOST=`hostname`;");
 			pos.println("\texport HOST;");
 			pos.println("fi");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
                         
                         pos.println("if test \"x${xterm_cmd}\" = \"x\" ; then");
                         pos.println("\txterm_cmd=\""+term_start+"\";");
                         pos.println("fi");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
                         
                         
 //			if(term_start.startsWith("xterm"))
 //			    {
-//				pos.println("");// blank line
+//				pos.println("");// blank lineNumber
 //				pos.println("if test '!' -x /usr/X11R6/bin/xterm -a '!' -x /usr/bin/xterm -a '!' -x /usr/X/bin/xterm ;  then");
 //				pos.println("\tNO_XTERM=1;");
 //				pos.println("\texport NO_XTERM;");
 //				pos.println("fi");
-//				pos.println("");// blank line
+//				pos.println("");// blank lineNumber
 //			    }
 //			else
 //			    {
-//				pos.println("");// blank line
+//				pos.println("");// blank lineNumber
 //				pos.println("if test '!' -x "+term_start+" ;  then");
 //				pos.println("\tNO_XTERM=1;");
 //				pos.println("\texport NO_XTERM;");
 //				pos.println("fi");
-//				pos.println("");// blank line
+//				pos.println("");// blank lineNumber
 //			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("pwd");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			if(RcsLibDir != null && RcsLibDir.length() > 1 )
 			    {
 				pos.println("if test \"x${RCSLIB_MAIN_DIR}\" = \"x\" ;  then");
@@ -978,9 +978,9 @@ import diagapplet.HierarchyPanel;
 				pos.println("\texport RCSLIB_MAIN_DIR;");
 				pos.println("fi");
 			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("echo RCSLIB_MAIN_DIR=${RCSLIB_MAIN_DIR}");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${RCSLIB_MAIN_DIR}/lib;");
 			pos.println("export LD_LIBRARY_PATH");
 			if(!singleDir)
@@ -995,14 +995,14 @@ import diagapplet.HierarchyPanel;
 				pos.println("\tfi");
 				pos.println("\techo Setting PLAT to ${PLAT}");
 				pos.println("fi");
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${RCSLIB_MAIN_DIR}:${RCSLIB_MAIN_DIR}/plat/${PLAT}/lib;");
 			pos.println("export LD_LIBRARY_PATH");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("echo LD_LIBRARY_PATH=${LD_LIBRARY_PATH}");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 
 			if(useJavaInScripts)
 			    {
@@ -1017,7 +1017,7 @@ import diagapplet.HierarchyPanel;
 					    }
 				    }
 			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("# Store current host name in NML configuration file");
 			pos.println("if test \"x${HOST}\" != \"x\" ;  then");
 			pos.println("\tif test -f "+AppName+".nml.local ; then");
@@ -1025,11 +1025,11 @@ import diagapplet.HierarchyPanel;
 			pos.println("\t\tcat "+AppName+".nml.local | sed s/localhost/${HOST}/ >"+AppName+".nml");
 			pos.println("\tfi");
 			pos.println("fi");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			Enumeration svrkey = serversHashtable.keys();
 			while(svrkey.hasMoreElements())
 			    {
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				String svrname = (String) svrkey.nextElement();
 				ServerInfo si = (ServerInfo) serversHashtable.get(svrname);
 				if(null == si)
@@ -1116,7 +1116,7 @@ import diagapplet.HierarchyPanel;
 					pos.println("\tread ready");
 					pos.println("fi");
 				    }
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 			    }
 			pos.println("\tsleep 2");
 			for(int i = 0; i < gui.mainLoopList.getItemCount(); i++)
@@ -1139,7 +1139,7 @@ import diagapplet.HierarchyPanel;
 						use_host_query = true;
 					    }
 				    }
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				pos.println("# "+loop_name+"main");
 				pos.println("\\rm -f "+loop_name+"main.log");
 				if(use_host_query)
@@ -1207,14 +1207,14 @@ import diagapplet.HierarchyPanel;
 				    }
 			    }
 			pos.println("\tsleep 2");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			if(useJavaInScripts)
 			    {
 				pos.println("echo \"Run Diagnostics Tool? '(y/n)'\"");
 				pos.println("read diag_confirm");
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				pos.println("if test \"x${diag_confirm}\" = \"xy\" ;  then");
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				if( null != gui.diagCommandField)
 				    {
 					gui.diag_cmd = gui.diagCommandField.getText();
@@ -1226,7 +1226,7 @@ import diagapplet.HierarchyPanel;
                                 pos.println("\tif test \"x${diag_cmd}\" = \"x\" ; then");
                                 pos.println("\t\tdiag_cmd=\""+gui.diag_cmd+"\";");
                                 pos.println("\tfi");
-                                pos.println("");// blank line
+                                pos.println("");// blank lineNumber
 				pos.println("\techo Starting Diagnostics Tool . . .");
 				pos.println("\tif test \"x${USE_XTERM}\" = \"x1\" ; then"); 
 				if(term_start.startsWith("xterm"))
@@ -1249,10 +1249,10 @@ import diagapplet.HierarchyPanel;
 				pos.println("\tfi");
 		
 				pos.println("\tsleep 2");
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				pos.println("fi");
 			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("echo \"Shutdown?\"");
 			pos.println("echo \"Enter \"\\\"y\\\"\" when you are ready to shutdown the controllers and servers,\"");
 			pos.println("echo \"or \"\\\"n\\\"\" to exit the script with everything running.\"");
@@ -1261,9 +1261,9 @@ import diagapplet.HierarchyPanel;
 			pos.println("\techo \"Shutdown? '(y/n)'\"");
 			pos.println("\tread shutdown_confirm");
 			pos.println("done");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("if test \"x${shutdown_confirm}\" = \"xy\" ; then");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			for(int i = 0; i < gui.mainLoopList.getItemCount(); i++)
 			    {
 				String loop_name = gui.mainLoopList.getItem(i);
@@ -1272,7 +1272,7 @@ import diagapplet.HierarchyPanel;
 				    {
 					loopmain_name = loopmain_name.substring(0,8);
 				    }
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				pos.println("\t"+loop_name+"main_pid=`ps -ea | grep "+loopmain_name+" | grep -v run. | awk '{print $1}' `");
 				pos.println("\techo Killing "+loop_name+"main, pid = $"+loop_name+"main_pid");
 				pos.println("\tkill -INT $"+loop_name+"main_pid");
@@ -1293,9 +1293,9 @@ import diagapplet.HierarchyPanel;
 			    }
 
 
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("\tsleep 2");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			for(int i = 0; i < gui.mainLoopList.getItemCount(); i++)
 			    {
 				String loop_name = gui.mainLoopList.getItem(i);
@@ -1304,7 +1304,7 @@ import diagapplet.HierarchyPanel;
 				    {
 					loopmain_name = loopmain_name.substring(0,8);
 				    }
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				pos.println("\t"+loop_name+"main_pid=`ps -ea | grep "+loopmain_name+" | grep -v run. | awk '{print $1}' `");
 				pos.println("\techo Killing "+loop_name+"main, pid = $"+loop_name+"main_pid");
 				pos.println("\tkill -KILL $"+loop_name+"main_pid");
@@ -1324,18 +1324,18 @@ import diagapplet.HierarchyPanel;
 				pos.println("\tkill -KILL $"+svrname+"_pid");
 			    }
 
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("fi");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 		    }
 		else
 		    {
 			pos.println("echo off");
 			pos.println("REM Batch File for running all the modules/servers in "+AppName);
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("REM CD to the User Directory, just in-case we're not already there.");
 			pos.println("cd "+userDirFile.getAbsolutePath());
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			if(useJavaInScripts)
 			    {
 				if(java_setup.length() > 1)
@@ -1351,9 +1351,9 @@ import diagapplet.HierarchyPanel;
 			    }
 			pos.println("REM Make sure that rcs32msc.dll is on the PATH.");
 			pos.println("set path=%path%;"+RcsLibDir+"\\PLAT\\WIN32MSC\\BIN;");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("IF NOT EXIST \""+AppName+".nml\" COPY \""+AppName+".nml.local\" \""+AppName+".nml\"");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			Enumeration svrkey = serversHashtable.keys();
 			while(svrkey.hasMoreElements())
 			    {
@@ -1365,12 +1365,12 @@ import diagapplet.HierarchyPanel;
 			for(int i = 0; i < gui.mainLoopList.getItemCount(); i++)
 			    {
 				String loop_name = gui.mainLoopList.getItem(i);
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				pos.println("echo Starting "+loop_name+"main");
 				pos.println("start /MIN PLAT\\WIN32MSC\\BIN\\"+loop_name+"main.exe");
 				pos.println("pause");
 			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			if(useJavaInScripts)
 			    {
 				pos.println("REM Start Java Diagnostics Application");
@@ -1590,7 +1590,7 @@ import diagapplet.HierarchyPanel;
 	try
 	    {
 		process_cnum++;
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("# "+process_name+"("+process_cnum+")");
 		current_processname = process_name;
 		current_processhost = "localhost";
@@ -1743,7 +1743,7 @@ import diagapplet.HierarchyPanel;
 		PrintWriter pos = new PrintWriter(fos);
 		merger.SetPrintWriter(pos);
 		merger.WriteLine("# NML Configuration file for the "+AppName+" application");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("# Buffers");
 		max_procs = gui.modulesList.getItemCount() + 3;
 		max_modname_length = 0;
@@ -1791,7 +1791,7 @@ import diagapplet.HierarchyPanel;
 				WriteNMLBufferLine(null,auxName);
 			    }
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("# Processes");
 		merger.WriteLine("# Name             \tBuffer           \tType    \tHost             \tOps \tserver? \ttimeout \tmaster? \tcnum");
 		process_cnum = -1;
@@ -1857,7 +1857,7 @@ import diagapplet.HierarchyPanel;
 			WriteNMLProcessLine(null, "errlog");
 		    }
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		for(int svrindex = 0; svrindex < gui.serverList.getItemCount(); svrindex++)
 		    {
 			String svrname = gui.serverList.getItem(svrindex);
@@ -1895,9 +1895,9 @@ import diagapplet.HierarchyPanel;
 				    }
 			    }
 		    }
-		merger.WriteLine("");// blank line
-		merger.WriteLine("");// blank line
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
+		merger.WriteLine("");// blank lineNumber
+		merger.WriteLine("");// blank lineNumber
 		merger.Finish();
 		pos.close();
 		pos = null;
@@ -1938,17 +1938,17 @@ import diagapplet.HierarchyPanel;
 		pos.println("# "+new Date());
 		pos.println("# This makefile should call for makes in each of the");
 		pos.println("# src subdirctories in this application");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("SRCS = ");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("HEADERS = ");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("OBJS = ");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("LIBS = ");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("BINS = ");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("# Include Application Specific Definions and the RCS generic Makefile");
 		if(mswinDevPlat)
 		    {
@@ -1958,7 +1958,7 @@ import diagapplet.HierarchyPanel;
 		    {
 			pos.println("include Makefile.inc");
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		File srcdirFile = new File(dirFile,"src");
 		if(!srcdirFile.exists())
 		    {
@@ -2034,7 +2034,7 @@ import diagapplet.HierarchyPanel;
 				pos.println("\t( cd src"+File.separator+"main; $(MAKE) $@;)");
 			    }
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.close();
 		fos.close();
 		pos = null;
@@ -2076,21 +2076,21 @@ import diagapplet.HierarchyPanel;
 		pos.println("# variables used thoughout the application such as");
 		pos.println("# LOCAL_CFLAGS, or RCSLIB_MAIN_DIR and then include the");
 		pos.println("# RCS generic makefile definitions.");
-		pos.println("");//blank line
+		pos.println("");//blank lineNumber
 		if(null != AppDir)
 		    {
 			pos.println("# Set the Release Directory for this Application");
 			pos.println("APPDIR = "+AppDir);
-			pos.println("");//blank line
+			pos.println("");//blank lineNumber
 		    }
 		File UserDirFile = new File(getUserDir());
 		if(null != getUserDir())
 		    {
 			pos.println("# Set the Development Directory for this user");
 			pos.println("USER_DIR = "+UserDirFile.getAbsolutePath());
-			pos.println("");//blank line
+			pos.println("");//blank lineNumber
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		if(null != RcsLibDir)
 		    {
 			if(RcsLibDir.length() > 0)
@@ -2099,7 +2099,7 @@ import diagapplet.HierarchyPanel;
 				pos.println("RCSLIB_MAIN_DIR="+RcsLibDir);
 			    }
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		if(gui.libsList.getItemCount() > 0)
 		    {
 			pos.println("EXTRA_LIBS = \\");
@@ -2114,7 +2114,7 @@ import diagapplet.HierarchyPanel;
 					pos.println("\t"+gui.libsList.getItem(i));
 				    }
 			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 		    }
 
 		if(gui.includesList.getItemCount() > 0)
@@ -2131,7 +2131,7 @@ import diagapplet.HierarchyPanel;
 					pos.println("\t-I"+gui.includesList.getItem(i));
 				    }
 			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("LOCAL_CFLAGS = $(EXTRA_INCLUDES)");
 
 		    }
@@ -2185,7 +2185,7 @@ import diagapplet.HierarchyPanel;
 		pos.println("# This makefile should define the sources, headers and objects");
 		pos.println("# stored or created with this directory and then include");
 		pos.println("# the application include Makefile.");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("SRCS =  \\");
 		String cpps[] = dirFile.list(new rcs.utils.SimpleFileFilter("*"+cpp_ext));
 		for(int i = 0; i < cpps.length; i++)
@@ -2240,7 +2240,7 @@ import diagapplet.HierarchyPanel;
 			    }
 		    }
 
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("HEADERS = \\");
 		String hpps[] = dirFile.list(new rcs.utils.SimpleFileFilter("*"+hpp_ext));
 		for(int i = 0; i < hpps.length; i++)
@@ -2295,7 +2295,7 @@ import diagapplet.HierarchyPanel;
 			    }
 		    }
 
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("OBJS = \\");
 		String cppso[] = dirFile.list(new rcs.utils.SimpleFileFilter("*"+cpp_ext));
 		for(int i = 0; i < cppso.length; i++)
@@ -2364,11 +2364,11 @@ import diagapplet.HierarchyPanel;
 			    }
 		    }
 
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("LIBS = ");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("BINS = ");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("# Include Application Specific Definitions and the RCS generic Makefile");
 		if(mswinDevPlat)
 		    {
@@ -2378,7 +2378,7 @@ import diagapplet.HierarchyPanel;
 		    {
 			pos.println("include ../../Makefile.inc");
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		if(mswinDevPlat)
 		    {
 			pos.println("DEVP_OBJS = \\");
@@ -2390,13 +2390,13 @@ import diagapplet.HierarchyPanel;
 			    {
 				pos.println("\t$(DEVP_LIB_DIR)\\"+cso[i].substring(0,cso[i].length()-1)+obj_ext+" \\");
 			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("all: $(DEVP_OBJS)");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 
 		    }
 
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.close();
 		fos.close();
 		pos = null;
@@ -2440,16 +2440,16 @@ import diagapplet.HierarchyPanel;
 		Date createDate = new Date();
 		pos.println("/*");
 		pos.println("\t"+serverName+cpp_ext);
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\tThis C++ file provides a main routin to start an NML server for this application");
 		pos.println("\tIt connects to all of the NML channels used by this application.");
 		pos.println("\tIf they are all valid it will call run_nml_servers(), otherwise it will exit immediately.");
 		pos.println("");
 		pos.println("\tMODIFICATIONS:");
 		pos.println("\t"+createDate+"\tCreated.");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("*/");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("// Include Files");
 		pos.println("#include <stdlib.h> // exit()");
 		pos.println("#include \"rcs.hh\" \t// Common RCS definitions");
@@ -2522,7 +2522,7 @@ import diagapplet.HierarchyPanel;
 			    }
 		    }
 
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("// NML Channel Pointers");
 		for(int i = 0; i< gui.modulesList.getItemCount(); i++)
 		    {
@@ -2580,10 +2580,10 @@ import diagapplet.HierarchyPanel;
 			pos.println("static NML *errlog = NULL;");
 		    }
 
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("static int InitNML()");
 		pos.println("{");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		for(int i = 0; i< gui.modulesList.getItemCount(); i++)
 		    {
 			String modName = gui.modulesList.getItem(i);
@@ -2618,7 +2618,7 @@ import diagapplet.HierarchyPanel;
 			    {
 				continue;
 			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			ModuleInfo modInfo = (ModuleInfo) modulesHashtable.get(modName);
 			String format_function = modName+"Format";
 			if(mod_cmd_needed)
@@ -2637,7 +2637,7 @@ import diagapplet.HierarchyPanel;
 			    }
 			if(mod_stat_needed)
 			    {
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				format_function = modName+"Format";
 				if(modInfo != null  && modInfo.statFormatFunction != null)
 				    {
@@ -2648,7 +2648,7 @@ import diagapplet.HierarchyPanel;
 				pos.println("\t\treturn -1;");
 				pos.println("\tif(!"+modName+"_stat->valid())");
 				pos.println("\t\treturn -1;");
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 			    }
 		    }
 		if(null != auxChannelsVector)
@@ -2670,13 +2670,13 @@ import diagapplet.HierarchyPanel;
 				    {
 					continue;
 				    }
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				pos.println("\t"+auxName+" = new NML("+auxName+"Format, \""+auxName+"\", \""+serverName+"\", \""+AppName+".nml\");");
 				pos.println("\tif(NULL == "+auxName+")");
 				pos.println("\t\treturn -1;");
 				pos.println("\tif(!"+auxName+"->valid())");
 				pos.println("\t\treturn -1;");
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 			    }
 		    }
 
@@ -2687,11 +2687,11 @@ import diagapplet.HierarchyPanel;
 			pos.println("\t\treturn -1;");
 			pos.println("\tif(!errlog->valid())");
 			pos.println("\t\treturn -1;");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 		    }
 		pos.println("\treturn 0;");
 		pos.println("}");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("static void DeleteNML()");
 		pos.println("{");
 		for(int i = 0; i< gui.modulesList.getItemCount(); i++)
@@ -2728,7 +2728,7 @@ import diagapplet.HierarchyPanel;
 			    {
 				continue;
 			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			if(mod_cmd_needed)
 			    {
 				pos.println("\t// "+modName);
@@ -2740,13 +2740,13 @@ import diagapplet.HierarchyPanel;
 			    }
 			if(mod_stat_needed)
 			    {
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				pos.println("\tif(NULL != "+modName+"_stat)");
 				pos.println("\t{");
 				pos.println("\t\tdelete "+modName+"_stat;");
 				pos.println("\t\t"+modName+"_stat = NULL;");
 				pos.println("\t}");
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 			    }
 		    }
 		if(null != auxChannelsVector)
@@ -2768,13 +2768,13 @@ import diagapplet.HierarchyPanel;
 				    {
 					continue;
 				    }
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 				pos.println("\tif(NULL != "+auxName+")");
 				pos.println("\t{");
 				pos.println("\t\tdelete "+auxName+";");
 				pos.println("\t\t"+auxName+" = NULL;");
 				pos.println("\t}");
-				pos.println("");// blank line
+				pos.println("");// blank lineNumber
 			    }
 		    }
 		if(errlog_needed)
@@ -2785,9 +2785,9 @@ import diagapplet.HierarchyPanel;
 			pos.println("\t\terrlog = NULL;");
 			pos.println("\t}");
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("}");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("// Main ");
 		if(!mswinDevPlat)
 		    {
@@ -2803,19 +2803,19 @@ import diagapplet.HierarchyPanel;
 			pos.println("#endif");
 		    }
 		pos.println("{");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\tset_rcs_print_destination(RCS_PRINT_TO_STDOUT);");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\tif(InitNML() < 0)");
 		pos.println("\t{");
 		pos.println("\t\tDeleteNML();");
 		pos.println("\t\treturn(-1);");
 		pos.println("\t}");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\trun_nml_servers();");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("}");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.close();
 		fos.close();
 		pos = null;
@@ -2859,7 +2859,7 @@ import diagapplet.HierarchyPanel;
 		merger.WriteLine("# This makefile should define the sources, headers and objects");
 		merger.WriteLine("# stored or created with this directory and then include");
 		merger.WriteLine("# the application include Makefile.");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("SRCS =  \\");
 		String cpps[] = dirFile.list(new rcs.utils.SimpleFileFilter("*"+cpp_ext));
 		for(int i = 0; i < cpps.length; i++)
@@ -2879,7 +2879,7 @@ import diagapplet.HierarchyPanel;
 			    }
 			merger.WriteLine("\t"+cs[i]+" \\");
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("HEADERS = \\");
 		String hpps[] = dirFile.list(new rcs.utils.SimpleFileFilter("*"+hpp_ext));
 		for(int i = 0; i < hpps.length; i++)
@@ -2902,7 +2902,7 @@ import diagapplet.HierarchyPanel;
 				merger.WriteLine("\t"+hs[i]+" \\");
 			    }
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("OBJS = \\");
 		String cppso[] = dirFile.list(new rcs.utils.SimpleFileFilter("*"+cpp_ext));
 		for(int i = 0; i < cppso.length; i++)
@@ -2922,7 +2922,7 @@ import diagapplet.HierarchyPanel;
 			    }
 			merger.WriteLine("\t"+cso[i].substring(0,cso[i].length()-2)+obj_ext+" \\");
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(mswinDevPlat)
 		    {
 			merger.WriteLine("LIBS = "+AppName+".lib");
@@ -2930,23 +2930,23 @@ import diagapplet.HierarchyPanel;
 		else
 		    {
 			merger.WriteLine("ifeq (vxworks,$(findstring vxworks,$(PLAT)))");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("LIBS =");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("else");
 			merger.WriteLine("LIBS = lib"+AppName+".a");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("endif");
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(!mswinDevPlat)
 		    {
 			merger.WriteLine("ifeq (vxworks,$(findstring vxworks,$(PLAT)))");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("BINS =");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("else");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 		    }
 		merger.WriteLine("BINS = \\");
 		Enumeration svrkey = serversHashtable.keys();
@@ -2965,10 +2965,10 @@ import diagapplet.HierarchyPanel;
 		    }
 		if(!mswinDevPlat)
 		    {
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("endif");
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("# Include Application Specific Definitions and the RCS generic Makefile");
 		if(mswinDevPlat)
 		    {
@@ -2978,7 +2978,7 @@ import diagapplet.HierarchyPanel;
 		    {
 			merger.WriteLine("include ../../Makefile.inc");
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(mswinDevPlat)
 		    {
 			merger.WriteLine("DEVP_OBJS = \\");
@@ -2998,7 +2998,7 @@ import diagapplet.HierarchyPanel;
 				    }
 				merger.WriteLine("\t$(DEVP_LIB_DIR)\\"+cso[i].substring(0,cso[i].length()-2)+obj_ext+" \\");
 			    }
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			String loopnames = "";
 			for(int i = 0; i < gui.mainLoopList.getItemCount(); i++)
 			    {
@@ -3007,10 +3007,10 @@ import diagapplet.HierarchyPanel;
 			    }
 			merger.WriteLine("all: $(DEVP_OBJS) $(DEVP_LIB_DIR)\\"+AppName+".lib $(DEVP_BIN_DIR)\\"+AppName+"svr.exe "+loopnames);
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("# Rules for specific libraries");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		HashSet lib_hs = new HashSet();
 		if(mswinDevPlat)
@@ -3213,9 +3213,9 @@ import diagapplet.HierarchyPanel;
 			merger.WriteLine("\t$(AR) cr $@ $^");
 			merger.WriteLine("\t$(RANLIB) $@");
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("# Rules for specific binaries");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		svrkey = serversHashtable.keys();
 		while(svrkey.hasMoreElements())
 		    {
@@ -3257,7 +3257,7 @@ import diagapplet.HierarchyPanel;
 					merger.WriteLine("\t$(CPLUSPLUSLINK) $(EXTRA_LIBS) \\");
 					merger.WriteLine("\t-o $@");
 				    }
-				merger.WriteLine("");// blank line
+				merger.WriteLine("");// blank lineNumber
 				if(mswinDevPlat)
 				    {
 					merger.WriteLine(svrname+": $(DEVP_BIN_DIR)\\"+svrname+".exe");
@@ -3266,12 +3266,12 @@ import diagapplet.HierarchyPanel;
 				    {
 					merger.WriteLine(svrname+": $(DEVP_BIN_DIR)/"+svrname);
 				    }
-				merger.WriteLine("");// blank line
+				merger.WriteLine("");// blank lineNumber
 				merger.WriteLine(".PHONY: "+svrname);
-				merger.WriteLine("");// blank line
+				merger.WriteLine("");// blank lineNumber
 			    }
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(gui.modulesList.getItemCount() > 0)
 		    {
 			for(int i = 0; i < gui.mainLoopList.getItemCount(); i++)
@@ -3321,7 +3321,7 @@ import diagapplet.HierarchyPanel;
 					merger.WriteLine("\t$(CPLUSPLUSLINK) $(EXTRA_LIBS) \\");
 					merger.WriteLine("\t-o $@");
 				    }
-				merger.WriteLine("");// blank line
+				merger.WriteLine("");// blank lineNumber
 				if(mswinDevPlat)
 				    {
 					merger.WriteLine(loop_name+"main: $(DEVP_BIN_DIR)\\"+loop_name+"main.exe");
@@ -3330,12 +3330,12 @@ import diagapplet.HierarchyPanel;
 				    {
 					merger.WriteLine(loop_name+"main: $(DEVP_BIN_DIR)/"+loop_name+"main");
 				    }
-				merger.WriteLine("");// blank line
+				merger.WriteLine("");// blank lineNumber
 				merger.WriteLine(".PHONY: "+loop_name+"main");
-				merger.WriteLine("");// blank line
+				merger.WriteLine("");// blank lineNumber
 			    }
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.Finish();
 		pos.close();
 		fos.close();
@@ -3377,51 +3377,51 @@ import diagapplet.HierarchyPanel;
 		merger.SetPrintWriter(pos);
 		merger.WriteLine("# Makefile automatically generated by rcsdesign on");
 		merger.WriteLine("# "+new Date()+" for "+dirFile);
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("# Set the main RCS Library Directory");
 		merger.WriteLine("ifndef RCSLIB_DIR");
 		merger.WriteLine("RCSLIB_DIR="+RcsLibDir);
 		merger.WriteLine("endif");
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("CPPFLAGS:=$(CPPFLAGS) -I$(RCSLIB_DIR)/include -I$(RCSLIB_DIR)/plat/$(PLAT)/include -Isrc/intf -Isrc/utils");
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("LIBS:=$(LIBS) -L$(RCSLIB_DIR)/lib -L$(RCSLIB_DIR)/plat/$(PLAT)/lib -lrcs ");
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("ifndef JAVA");
 		merger.WriteLine("JAVA=java");
 		merger.WriteLine("endif");
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("ifndef RANLIB");
 		merger.WriteLine("RANLIB=ranlib");
 		merger.WriteLine("endif");
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("ifndef AR");
 		merger.WriteLine("AR=ar");
 		merger.WriteLine("endif");
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("ifndef CXX");
 		merger.WriteLine("CXX=g++");
 		merger.WriteLine("endif");
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("ifndef NML_CODEGEN");
 		merger.WriteLine("NML_CODEGEN=$(JAVA) -jar $(RCSLIB_DIR)/plat/java/lib/CodeGenCmdLine.jar ");
 		merger.WriteLine("endif");
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("APPNAME="+AppName);
 		String svrsLine="SVRS = ";
@@ -3487,7 +3487,7 @@ import diagapplet.HierarchyPanel;
 		merger.WriteLine(modulesLine);
 		merger.WriteLine(nmlsLine);
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("SERVERS_LIST=$(SVRS:%=%svr)");
 		merger.WriteLine("MAINS_LIST=$(LOOPS:%=%main)");
@@ -3496,43 +3496,43 @@ import diagapplet.HierarchyPanel;
 		merger.WriteLine("NML_A=lib$(APPNAME)_nml.a");
 		merger.WriteLine("MODULE_A=lib$(APPNAME)_module.a");
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("all: $(SERVERS_LIST) $(MAINS_LIST)");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine(".PHONY: all");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("%n_n.cc: %n.hh");
 		merger.WriteLine("\t$(NML_CODEGEN) $^");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("$(NML_A): $(NML_O_LIST)");
 		merger.WriteLine("\t$(AR) cr $@ $^ ");
 		merger.WriteLine("\t$(RANLIB) $@");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("$(MODULE_A): $(MODULES_O_LIST)");
 		merger.WriteLine("\t$(AR) cr $@ $^ ");
 		merger.WriteLine("\t$(RANLIB) $@");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("%svr: %svr.o $(NML_A)");
 		merger.WriteLine("\t$(CXX) $^ $(LIBS) $(CXXFLAGS) -o $@");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("%main: %main.o $(MODULE_A) $(NML_A)");
 		merger.WriteLine("\t$(CXX) $^ $(LIBS) $(CXXFLAGS) -o $@");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("clean:");
 		merger.WriteLine("\t-\\rm -f *n_n.cc *.o lib*.a lib*.so lib*.la *.lib *.ddll *.obj *.exe *main *svr");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine(".PHONY: clean");
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.Finish();
 		pos.close();
 		fos.close();
@@ -3577,7 +3577,7 @@ import diagapplet.HierarchyPanel;
 		pos.println("# This makefile should define the sources, headers and objects");
 		pos.println("# stored or created with this directory and then include");
 		pos.println("# the application include Makefile.");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("SRCS =  \\");
 		/*
 		  String hns[] = dirFile.list(new rcs.utils.SimpleFileFilter("*n"+hpp_ext));
@@ -3720,7 +3720,7 @@ import diagapplet.HierarchyPanel;
 				pos.println("\t"+forced_cpp+" \\");
 			    }
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("HEADERS = \\");
 		String hpps[] = dirFile.list(new rcs.utils.SimpleFileFilter("*"+hpp_ext));
 		for(int i = 0; i < hpps.length; i++)
@@ -3806,7 +3806,7 @@ import diagapplet.HierarchyPanel;
 		    }
 		forced_hpps = null;
 
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("OBJS = \\");
 		HashSet obj_hs = new HashSet();
 		StringTokenizer obj_tokenizer = new StringTokenizer(forced_cpps," ,;");
@@ -3830,11 +3830,11 @@ import diagapplet.HierarchyPanel;
 			pos.println("\t"+obj_base+obj_ext+" \\");
 		    }
 
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("LIBS = ");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("BINS = ");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("# Include Application Specific Definitions and the RCS generic Makefile");
 		if(mswinDevPlat)
 		    {
@@ -3847,7 +3847,7 @@ import diagapplet.HierarchyPanel;
 
 		if(mswinDevPlat)
 		    {
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("DEVP_OBJS = \\");
 			obj_hs = new HashSet();
 			obj_tokenizer = new 
@@ -3870,13 +3870,13 @@ import diagapplet.HierarchyPanel;
 				    }
 				pos.println("\t $(DEVP_LIB_DIR)\\"+obj_base+obj_ext+" \\");
 			    }
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 			pos.println("all:  $(DEVP_OBJS)");
-			pos.println("");// blank line
+			pos.println("");// blank lineNumber
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("# Rules for specific targets");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 
 
 		HashSet cpp_hs=new HashSet();
@@ -3913,7 +3913,7 @@ import diagapplet.HierarchyPanel;
 			    }
 		    }
 		forced_cpps = null;
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.close();
 		fos.close();
 		pos = null;
@@ -4077,7 +4077,7 @@ import diagapplet.HierarchyPanel;
 		pos.println("generate C++ update >"+filenamebase+cpp_ext);
 		pos.println("generate C++ constructor >"+filenamebase+cpp_ext);
 		pos.println("exit");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.close();
 		fos.close();
 		pos = null;
@@ -4124,7 +4124,7 @@ import diagapplet.HierarchyPanel;
 		pos.println("generate C++ update >"+aux+"n"+cpp_ext);
 		pos.println("generate C++ constructor >"+aux+"n"+cpp_ext);
 		pos.println("exit");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.close();
 		fos.close();
 		pos = null;
@@ -4175,7 +4175,7 @@ import diagapplet.HierarchyPanel;
 		pos.println("generate C++ update >"+cpp_file);
 		pos.println("generate C++ constructor >"+cpp_file);
 		pos.println("exit");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.close();
 		fos.close();
 		pos = null;
@@ -4449,7 +4449,7 @@ import diagapplet.HierarchyPanel;
 		String modNameUpper = modName.toUpperCase();
 		merger.WriteLine("/*");
 		merger.WriteLine("\t"+modName+"n"+hpp_ext);
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\tThis C++ header file defines the NML Messages used for command and status by "+modInfo.moduleClassName+"");
 		if(merger.template_version > 0.0 || !merging_backup)
 		    {
@@ -4470,13 +4470,13 @@ import diagapplet.HierarchyPanel;
 			merger.WriteLine("\t"+createDate+"\tCreated by rcsdesign.");
 		    }
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("*/");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Prevent Multiple Inclusion");
 		merger.WriteLine("#ifndef "+moduleHeaderFile.getName().toUpperCase().replace('.','_'));
 		merger.WriteLine("#define "+moduleHeaderFile.getName().toUpperCase().replace('.','_'));
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Include Files");
 		Vector previous_includes = new Vector();
 		merger.WriteLine("#include \"rcs.hh\" \t// Common RCS definitions");
@@ -4571,7 +4571,7 @@ import diagapplet.HierarchyPanel;
 				merger.EnableMerge("//");
 			    }
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Define the integer type ids.");
 		merger.DisableMerge("// ");
 		merger.WriteLine("#define "+modNameUpper+"_STATUS_TYPE "+(modInfo.module_number*1000));
@@ -4591,9 +4591,9 @@ import diagapplet.HierarchyPanel;
 		merger.EnableMerge("// ");
 
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Define the NML Message Classes");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Status Class");
 		if(!merger.ClassFoundInExistingFile(modNameUpper+"_STATUS"))
 		    {
@@ -4607,10 +4607,10 @@ import diagapplet.HierarchyPanel;
 			    }
 			merger.WriteLine("{");
 			merger.WriteLine("public:");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\t// Normal Constructor");
 			merger.WriteLine("\t"+modNameUpper+"_STATUS();");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\t// Constructor used by derived classes");
 			if(null == modInfo.baseModuleName)
 			    {
@@ -4620,21 +4620,21 @@ import diagapplet.HierarchyPanel;
 			    {
 				merger.WriteLine("\t"+modNameUpper+"_STATUS(NMLTYPE t, size_t s) :  "+modInfo.baseModuleName.toUpperCase()+"_STATUS(t,s) {};");
 			    }
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\t// CMS Update Function");
 			merger.WriteLine("\tvoid update(CMS *);");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\t// Place custom variables here.");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("};");
 		    }
 		else
 		    {
 			merger.input_subsection_number++;
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Command Classes");
-		merger.WriteLine("");   // blank line
+		merger.WriteLine("");   // blank lineNumber
 		if(null != cmdsVector)
 		    {
 			for(int i = 0; i< cmdsVector.size(); i++)
@@ -4651,17 +4651,17 @@ import diagapplet.HierarchyPanel;
 					merger.WriteLine("class "+cmdName+" : public RCS_CMD_MSG");
 					merger.WriteLine("{");
 					merger.WriteLine("public:");
-					merger.WriteLine("");// blank line
+					merger.WriteLine("");// blank lineNumber
 					merger.WriteLine("\t//Constructor");
 					merger.WriteLine("\t"+cmdName+"();");
-					merger.WriteLine("");// blank line
+					merger.WriteLine("");// blank lineNumber
 					merger.WriteLine("\t// CMS Update Function");
 					merger.WriteLine("\tvoid update(CMS *);");
-					merger.WriteLine("");// blank line
+					merger.WriteLine("");// blank lineNumber
 					merger.WriteLine("\t// Place custom variables here.");
-					merger.WriteLine("");// blank line
+					merger.WriteLine("");// blank lineNumber
 					merger.WriteLine("};");
-					merger.WriteLine("");// blank line
+					merger.WriteLine("");// blank lineNumber
 				    }
 				else
 				    {
@@ -4670,12 +4670,12 @@ import diagapplet.HierarchyPanel;
 			    }
 
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Declare NML format function");
 		merger.WriteLine("extern int "+modName+"Format(NMLTYPE, void *, CMS *);");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("#endif \t// "+moduleHeaderFile.getName().toUpperCase().replace('.','_'));
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		pos.close();
 		fos.close();
 		pos = null;
@@ -4726,7 +4726,7 @@ import diagapplet.HierarchyPanel;
 		String auxNameUpper = auxName.toUpperCase();
 		merger.WriteLine("/*");
 		merger.WriteLine("\t"+auxName+"n"+hpp_ext);
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\tThis C++ header file defines the NML Messages for "+auxNameUpper);
 		if(merger.template_version > 0.0 || !merging_backup)
 		    {
@@ -4743,52 +4743,52 @@ import diagapplet.HierarchyPanel;
 			merger.WriteLine("\t"+createDate+"\tCreated by rcsdesign.");
 		    }
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("*/");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Prevent Multiple Inclusion");
 		merger.WriteLine("#ifndef "+auxNMLHeaderFile.getName().toUpperCase().replace('.','_'));
 		merger.WriteLine("#define "+auxNMLHeaderFile.getName().toUpperCase().replace('.','_'));
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Include Files");
 		merger.WriteLine("#include \"rcs.hh\" \t// Common RCS definitions");
-		merger.WriteLine("");// blank line
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Trying to merge the type ids often results in redefinn the ID twice..");
 		merger.DisableMerge("//");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Define the integer type ids.");
 		int aux_base = gui.modulesList.getItemCount()*2;
 		aux_base += (100 - (aux_base%100));
 		merger.WriteLine("#define "+auxNameUpper+"_MSG_TYPE "+((bi.id+aux_base)*1000));
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.EnableMerge("//");
-		merger.WriteLine("");// blank line
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("// Define the NML Message Classes");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("class "+auxNameUpper+"_MSG : public NMLmsg");
 		merger.WriteLine("{");
 		merger.WriteLine("public:");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\t//Constructor");
 		merger.WriteLine("\t"+auxNameUpper+"_MSG();");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\t// CMS Update Function");
 		merger.WriteLine("\tvoid update(CMS *);");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\t// Place custom variables here.");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("};");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 
 		merger.WriteLine("// Declare NML format function");
 		merger.WriteLine("extern int "+auxName+"Format(NMLTYPE, void *, CMS *);");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("#endif \t// "+auxNMLHeaderFile.getName().toUpperCase().replace('.','_'));
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		pos.close();
 		fos.close();
 		pos = null;
@@ -4917,7 +4917,7 @@ import diagapplet.HierarchyPanel;
 		String modNameUpper = modName.toUpperCase();
 		merger.WriteLine("/*");
 		merger.WriteLine("\t"+modName+hpp_ext);
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\tThis C++ header file defines the class "+modInfo.moduleClassName+"");
 		merger.WriteLine("\tIt was generated with the RCS-Design tool.");
 		if(merger.template_version > 0.0 || !merging_backup)
@@ -4934,17 +4934,17 @@ import diagapplet.HierarchyPanel;
 		    {
 			merger.WriteLine("\t"+createDate+"\tCreated by RCS-Design tool.");
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("*/");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Prevent Multiple Inclusion");
 		merger.WriteLine("#ifndef "+moduleHeaderFile.getName().toUpperCase().replace('.','_'));
 		merger.WriteLine("#define "+moduleHeaderFile.getName().toUpperCase().replace('.','_'));
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Include Files");
 		merger.WriteLine("#include \"rcs.hh\" \t// Common RCS definitions");
 		merger.WriteLine("#include \"nml_mod.hh\" \t// NML_MODULE definitions");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(merger.template_version >= 1.1)
 		    {
 			merger.DisableMerge("//");
@@ -4995,7 +4995,7 @@ import diagapplet.HierarchyPanel;
 		    }
 		if(null != modInfo.AuxInputNames)
 		    {
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			if(modInfo.AuxInputNames.size() > 0)
 			    {
 				merger.WriteLine("// auxiliary Input NML Message Files");
@@ -5008,7 +5008,7 @@ import diagapplet.HierarchyPanel;
 		    }
 		if(null != modInfo.AuxOutputNames)
 		    {
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			if(modInfo.AuxOutputNames.size() > 0)
 			    {
 				merger.WriteLine("// auxiliary Output NML Message Files");
@@ -5020,7 +5020,7 @@ import diagapplet.HierarchyPanel;
 			    }
 		    }
 		merger.EnableMerge("//");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(modInfo.baseClassName == null)
 		    {
 			merger.WriteLine("class "+modInfo.moduleClassName+": public NML_MODULE");
@@ -5032,15 +5032,15 @@ import diagapplet.HierarchyPanel;
 		merger.WriteLine("{");
 		merger.DisableMerge("\t//");
 		merger.WriteLine("public:");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\t"+modInfo.moduleClassName+"(int _is_base_class = 0); // Constructor");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\t// Overloaded Virtual Functions");
 		merger.WriteLine("\tvirtual void PRE_PROCESS();");
 		merger.WriteLine("\tvirtual void DECISION_PROCESS();");
 		merger.WriteLine("\tvirtual void POST_PROCESS();");
 		merger.WriteLine("\tvirtual void INITIALIZE_NML();");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\t// Command Functions");
 		if(null != cmdsVector)
 		    {
@@ -5103,7 +5103,7 @@ import diagapplet.HierarchyPanel;
 				merger.WriteLine("\tvirtual void "+function_name+"("+cmdName+" *);");
 			    }
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\t// Convenience Variables");
 		if(modInfo.primaryStatusType == null)
 		    {
@@ -5152,7 +5152,7 @@ import diagapplet.HierarchyPanel;
 		    }
 		if(null != modInfo.AuxInputNames)
 		    {
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("// auxiliary Input NML Channels");
 			for(int i = 0; i < modInfo.AuxInputNames.size(); i++)
 			    {
@@ -5163,7 +5163,7 @@ import diagapplet.HierarchyPanel;
 		    }
 		if(null != modInfo.AuxOutputNames)
 		    {
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("// auxiliary Output NML Channels");
 			for(int i = 0; i < modInfo.AuxOutputNames.size(); i++)
 			    {
@@ -5174,14 +5174,14 @@ import diagapplet.HierarchyPanel;
 		    }
 
 		merger.EnableMerge("\t//");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("private:");
 		merger.WriteLine("\t// Add custom variables and functions here.");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("};");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("#endif \t// "+moduleHeaderFile.getName().toUpperCase().replace('.','_'));
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.Finish();
 		pos.close();
 		fos.close();
@@ -5233,10 +5233,10 @@ import diagapplet.HierarchyPanel;
 		Date createDate = new Date();
 		pos.println("/*");
 		pos.println("\t"+loop_name+"main.cc");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\tThis file provides the C++ main function which");
 		pos.println("\tcreates and runs the following control modules:");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		// Eliminate duplicate modules
 		String new_modules[] = new String[loopInfo.getModules().size()+1];
 		int unique_modules = 0;
@@ -5298,9 +5298,9 @@ import diagapplet.HierarchyPanel;
 		pos.println("");
 		pos.println("\tMODIFICATIONS:");
 		pos.println("\t"+createDate+"\tCreated.");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("*/");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("// Include Files");
 		pos.println("#include <stdlib.h>\t// exit()");
 		pos.println("#include <signal.h>\t// SIGINT, signal()");
@@ -5315,17 +5315,17 @@ import diagapplet.HierarchyPanel;
 				pos.println("#include \""+modName+hpp_ext+"\"\t// definition of "+modInfo.moduleClassName+"");
 			    }
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("// flag signifying main loop is to terminate");
 		pos.println("int "+loop_name+"_done = 0;");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("//signal handler for ^C");
 		pos.println("extern \"C\" void "+loop_name+"_quit(int sig);");
 		pos.println("void "+loop_name+"_quit(int sig)");
 		pos.println("{");
 		pos.println("\t"+loop_name+"_done = 1;");
 		pos.println("}");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("// main loop, running "+modulesHashtable.size()+" controller(s)");
 		if(!mswinDevPlat)
 		    {
@@ -5341,9 +5341,9 @@ import diagapplet.HierarchyPanel;
 			pos.println("#endif");
 		    }
 		pos.println("{");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\tset_rcs_print_destination(RCS_PRINT_TO_STDOUT);");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\tRCS_TIMER *timer = new RCS_TIMER("+loopInfo.cycle_time+");");
 		for(int i = 0; i < loopInfo.getModules().size(); i++)
 		    {
@@ -5354,10 +5354,10 @@ import diagapplet.HierarchyPanel;
 				pos.println("\t"+modInfo.moduleClassName+" *"+modName+" = new "+modInfo.moduleClassName+"();");
 			    }
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\t// set the SIGINT handler");
 		pos.println("\tsignal(SIGINT, "+loop_name+"_quit);");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\t// enter main loop");
 		pos.println("\twhile(!"+loop_name+"_done)");
 		pos.println("\t{");
@@ -5369,10 +5369,10 @@ import diagapplet.HierarchyPanel;
 				pos.println("\t\t"+modName+"->controller();");
 			    }
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\t\ttimer->wait();");
 		pos.println("\t}");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\t// Delete Modules");
 		for(int i = 0; i < loopInfo.getModules().size(); i++)
 		    {
@@ -5382,11 +5382,11 @@ import diagapplet.HierarchyPanel;
 				pos.println("\tdelete "+modName+";");
 			    }
 		    }
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.println("\t// Delete Timer");
 		pos.println("\tdelete timer;");
 		pos.println("}");
-		pos.println("");// blank line
+		pos.println("");// blank lineNumber
 		pos.close();
 		fos.close();
 		pos = null;
@@ -5721,7 +5721,7 @@ import diagapplet.HierarchyPanel;
 		String modNameUpper = modName.toUpperCase();
 		merger.WriteLine("/*");
 		merger.WriteLine("\t"+modName+cpp_ext);
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\tThis C++ file defines member functions for the class "+modInfo.moduleClassName+"");
 		merger.WriteLine("\tIt was generated with rcsdesign");
 		merger.WriteLine("\t\twith template version "+merger.template_version);
@@ -5739,9 +5739,9 @@ import diagapplet.HierarchyPanel;
 		    {
 			merger.WriteLine("\t"+createDate+"\tCreated with RCS-Design tool.");
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("*/");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Include Files");
 		merger.WriteLine("#include \"rcs.hh\" \t// Common RCS definitions");
 		merger.WriteLine("#include \"nml_mod.hh\" \t// NML_MODULE definitions");
@@ -5800,7 +5800,7 @@ import diagapplet.HierarchyPanel;
 		    }
 		if(null != modInfo.AuxInputNames)
 		    {
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			if( modInfo.AuxInputNames.size() > 0)
 			    {
 				merger.WriteLine("// auxiliary Input NML Message Files");
@@ -5813,7 +5813,7 @@ import diagapplet.HierarchyPanel;
 		    }
 		if(null != modInfo.AuxOutputNames)
 		    {
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			if( modInfo.AuxOutputNames.size() > 0)
 			    {
 				merger.WriteLine("// auxiliary Output NML Message Files");
@@ -5829,7 +5829,7 @@ import diagapplet.HierarchyPanel;
 			merger.EnableMerge("//");
 		    }
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("// Constructor");
 		if(modInfo.baseClassName != null)
 		    {
@@ -5840,22 +5840,22 @@ import diagapplet.HierarchyPanel;
 			merger.WriteLine(modInfo.moduleClassName+"::"+modInfo.moduleClassName+"(int _is_base_class)");
 		    }
 		merger.WriteLine("{");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\t// Initialize the NML channels if this module is not being used as the base class for another module.");
 		merger.WriteLine("\tif(!_is_base_class)");
 		merger.WriteLine("\t{");
 		merger.WriteLine("\t\tINITIALIZE_NML();");
 		merger.WriteLine("\t}");
 		merger.WriteLine("\t// Add additional code to initialize the module here.");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("}");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("\t// Overloaded Virtual Functions");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("/*");
 		merger.WriteLine("INITIALIZE_NML");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(!merging_backup)
 		    {
 			merger.WriteLine("The INITIALIZE_NML function is ussually called only once from within the");
@@ -5919,7 +5919,7 @@ import diagapplet.HierarchyPanel;
 			format_function = modName+"Format";
 		    }
 		merger.WriteLine("\tsetStatChannel(new RCS_STAT_CHANNEL("+format_function+", \""+modName+"_sts\", \""+modName+"\", \""+AppName+".nml\"), "+modName+"_status);");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(null != modInfo.children_names)
 		    {
 			for(int i = 0; i< modInfo.children_names.size(); i++)
@@ -6010,12 +6010,12 @@ import diagapplet.HierarchyPanel;
 					merger.WriteLine("\t"+base_child+"_status = "+child+"_status;");
 					merger.WriteLine("\t"+base_child+"_sub_num = "+child+"_sub_num;");
 				    }
-				merger.WriteLine("");// blank line
+				merger.WriteLine("");// blank lineNumber
 			    }
 		    }
 		if(null != modInfo.AuxInputNames)
 		    {
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\t// auxiliary Input NML Channels");
 			for(int i = 0; i < modInfo.AuxInputNames.size(); i++)
 			    {
@@ -6027,7 +6027,7 @@ import diagapplet.HierarchyPanel;
 		    }
 		if(null != modInfo.AuxOutputNames)
 		    {
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\t// auxiliary Output NML Channels");
 			for(int i = 0; i < modInfo.AuxOutputNames.size(); i++)
 			    {
@@ -6038,10 +6038,10 @@ import diagapplet.HierarchyPanel;
 		    }
 		merger.EnableMerge("\t//");
 		merger.WriteLine("}");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("/*");
 		merger.WriteLine("PRE_PROCESS");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(!merging_backup)
 		    {
 			merger.WriteLine(" The PRE_PROCESS function is called every cycle after the command and");
@@ -6054,10 +6054,10 @@ import diagapplet.HierarchyPanel;
 		merger.WriteLine("{");
 		if(modInfo.baseClassName != null)
 		    {
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\t// Call Overloaded  base class PRE_PROCESS function.");
 			merger.WriteLine("\t"+modInfo.baseClassName+"::PRE_PROCESS();");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 		    }
 		if(null != modInfo.AuxInputNames)
 		    {
@@ -6085,7 +6085,7 @@ import diagapplet.HierarchyPanel;
 		    }
 		merger.WriteLine("\t// Pre-Processing Code");
 		merger.WriteLine("}");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 	
 		boolean have_init=false;
@@ -6118,7 +6118,7 @@ import diagapplet.HierarchyPanel;
 
 		merger.WriteLine("/*");
 		merger.WriteLine("DECISION_PROCESS");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(!merging_backup)
 		    {
 			merger.WriteLine(" The DECISION_PROCESS function is called every cycle as long as there is a non-zero command.");
@@ -6136,14 +6136,14 @@ import diagapplet.HierarchyPanel;
 			merger.WriteLine("\t\tINIT(("+modNameUpper+"_INIT *)commandInData);");
 			merger.WriteLine("\t\tbreak;");
 		    }
-		merger.WriteLine(""); // blank line
+		merger.WriteLine(""); // blank lineNumber
 		if(have_halt)
 		    {
 			merger.WriteLine("\tcase "+modNameUpper+"_HALT_TYPE:");
 			merger.WriteLine("\t\tHALT(("+modNameUpper+"_HALT *)commandInData);");
 			merger.WriteLine("\t\tbreak;");
 		    }
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(null != modInfo.cmdsAvailable)
 		    {
 			for(int i = 0; i< modInfo.cmdsAvailable.size(); i++)
@@ -6213,21 +6213,21 @@ import diagapplet.HierarchyPanel;
 				    }
 				merger.WriteLine("\t\t"+function_name+"(("+cmdName+" *)commandInData);");
 				merger.WriteLine("\t\tbreak;");
-				merger.WriteLine("");// blank line
+				merger.WriteLine("");// blank lineNumber
 			    }
 		    }
 		merger.EnableMerge("\t//");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		merger.WriteLine("\tdefault:");
 		merger.WriteLine("\t\tlogError(\"The command %d is not recognized.\",commandInData->type);");
 		merger.WriteLine("\t\tbreak;");
 		merger.WriteLine("\t}");
 		merger.WriteLine("}");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("/*");
 		merger.WriteLine("POST_PROCESS");
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		if(!merging_backup)
 		    {
 			merger.WriteLine(" The POST_PROCESS function is called every cycle after DECISION_PROCESS is called");
@@ -6241,7 +6241,7 @@ import diagapplet.HierarchyPanel;
 		merger.WriteLine("\t// Post-Processing Code");
 		if(null != modInfo.AuxOutputNames)
 		    {
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\t// auxiliary Output NML Channels");
 			for(int i = 0; i < modInfo.AuxOutputNames.size(); i++)
 			    {
@@ -6268,25 +6268,25 @@ import diagapplet.HierarchyPanel;
 		    {
 			merger.WriteLine("\t// Call Overloaded  base class POST_PROCESS function.");
 			merger.WriteLine("\t"+modInfo.baseClassName+"::POST_PROCESS();");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 		    }
 
 		merger.WriteLine("}");
-		merger.WriteLine("");// blank line
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
+		merger.WriteLine("");// blank lineNumber
 		merger.WriteLine("\t// Command Functions");
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 
 		if(have_init)
 		    {
 			merger.WriteLine("/*");
 			merger.WriteLine("INIT");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("Parameter(s):");
 			merger.WriteLine(modNameUpper+"_INIT *cmd_in -- NML Message sent from superior.");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			if(!merging_backup)
 			    {
 				merger.WriteLine(" Most Modules will have an INIT command.");
@@ -6308,7 +6308,7 @@ import diagapplet.HierarchyPanel;
 				    }
 			    }
 			merger.EnableMerge("//");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\tif(STATE_MATCH(NEW_COMMAND))");
 			merger.WriteLine("\t{");
 			merger.WriteLine("\t\t// Send an INIT command to all subordinates.");
@@ -6321,10 +6321,10 @@ import diagapplet.HierarchyPanel;
 				    }
 			    }
 			merger.EnableMerge("\t\t//");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\t\tstateNext(S1);");
 			merger.WriteLine("\t\t// Reinitialize variables here.");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\t}");
 			merger.WriteLine("\t// Wait for all subordinates to report done.");
 			merger.DisableMerge("\t//");
@@ -6352,16 +6352,16 @@ import diagapplet.HierarchyPanel;
 			merger.WriteLine("}");
 		    }
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 
 		if(have_halt)
 		    {
 			merger.WriteLine("/*");
 			merger.WriteLine("HALT");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("Parameter(s):");
 			merger.WriteLine(modNameUpper+"_HALT *cmd_in -- NML Message sent from superior.");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			if(!merging_backup)
 			    {
 				merger.WriteLine(" Most Modules will have an HALT command.");
@@ -6383,7 +6383,7 @@ import diagapplet.HierarchyPanel;
 				    }
 			    }
 			merger.EnableMerge("\t//");
-			merger.WriteLine("");// blank line
+			merger.WriteLine("");// blank lineNumber
 			merger.WriteLine("\tif(STATE_MATCH(NEW_COMMAND))");
 			merger.WriteLine("\t{");
 			merger.WriteLine("\t\t//Send a HALT command to all subordinates.");
@@ -6466,13 +6466,13 @@ import diagapplet.HierarchyPanel;
 				    }
 				if(!merger.FunctionFoundInExistingFile(modInfo.moduleClassName+"::"+function_name))
 				    {
-					merger.WriteLine("");// blank line
+					merger.WriteLine("");// blank lineNumber
 					merger.WriteLine("/*");
 					merger.WriteLine(function_name);
-					merger.WriteLine("");// blank line
+					merger.WriteLine("");// blank lineNumber
 					merger.WriteLine("Parameter(s):");
 					merger.WriteLine(cmdName+" *cmd_in -- NML Message sent from superior.");
-					merger.WriteLine("");// blank line
+					merger.WriteLine("");// blank lineNumber
 					merger.WriteLine("*/");
 					merger.WriteLine("void "+modInfo.moduleClassName+"::"+function_name+"("+cmdName+" *cmd_in)");
 					merger.WriteLine("{");
@@ -6513,13 +6513,13 @@ import diagapplet.HierarchyPanel;
 				    }
 				if(!merger.FunctionFoundInExistingFile(modInfo.moduleClassName+"::"+function_name))
 				    {
-					merger.WriteLine("");// blank line
+					merger.WriteLine("");// blank lineNumber
 					merger.WriteLine("/*");
 					merger.WriteLine(function_name);
-					merger.WriteLine("");// blank line
+					merger.WriteLine("");// blank lineNumber
 					merger.WriteLine("Parameter(s):");
 					merger.WriteLine(cmdName+" *cmd_in -- NML Message sent from superior.");
-					merger.WriteLine("");// blank line
+					merger.WriteLine("");// blank lineNumber
 					merger.WriteLine("*/");
 					merger.WriteLine("void "+modInfo.moduleClassName+"::"+function_name+"("+cmdName+" *cmd_in)");
 					merger.WriteLine("{");
@@ -6539,7 +6539,7 @@ import diagapplet.HierarchyPanel;
 		    }
 
 
-		merger.WriteLine("");// blank line
+		merger.WriteLine("");// blank lineNumber
 		merger.Finish();
 		pos.close();
 		fos.close();

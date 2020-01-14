@@ -325,7 +325,7 @@ public class WatchJPanel extends javax.swing.JPanel {
 	try {
 	    StructureTypeInfo stm = wtm.getStructureTypeInfo();
 	    if (null != stm) {
-		final File f = File.createTempFile("diag_saved_message_" + stm.Name + "_", ".txt");
+		final File f = File.createTempFile("diag_saved_message_" + stm.getName() + "_", ".txt");
 		this.DumpDataStringFile(f, s);
 		if (null == JMenuPreviousMessages) {
 		    JMenuPreviousMessages = new JMenu("Previous Messages");
@@ -343,7 +343,7 @@ public class WatchJPanel extends javax.swing.JPanel {
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
-		JMenuItem jmi = new JMenuItem(time_string + stm.Name + " : " + s_to_show);
+		JMenuItem jmi = new JMenuItem(time_string + stm.getName() + " : " + s_to_show);
 		jmi.addActionListener(new ActionListener() {
 
 		    @Override
@@ -525,14 +525,14 @@ public class WatchJPanel extends javax.swing.JPanel {
 		    for (int i = 0; i < stis_used_vector.size(); i++) {
 			final StructureTypeInfo sti_for_compare = stis_used_vector.elementAt(i);
 			if (sti_for_compare.equals(sti2) ||
-				sti_for_compare.Name.compareTo(sti2.Name) == 0) {
+				sti_for_compare.getName().compareTo(sti2.getName()) == 0) {
 			    already_printed = true;
 			    break;
 			}
 		    }
 		    if (!already_printed) {
-			ps.println("# " + sti2.Name + "<" + sti2.fromFile + ":" + sti2.fromLine + "> -- " + sti2.PreFinalPassInfo);
-			ps.println("#[" + sti2.Name + " :Id=" + sti2.Id + ":HiddenInfo=" + sti2.HiddenInfo);
+			ps.println("# " + sti2.getName() + "<" + sti2.fromFileName + ":" + sti2.fromLineNumber + "> -- " + sti2.PreFinalPassInfo);
+			ps.println("#[" + sti2.getName() + " :Id=" + sti2.Id + ":HiddenInfo=" + sti2.HiddenInfo);
 			stis_used_vector.addElement(sti2);
 			PrintTypes(ps, ht, sti2.PreFinalPassInfo, stis_used_vector);
 		    }
@@ -559,13 +559,13 @@ public class WatchJPanel extends javax.swing.JPanel {
 		e.printStackTrace();
 	    }
 	    final StructureTypeInfo sti = this.wtm.getStructureTypeInfo();
-	    ps.println("# Name=" + sti.Name);
+	    ps.println("# Name=" + sti.getName());
 	    ps.println("# Id=" + sti.Id);
 	    final Hashtable ht = wtm.get_structInfoByNameHashtable();
 	    if (null != sti.DerivedFrom && sti.DerivedFrom.compareTo("NMLmsg") != 0) {
 		StructureTypeInfo stip = (StructureTypeInfo) ht.get(sti.DerivedFrom);
 		while (null != stip) {
-		    ps.println("# " + stip.Name + "<" + stip.fromFile + ":" + stip.fromLine + "> -- " + stip.PreFinalPassInfo);
+		    ps.println("# " + stip.getName() + "<" + stip.fromFileName + ":" + stip.fromLineNumber + "> -- " + stip.PreFinalPassInfo);
 		    if (null == stip.DerivedFrom || stip.DerivedFrom.compareTo("NMLmsg") == 0) {
 			stip = null;
 			break;
@@ -575,8 +575,8 @@ public class WatchJPanel extends javax.swing.JPanel {
 		}
 	    }
 	    String info_string = sti.PreFinalPassInfo;
-	    ps.println("# " + sti.Name + "<" + sti.fromFile + ":" + sti.fromLine + "> -- " + info_string);
-	    ps.println("#[" + sti.Name + " :Id=" + sti.Id + ":HiddenInfo=" + sti.HiddenInfo);
+	    ps.println("# " + sti.getName() + "<" + sti.fromFileName + ":" + sti.fromLineNumber + "> -- " + info_string);
+	    ps.println("#[" + sti.getName() + " :Id=" + sti.Id + ":HiddenInfo=" + sti.HiddenInfo);
 	    Vector<StructureTypeInfo> stis_used_vector = new Vector<StructureTypeInfo>();
 	    PrintTypes(ps, ht, info_string, stis_used_vector);
 //			diagapplet.utils.DiagError.println(data_string);
@@ -661,12 +661,12 @@ public class WatchJPanel extends javax.swing.JPanel {
 		    } else {
 			try {
 			    sti = LineToStructureTypeInfo(line, last_sti, name_found_yet);
-			    if (sti != null && null != sti.Name) {
+			    if (sti != null && null != sti.getName()) {
 				if (new_ht == null) {
 				    new_ht = new Hashtable();
 				}
-				new_ht.put(sti.Name, sti);
-				if (sti.Name.compareTo(name) == 0) {
+				new_ht.put(sti.getName(), sti);
+				if (sti.getName().compareTo(name) == 0) {
 				    name_found_yet = true;
 				}
 //								if (this.wtm.get_structInfoByNameHashtable() != null &&
@@ -718,7 +718,7 @@ public class WatchJPanel extends javax.swing.JPanel {
 		sti = new StructureTypeInfo();
 		if (!name_found_yet) {
 		    if (null != last_sti) {
-			sti.DerivedFrom = last_sti.Name;
+			sti.DerivedFrom = last_sti.getName();
 		    } else {
 			sti.DerivedFrom = "NMLmsg";
 		    }
@@ -729,19 +729,19 @@ public class WatchJPanel extends javax.swing.JPanel {
 		if (ltindex < 1) {
 		    return null;
 		}
-		sti.Name = line.substring(0, ltindex);
+		sti.setName(line.substring(0, ltindex));
 		line = line.substring(ltindex + 1);
 		int colonindex = line.indexOf(':');
 		if (colonindex < 1) {
 		    return null;
 		}
-		sti.fromFile = line.substring(0, colonindex);
+		sti.fromFileName = line.substring(0, colonindex);
 		line = line.substring(colonindex + 1);
 		int gtindex = line.indexOf('>');
 		if (gtindex < 1) {
 		    return null;
 		}
-		sti.fromLine = Integer.valueOf(line.substring(0, gtindex));
+		sti.fromLineNumber = Integer.valueOf(line.substring(0, gtindex));
 		line = line.substring(gtindex + 1);
 		int dashdashindex = line.indexOf("--");
 		if (dashdashindex < 1) {
@@ -756,7 +756,7 @@ public class WatchJPanel extends javax.swing.JPanel {
 		    return null;
 		}
 		String name_check = line.substring(0, colon_index1).trim();
-		if (name_check.compareTo(last_sti.Name) != 0) {
+		if (name_check.compareTo(last_sti.getName()) != 0) {
 //					System.out.println("name_check=\n\"" + name_check + "\" not equal to \n\"" + last_sti.Name + "\"");
 		    return null;
 		}
@@ -801,7 +801,7 @@ public class WatchJPanel extends javax.swing.JPanel {
 	    String sti_name = null;
 	    if (null != this.wtm.getStructureTypeInfo()) {
 		StructureTypeInfo sti = this.wtm.getStructureTypeInfo();
-		sti_name = sti.Name;
+		sti_name = sti.getName();
 	    }
 	    if (null != sti_name) {
 		FileNameExtensionFilter fne_filter =
@@ -826,7 +826,7 @@ public class WatchJPanel extends javax.swing.JPanel {
 	    String sti_name = null;
 	    if (null != this.wtm.getStructureTypeInfo()) {
 		StructureTypeInfo sti = this.wtm.getStructureTypeInfo();
-		sti_name = sti.Name;
+		sti_name = sti.getName();
 	    }
 	    FileNameExtensionFilter fne_filter = null;
 	    if (null != sti_name) {
@@ -944,7 +944,7 @@ public class WatchJPanel extends javax.swing.JPanel {
 
     private void ShowXMLFile() {
 	try {
-	    File f = File.createTempFile(wtm.getStructureTypeInfo().Name + "_", ".xml");
+	    File f = File.createTempFile(wtm.getStructureTypeInfo().getName() + "_", ".xml");
 	    SaveXMLFile(f);
 	    Desktop.getDesktop().open(f);
 	} catch (Exception exception) {
@@ -1110,7 +1110,7 @@ public class WatchJPanel extends javax.swing.JPanel {
 	}
 	final StructureTypeInfo sti = this.getStructureTypeInfo();
 	if (null != sti) {
-	    final String from_header = sti.fromFile;
+	    final String from_header = sti.fromFileName;
 	    if (null != from_header) {
 		final File header_f = new File(from_header);
 		if (header_f.exists() && header_f.canRead()) {
@@ -1294,8 +1294,8 @@ public class WatchJPanel extends javax.swing.JPanel {
 	    }
 	    if (null != JMenuPreviousMessages) {
 		StructureTypeInfo stm = wtm.getStructureTypeInfo();
-		if (null != stm && null != stm.Name) {
-		    EnableMatchingPreviousMessages(stm.Name + " :");
+		if (null != stm && null != stm.getName()) {
+		    EnableMatchingPreviousMessages(stm.getName() + " :");
 		} else {
 		    EnableAllPreviousMessages();
 		}

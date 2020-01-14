@@ -420,7 +420,7 @@ class HierarchyLoad_NB_UI extends javax.swing.JFrame {
        }
     }//GEN-LAST:event_jButtonCancelActionPerformed
     /**
-     * @param args the command line arguments
+     * @param args the command lineNumber arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {

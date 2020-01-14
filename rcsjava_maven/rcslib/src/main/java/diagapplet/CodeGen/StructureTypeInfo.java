@@ -32,7 +32,7 @@ import rcs.utils.StackTracePrinter;
  */
 public class StructureTypeInfo implements Comparable {
 
-    public String Name = "";
+    private String Name = "";
     public String NameSpace = "";
     public String CppQualifiedName = "";
     public boolean inside_namespace = false;
@@ -40,6 +40,7 @@ public class StructureTypeInfo implements Comparable {
     public String type_id_string = null;
     public String RawInfo = "";
     public String HiddenInfo = "";
+    public String StepTwoInfo = "";
     public String PreFinalPassInfo = "";
     public String CppUpdateFunction = null;
     public String C_UpdateFunction = null;
@@ -54,6 +55,7 @@ public class StructureTypeInfo implements Comparable {
     private boolean last_skip_command_stat = false;
     public boolean is_rcs_cmd_msg = false;
     public boolean is_rcs_stat_msg = false;
+    public final List<DefinedValue> usedDefinedValues=new ArrayList<>();
 
     public String getBaseClassExpandedPreFinalPassInfo(Hashtable structInfoByNameHashtable, boolean skip_command_stat) {
 	if (null != BaseClassExpandedPreFinalPassInfo &&
@@ -83,8 +85,9 @@ public class StructureTypeInfo implements Comparable {
 	return s;
     }
     public diagapplet.CodeGen.ModuleInfoInterface first_module_used_in = null;
-    public String fromFile = null;
-    public int fromLine = -1;
+    public String fromFileName = null;
+    public int fromLineNumber = -1;
+    public String fromLineText = "";
     public boolean generic = false;
     public boolean destructor_declared = false;
     public boolean constructor_declared = false;
@@ -230,16 +233,18 @@ public class StructureTypeInfo implements Comparable {
 	sb.append("\tinside_namespace=" + inside_namespace + "\n" +
 		"\tRawInfo = " + RawInfo + "\n" +
 		"\tHiddenInfo = " + HiddenInfo + "\n" +
+		"\tStepTwoInfo = " + StepTwoInfo + "\n" +
 		"\tcurToken = " + curToken + "\n" +
 		"\tlast_sout = " + last_sout + "\n" +
 		"\tinfo_array.length=" + info_array_length + "\n" +
 		"\tId = " + Id + "\n" +
 		"\tDerivedFrom = " + DerivedFrom + "\n" +
-		"\tfromFile = " + fromFile + "\n" +
+		"\tfromFile = " + fromFileName + "\n" +
 		"\tis_nml_msg = " + is_nml_msg + "\n" +
 		"\tgeneric = " + generic + "\n" +
 		"\tselected = " + selected + "\n" +
 		"\tPreFinalPassInfo = " + PreFinalPassInfo + "\n" +
+		"\tusedDefinedValues = " + usedDefinedValues + "\n" +
 		"\tCppUpdateFunction = " + CppUpdateFunction + "\n" +
 		"\tCppConstructor = " + CppConstructor + "\n" +
 		"\tJavaDefinition = " + JavaDefinition + "\n" +
@@ -463,5 +468,16 @@ public class StructureTypeInfo implements Comparable {
     public STI_TokenizerInterface getInfoTokenizer() {
 	startInfoTokens();
 	return new STI_Tokenizer(this);
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String Name) {
+        if("MP_COORD".equals(Name)) {
+            throw new RuntimeException("this="+this);
+        }
+        this.Name = Name;
     }
 }

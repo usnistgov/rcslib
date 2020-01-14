@@ -391,7 +391,7 @@ public class rcsDesign extends rcsDesignGui     implements Runnable, ActionListe
 //		    }
 
 		// Running as standalone application, so parameter values are obtained from
-		// the command line. The user specifies them as follows:
+		// the command lineNumber. The user specifies them as follows:
 		//
 		//      JView rcsdesign param1=<val> param2=<"val with spaces"> ...
 		//-----------------------------------------------------------------------
@@ -411,7 +411,7 @@ public class rcsDesign extends rcsDesignGui     implements Runnable, ActionListe
 			    }
 			if (strArg.equalsIgnoreCase(args[i].substring(0, strArg.length())))
 			    {
-				// Found matching parameter on command line, so extract its value.
+				// Found matching parameter on command lineNumber, so extract its value.
 				// If in double quotes, remove the quotes.
 				//---------------------------------------------------------------
 				strValue= args[i].substring(strArg.length());
@@ -467,7 +467,7 @@ public class rcsDesign extends rcsDesignGui     implements Runnable, ActionListe
     // parameters and stores them in variables. This method works both when the
     // applet is run as a standalone application and when it's run within an HTML
     // page.  When the applet is run as a standalone application, this method is
-    // called by the main() method, which passes it the command-line arguments.
+    // called by the main() method, which passes it the command-lineNumber arguments.
     // When the applet is run within an HTML page, this method is called by the
     // init() method with args == null.
     //---------------------------------------------------------------------------

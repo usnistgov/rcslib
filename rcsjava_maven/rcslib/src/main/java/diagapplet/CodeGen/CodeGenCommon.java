@@ -49,7 +49,7 @@ import rcs.utils.StackTracePrinter;
  * functions, C,Java, and Ada class definitions and information for the
  * Diagnostics and Design tools.
  *
- * @author Will Shackleford  {@literal <william.shackleford@nist.gov>}
+ * @author Will Shackleford {@literal <william.shackleford@nist.gov>}
  */
 public class CodeGenCommon implements CodeGenCommonInterface2 {
 
@@ -220,7 +220,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             e.printStackTrace();
         }
     }
-    static private StructureTypeInfo cur_type_info = null;
+    static private volatile StructureTypeInfo cur_type_info = null;
+    static private volatile StructureTypeInfo last_type_info = null;
     private static int error_count = 0;
 
     public int get_error_count() {
@@ -233,16 +234,21 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
 
             Throwable t = new Throwable();
             error_count++;
-            String sfull = StackTracePrinter.ThrowableToShortList(t) + " CODEGEN ERROR: (" + error_count + ") " + s;
+            String sfull = s + "\n    trace=" + StackTracePrinter.ThrowableToShortList(t) + ", error_count=" + error_count + "\n";
             if (debug_on) {
                 System.out.println("cur_type_info =" + cur_type_info);
                 System.out.println(sfull);
             }
             if (null != cur_type_info) {
-                sfull = cur_type_info.fromFile + ":" + cur_type_info.fromLine + " " + sfull;
+                sfull = cur_type_info.fromFileName + ":" + cur_type_info.fromLineNumber + " " + cur_type_info.fromLineText + "\n"
+                        + cur_type_info.fromFileName + ":" + cur_type_info.fromLineNumber + " " + sfull;
+            } else if (null != last_type_info) {
+                sfull = last_type_info.fromFileName + ":" + last_type_info.fromLineNumber + " " + last_type_info.fromLineText + "\n"
+                        + last_type_info.fromFileName + ":" + last_type_info.fromLineNumber + " (cur_type_info == null, using last_type_info)" + sfull;
             }
             if (!cmd_line_printed) {
                 diagapplet.utils.DiagError.println(orig_args_one_string);
+                cmd_line_printed = true;
             }
             diagapplet.utils.DiagError.println(sfull);
         } catch (Exception e) {
@@ -259,7 +265,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 System.out.println(sfull);
             }
             if (null != cur_type_info) {
-                sfull = cur_type_info.fromFile + ":" + cur_type_info.fromLine + " " + sfull;
+                sfull = cur_type_info.fromFileName + ":" + cur_type_info.fromLineNumber + " " + sfull;
             }
             if (!cmd_line_printed) {
                 diagapplet.utils.DiagError.println(orig_args_one_string);
@@ -361,7 +367,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
     // parameters and stores them in variables. This method works both when the
     // applet is run as a standalone application and when it's run within an HTML
     // page.  When the applet is run as a standalone application, this method is
-    // called by the main() method, which passes it the command-line arguments.
+    // called by the main() method, which passes it the command-lineNumber arguments.
     // When the applet is run within an HTML page, this method is called by the
     // init() method with args == null.
     //------------------------------------------------------------------------
@@ -401,7 +407,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             //--------------------------------------------------------------
             String param;
             String unused_args[] = null;
-
 
             // HierarchyConfigurationFile: The URL or name of the Configuration file which is parsed to determine which header files to read, which modules are children of other modules, etc.
             //--------------------------------------------------------------
@@ -502,7 +507,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
             }
 
-
             param = StringFuncs.GetParameter(PARAM_SelectFromAllFiles, args, optionsHashtable, unused_args);
             if (param != null) {
                 try {
@@ -529,7 +533,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     e.printStackTrace();
                 }
             }
-
 
             param = StringFuncs.GetParameter(PARAM_AddSetHeader, args, optionsHashtable, unused_args);
             if (param != null) {
@@ -582,7 +585,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         e.printStackTrace();
                     }
                 }
-
 
                 param = StringFuncs.GetParameter(PARAM_JavaPackageName, args, optionsHashtable, unused_args);
                 if (param != null) {
@@ -1188,7 +1190,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             String def = type_info.PreFinalPassInfo.substring(s2index, sindex);
             return def;
         } catch (Exception e) {
-            ErrorPrint("var=" + var + ",type_info.Name=" + type_info.Name);
+            ErrorPrint("var=" + var + ",type_info.Name=" + type_info.getName());
             e.printStackTrace();
         }
         return null;
@@ -1229,7 +1231,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 skip_type = true;
                 return "";
             }
-            if (null != ModuleInfo.m_structInfoByNameHashTable.get(cpp_token)) {
+            final StructureTypeInfo typeFromStructInfoByNameHashTable = ModuleInfo.m_structInfoByNameHashTable.get(cpp_token);
+            if (null != typeFromStructInfoByNameHashTable) {
                 if (debug_on) {
                     DebugPrint("cpp_type= \"" + cpp_token + "\" is in ModuleInfo.m_structInfoByNameHashTable.");
                 }
@@ -1250,7 +1253,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
         if (cpp_type.compareTo("unsigned") == 0) {
             return "int";
         }
-        DebugPrint("Unrecognized type :" + cpp_type);
+        ErrorPrint("Unrecognized type :" + cpp_type + " m_structInfoByNameHashTable.keySet = " + ModuleInfo.m_structInfoByNameHashTable.keySet());
         return "CODEGEN_UNRECOGNIZED_TYPE";
     }
 
@@ -1317,10 +1320,11 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
 
     public void CreateJavaDefinition(StructureTypeInfo type_info) {
         try {
+            last_type_info = cur_type_info;
             cur_type_info = type_info;
             StringTokenizer info_tokenizer = new StringTokenizer(type_info.PreFinalPassInfo, ";");
             if (debug_on) {
-                DebugPrint("Creating JavaDefinition for " + type_info.Name);
+                DebugPrint("Creating JavaDefinition for " + type_info.getName());
             }
             String info_token = null;
             int r_squareParamIndex = -1;
@@ -1340,7 +1344,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             //		String trimmed_orig_info_token = null;
 
             // If this class was derived from another just eat the members of the base class.
-
             while (info_tokenizer.hasMoreTokens()) {
                 info_token = info_tokenizer.nextToken();
                 if (debug_on) {
@@ -1392,7 +1395,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     if (r_squareParamIndex > 0 && r_squareParamIndex < array_length_string.length()) {
                         array_length_string = array_length_string.substring(0, r_squareParamIndex + 1);
                     } else {
-                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                         ErrorPrint("\t\t-- array_length_string (" + array_length_string + ") needs another ].");
 
                         RingBell();
@@ -1413,7 +1416,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         }
                         int this_dim_length = ModuleInfo.doArrayLengthMath(this_dim_array_string);
                         array_length *= this_dim_length;
-                        new_array_length_string += Integer.toString(this_dim_length); 
+                        new_array_length_string += Integer.toString(this_dim_length);
                         l_squareParamIndex = array_length_string.indexOf('[', l_squareParamIndex + 1);
                         r_squareParamIndex = array_length_string.indexOf(']', l_squareParamIndex + 1);
                         if (-1 != r_squareParamIndex && -1 != l_squareParamIndex) {
@@ -1429,7 +1432,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 lastSpaceIndex = info_token.lastIndexOf(' ');
                 if (lastSpaceIndex < 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- info_token (" + info_token + ") needs a space. *0");
                     RingBell();
                     continue;
@@ -1438,7 +1441,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 if (variable_name.length() < 1) {
                     lastSpaceIndex = info_token.lastIndexOf(' ', lastSpaceIndex - 1);
                     if (lastSpaceIndex < 0) {
-                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                         ErrorPrint("\t\t-- info_token (" + info_token + ") needs another space. L1143--11%");
                         RingBell();
                         continue;
@@ -1447,7 +1450,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 variable_name = variable_name.trim();
                 if (variable_name.length() < 1) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- no variable_name.");
                     RingBell();
                     continue;
@@ -1467,13 +1470,13 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || variable_name.indexOf('{') >= 0 || variable_name.indexOf('}') >= 0
                         || variable_name.indexOf(',') >= 0
                         || variable_name.indexOf('&') >= 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- variable_name (" + variable_name + ") contains illegal character.");
                     RingBell();
                     continue;
                 }
                 if (!Character.isJavaIdentifierStart(variable_name.charAt(0))) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- variable_name (" + variable_name + ") contains illegal character at start (" + variable_name.charAt(0) + ")");
                     RingBell();
                     continue;
@@ -1499,7 +1502,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || cpp_type.indexOf('{') >= 0 || cpp_type.indexOf('}') >= 0
                         || cpp_type.indexOf(',') >= 0
                         || cpp_type.indexOf('&') >= 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- cpp_type (" + cpp_type + ") contains illegal character.");
                     RingBell();
                     continue;
@@ -1515,7 +1518,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || java_type.equals("CODEGEN_UNRECOGNIZED_TYPE")) {
                     type_info.contains_unrecognized_type = true;
                     type_info.JavaDefinition = null;
-                    ErrorPrint("No java type for cpp_type=" + cpp_type);
+                    ErrorPrint("No java type for cpp_type=" + cpp_type + ", orig_info_token=" + orig_info_token);
                     return;
                 }
                 if (skip_type) {
@@ -1541,8 +1544,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     if (lastspaceindex > 0) {
                         enum_name = enum_name.substring(lastspaceindex + 1);
                     }
-                    enum_info =
-                            (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                    enum_info
+                            = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                     if (null == enum_info) {
                         DebugPrint("Can't get enum_info for " + enum_name);
                         type_info.JavaClassArrayInitializers += "\t\t/* Bad enumeration name" + enum_name + " */\n\t\t;;\n";
@@ -1551,8 +1554,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                             enums_used_in_this_class = new Vector();
                         }
                         for (int ei = 0; ei < enums_used_in_this_class.size(); ei++) {
-                            EnumTypeInfo compare_enum_info =
-                                    (EnumTypeInfo) enums_used_in_this_class.elementAt(ei);
+                            EnumTypeInfo compare_enum_info
+                                    = (EnumTypeInfo) enums_used_in_this_class.elementAt(ei);
                             if (compare_enum_info.equals(enum_info)) {
                                 this_enum_already_used = true;
                                 break;
@@ -1671,8 +1674,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                 if (lastspaceindex > 0) {
                                     enum_name = enum_name.substring(lastspaceindex + 1);
                                 }
-                                enum_info =
-                                        (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                                enum_info
+                                        = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                                 Ival = (Integer) enum_info.reverse_hashtable.get(defv);
                                 if (Ival != null) {
                                     ival = Ival.intValue();
@@ -1704,8 +1707,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                 if (lastspaceindex > 0) {
                                     enum_name = enum_name.substring(lastspaceindex + 1);
                                 }
-                                enum_info =
-                                        (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                                enum_info
+                                        = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                                 if (null == enum_info) {
                                     DebugPrint("Can't get enum_info for " + enum_name);
                                     type_info.JavaDefinition += "\t/* Bad enumeration name" + enum_name + " */\n";
@@ -1752,8 +1755,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                 if (lastspaceindex > 0) {
                                     enum_name = enum_name.substring(lastspaceindex + 1);
                                 }
-                                enum_info =
-                                        (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                                enum_info
+                                        = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                                 Ival = (Integer) enum_info.reverse_hashtable.get(defv);
                                 if (Ival != null) {
                                     ival = Ival.intValue();
@@ -1769,7 +1772,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
             }
         } catch (Exception e) {
-            ErrorPrint("Error Generating Java Class Definition for " + type_info.Name);
+            ErrorPrint("Error Generating Java Class Definition for " + type_info.getName());
             ErrorPrint("type_info.DerivedFrom = " + type_info.DerivedFrom);
             ErrorPrint("type_info.PreFinalPassInfo = " + type_info.PreFinalPassInfo);
             ErrorPrint("type_info.HiddenInfo = " + type_info.HiddenInfo);
@@ -1812,39 +1815,48 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             }
             StringTokenizer line_tokenizer = new StringTokenizer(type_info.JavaDefinition, "\r\n");
             if (debug_on) {
-                DebugPrint("Creating JavaUpdateFunction for " + type_info.Name);
+                DebugPrint("Creating JavaUpdateFunction for " + type_info.getName());
             }
             if (update_with_name && m_currentModule.definedValues.containsKey("DO_NOT_ADD_INDEXES_TO_ARRAY_NAMES")) {
-                type_info.JavaUpdateFunction +=
-                        "\n\t\tnml_fc.add_array_indexes_to_name=false;\n";
+                type_info.JavaUpdateFunction
+                        += "\n\t\tnml_fc.add_array_indexes_to_name=false;\n";
             }
             EnumTypeInfo union_enum_info = null;
             if (update_with_name) {
                 if (!type_info.is_union) {
                     if (null != type_info.DerivedFrom) {
-                        type_info.JavaUpdateFunction +=
-                                "\n\t\tnml_fc.beginClass(\"" + type_info.Name + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
+                        type_info.JavaUpdateFunction
+                                += "\n\t\tnml_fc.beginClass(\"" + type_info.getName() + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
 
                         type_info.JavaUpdateFunction += "\n\t\tnml_fc.beginBaseClass(\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
                         type_info.JavaUpdateFunction += "\n\t\tsuper.update(nml_fc);\n";
                         type_info.JavaUpdateFunction += "\n\t\tnml_fc.endBaseClass(\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
                     } else {
-                        type_info.JavaUpdateFunction +=
-                                "\n\t\tnml_fc.beginClass(\"" + type_info.Name + "\",null);\n";
+                        type_info.JavaUpdateFunction
+                                += "\n\t\tnml_fc.beginClass(\"" + type_info.getName() + "\",null);\n";
                     }
                 } else {
-                    String union_enum_name = StringFuncs.replaceFirstInString(type_info.Name, "Union", "_UNION_ENUM");
+                    String union_enum_name = StringFuncs.replaceFirstInString(type_info.getName(), "Union", "_UNION_ENUM");
                     union_enum_info = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(union_enum_name);
                     if (union_enum_info == null) {
-                        ErrorPrint("Bad union definition " + type_info.Name + ", no corresponding enum " + union_enum_name);
+                        ErrorPrint("Bad union definition " + type_info.getName() + ", no corresponding enum " + union_enum_name);
                         return;
                     }
-                    type_info.JavaUpdateFunction +=
-                            "\n\t\tnml_fc.beginUnion(\"" + type_info.Name + "\");\n";
+                    type_info.JavaUpdateFunction
+                            += "\n\t\tnml_fc.beginUnion(\"" + type_info.getName() + "\");\n";
 
-                    type_info.JavaUpdateFunction +=
-                            "\n\t\tswitch(union_selector)\n\t\t{\n";
+                    type_info.JavaUpdateFunction
+                            += "\n\t\tswitch(union_selector)\n\t\t{\n";
                 }
+            } else if (type_info.is_union) {
+                String union_enum_name = StringFuncs.replaceFirstInString(type_info.getName(), "Union", "_UNION_ENUM");
+                union_enum_info = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(union_enum_name);
+                if (union_enum_info == null) {
+                    ErrorPrint("Bad union definition " + type_info.getName() + ", no corresponding enum " + union_enum_name);
+                    return;
+                }
+                type_info.JavaUpdateFunction
+                        += "\n\t\tswitch(union_selector)\n\t\t{\n";
             }
             while (line_tokenizer.hasMoreTokens()) {
                 String line_token = line_tokenizer.nextToken();
@@ -1912,7 +1924,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 lastSpaceIndex = info_token.lastIndexOf(' ');
                 if (lastSpaceIndex < 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- info_token (" + info_token + ") needs a space. *1");
                     RingBell();
                     continue;
@@ -1925,7 +1937,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 if (variable_name.length() < 1) {
                     lastSpaceIndex = info_token.lastIndexOf(' ', lastSpaceIndex - 1);
                     if (lastSpaceIndex < 0) {
-                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") for in class " + type_info.Name);
+                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") for in class " + type_info.getName());
                         ErrorPrint("\t\t-- info_token (" + info_token + ") needs another space. L1703--19%");
                         RingBell();
                         continue;
@@ -1938,7 +1950,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 variable_name = variable_name.trim();
                 if (variable_name.length() < 1) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- no variable_name\n");
                     RingBell();
                     continue;
@@ -1958,13 +1970,13 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || variable_name.indexOf('{') >= 0 || variable_name.indexOf('}') >= 0
                         || variable_name.indexOf(',') >= 0
                         || variable_name.indexOf('&') >= 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- variable_name (" + variable_name + ") contains illegal character.");
                     RingBell();
                     continue;
                 }
                 if (!Character.isJavaIdentifierStart(variable_name.charAt(0))) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- variable_name (" + variable_name + ") contains illegal character at start (" + variable_name.charAt(0) + ").");
 
                     RingBell();
@@ -1986,7 +1998,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || variable_name.indexOf(',') >= 0
                         || variable_name.indexOf('&') >= 0) {
                     RingBell();
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- variable_name (" + variable_name + ") contains illegal character.");
                     continue;
                 }
@@ -2019,11 +2031,18 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     cpp_var_def = GetCppVarDef(variable_name, type_info);
                 }
                 if (type_info.is_union) {
-                    if (!union_enum_info.reverse_hashtable.containsKey("UNION_" + StringFuncs.replaceAllInString(type_info.Name, "Union", "") + "_SELECTED_" + variable_name)) {
+                    final String nameWithReplacements = StringFuncs.replaceAllInString(type_info.getName(), "Union", "");
+                    if (null == union_enum_info) {
+                        throw new NullPointerException("union_enum_info");
+                    }
+                    if (!union_enum_info.reverse_hashtable.containsKey("UNION_" + nameWithReplacements + "_SELECTED_" + variable_name)) {
                         continue;
                     }
-                    type_info.JavaUpdateFunction +=
-                            "\n\t\t\tcase UNION_" + StringFuncs.replaceAllInString(type_info.Name, "Union", "") + "_SELECTED_" + variable_name + ":\n";
+                    if (null == type_info.JavaUpdateFunction) {
+                        throw new NullPointerException("type_info.JavaUpdateFunction");
+                    }
+                    type_info.JavaUpdateFunction
+                            += "\n\t\t\tcase UNION_" + nameWithReplacements + "_SELECTED_" + variable_name + ":\n";
                 }
                 if (!is_class && !type_info.is_union && update_with_name) {
                     String defv = (String) type_info.VarnameToDefaultsHashTable.get(variable_name);
@@ -2123,8 +2142,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         }
                     }
                     if (type_info.is_union) {
-                        type_info.JavaUpdateFunction +=
-                                "\t\t\tbreak;\n";
+                        type_info.JavaUpdateFunction
+                                += "\t\t\tbreak;\n";
                     }
                 } else if (is_class) {
                     if (unbounded_array) {
@@ -2228,27 +2247,27 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             if (update_with_name) {
                 if (!type_info.is_union) {
                     if (null != type_info.DerivedFrom) {
-                        type_info.JavaUpdateFunction +=
-                                "\n\t\tnml_fc.endClass(\"" + type_info.Name + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
+                        type_info.JavaUpdateFunction
+                                += "\n\t\tnml_fc.endClass(\"" + type_info.getName() + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
                     } else {
-                        type_info.JavaUpdateFunction +=
-                                "\n\t\tnml_fc.endClass(\"" + type_info.Name + "\",null);\n";
+                        type_info.JavaUpdateFunction
+                                += "\n\t\tnml_fc.endClass(\"" + type_info.getName() + "\",null);\n";
                     }
                 } else {
-                    type_info.JavaUpdateFunction +=
-                            "\n\t\t} /* end of switch(union_selector) */\n";
-                    type_info.JavaUpdateFunction +=
-                            "\n\t\tnml_fc.endUnion(\"" + type_info.Name + "\");\n";
+                    type_info.JavaUpdateFunction
+                            += "\n\t\t} /* end of switch(union_selector) */\n";
+                    type_info.JavaUpdateFunction
+                            += "\n\t\tnml_fc.endUnion(\"" + type_info.getName() + "\");\n";
                 }
             }
         } catch (Exception e) {
-            ErrorPrint("Error Generating Java Update function for " + type_info.Name);
-            ErrorPrint("type_info.DerivedFrom = " + type_info.DerivedFrom);
-            ErrorPrint("type_info.PreFinalPassInfo = " + type_info.PreFinalPassInfo);
-            ErrorPrint("type_info.RawInfo = " + type_info.RawInfo);
-            ErrorPrint("type_info.HiddenInfo = " + type_info.HiddenInfo);
-            ErrorPrint("type_info.JavaUpdateFunction = " + type_info.JavaUpdateFunction);
-            ErrorPrint("info_token = " + info_token);
+            ErrorPrint("Error Generating Java Update function for " + type_info.getName() + "\n"
+                    + "    type_info.DerivedFrom = " + type_info.DerivedFrom + "\n"
+                    + "    type_info.PreFinalPassInfo = " + type_info.PreFinalPassInfo + "\n"
+                    + "    type_info.RawInfo = " + type_info.RawInfo + "\n"
+                    + "    type_info.HiddenInfo = " + type_info.HiddenInfo + "\n"
+                    + "    type_info.JavaUpdateFunction = " + type_info.JavaUpdateFunction + "\n"
+                    + "    info_token = " + info_token);
             RingBell();
             e.printStackTrace();
         }
@@ -2263,6 +2282,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
     }
 
     public void CreateCppUpdateFunction(StructureTypeInfo type_info) {
+        last_type_info = cur_type_info;
         cur_type_info = type_info;
         String info_token = null;
         int r_squareParamIndex = -1;
@@ -2282,7 +2302,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
         boolean var_class_is_nml_msg = false;
         String union_selector_var_name = null;
         if (debug_on) {
-            DebugPrint("CreateCppUpdateFunction: type_info.Name = " + type_info.Name);
+            DebugPrint("CreateCppUpdateFunction: type_info.Name = " + type_info.getName());
             DebugPrint("CreateCppUpdateFunction: type_info.Info = " + type_info.RawInfo);
             DebugPrint("CreateCppUpdateFunction: type_info.Info = " + type_info.HiddenInfo);
             DebugPrint("CreateCppUpdateFunction: type_info.PreFinalPassInfo = " + type_info.PreFinalPassInfo);
@@ -2297,23 +2317,23 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             if (update_with_name) {
                 if (!type_info.is_union) {
                     if (null != type_info.DerivedFrom) {
-                        type_info.CppUpdateFunction +=
-                                "\n\tcms->beginClass(\"" + type_info.Name + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
+                        type_info.CppUpdateFunction
+                                += "\n\tcms->beginClass(\"" + type_info.getName() + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
                     } else {
-                        type_info.CppUpdateFunction +=
-                                "\n\tcms->beginClass(\"" + type_info.Name + "\",0);\n";
+                        type_info.CppUpdateFunction
+                                += "\n\tcms->beginClass(\"" + type_info.getName() + "\",0);\n";
                     }
                 } else {
-                    String union_enum_name = StringFuncs.replaceFirstInString(type_info.Name, "Union", "_UNION_ENUM");
+                    String union_enum_name = StringFuncs.replaceFirstInString(type_info.getName(), "Union", "_UNION_ENUM");
                     union_enum_info = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(union_enum_name);
                     if (union_enum_info == null) {
-                        ErrorPrint("Bad union definition " + type_info.Name + ", no corresponding enum " + union_enum_name);
+                        ErrorPrint("Bad union definition " + type_info.getName() + ", no corresponding enum " + union_enum_name);
                         return;
                     }
-                    type_info.CppUpdateFunction +=
-                            "\n\tcms->beginUnion(\"" + type_info.Name + "\");\n";
-                    type_info.CppUpdateFunction +=
-                            "\n\tswitch(union_selector)\n\t{\n";
+                    type_info.CppUpdateFunction
+                            += "\n\tcms->beginUnion(\"" + type_info.getName() + "\");\n";
+                    type_info.CppUpdateFunction
+                            += "\n\tswitch(union_selector)\n\t{\n";
                 }
             }
             if (null != type_info.DerivedFrom) {
@@ -2324,8 +2344,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         && !type_info.DerivedFrom.equals("RCS_STAT_MSG")
                         && !type_info.DerivedFrom.equals("NMLmsg")) {
                     if (update_with_name) {
-                        type_info.CppUpdateFunction +=
-                                "\n\tcms->beginBaseClass(\"" + type_info.UnqualifiedDerivedFrom + "\");";
+                        type_info.CppUpdateFunction
+                                += "\n\tcms->beginBaseClass(\"" + type_info.UnqualifiedDerivedFrom + "\");";
                     }
                     is_posemath_class = CheckForCppPosemathClass(type_info.DerivedFrom);
                     if (is_posemath_class) {
@@ -2339,7 +2359,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                             DebugPrint("CreateCppUpdateFunction: var_class_is_nml_msg = " + var_class_is_nml_msg);
                         }
                         if (var_class_is_nml_msg != type_info.is_nml_msg) {
-                            String tmperrstring = type_info.Name + " appears to be derived from " + type_info.DerivedFrom + " but IsNMLMsg(\"" + type_info.DerivedFrom + "\") returned " + var_class_is_nml_msg + " and type_info.is_nml_msg = " + type_info.is_nml_msg;
+                            String tmperrstring = type_info.getName() + " appears to be derived from " + type_info.DerivedFrom + " but IsNMLMsg(\"" + type_info.DerivedFrom + "\") returned " + var_class_is_nml_msg + " and type_info.is_nml_msg = " + type_info.is_nml_msg;
                             ErrorPrint(tmperrstring);
                             type_info.CppUpdateFunction += "\n\t//" + tmperrstring + "\n";
                         }
@@ -2354,17 +2374,17 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         }
                     }
                     if (update_with_name) {
-                        type_info.CppUpdateFunction +=
-                                "\tcms->endBaseClass(\"" + type_info.UnqualifiedDerivedFrom + "\");\n\n";
+                        type_info.CppUpdateFunction
+                                += "\tcms->endBaseClass(\"" + type_info.UnqualifiedDerivedFrom + "\");\n\n";
                     }
                 } else if (type_info.DerivedFrom.equals("RCS_CMD_MSG")
                         && update_with_name) {
-                    type_info.CppUpdateFunction +=
-                            "\tRCS_CMD_MSG::update_cmd_msg_base(cms);\n";
+                    type_info.CppUpdateFunction
+                            += "\tRCS_CMD_MSG::update_cmd_msg_base(cms);\n";
                 } else if (type_info.DerivedFrom.equals("RCS_STAT_MSG")
                         && update_with_name) {
-                    type_info.CppUpdateFunction +=
-                            "\n\tRCS_STAT_MSG::update_stat_msg_base(cms);\n";
+                    type_info.CppUpdateFunction
+                            += "\n\tRCS_STAT_MSG::update_stat_msg_base(cms);\n";
                 }
 
             }
@@ -2443,12 +2463,11 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 lastSpaceIndex = pre_array_string.lastIndexOf(' ');
                 if (lastSpaceIndex < 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- pre_array_string (" + pre_array_string + ") needs a space. *2");
                     RingBell();
                     continue;
                 }
-
 
                 variable_name = pre_array_string.substring(lastSpaceIndex + 1);
                 l_squareParamIndex = variable_name.indexOf('[');
@@ -2458,7 +2477,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 if (variable_name.length() < 1) {
                     lastSpaceIndex = info_token.lastIndexOf(' ', lastSpaceIndex - 1);
                     if (lastSpaceIndex < 0) {
-                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                         ErrorPrint("\t\t-- info_token (" + info_token + ") needs another space. L2313--28%");
                         RingBell();
                         continue;
@@ -2470,13 +2489,13 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     }
                 }
                 if (variable_name.length() < 1) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- no variable_name.");
                     RingBell();
                     continue;
                 }
                 if (variable_name.indexOf('*') >= 0 || variable_name.indexOf('&') >= 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- variable (" + variable_name + ") appears to be a pointer or reference.");
                     type_info.CppUpdateFunction += "\n#error Can not create update for pointer or reference type (" + orig_info_token + ")\n";
                     RingBell();
@@ -2497,7 +2516,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || variable_name.indexOf('{') >= 0 || variable_name.indexOf('}') >= 0
                         || variable_name.indexOf(',') >= 0
                         || variable_name.indexOf('&') >= 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- variable_name (" + variable_name + ") contains an illegal character.");
                     RingBell();
                     continue;
@@ -2550,7 +2569,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 if (cpp_type.indexOf('*') >= 0
                         || cpp_type.indexOf('&') >= 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- cpp_type (" + cpp_type + ") appears to be a pointer or reference.");
                     type_info.CppUpdateFunction += "\n#error Can not create update for pointer or reference type (" + cpp_type + ")\n";
                     RingBell();
@@ -2570,7 +2589,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || cpp_type.indexOf('{') >= 0 || cpp_type.indexOf('}') >= 0
                         || cpp_type.indexOf(',') >= 0
                         || cpp_type.indexOf('&') >= 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- cpp_type (" + cpp_type + ") contains an illegal character.");
 
                     continue;
@@ -2584,10 +2603,10 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     is_enum = CheckForCppEnum(cpp_type);
                 }
                 if (type_info.is_union) {
-                    if (!union_enum_info.reverse_hashtable.containsKey("UNION_" + StringFuncs.replaceAllInString(type_info.Name, "Union", "") + "_SELECTED_" + variable_name)) {
+                    if (!union_enum_info.reverse_hashtable.containsKey("UNION_" + StringFuncs.replaceAllInString(type_info.getName(), "Union", "") + "_SELECTED_" + variable_name)) {
                         continue;
                     }
-                    type_info.CppUpdateFunction += "\tcase UNION_" + StringFuncs.replaceAllInString(type_info.Name, "Union", "") + "_SELECTED_" + variable_name + ":\n\t";
+                    type_info.CppUpdateFunction += "\tcase UNION_" + StringFuncs.replaceAllInString(type_info.getName(), "Union", "") + "_SELECTED_" + variable_name + ":\n\t";
                 }
                 if (!is_class && !is_posemath_class && !type_info.is_union && update_with_name) {
                     String defv = (String) type_info.VarnameToDefaultsHashTable.get(variable_name);
@@ -2778,8 +2797,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                         if (lastspaceindex > 0) {
                                             enum_name = enum_name.substring(lastspaceindex + 1);
                                         }
-                                        EnumTypeInfo enum_info =
-                                                (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                                        EnumTypeInfo enum_info
+                                                = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                                         if (enum_info.generate_symbol_lookup || generate_symbol_lookups) {
                                             type_info.CppUpdateFunction += "\tcms->beginEnumerationArray(\"" + ovn_variable_name + "\",&enum_" + enum_info.Name + "_info_struct," + array_length_string + ");\n";
                                         } else {
@@ -2810,8 +2829,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                         if (lastspaceindex > 0) {
                                             enum_name = enum_name.substring(lastspaceindex + 1);
                                         }
-                                        EnumTypeInfo enum_info =
-                                                (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                                        EnumTypeInfo enum_info
+                                                = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                                         if (enum_info.generate_symbol_lookup || generate_symbol_lookups) {
                                             type_info.CppUpdateFunction += "\tcms->beginEnumerationDLA(\"" + ovn_variable_name + "\",&enum_" + enum_info.Name + "_info_struct," + variable_name + "_length," + array_length_string + ");\n";
                                         } else {
@@ -2843,8 +2862,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                         if (lastspaceindex > 0) {
                                             enum_name = enum_name.substring(lastspaceindex + 1);
                                         }
-                                        EnumTypeInfo enum_info =
-                                                (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                                        EnumTypeInfo enum_info
+                                                = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                                         if (enum_info.generate_symbol_lookup || generate_symbol_lookups) {
                                             type_info.CppUpdateFunction += "\tcms->beginEnumerationArray(\"" + ovn_variable_name + "\",&enum_" + enum_info.Name + "_info_struct," + array_length_string + ");\n";
                                         } else {
@@ -2874,8 +2893,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                         if (lastspaceindex > 0) {
                                             enum_name = enum_name.substring(lastspaceindex + 1);
                                         }
-                                        EnumTypeInfo enum_info =
-                                                (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                                        EnumTypeInfo enum_info
+                                                = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                                         if (enum_info.generate_symbol_lookup || generate_symbol_lookups) {
                                             type_info.CppUpdateFunction += "\tcms->beginEnumerationDLA(\"" + ovn_variable_name + "\",&enum_" + enum_info.Name + "_info_struct,x->" + variable_name + "_length," + array_length_string + ");\n";
                                         } else {
@@ -3018,11 +3037,11 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                     if (variable_name.startsWith("union_selector")) {
                                         type_info.CppUpdateFunction += "\t" + variable_name + "= (" + cpp_type + ") cms->update_union_selector_with_name(\"";
                                         if (enum_info.generate_symbol_lookup || generate_symbol_lookups) {
-                                            type_info.CppUpdateFunction +=
-                                                    variable_name + "\", (int)" + variable_name + ",(void*)&" + variable_name + ",&enum_" + enum_info.Name + "_info_struct);\n";
+                                            type_info.CppUpdateFunction
+                                                    += variable_name + "\", (int)" + variable_name + ",(void*)&" + variable_name + ",&enum_" + enum_info.Name + "_info_struct);\n";
                                         } else {
-                                            type_info.CppUpdateFunction +=
-                                                    variable_name + "\", (int)" + variable_name + ",(void*)&" + variable_name + ",0);\n";
+                                            type_info.CppUpdateFunction
+                                                    += variable_name + "\", (int)" + variable_name + ",(void*)&" + variable_name + ",0);\n";
                                         }
                                         union_selector_var_name = variable_name;
                                     } else {
@@ -3095,17 +3114,17 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             if (update_with_name) {
                 if (!type_info.is_union) {
                     if (null != type_info.DerivedFrom) {
-                        type_info.CppUpdateFunction +=
-                                "\n\tcms->endClass(\"" + type_info.Name + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
+                        type_info.CppUpdateFunction
+                                += "\n\tcms->endClass(\"" + type_info.getName() + "\",\"" + type_info.UnqualifiedDerivedFrom + "\");\n";
                     } else {
-                        type_info.CppUpdateFunction +=
-                                "\n\tcms->endClass(\"" + type_info.Name + "\",0);\n";
+                        type_info.CppUpdateFunction
+                                += "\n\tcms->endClass(\"" + type_info.getName() + "\",0);\n";
                     }
                 } else {
-                    type_info.CppUpdateFunction +=
-                            "\n\t} /* end of switch(union_selector) */\n";
-                    type_info.CppUpdateFunction +=
-                            "\n\tcms->endUnion(\"" + type_info.Name + "\");\n";
+                    type_info.CppUpdateFunction
+                            += "\n\t} /* end of switch(union_selector) */\n";
+                    type_info.CppUpdateFunction
+                            += "\n\tcms->endUnion(\"" + type_info.getName() + "\");\n";
                 }
             }
         } catch (Exception e) {
@@ -3113,7 +3132,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             if (debug_on) {
                 e.printStackTrace(System.out);
             }
-            ErrorPrint("Error Generating C++ Update function for " + type_info.Name);
+            ErrorPrint("Error Generating C++ Update function for " + type_info.getName());
             ErrorPrint("type_info.DerivedFrom = " + type_info.DerivedFrom);
             ErrorPrint("type_info.PreFinalPassInfo = " + type_info.PreFinalPassInfo);
             ErrorPrint("type_info.RawInfo = " + type_info.RawInfo);
@@ -3161,8 +3180,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 StringTokenizer tokenizer = new StringTokenizer(options, ", \t");
                 while (tokenizer.hasMoreTokens()) {
                     String token = tokenizer.nextToken();
-                    StructureTypeInfo type_info =
-                            (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(token);
+                    StructureTypeInfo type_info
+                            = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(token);
                     if (null != type_info) {
                         DebugPrint("#" + token);
                         if (debug_on) {
@@ -3217,14 +3236,11 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
         boolean is_class = false;
         boolean unbounded_array = false;
 
-
         try {
             StringTokenizer info_tokenizer = new StringTokenizer(type_info.PreFinalPassInfo, ";");
             //DebugPrint("Creating Update Function for "+type_info.Name);
 
             // If this class was derived from another just eat the members of the base class.
-
-
             while (info_tokenizer.hasMoreTokens()) {
                 info_token = info_tokenizer.nextToken();
                 orig_info_token = info_token;
@@ -3265,7 +3281,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 lastSpaceIndex = info_token.lastIndexOf(' ');
                 if (lastSpaceIndex < 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- info_token (" + info_token + ") needs a space. *3");
                     continue;
                 }
@@ -3277,7 +3293,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 if (variable_name.length() < 1) {
                     lastSpaceIndex = info_token.lastIndexOf(' ', lastSpaceIndex - 1);
                     if (lastSpaceIndex < 0) {
-                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                         ErrorPrint("\t\t-- info_token (" + info_token + ") needs another space. L3295--42%");
                         continue;
                     }
@@ -3288,7 +3304,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     }
                 }
                 if (variable_name.length() < 1) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- no variable_name.");
 
                     continue;
@@ -3308,7 +3324,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || variable_name.indexOf('{') >= 0 || variable_name.indexOf('}') >= 0
                         || variable_name.indexOf(',') >= 0
                         || variable_name.indexOf('&') >= 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- variable_name (" + variable_name + ") contains illegal character.");
                     continue;
                 }
@@ -3356,7 +3372,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || cpp_type.indexOf('{') >= 0 || cpp_type.indexOf('}') >= 0
                         || cpp_type.indexOf(',') >= 0
                         || cpp_type.indexOf('&') >= 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- cpp_type (" + cpp_type + ") contains illegal character.");
 
                     continue;
@@ -3364,7 +3380,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 is_class = CheckForCppClass(cpp_type);
                 unbounded_array = type_info.VarnameUnboundedHashTable.containsKey(variable_name);
                 if (debug_on) {
-                    DebugPrint("CreateCppInitializer(" + type_info.Name + ") : variable_name=" + variable_name + ",cpp_type=" + cpp_type + ",is_class=" + is_class + ",unbounded_array=" + unbounded_array + ",array_length=" + array_length);
+                    DebugPrint("CreateCppInitializer(" + type_info.getName() + ") : variable_name=" + variable_name + ",cpp_type=" + cpp_type + ",is_class=" + is_class + ",unbounded_array=" + unbounded_array + ",array_length=" + array_length);
                 }
                 if (unbounded_array) {
                     String defv = null;
@@ -3395,8 +3411,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                             type_info.CppConstructor += "\tx->" + variable_name + "_length=" + dla_length_init + ";\n";
                             type_info.CppConstructor += "\tx->" + variable_name + "_size_allocated=" + dla_length_init + ";\n";
                             if (is_class) {
-                                StructureTypeInfo vartype_info =
-                                        (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(varclassname);
+                                StructureTypeInfo vartype_info
+                                        = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(varclassname);
                                 if (!vartype_info.constructor_declared && vartype_info.have_initialize && !IsNMLMsg(varclassname) && !CheckForCppPosemathClass(varclassname)) {
                                     type_info.CppConstructor += "\tfor(int i_" + variable_name + "=0; i_" + variable_name + "< " + dla_length_init + "; i_" + variable_name + "++)\n\t{\n";
                                     type_info.CppConstructor += "\t\tinitialize_" + varclassname + "( ((" + varclassname + "*)(x->" + variable_name + "))+i_" + variable_name + ");\n";
@@ -3433,8 +3449,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                 if (lastspaceindex > 0) {
                                     enum_name = enum_name.substring(lastspaceindex + 1);
                                 }
-                                EnumTypeInfo enum_info =
-                                        (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                                EnumTypeInfo enum_info
+                                        = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                                 Enumeration enum_keys = enum_info.reverse_hashtable.keys();
                                 String keystring = (String) enum_keys.nextElement();
                                 String keytouse = keystring;
@@ -3471,7 +3487,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     }
                     StructureTypeInfo vartype_info = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(varclassname);
                     if (null == vartype_info) {
-                        ErrorPrint("Can't find vartype_info for {" + varclassname + "} for " + variable_name + " in " + type_info.Name + " in ModuleInfo.m_structInfoByNameHashTable.");
+                        ErrorPrint("Can't find vartype_info for {" + varclassname + "} for " + variable_name + " in " + type_info.getName() + " in ModuleInfo.m_structInfoByNameHashTable.");
                         Enumeration classenum = ModuleInfo.m_structInfoByNameHashTable.keys();
                         while (classenum.hasMoreElements()) {
                             String s = (String) classenum.nextElement();
@@ -3501,8 +3517,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                             if (lastspaceindex > 0) {
                                 enum_name = enum_name.substring(lastspaceindex + 1);
                             }
-                            EnumTypeInfo enum_info =
-                                    (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                            EnumTypeInfo enum_info
+                                    = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                             if (enum_info == null) {
                                 ErrorPrint("Could not get enum information for (" + enum_name + ")");
                             } else {
@@ -3545,7 +3561,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ErrorPrint("Error Generating C++ Initializer for " + type_info.Name);
+            ErrorPrint("Error Generating C++ Initializer for " + type_info.getName());
             ErrorPrint("type_info.DerivedFrom = " + type_info.DerivedFrom);
             ErrorPrint("type_info.PreFinalPassInfo = " + type_info.PreFinalPassInfo);
             ErrorPrint("type_info.RawInfo = " + type_info.RawInfo);
@@ -3582,8 +3598,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             //DebugPrint("Creating Update Function for "+type_info.Name);
 
             // If this class was derived from another just eat the members of the base class.
-
-
             while (info_tokenizer.hasMoreTokens()) {
                 info_token = info_tokenizer.nextToken();
                 orig_info_token = info_token;
@@ -3624,7 +3638,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 lastSpaceIndex = info_token.lastIndexOf(' ');
                 if (lastSpaceIndex < 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- info_token (" + info_token + ") needs a space. *4");
                     continue;
                 }
@@ -3636,7 +3650,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 if (variable_name.length() < 1) {
                     lastSpaceIndex = info_token.lastIndexOf(' ', lastSpaceIndex - 1);
                     if (lastSpaceIndex < 0) {
-                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                         ErrorPrint("\t\t-- info_token (" + info_token + ") needs another space. L3722--48%");
 
                         continue;
@@ -3648,7 +3662,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     }
                 }
                 if (variable_name.length() < 1) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- no variable_name");
 
                     continue;
@@ -3668,7 +3682,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || variable_name.indexOf('{') >= 0 || variable_name.indexOf('}') >= 0
                         || variable_name.indexOf(',') >= 0
                         || variable_name.indexOf('&') >= 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- variable_name (" + variable_name + ") contains illegal character.");
                     continue;
                 }
@@ -3716,7 +3730,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || cpp_type.indexOf('{') >= 0 || cpp_type.indexOf('}') >= 0
                         || cpp_type.indexOf(',') >= 0
                         || cpp_type.indexOf('&') >= 0) {
-                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     ErrorPrint("\t\t-- cpp_type (" + cpp_type + ") contains illegal character.");
 
                     continue;
@@ -3724,7 +3738,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 is_class = CheckForCppClass(cpp_type);
                 unbounded_array = type_info.VarnameUnboundedHashTable.containsKey(variable_name);
                 if (debug_on) {
-                    DebugPrint("CreateCppConstructor(" + type_info.Name + ") : variable_name=" + variable_name + ",cpp_type=" + cpp_type + ",is_class=" + is_class + ",unbounded_array=" + unbounded_array + ",array_length=" + array_length);
+                    DebugPrint("CreateCppConstructor(" + type_info.getName() + ") : variable_name=" + variable_name + ",cpp_type=" + cpp_type + ",is_class=" + is_class + ",unbounded_array=" + unbounded_array + ",array_length=" + array_length);
                 }
                 if (unbounded_array) {
                     try {
@@ -3800,8 +3814,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                 if (lastspaceindex > 0) {
                                     enum_name = enum_name.substring(lastspaceindex + 1);
                                 }
-                                EnumTypeInfo enum_info =
-                                        (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                                EnumTypeInfo enum_info
+                                        = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                                 Enumeration enum_keys = enum_info.reverse_hashtable.keys();
                                 String keystring = (String) enum_keys.nextElement();
                                 String keytouse = keystring;
@@ -3867,8 +3881,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                             if (lastspaceindex > 0) {
                                 enum_name = enum_name.substring(lastspaceindex + 1);
                             }
-                            EnumTypeInfo enum_info =
-                                    (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
+                            EnumTypeInfo enum_info
+                                    = (EnumTypeInfo) ModuleInfo.m_enumInfoHashTable.get(enum_name);
                             if (null == enum_info) {
                                 ErrorPrint("No enum information for " + enum_name);
                                 break;
@@ -3912,7 +3926,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             if (debug_on) {
                 e.printStackTrace(System.out);
             }
-            ErrorPrint("Error Generating C++ Constructor for " + type_info.Name);
+            ErrorPrint("Error Generating C++ Constructor for " + type_info.getName());
             ErrorPrint("type_info.DerivedFrom = " + type_info.DerivedFrom);
             ErrorPrint("type_info.PreFinalPassInfo = " + type_info.PreFinalPassInfo);
             ErrorPrint("type_info.RawInfo = " + type_info.RawInfo);
@@ -3944,6 +3958,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             }
             if (null == type_info.JavaDefinition) {
                 ErrorPrint("Can't generate java class for " + class_name + " : type_info=" + type_info);
+//                debug_on = true;
+//                CreateJavaDefinition(type_info);
                 return;
             }
 
@@ -3955,8 +3971,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 javaFileName = class_name + ".java";
                 WriteOutput("/*\n*\tNew Java File starts here.\n*\tThis file should be named " + javaFileName + "\n");
                 WriteOutput("*\tAutomatically generated by NML CodeGen Java Applet.\n");
-                if (null != type_info.fromFile) {
-                    WriteOutput("*\tfrom " + type_info.fromFile + ":" + type_info.fromLine + "\n");
+                if (null != type_info.fromFileName) {
+                    WriteOutput("*\tfrom " + type_info.fromFileName + ":" + type_info.fromLineNumber + "\n");
                 }
                 WriteOutput("*\twith command line arguments : " + orig_args_one_string + "\n");
 //                WriteOutput("*\tRCS_VERSION=" + rcs.RCS_VERSION.version_string);
@@ -4211,13 +4227,13 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     || type_info.contains_unrecognized_type) {
                 return true;
             }
-            if (type_info.Name.compareTo("NML") == 0) {
+            if (type_info.getName().compareTo("NML") == 0) {
                 return true;
             }
-            if (type_info.Name.compareTo("RCS_CMD_CHANNEL") == 0) {
+            if (type_info.getName().compareTo("RCS_CMD_CHANNEL") == 0) {
                 return true;
             }
-            if (type_info.Name.compareTo("RCS_STAT_CHANNEL") == 0) {
+            if (type_info.getName().compareTo("RCS_STAT_CHANNEL") == 0) {
                 return true;
             }
             for (int i = 0; i < nonUpdateableClasses.size(); i++) {
@@ -4225,7 +4241,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 if (null == badclassname) {
                     break;
                 }
-                if (type_info.Name.compareTo(badclassname) == 0) {
+                if (type_info.getName().compareTo(badclassname) == 0) {
                     return true;
                 }
             }
@@ -4238,23 +4254,23 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     break;
                 }
                 if (type_info.DerivedFrom.compareTo(badclassname) == 0) {
-                    nonUpdateableClasses.addElement(type_info.Name);
+                    nonUpdateableClasses.addElement(type_info.getName());
                     return true;
                 }
             }
-            if (IsNMLMsg(type_info.Name)) {
+            if (IsNMLMsg(type_info.getName())) {
                 return false;
             }
             if (type_info.DerivedFrom.compareTo("NML") == 0) {
-                nonUpdateableClasses.addElement(type_info.Name);
+                nonUpdateableClasses.addElement(type_info.getName());
                 return true;
             }
             if (type_info.DerivedFrom.compareTo("RCS_CMD_CHANNEL") == 0) {
-                nonUpdateableClasses.addElement(type_info.Name);
+                nonUpdateableClasses.addElement(type_info.getName());
                 return true;
             }
             if (type_info.DerivedFrom.compareTo("RCS_STAT_CHANNEL") == 0) {
-                nonUpdateableClasses.addElement(type_info.Name);
+                nonUpdateableClasses.addElement(type_info.getName());
                 return true;
             }
             StructureTypeInfo parent_info = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(type_info.DerivedFrom);
@@ -4304,12 +4320,10 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             cpp_updates_written++;
             total_cpp_updates_written++;
             WriteOutput("\n/*\n*\tNML/CMS Update function for " + class_name + "\n");
-            if (null != type_info.fromFile) {
-                WriteOutput("*\tfrom " + type_info.fromFile + ":" + type_info.fromLine + "\n");
+            if (null != type_info.fromFileName) {
+                WriteOutput("*\tfrom " + type_info.fromFileName + ":" + type_info.fromLineNumber + "\n");
             }
             WriteOutput("*/\n");
-
-
 
             if (IsNMLMsg(class_name)) {
                 WriteOutput("void " + class_name + "::update(CMS *cms)\n{\n");
@@ -4412,8 +4426,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             }
 
             WriteOutput("/*\n*\tConstructor for " + class_name + "\n");
-            if (null != type_info.fromFile) {
-                WriteOutput("*\tfrom " + type_info.fromFile + ":" + type_info.fromLine + "\n");
+            if (null != type_info.fromFileName) {
+                WriteOutput("*\tfrom " + type_info.fromFileName + ":" + type_info.fromLineNumber + "\n");
             }
             WriteOutput("*/\n");
 
@@ -4559,7 +4573,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 if (type_info.destructor_declared_and_not_inlined) {
                     WriteOutput("// Destructor\n");
-                    WriteOutput(type_info.Name);
+                    WriteOutput(type_info.getName());
                 }
             }
             generate_cpp_constructors_needed = false;
@@ -5043,7 +5057,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                             }
                         }
                     }
-                    String class_name = type_info.Name;
+                    String class_name = type_info.getName();
                     var_class_is_nml_msg = IsNMLMsg(class_name);
                     if (!var_class_is_nml_msg) {
                         already_prototyped = false;
@@ -5133,7 +5147,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         }
                         lastSpaceIndex = info_token.lastIndexOf(' ');
                         if (lastSpaceIndex < 0) {
-                            ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                            ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                             ErrorPrint("\t\t-- info_token (" + info_token + ") needs a space. *5");
                             continue;
                         }
@@ -5170,7 +5184,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         }
                         if (cpp_type.indexOf('*') >= 0
                                 || cpp_type.indexOf('&') >= 0) {
-                            ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                            ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                             ErrorPrint("\t\t-- cpp_type (" + cpp_type + ") appears to be a pointer or reference.");
                             type_info.CppUpdateFunction += "\n#error Can not create update for pointer or reference type (" + cpp_type + ")\n";
                             continue;
@@ -5188,14 +5202,14 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                 || cpp_type.indexOf('{') >= 0 || cpp_type.indexOf('}') >= 0
                                 || cpp_type.indexOf(',') >= 0
                                 || cpp_type.indexOf('&') >= 0) {
-                            ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                            ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                             ErrorPrint("\t\t-- cpp_type (" + cpp_type + ") contains illegal character.");
                             continue;
                         }
                         if (cpp_type.length() < 1
                                 || cpp_type.equals("class")
                                 || cpp_type.equals("struct")) {
-                            ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                            ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                             ErrorPrint("Bad cpp_type=" + cpp_type);
                             continue;
                         }
@@ -5422,7 +5436,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         }
                     }
                 }
-                String class_name = type_info.Name;
+                String class_name = type_info.getName();
                 if (class_name == null
                         || class_name.length() < 1
                         || class_name.equals("class")
@@ -5521,7 +5535,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     }
                     lastSpaceIndex = info_token.lastIndexOf(' ');
                     if (lastSpaceIndex < 0) {
-                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                         ErrorPrint("\t\t-- info_token (" + info_token + ") needs a space. *6");
                         continue;
                     }
@@ -5558,7 +5572,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     }
                     if (cpp_type.indexOf('*') >= 0
                             || cpp_type.indexOf('&') >= 0) {
-                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                         ErrorPrint("\t\t-- cpp_type (" + cpp_type + ") appears to be a pointer or reference.");
 
                         type_info.CppUpdateFunction += "\n#error Can not create update for pointer or reference type (" + cpp_type + ")\n";
@@ -5577,7 +5591,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                             || cpp_type.indexOf('{') >= 0 || cpp_type.indexOf('}') >= 0
                             || cpp_type.indexOf(',') >= 0
                             || cpp_type.indexOf('&') >= 0) {
-                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                        ErrorPrint("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                         ErrorPrint("\t\t-- cpp_type (" + cpp_type + ") contains illegal character.");
 
                         continue;
@@ -5784,8 +5798,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                                     sorted_enum_key_vector.addElement(key);
                                 }
                             }
-                            String enumlistname =
-                                    /// format_function_name.substring(0,format_function_name.length()-6)+
+                            String enumlistname
+                                    = /// format_function_name.substring(0,format_function_name.length()-6)+
                                     "enum_" + enum_info.Name;
                             WriteOutput("#ifndef MAX_" + enumlistname.toUpperCase() + "_STRING_LENGTH\n");
                             WriteOutput("#define MAX_" + enumlistname.toUpperCase() + "_STRING_LENGTH " + (maxenumvalstringlength + 1) + "\n");
@@ -5955,12 +5969,11 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 int lastSpaceIndex = pre_array_string.lastIndexOf(' ');
                 if (lastSpaceIndex < 0) {
-                    diagapplet.utils.DiagError.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    diagapplet.utils.DiagError.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     diagapplet.utils.DiagError.println("\t\t-- pre_array_string (" + pre_array_string + ") needs a space. *2");
                     RingBell();
                     continue;
                 }
-
 
                 variable_name = pre_array_string.substring(lastSpaceIndex + 1);
                 l_squareParamIndex = variable_name.indexOf('[');
@@ -5970,7 +5983,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 if (variable_name.length() < 1) {
                     lastSpaceIndex = info_token.lastIndexOf(' ', lastSpaceIndex - 1);
                     if (lastSpaceIndex < 0) {
-                        diagapplet.utils.DiagError.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                        diagapplet.utils.DiagError.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                         diagapplet.utils.DiagError.println("\t\t-- info_token (" + info_token + ") needs another space. L2313--28%");
                         RingBell();
                         continue;
@@ -5982,7 +5995,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     }
                 }
                 if (variable_name.length() < 1) {
-                    diagapplet.utils.DiagError.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    diagapplet.utils.DiagError.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     diagapplet.utils.DiagError.println("\t\t-- no variable_name.");
                     RingBell();
                     continue;
@@ -6005,7 +6018,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || variable_name.indexOf('{') >= 0 || variable_name.indexOf('}') >= 0
                         || variable_name.indexOf(',') >= 0
                         || variable_name.indexOf('&') >= 0) {
-                    diagapplet.utils.DiagError.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    diagapplet.utils.DiagError.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     diagapplet.utils.DiagError.println("\t\t-- variable_name (" + variable_name + ") contains an illegal character.");
                     RingBell();
                     continue;
@@ -6079,7 +6092,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         || cpp_type.indexOf('{') >= 0 || cpp_type.indexOf('}') >= 0
                         || cpp_type.indexOf(',') >= 0
                         || cpp_type.indexOf('&') >= 0) {
-                    diagapplet.utils.DiagError.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.Name);
+                    diagapplet.utils.DiagError.println("Invalid variable definition (" + orig_info_token + ") in class " + type_info.getName());
                     diagapplet.utils.DiagError.println("\t\t-- cpp_type (" + cpp_type + ") contains an illegal character.");
 
                     continue;
@@ -6232,8 +6245,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
     private boolean CheckUsedInSelectedClasses(String selected_classes[], String enumName) {
         for (int i = 0; i < selected_classes.length; i++) {
             String classname = selected_classes[i];
-            StructureTypeInfo typeInfo =
-                    (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(classname);
+            StructureTypeInfo typeInfo
+                    = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(classname);
             if (typeInfo != null) {
                 if (typeInfo.PreFinalPassInfo.indexOf(enumName + " ") >= 0) {
                     return true;
@@ -6309,8 +6322,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                             sorted_enum_key_vector.addElement(key);
                         }
                     }
-                    String enumlistname =
-                            /// format_function_name.substring(0,format_function_name.length()-6)+
+                    String enumlistname
+                            = /// format_function_name.substring(0,format_function_name.length()-6)+
                             "enum_" + enum_info.Name;
                     WriteOutput("#ifndef MAX_" + enumlistname.toUpperCase() + "_STRING_LENGTH\n");
                     WriteOutput("#define MAX_" + enumlistname.toUpperCase() + "_STRING_LENGTH " + (maxenumvalstringlength + 1) + "\n");
@@ -6489,7 +6502,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             }
             GenerateCppStartOfFile();
 
-
             if (!first_java_class) {
                 WriteOutput("\n/**************************************************************");
                 WriteOutput("\n*  ERROR !!! --- Clear Java code before adding C++ functions! *");
@@ -6634,7 +6646,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         if (typeInfo.estimated_size > max_estimated_size) {
                             max_estimated_size = typeInfo.estimated_size;
                         }
-                        WriteOutput("Estimated_size\t" + typeInfo.Name + "\t" + typeInfo.estimated_size + "\n");
+                        WriteOutput("Estimated_size\t" + typeInfo.getName() + "\t" + typeInfo.estimated_size + "\n");
                     }
                 }
                 WriteOutput("Estimated_size\tMAXIMUM\t" + max_estimated_size + "\n");
@@ -6644,7 +6656,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             }
             WriteOutput("*/\n");
             WriteOutput("");
-
 
             WriteOutput("/*\n*\tNML/CMS Format function : " + format_function_name + "\n");
             WriteOutput("*/\n");
@@ -6667,7 +6678,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                     StructureTypeInfo typeInfo = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(selected_classes[i]);
                     if (null != typeInfo && typeInfo.Id > 0) {
                         if (null == fullheader) {
-                            fullheader = new File(typeInfo.fromFile).getAbsolutePath();
+                            fullheader = new File(typeInfo.fromFileName).getAbsolutePath();
                         }
                         if (typeInfo.VarnameUnboundedHashTable != null
                                 && typeInfo.VarnameUnboundedHashTable.size() > 0) {
@@ -7178,7 +7189,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 WriteOutput("\n");
 
                 //WriteOutput("Estimated_size\tMAXIMUM\t" + max_estimated_size + "\n");
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -7208,7 +7218,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         continue;
                     }
                     if (type_info.conflicts) {
-                        WriteOutput("\n\t\t// Conflict for type " + type_info.Name + " with ID " + type_info.Id + "\n");
+                        WriteOutput("\n\t\t// Conflict for type " + type_info.getName() + " with ID " + type_info.Id + "\n");
                         continue;
                     }
                     WriteOutput("\t\tI= (" + selected_classes[i] + "_TYPE);\n");
@@ -7399,11 +7409,11 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         continue;
                     }
                     if (type_info.Id <= 0) {
-                        WriteOutput("\n\t\t// Type " + type_info.Name + " has Id less than 1 :  " + type_info.Id + "\n");
+                        WriteOutput("\n\t\t// Type " + type_info.getName() + " has Id less than 1 :  " + type_info.Id + "\n");
                         continue;
                     }
                     if (type_info.conflicts) {
-                        WriteOutput("\n\t\t// Conflict for type " + type_info.Name + " with ID " + type_info.Id + "\n");
+                        WriteOutput("\n\t\t// Conflict for type " + type_info.getName() + " with ID " + type_info.Id + "\n");
                         continue;
                     }
                     WriteOutput("\t\tcase " + selected_class_i + "_TYPE: /*" + type_info.Id + "*/\n");
@@ -7434,11 +7444,11 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         continue;
                     }
                     if (type_info.Id <= 0) {
-                        WriteOutput("\n\t\t// Type " + type_info.Name + " has Id less than 1 :  " + type_info.Id + "\n");
+                        WriteOutput("\n\t\t// Type " + type_info.getName() + " has Id less than 1 :  " + type_info.Id + "\n");
                         continue;
                     }
                     if (type_info.conflicts) {
-                        WriteOutput("\n\t\t// Conflict for type " + type_info.Name + " with ID " + type_info.Id + "\n");
+                        WriteOutput("\n\t\t// Conflict for type " + type_info.getName() + " with ID " + type_info.Id + "\n");
                         continue;
                     }
                     String jclassname = selected_classes[i].replace(':', '_');
@@ -7610,8 +7620,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                         sti.selected = false;
                     }
                     select_it = sti.selected;
-                    if (null != sti.fromFile && !select_it) {
-                        String file_name_only = sti.fromFile;
+                    if (null != sti.fromFileName && !select_it) {
+                        String file_name_only = sti.fromFileName;
                         int sindex = file_name_only.lastIndexOf(File.separator);
                         if (sindex >= 0) {
                             file_name_only = file_name_only.substring(sindex + 1);
@@ -7686,9 +7696,9 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             for (int i = 0; i < selected_classes.length; i++) {
                 StructureTypeInfo type_info = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(selected_classes[i]);
                 if (null != type_info) {
-                    if (IsRcsStatMsg(type_info.Name)) {
+                    if (IsRcsStatMsg(type_info.getName())) {
                         rcs_status_enum_needed = true;
-                        if (IsRcsStatMsgV2(type_info.Name)) {
+                        if (IsRcsStatMsgV2(type_info.getName())) {
                             rcs_admin_state_enum_needed = true;
                         }
                         if (rcs_admin_state_enum_needed) {
@@ -7763,7 +7773,7 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 boolean select_it = false;
                 if (null != sti) {
-                    if (null != sti.fromFile) {
+                    if (null != sti.fromFileName) {
                         select_it = true;
                     }
                     sti.selected = select_it;
@@ -7830,9 +7840,9 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
             for (int i = 0; i < selected_classes.length; i++) {
                 StructureTypeInfo type_info = (StructureTypeInfo) ModuleInfo.m_structInfoByNameHashTable.get(selected_classes[i]);
                 if (null != type_info) {
-                    if (IsRcsStatMsg(type_info.Name)) {
+                    if (IsRcsStatMsg(type_info.getName())) {
                         rcs_status_enum_needed = true;
-                        if (IsRcsStatMsgV2(type_info.Name)) {
+                        if (IsRcsStatMsgV2(type_info.getName())) {
                             rcs_admin_state_enum_needed = true;
                         }
                         if (rcs_admin_state_enum_needed) {
@@ -7889,10 +7899,10 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 if (debug_on) {
                     DebugPrint("sti=" + sti);
                 }
-                if (!sti.Name.equals(stringToAdd)) {
-                    DebugPrint("sti.Name=\"" + sti.Name + "\" != stringToAdd=\"" + stringToAdd + "\"");
-                    ErrorPrint("sti.Name=\"" + sti.Name + "\" != stringToAdd=\"" + stringToAdd + "\"");
-                    throw new Exception("sti.Name=\"" + sti.Name + "\" != stringToAdd=\"" + stringToAdd + "\"");
+                if (!sti.getName().equals(stringToAdd)) {
+                    DebugPrint("sti.Name=\"" + sti.getName() + "\" != stringToAdd=\"" + stringToAdd + "\"");
+                    ErrorPrint("sti.Name=\"" + sti.getName() + "\" != stringToAdd=\"" + stringToAdd + "\"");
+                    throw new Exception("sti.Name=\"" + sti.getName() + "\" != stringToAdd=\"" + stringToAdd + "\"");
                 }
                 sti.selected = !(is_generic(stringToAdd));
                 sti.generic = !sti.selected;
@@ -8389,8 +8399,8 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                             currentModule.setHost(m_systemHost);
                             currentModule.m_loadingPanel = m_loadingPanel;
                             ModuleInfo.previous_url_loaded = m_hierarchyFile;
-                            ModuleInfo.cur_file_name = m_hierarchyFile;
-                            ModuleInfo.cur_file_line = info_start_line;
+                            ModuleInfo.curFileName = m_hierarchyFile;
+                            ModuleInfo.curFileLineNumber = info_start_line;
                             currentModule.LoadInfo();
                             if (!currentModule.no_stat || !currentModule.no_cmd) {
                                 if (null != m_modulesList && !preserve_modules_hashtable) {
@@ -8872,7 +8882,6 @@ public class CodeGenCommon implements CodeGenCommonInterface2 {
                 }
                 return;
             }
-
 
             if (line_of_script.startsWith("add_include_dir")) {
                 line_of_script = line_of_script.substring(15);

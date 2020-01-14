@@ -566,12 +566,12 @@ class HierarchyDraw
                             }
                             if (null != cmdInfo) {
                                 moduleToUpdate.cmd_msg_type = idLong.longValue();
-                                if (null != cmdInfo.Name) {
+                                if (null != cmdInfo.getName()) {
                                     if (null == moduleToUpdate.lastCmdName) {
-                                        moduleToUpdate.lastCmdName = cmdInfo.Name;
+                                        moduleToUpdate.lastCmdName = cmdInfo.getName();
                                         repaint_needed = true;
-                                    } else if (0 != cmdInfo.Name.compareTo(moduleToUpdate.lastCmdName)) {
-                                        moduleToUpdate.lastCmdName = cmdInfo.Name;
+                                    } else if (0 != cmdInfo.getName().compareTo(moduleToUpdate.lastCmdName)) {
+                                        moduleToUpdate.lastCmdName = cmdInfo.getName();
                                         repaint_needed = true;
                                     }
                                 } else {
@@ -643,7 +643,7 @@ class HierarchyDraw
                                 }
                             }
                             moduleToUpdate.stat_msg_type = idLong.longValue();
-                            moduleToUpdate.status_type_name = statInfo.Name;
+                            moduleToUpdate.status_type_name = statInfo.getName();
                             StringTokenizer dataTokenizer =
                                     new StringTokenizer(moduleToUpdate.statData, ",");
                             statInfo.startInfoTokens();
@@ -1402,7 +1402,7 @@ class HierarchyDraw
             x_diff = x_high - x_low;
             y_diff = y_high - y_low;
 
-            // Handle vertical line and sindgle point case separately.
+            // Handle vertical lineNumber and sindgle point case separately.
             if (x_diff < 1) {
                 // Handle sindgle point case separately.
                 if (y_diff < 1) {
@@ -1412,7 +1412,7 @@ class HierarchyDraw
                 g.fillRect(x_low, y_low, line_width, y_diff);
                 return;
             }
-            // Handle horizontal line case separately.
+            // Handle horizontal lineNumber case separately.
             if (y_diff < 1) {
                 g.fillRect(x_low, y_low, x_diff, line_width);
                 return;

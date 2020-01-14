@@ -662,9 +662,9 @@ public class diag_NB_UI extends javax.swing.JFrame {
                 this.cmdToSendIdString = new_cmdToSendIdString;
                 StructureTypeInfo sti = (StructureTypeInfo) ModuleInfo.m_cmd_structInfoHashTable.get(Long.valueOf(id));
                 if (null != sti) {
-                    String name = sti.Name;
+                    String name = sti.getName();
                     if (name.compareTo(this.jTextFieldCmdToSendMsgType.getText()) != 0) {
-                        this.jTextFieldCmdToSendMsgType.setText(sti.Name);
+                        this.jTextFieldCmdToSendMsgType.setText(sti.getName());
                     }
                 }
             }
@@ -1880,7 +1880,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
             plot_tracker.module = mi;
             plot_tracker.auxBufferInfo = bi;
             plot_tracker.varName = variable_name;
-            plot_tracker.structName = ti.Name;
+            plot_tracker.structName = ti.getName();
             int index = variable_name.indexOf('=');
             if (index > 0) {
                 variable_name = variable_name.substring(0, index);
@@ -2124,7 +2124,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
                         watchJPanelDetailsStatus.SetTypeInfo(typeInfo,
                                 ModuleInfo.m_structInfoByNameHashTable);
                     }
-                    jTextFieldCurrentStatusType.setText(typeInfo.Name);
+                    jTextFieldCurrentStatusType.setText(typeInfo.getName());
                     last_status_id_long = idLong.longValue();
                     curModule.stat_msg_type = last_status_id_long;
                     jButtonPlotStatusVar.setText("Plot variable. (disabled)");
@@ -2261,7 +2261,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
                         watchJPanelDetailsCmd.set_hashtable_by_id(ModuleInfo.m_cmd_structInfoHashTable);
                         watchJPanelDetailsCmd.SetTypeInfo(typeInfo, ModuleInfo.m_structInfoByNameHashTable);
                     }
-                    jTextFieldCurrentCommandMsgType.setText(typeInfo.Name);
+                    jTextFieldCurrentCommandMsgType.setText(typeInfo.getName());
                     last_cmd_id_long = idLong.longValue();
                     curModule.cmd_msg_type = last_cmd_id_long;
                     jButtonPlotCmdVar.setText("Plot this cmd variable");
@@ -2412,7 +2412,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
                         watchJPanelAuxView.SetTypeInfo(typeInfo,
                                 ModuleInfo.m_structInfoByNameHashTable);
                     }
-                    jLabelAuxType.setText(typeInfo.Name);
+                    jLabelAuxType.setText(typeInfo.getName());
                     last_aux_id_long = idLong.longValue();
                     jButtonPlotAuxVar.setText("Plot this status variable");
                     jButtonPlotAuxVar.setEnabled(false);
@@ -2709,7 +2709,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
                 if (null != ht && ni.msg_type > 0) {
                     StructureTypeInfo sti = (StructureTypeInfo) ht.get(Long.valueOf(ni.msg_type));
                     if (null != sti) {
-                        typeName = sti.Name;
+                        typeName = sti.getName();
                     }
                 }
             } catch (Exception e) {
@@ -2909,7 +2909,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
             if (null != ht && ni.msg_type > 0) {
                 StructureTypeInfo sti = (StructureTypeInfo) ht.get(Long.valueOf(ni.msg_type));
                 if (null != sti) {
-                    typeName = sti.Name;
+                    typeName = sti.getName();
                 }
             }
             if (null != typeName) {
@@ -7853,8 +7853,8 @@ private void jMenuItemPrintHierarchyActionPerformed(java.awt.event.ActionEvent e
 
     /**
      * Main function --normally opens a new Diagnostics Window
-     * run with --help to see available command line options.
-     * @param _args command line arguments
+ run with --help to see available command lineNumber options.
+     * @param _args command lineNumber arguments
      */
     public static void main(String _args[]) {
 
