@@ -123,7 +123,7 @@ struct BUFFER_INFO
   char ClonedBufferName[CMS_CONFIG_LINELEN];
   char BufferName[CMS_CONFIG_LINELEN];
   char BufferHost[CMS_CONFIG_LINELEN];
-  char BufferLine[CMS_CONFIG_LINELEN];
+  char BufferLine[CMS_CONFIG_LINELEN*4];
   char WordBuffer[CMS_CONFIG_LINELEN];
   char BufLineAdd[CMS_CONFIG_LINELEN];
   size_t size;

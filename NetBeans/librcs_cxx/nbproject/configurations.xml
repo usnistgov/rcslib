@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="97">
+<configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="src"
                    displayName="src"
@@ -2143,10 +2143,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/autokey.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/autokey.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2166,7 +2166,7 @@
       <item path="../../src/cms/cms.cc" ex="false" tool="1" flavor2="0">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2186,7 +2186,7 @@
       <item path="../../src/cms/cms_cfg.cc" ex="false" tool="1" flavor2="0">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2206,7 +2206,7 @@
       <item path="../../src/cms/cms_datetime.cc" ex="false" tool="1" flavor2="0">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2223,10 +2223,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/cms_dup.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/cms_dup.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2246,7 +2246,7 @@
       <item path="../../src/cms/cms_in.cc" ex="false" tool="1" flavor2="0">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2284,7 +2284,7 @@
       <item path="../../src/cms/cms_pm.cc" ex="false" tool="1" flavor2="0">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2301,10 +2301,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/cms_pup.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/cms_pup.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2321,10 +2321,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/cms_srv.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/cms_srv.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2344,7 +2344,7 @@
       <item path="../../src/cms/cms_up.cc" ex="false" tool="1" flavor2="0">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2361,10 +2361,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/cms_xml_up.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/cms_xml_up.cc" ex="false" tool="1" flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2381,10 +2381,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/cms_xup.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/cms_xup.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2401,10 +2401,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/cmssvrp.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/cmssvrp.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2421,10 +2421,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/extxdrintf.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/extxdrintf.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2441,10 +2441,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/cms/memsem.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/memsem.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2464,10 +2464,10 @@
       <item path="../../src/cms/msg_to_encoded_data.cc"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2487,7 +2487,7 @@
       <item path="../../src/cms/nml.cc" ex="false" tool="1" flavor2="0">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2507,10 +2507,10 @@
       <item path="../../src/cms/nmlGetRemoteTcpServerBufferInfo.cc"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2529,10 +2529,10 @@
       <item path="../../src/cms/nmlGetRemoteTcpServerBufferList.cc"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2551,10 +2551,10 @@
       <item path="../../src/cms/nml_packed_file_to_csv.cc"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2570,10 +2570,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/nml_srv.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/nml_srv.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2590,10 +2590,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/nmlcfg.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/nmlcfg.cc" ex="false" tool="1" flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2609,10 +2609,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/nmlcfgsvr.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/nmlcfgsvr.cc" ex="false" tool="1" flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2631,10 +2631,10 @@
       <item path="../../src/cms/nmlcfgsvr_clntcalls.cc"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2651,10 +2651,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/nmlclean.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/nmlclean.cc" ex="false" tool="1" flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2670,10 +2670,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/nmlcms_c.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/nmlcms_c.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2690,10 +2690,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/nmlmsg.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/nmlmsg.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2710,10 +2710,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/nmlperf.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/nmlperf.cc" ex="false" tool="1" flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2749,10 +2749,10 @@
           <inheritPreValues>false</inheritPreValues>
         </ccTool>
       </item>
-      <item path="../../src/cms/nmlset.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/nmlset.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2769,10 +2769,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/nmltest.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/nmltest.cc" ex="false" tool="1" flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2788,10 +2788,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/perfsvr.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/perfsvr.cc" ex="false" tool="1" flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2807,10 +2807,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/perftype.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/perftype.cc" ex="false" tool="1" flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2826,10 +2826,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/physmem.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/physmem.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2846,10 +2846,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/posemath_c_n.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/posemath_c_n.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2866,10 +2866,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/cms/recvline.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/recvline.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2886,10 +2886,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/cms/recvmsgt.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/recvmsgt.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2906,10 +2906,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/cms/recvn.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/recvn.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2926,10 +2926,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/cms/sendline.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/sendline.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2946,10 +2946,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/cms/sendmsgt.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/sendmsgt.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2966,10 +2966,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/cms/sendn.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/sendn.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -2986,10 +2986,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/cms/shmem.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/shmem.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3006,10 +3006,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/sokintrf.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/sokintrf.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3026,10 +3026,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/cms/stcpmem.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/stcpmem.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3046,10 +3046,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/stcpopts.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/stcpopts.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3066,10 +3066,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/stcpsvr.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/stcpsvr.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3086,10 +3086,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/tcp_opts.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/tcp_opts.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3106,10 +3106,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/tcp_srv.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/tcp_srv.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3126,10 +3126,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/tcpmem.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/tcpmem.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3146,10 +3146,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/tty_srv.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/tty_srv.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3166,10 +3166,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/ttyintf.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/ttyintf.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3186,10 +3186,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/cms/ttymem.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/ttymem.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3206,10 +3206,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/ttytest.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/cms/ttytest.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3225,10 +3225,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/cms/udp_opts.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/udp_opts.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3245,10 +3245,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/udp_srv.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/udp_srv.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3265,10 +3265,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/cms/udpmem.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/cms/udpmem.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3285,10 +3285,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/node/cmd_msg.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/node/cmd_msg.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3305,10 +3305,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/node/nml_mod.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/node/nml_mod.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3325,10 +3325,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/node/nml_oi.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/node/nml_oi.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3345,10 +3345,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/node/stat_msg.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/node/stat_msg.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3365,10 +3365,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/node/stat_msg_v2_n.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/node/stat_msg_v2_n.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3385,10 +3385,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/node/timetracker.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/node/timetracker.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3405,50 +3405,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/node/timetracker_c_n.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/node/timetracker_c_n.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
-            <pElem>../..</pElem>
-            <pElem>../../src</pElem>
-            <pElem>../../src/os_intf</pElem>
-            <pElem>../../src/print</pElem>
-            <pElem>../../src/stg_clss</pElem>
-            <pElem>../../src/posemath</pElem>
-            <pElem>../../src/cms</pElem>
-            <pElem>../../src/node</pElem>
-            <pElem>../../last_config</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>DISABLE_RCS_DEBUG_PRINT</Elem>
-            <Elem>PIC</Elem>
-          </preprocessorList>
-        </cTool>
-      </item>
-      <item path="../../src/node/timetracker_n.cc" ex="false" tool="1" flavor2="0">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
-            <pElem>../..</pElem>
-            <pElem>../../src</pElem>
-            <pElem>../../src/os_intf</pElem>
-            <pElem>../../src/print</pElem>
-            <pElem>../../src/stg_clss</pElem>
-            <pElem>../../src/posemath</pElem>
-            <pElem>../../src/cms</pElem>
-            <pElem>../../src/node</pElem>
-            <pElem>../../last_config</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>DISABLE_RCS_DEBUG_PRINT</Elem>
-            <Elem>PIC</Elem>
-          </preprocessorList>
-        </ccTool>
-      </item>
-      <item path="../../src/os_intf/_inifile.c" ex="false" tool="0" flavor2="0">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3465,10 +3425,50 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/os_intf/_shm.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/node/timetracker_n.cc" ex="false" tool="1" flavor2="11">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
+            <pElem>../..</pElem>
+            <pElem>../../src</pElem>
+            <pElem>../../src/os_intf</pElem>
+            <pElem>../../src/print</pElem>
+            <pElem>../../src/stg_clss</pElem>
+            <pElem>../../src/posemath</pElem>
+            <pElem>../../src/cms</pElem>
+            <pElem>../../src/node</pElem>
+            <pElem>../../last_config</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>DISABLE_RCS_DEBUG_PRINT</Elem>
+            <Elem>PIC</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../src/os_intf/_inifile.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
+            <pElem>../..</pElem>
+            <pElem>../../src</pElem>
+            <pElem>../../src/os_intf</pElem>
+            <pElem>../../src/print</pElem>
+            <pElem>../../src/stg_clss</pElem>
+            <pElem>../../src/posemath</pElem>
+            <pElem>../../src/cms</pElem>
+            <pElem>../../src/node</pElem>
+            <pElem>../../last_config</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>DISABLE_RCS_DEBUG_PRINT</Elem>
+            <Elem>PIC</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="../../src/os_intf/_shm.c" ex="false" tool="0" flavor2="2">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3488,7 +3488,7 @@
       <item path="../../src/os_intf/_timer.c" ex="false" tool="0" flavor2="0">
         <cTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3508,7 +3508,7 @@
       <item path="../../src/os_intf/inetnull.cc" ex="false" tool="1" flavor2="0">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3525,10 +3525,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/os_intf/inifile.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/os_intf/inifile.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3545,10 +3545,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/os_intf/sem.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/os_intf/sem.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3565,10 +3565,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/os_intf/shm.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/os_intf/shm.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3588,7 +3588,7 @@
       <item path="../../src/os_intf/timer.cc" ex="false" tool="1" flavor2="0">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3605,10 +3605,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/os_intf/unix_sem.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/os_intf/unix_sem.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3625,10 +3625,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/posemath/_mathprnt.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/posemath/_mathprnt.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3645,10 +3645,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/posemath/_posemath.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/posemath/_posemath.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3665,10 +3665,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/posemath/mathprnt.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/posemath/mathprnt.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3685,10 +3685,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/posemath/posemath.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/posemath/posemath.cc" ex="false" tool="1" flavor2="11">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3705,10 +3705,10 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="../../src/posemath/sincos.c" ex="false" tool="0" flavor2="0">
+      <item path="../../src/posemath/sincos.c" ex="false" tool="0" flavor2="2">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3725,10 +3725,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/print/rcs_prnt.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/print/rcs_prnt.cc" ex="false" tool="1" flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3748,7 +3748,7 @@
       <item path="../../src/print/sepwords.cc" ex="false" tool="1" flavor2="0">
         <ccTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3768,7 +3768,7 @@
       <item path="../../src/rcsvers.c" ex="false" tool="0" flavor2="0">
         <cTool flags="0">
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>
@@ -3785,10 +3785,10 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../../src/stg_clss/linklist.cc" ex="false" tool="1" flavor2="0">
+      <item path="../../src/stg_clss/linklist.cc" ex="false" tool="1" flavor2="11">
         <ccTool>
           <incDir>
-            <pElem>../../.multiplatbuilds/Linux/3_19_0_32_generic/x86_64/GLIBC_2_19/gcc_version_4_8_4__Ubuntu_4_8_4_2ubuntu1~14_04_3_</pElem>
+            <pElem>../../.multiplatbuilds/Linux/4_15_0_76_generic/x86_64/GLIBC_2_27/gcc_version_7_4_0__Ubuntu_7_4_0_1ubuntu1~18_04_1_</pElem>
             <pElem>../..</pElem>
             <pElem>../../src</pElem>
             <pElem>../../src/os_intf</pElem>

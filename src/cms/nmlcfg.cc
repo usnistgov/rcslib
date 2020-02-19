@@ -2720,7 +2720,7 @@ nmlcfg_write_output(char *filename) {
     long last_globmem_vme_size = 0;
     char *bdl = 0;
 
-    static char line[CMS_CONFIG_LINELEN];
+    static char line[CMS_CONFIG_LINELEN*4];
     static char last_host_name[CMS_CONFIG_LINELEN];
     static char default_buffer_line[CMS_CONFIG_LINELEN];
     memset(line, 0, sizeof (line));

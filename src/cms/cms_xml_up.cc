@@ -5591,7 +5591,7 @@ CMS_XML_UPDATER::findNodeString (const char *name)
 }
 
 
-#define XSDTYPE(X) (xmlXsdType(xsdNs,"xsd:"X))
+#define XSDTYPE(X) (xmlXsdType(xsdNs,"xsd:" X))
 
 static inline const xmlChar *xmlXsdType(const xmlNsPtr ns, const char *tname)
 {

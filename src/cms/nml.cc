@@ -6423,6 +6423,8 @@ writestr_with_repeated_tries (int fd, const char *cdata)
 }
 #endif
 
+
+
 int NML::internal_xml_log(
 #ifdef ENABLE_RCS_XML
 			  const char *log_type, 
@@ -6460,10 +6462,10 @@ int NML::internal_xml_log(
     }
 
   SNPRINTF_FUNC ( SNPRINTF_ARGS(ni->xmllogfilename,sizeof(ni->xmllogfilename)),
-		  "%s_%s_%s_%s_%s_%d_%d.xml",
-		  (cms->nmltypename?cms->nmltypename:""),log_type, 
-		  cms->ProcessName, cms->BufferName,
-		  cms->short_status_string (cms->status), 
+		  "xmllog_%d_%d.xml",
+		  //(cms->nmltypename?cms->nmltypename:""),log_type, 
+		  //cms->ProcessName, cms->BufferName,
+		  //cms->short_status_string (cms->status), 
 		  ni->pid, ni->xmllogcount);
 
   ni->xmllogcount++;
