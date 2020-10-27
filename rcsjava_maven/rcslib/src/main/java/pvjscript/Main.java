@@ -555,6 +555,7 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
+    @SuppressWarnings("deprecation")
     protected void finalize() throws Throwable {
         super.finalize();
         close();

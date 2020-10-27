@@ -281,28 +281,28 @@ class testpm
         PM_CARTESIAN v1;
         PM_CARTESIAN v2;
         PM_QUATERNION q1;
-        PM_QUATERNION q2 = new PM_QUATERNION(1, 0, 0, 0);
+        PM_QUATERNION q2 = PM_QUATERNION.newSXYZ(1, 0, 0, 0);
         PM_QUATERNION pq;
 
         // test arg ctor
-        testAssert((new PM_QUATERNION(1, 0, 0, 0)).equals(q2));
+        testAssert((PM_QUATERNION.newSXYZ(1, 0, 0, 0)).equals(q2));
 
         // test new arg ctor
-        pq = new PM_QUATERNION(1, 0, 0, 0);
-        testAssert((new PM_QUATERNION(1, 0, 0, 0)).equals(pq));
+        pq = PM_QUATERNION.newSXYZ(1, 0, 0, 0);
+        testAssert((PM_QUATERNION.newSXYZ(1, 0, 0, 0)).equals(pq));
 
         // test indexing
         q1 = q2;
         testAssert(q1.equals(q2));
 
         // test assignment
-        q1 = new PM_QUATERNION(1, 0, 0, 0);
-        q2 = new PM_QUATERNION(2, 3, 4, 5);
-        pq = new PM_QUATERNION(6, 7, 8, 9);
+        q1 = PM_QUATERNION.newSXYZ(1, 0, 0, 0);
+        q2 = PM_QUATERNION.newSXYZ(2, 3, 4, 5);
+        pq = PM_QUATERNION.newSXYZ(6, 7, 8, 9);
         pq = q2 = q1;
-        testAssert((new PM_QUATERNION(1, 0, 0, 0)).equals(q1));
-        testAssert((new PM_QUATERNION(1, 0, 0, 0)).equals(q2));
-        testAssert((new PM_QUATERNION(1, 0, 0, 0)).equals(pq));
+        testAssert((PM_QUATERNION.newSXYZ(1, 0, 0, 0)).equals(q1));
+        testAssert((PM_QUATERNION.newSXYZ(1, 0, 0, 0)).equals(q2));
+        testAssert((PM_QUATERNION.newSXYZ(1, 0, 0, 0)).equals(pq));
 
         // test rotation vector assignment
         /*                                 .
@@ -314,11 +314,11 @@ class testpm
                                            */
         d = Math.sqrt(2.0) / 2.0;
         q1 = Posemath.toQuat(new PM_ROTATION_VECTOR(Math.PI/2, 1, 0, 0));
-        testAssert((new PM_QUATERNION(d, d, 0, 0)).equals(q1));
+        testAssert((PM_QUATERNION.newSXYZ(d, d, 0, 0)).equals(q1));
         q1 = Posemath.toQuat(new PM_ROTATION_VECTOR(Math.PI/2, 0, 1, 0));
-        testAssert((new PM_QUATERNION(d, 0, d, 0)).equals(q1));
+        testAssert((PM_QUATERNION.newSXYZ(d, 0, d, 0)).equals(q1));
         q1 = Posemath.toQuat(new PM_ROTATION_VECTOR(Math.PI/2, 0, 0, 1));
-        testAssert((new PM_QUATERNION(d, 0, 0, d)).equals(q1));
+        testAssert((PM_QUATERNION.newSXYZ(d, 0, 0, d)).equals(q1));
 
         // test unary operators
         q1 = Posemath.toQuat(new PM_ROTATION_VECTOR(Math.PI/2, 1, 1, 1));
@@ -357,9 +357,9 @@ class testpm
         testAssert(Posemath.isNorm(q1));
 
         // test inv
-        q1 = new PM_QUATERNION(2, 3, 4, 5);
+        q1 = PM_QUATERNION.newSXYZ(2, 3, 4, 5);
         q2 = Posemath.inv(q1);
-        testAssert(Posemath.multiply(q1,q2).equals(new PM_QUATERNION(1, 0, 0, 0)));
+        testAssert(Posemath.multiply(q1,q2).equals(PM_QUATERNION.newSXYZ(1, 0, 0, 0)));
       }
     catch(Exception e)
       {
@@ -461,11 +461,11 @@ class testpm
 
         q1 = Posemath.toQuat(rpy1);
         q2 = Posemath.toQuat(zyz2);
-        testAssert(Posemath.multiply(q1,q2).equals(new PM_QUATERNION(1, 0, 0, 0)));
+        testAssert(Posemath.multiply(q1,q2).equals(PM_QUATERNION.newSXYZ(1, 0, 0, 0)));
 
         q1 = Posemath.toQuat(rpy1);
         q2 = Posemath.toQuat(zyx2);
-        testAssert(Posemath.multiply(q1, q2).equals(new PM_QUATERNION(1, 0, 0, 0)));
+        testAssert(Posemath.multiply(q1, q2).equals(PM_QUATERNION.newSXYZ(1, 0, 0, 0)));
 
         // -- need assignment operators for all types
         // zyz1 = zyx1;

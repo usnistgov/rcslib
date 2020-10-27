@@ -1755,6 +1755,7 @@ public class diag_NB_UI extends javax.swing.JFrame {
     } // end SaveDiagPreserve()
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void finalize() throws Throwable {
         try {
             shutting_down = true;

@@ -47,10 +47,26 @@ public class PM_QUATERNION extends PmQuaternion implements Cloneable {
         super();
     }
 
-    public PM_QUATERNION(double starts, double startx, double starty, double startz) throws PmException {
+    private PM_QUATERNION(double starts, double startx, double starty, double startz) throws PmException {
         super(starts, startx, starty, startz);
     }
 
+    /**
+     * Construct a new PmQuaterion from the field values.
+     * 
+     * @param starts starting value of s
+     * @param startx starting value of x
+     * @param starty starting value of y
+     * @param startz starting value of z
+     * @throws PmException quaternion could not be normalized of one of the values is invalid
+     *
+     * NOTE: the order used to be s,x,y,z (swapping y and z) This was probably a
+     * bug
+     */
+    public static PM_QUATERNION newSXYZ(double starts, double startx, double starty, double startz) throws PmException {
+        return new PM_QUATERNION(starts, startx, starty, startz);
+    }
+    
     public PM_QUATERNION(PM_ROTATION_VECTOR rv) throws PmException {
         Posemath.pmRotNorm(rv, rv);
         Posemath.pmRotQuatConvert(rv, this);

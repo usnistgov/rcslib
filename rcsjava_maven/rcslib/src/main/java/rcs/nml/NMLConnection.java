@@ -1602,6 +1602,7 @@ public class NMLConnection implements NMLConnectionInterface {
         }
     }
 
+    @SuppressWarnings("deprecation")
     protected void finalize() {
         disconnect();
     }
