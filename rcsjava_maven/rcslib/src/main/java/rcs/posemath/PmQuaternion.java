@@ -72,7 +72,7 @@ public class PmQuaternion implements Cloneable
      Posemath.pmMatQuatConvert(mat, this);
   }
   
-  public PmQuaternion(double starts, double startx, double startz, double starty) throws PmException
+  public PmQuaternion(double starts, double startx, double starty, double startz) throws PmException
   {
     s = starts;
     x = startx;
