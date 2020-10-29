@@ -58,6 +58,7 @@ public class PM_QUATERNION extends PmQuaternion implements Cloneable {
      * @param startx starting value of x
      * @param starty starting value of y
      * @param startz starting value of z
+     * @return  new PM_QUATERION
      * @throws PmException quaternion could not be normalized of one of the values is invalid
      *
      * NOTE: the order used to be s,x,y,z (swapping y and z) This was probably a

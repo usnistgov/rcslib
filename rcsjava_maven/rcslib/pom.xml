@@ -3,14 +3,14 @@
     <groupId>com.github.wshackle</groupId>
     <artifactId>rcslib</artifactId>
     <packaging>jar</packaging>
-    <version>2017.07.20-SNAPSHOT</version>
+    <version>2020.10.29-SNAPSHOT</version>
     <name>rcslib</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
