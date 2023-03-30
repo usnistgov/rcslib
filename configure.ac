@@ -394,10 +394,10 @@ AC_ARG_ENABLE(xml,
 
 AC_ARG_ENABLE(xdr,
 	[AC_HELP_STRING([--enable-xdr],
-	[Add XDR (eXternal Data Representation) support to CMS (default=yes)])],
+	[Add XDR (eXternal Data Representation) support to CMS (default=no)])],
 	[enable_xdr=$enableval;
 	AC_MSG_NOTICE([set_--enable-xdr=$enableval])],
-	[enable_xdr=default_to_yes])
+	[enable_xdr=default_to_no])
 
 AC_ARG_ENABLE(packed,
 	[AC_HELP_STRING([--enable-packed],
