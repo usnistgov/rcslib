@@ -206,18 +206,17 @@ public class jtest
 		java.util.Properties p = System.getProperties();
 		if(p == null)
 		    {
+		    	System.err.println("System.getProperties() returned null");
 			System.exit(1);
 		    }
 		String jv = p.getProperty("java.version");
 		if(jv == null)
 		    {
+			System.err.println("System.getProperties().getProperty(\"java.version\") returned null");
 			System.exit(2);
 		    }
 		System.out.println("java.version="+jv);
-		if(!jv.matches("1.[[4-9]].*"))
-		    {
-			System.exit(3);
-		    }
+		// No longer checking if it is > 1.4 since that is so ancient it is not worth it. Previously mistakenly though 10+ were too old since pattern didn't match.
 		System.exit(0);
 	    }
 	catch(Exception e)
@@ -251,6 +250,13 @@ AC_MSG_NOTICE([javac_cmd=${javac_cmd}])
 if javac jtest.java && java jtest ; then
    enable_java_jars_default=default_to_yes;
 else
+   pwd
+   javac jtest.java >javac_jtest.java.log 2>javac_jtest.java.err
+   cat javac_jtest.java.log
+   cat javac_jtest.java.err
+   java jtest >java_jtest.log 2>java_jtest.err
+   cat java_jtest.log
+   cat java_jtest.err
    enable_java_jars_default=default_to_no;
 fi
 
@@ -3314,7 +3320,7 @@ posix_semaphores_available=no
 if test "x${ac_cv_have_winsock}" != "xyes" -a "x${ac_cv_have_winsock2}" != "xyes" ; then
 
 AC_MSG_NOTICE([checking System V semaphores])
-/
+
 AC_CHECK_HEADER([sem.h],
 	[AC_DEFINE(HAVE_SEM_H,1,[Define to 1 if you have <sem.h>.])])
 
