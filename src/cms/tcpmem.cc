@@ -345,7 +345,7 @@ TCPMEM::get_diagnostics_info ()
     }
   disable_sigpipe ();
 
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
       reenable_sigpipe ();
       return (NULL);
@@ -975,11 +975,18 @@ TCPMEM::disconnect ()
 }
 
 
-CMS_STATUS TCPMEM::handle_old_replies ()
+CMS_STATUS TCPMEM::handle_old_replies (double old_replies_timeout)
 {
   long
     message_size;
 
+
+rcs_print_debug (PRINT_ALL_SOCKET_REQUESTS,
+		   "TCPMEM handling old replies: fd = %d, serial_number=%ld, "
+		   "request_type=%ld, buffer_number=%ld, old_replies_timeout=%lf\n",
+		   socket_fd, serial_number,
+		   (long) last_request_type,
+		   buffer_number, old_replies_timeout);
   if(interrupting_operation)
     {
       status=CMS_INTERRUPTED_OPERATION;
@@ -993,7 +1000,7 @@ CMS_STATUS TCPMEM::handle_old_replies ()
     case REMOTE_CMS_READ_REQUEST_TYPE:
       if (!waiting_for_message)
 	{
-	  if (recvn (socket_fd, temp_buffer, 20, 0, timeout, &recvd_bytes,!polling) <
+	  if (recvn (socket_fd, temp_buffer, 20, 0, old_replies_timeout, &recvd_bytes,!polling) <
 	      0)
 	    {
 	      if (recvn_timedout)
@@ -1065,7 +1072,7 @@ CMS_STATUS TCPMEM::handle_old_replies ()
       if (message_size > 0)
 	{
 	  if (recvn
-	      (socket_fd, encoded_data, message_size, 0, timeout,
+	      (socket_fd, encoded_data, message_size, 0, old_replies_timeout,
 	       &recvd_bytes,!polling) < 0)
 	    {
 	      if (recvn_timedout)
@@ -1126,7 +1133,7 @@ CMS_STATUS TCPMEM::handle_old_replies ()
 	{
 	  break;
 	}
-      if (recvn (socket_fd, temp_buffer, 12, 0, timeout, &recvd_bytes,!polling) < 0)
+      if (recvn (socket_fd, temp_buffer, 12, 0, old_replies_timeout, &recvd_bytes,!polling) < 0)
 	{
 	  if (recvn_timedout)
 	    {
@@ -1169,7 +1176,7 @@ CMS_STATUS TCPMEM::handle_old_replies ()
       break;
 
     case REMOTE_CMS_CLEAR_REQUEST_TYPE:
-      if (recvn (socket_fd, temp_buffer, 4, 0, timeout, &recvd_bytes,1) < 0)
+      if (recvn (socket_fd, temp_buffer, 4, 0, old_replies_timeout, &recvd_bytes,1) < 0)
 	{
 	  if (recvn_timedout)
 	    {
@@ -1219,7 +1226,7 @@ CMS_STATUS TCPMEM::handle_old_replies ()
   if (bytes_to_throw_away > 0)
     {
       if (recvn
-	  (socket_fd, encoded_data, bytes_to_throw_away, 0, timeout,
+	  (socket_fd, encoded_data, bytes_to_throw_away, 0, old_replies_timeout,
 	   &recvd_bytes,!polling) < 0)
 	{
 	  if (recvn_timedout)
@@ -1296,7 +1303,7 @@ CMS_STATUS TCPMEM::read ()
 	{
 	  serial_number++;
 	}
-      handle_old_replies ();
+      handle_old_replies (timeout);
       check_id (timedout_request_writeid);
       if (status == CMS_READ_OK)
 	{
@@ -1330,7 +1337,7 @@ CMS_STATUS TCPMEM::read ()
       return (status = CMS_MISC_ERROR);
     }
   last_timedout_request = timedout_request;
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
       reenable_sigpipe ();
       return status;
@@ -1534,7 +1541,7 @@ CMS_STATUS TCPMEM::blocking_read (double _blocking_timeout)
 	}
       last_request_type = REMOTE_CMS_READ_REQUEST_TYPE;
       timedout_request = REMOTE_CMS_READ_REQUEST_TYPE;
-      handle_old_replies ();
+      handle_old_replies (timeout);
       if(interrupting_operation)
 	{
 	  reenable_sigpipe ();
@@ -1582,7 +1589,8 @@ CMS_STATUS TCPMEM::blocking_read (double _blocking_timeout)
       return (status = CMS_MISC_ERROR);
     }
   last_timedout_request = timedout_request;
-  if (((int) handle_old_replies ()) < 0)
+  int hanle_old_replies_ret = ((int) handle_old_replies (blocking_timeout));
+  if ( hanle_old_replies_ret < 0)
     {
         if(interrupting_operation)
 	  {
@@ -1626,8 +1634,14 @@ CMS_STATUS TCPMEM::blocking_read (double _blocking_timeout)
       hton_uint32_array_set(temp_buffer,6,(unsigned long) current_subdivision);
       send_header_size = 28;
     }
-  if (sendn (socket_fd, temp_buffer, send_header_size, 0, blocking_timeout) <
-      0)
+    rcs_print_debug (PRINT_ALL_SOCKET_REQUESTS,
+		   "TCPMEM sending request: fd = %d, serial_number=%ld, "
+		   "request_type=%ld, buffer_number=%ld, blocking_timout=%lf, send_header_size=%d\n",
+		   socket_fd, serial_number,
+		   (long) last_request_type,
+		   buffer_number, blocking_timeout,send_header_size);
+  int sendn_ret = sendn (socket_fd, temp_buffer, send_header_size, 0, blocking_timeout);
+  if (sendn_ret < 0)
     {
         if(interrupting_operation)
 	  {
@@ -1650,19 +1664,29 @@ CMS_STATUS TCPMEM::blocking_read (double _blocking_timeout)
       return(status);
     }
   serial_number++;
+  
   rcs_print_debug (PRINT_ALL_SOCKET_REQUESTS,
-		   "TCPMEM sending request: fd = %d, serial_number=%ld, "
-		   "request_type=%ld, buffer_number=%ld\n",
+		   "TCPMEM recieving reply: fd = %d, serial_number=%ld, "
+		   "request_type=%ld, buffer_number=%ld, blocking_timout=%lf, polling=%d\n",
 		   socket_fd, serial_number,
 		   (long) last_request_type,
-		   buffer_number);
-  if (recvn (socket_fd, temp_buffer, 20, 0, blocking_timeout, &recvd_bytes,!polling) <
-      0)
+		   buffer_number, blocking_timeout,polling);
+  int recvn_ret = recvn (socket_fd, temp_buffer, 20, 0, blocking_timeout, &recvd_bytes,!polling);
+  rcs_print_debug (PRINT_ALL_SOCKET_REQUESTS,
+		   "TCPMEM recieved %d bytes fd = %d, ",
+		   recvn_ret, socket_fd);
+  if ( recvn_ret < 0)
     {
         if(interrupting_operation)
 	  {
 	    reenable_sigpipe ();
 	    status=CMS_INTERRUPTED_OPERATION;
+	    rcs_print_debug (PRINT_ALL_SOCKET_REQUESTS,
+		   "TCPMEM returning  CMS_INTERRUPTED_OPERATION: fd = %d, serial_number=%ld, "
+		   "request_type=%ld, buffer_number=%ld, blocking_timout=%lf, polling=%d\n",
+		   socket_fd, serial_number,
+		   (long) last_request_type,
+		   buffer_number, blocking_timeout,polling);
 	    return(status);
 	  }
 	print_recvn_timeout_errors = orig_print_recvn_timeout_errors;
@@ -1671,12 +1695,24 @@ CMS_STATUS TCPMEM::blocking_read (double _blocking_timeout)
 	    timedout_request = REMOTE_CMS_READ_REQUEST_TYPE;
 	    if (polling)
 	    {
+	    rcs_print_debug (PRINT_ALL_SOCKET_REQUESTS,
+		   "TCPMEM returning  CMS_READ_OLD: fd = %d, serial_number=%ld, "
+		   "request_type=%ld, buffer_number=%ld, blocking_timout=%lf, polling=%d\n",
+		   socket_fd, serial_number,
+		   (long) last_request_type,
+		   buffer_number, blocking_timeout,polling);
 	      return (status = CMS_READ_OLD);
 	    }
 	  else
 	    {
 	      consecutive_timeouts = 1;
 	      reenable_sigpipe ();
+	      rcs_print_debug (PRINT_ALL_SOCKET_REQUESTS,
+		   "TCPMEM returning  CMS_READ_OLD: fd = %d, serial_number=%ld, "
+		   "request_type=%ld, buffer_number=%ld, blocking_timout=%lf, polling=%d\n",
+		   socket_fd, serial_number,
+		   (long) last_request_type,
+		   buffer_number, blocking_timeout,polling);
 	      return (status = CMS_TIMED_OUT);
 	    }
 	}
@@ -1863,7 +1899,7 @@ CMS_STATUS TCPMEM::peek ()
 	{
 	  serial_number++;
 	}
-      handle_old_replies ();
+      handle_old_replies (timeout);
       check_id (timedout_request_writeid);
       if (status == CMS_READ_OK)
 	{
@@ -1897,7 +1933,7 @@ CMS_STATUS TCPMEM::peek ()
       return (status = CMS_MISC_ERROR);
     }
   last_timedout_request = timedout_request;
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
       reenable_sigpipe ();
       return status;
@@ -2080,7 +2116,7 @@ CMS_STATUS TCPMEM::write (void *user_data)
       reenable_sigpipe ();
       return (status = CMS_MISC_ERROR);
     }
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
       reenable_sigpipe ();
       return status;
@@ -2263,7 +2299,7 @@ CMS_STATUS TCPMEM::write_if_read (void *user_data)
       reenable_sigpipe ();
       return (status = CMS_MISC_ERROR);
     }
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
       reenable_sigpipe ();
       return status;
@@ -2405,7 +2441,7 @@ TCPMEM::check_if_read ()
       reenable_sigpipe ();
       return (status = CMS_MISC_ERROR);
     }
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
       reenable_sigpipe ();
       return 0;
@@ -2507,7 +2543,7 @@ TCPMEM::get_queue_length ()
       reenable_sigpipe ();
       return (status = CMS_MISC_ERROR);
     }
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
       reenable_sigpipe ();
       return 0;
@@ -2607,7 +2643,7 @@ TCPMEM::get_msg_count ()
       reenable_sigpipe ();
       return (status = CMS_MISC_ERROR);
     }
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
       reenable_sigpipe ();
       return 0;
@@ -2707,7 +2743,7 @@ TCPMEM::get_msg_type ()
       reenable_sigpipe ();
       return (status = CMS_MISC_ERROR);
     }
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
       reenable_sigpipe ();
       return 0;
@@ -2806,7 +2842,7 @@ TCPMEM::get_space_available ()
       reenable_sigpipe ();
       return (status = CMS_MISC_ERROR);
     }
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
       reenable_sigpipe ();
       return 0;
@@ -2901,7 +2937,7 @@ CMS_STATUS TCPMEM::clear ()
       reconnect_needed = 1;
       return (status = CMS_MISC_ERROR);
     }
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
       return status;
     }
@@ -2994,7 +3030,7 @@ TCPMEM::login (
 	  status=CMS_INTERRUPTED_OPERATION;
 	  return(status);
 	}
-      handle_old_reply_ret = handle_old_replies ();
+      handle_old_reply_ret = handle_old_replies (timeout);
     }
   if (handle_old_reply_ret < 0)
     {
@@ -3176,7 +3212,7 @@ int TCPMEM::do_wait_for(REMOTE_CMS_REQUEST_TYPE t, long lparam1, long lparam2, d
       print_recvn_timeout_errors = orig_print_recvn_timeout_errors;
       return (status = CMS_MISC_ERROR);
     }
-  if (((int) handle_old_replies ()) < 0)
+  if (((int) handle_old_replies (timeout)) < 0)
     {
         if(interrupting_operation)
 	  {

@@ -897,16 +897,18 @@ if test "x${MAKE_CMD}" = "x" ; then
 	MAKE_CMD=make;
 fi
     
-echo CFLAGS="${CFLAGS}"
-echo CXXFLAGS="${CXXFLAGS}"
-echo CPPFLAGS="${CPPFLAGS}"
-echo LDFLAGS="${LDFLAGS}"
-echo CC="${CC}"
-echo CXX="${CXX}"
-echo MULTIPLAT_MAKEFLAGS="${MULTIPLAT_MAKEFLAGS}"
-echo MAKE_CMD=${MAKE_CMD}
+
 
 if ${test_cmd} $# -lt 1 ; then
+
+    echo CFLAGS="${CFLAGS}"
+    echo CXXFLAGS="${CXXFLAGS}"
+    echo CPPFLAGS="${CPPFLAGS}"
+    echo LDFLAGS="${LDFLAGS}"
+    echo CC="${CC}"
+    echo CXX="${CXX}"
+    echo MULTIPLAT_MAKEFLAGS="${MULTIPLAT_MAKEFLAGS}"
+    echo MAKE_CMD=${MAKE_CMD}
 
     if ${test_cmd} \! -f Makefile  ; then
 	( if test "x${DEBUG}" != x ; then set -x ; fi;  ${rcsdir}/configure --prefix=${install_dir} ${host_arg_to_add} ${CONFIG_OPTS} ) || (echo "configure failed." >&2 ; exit 127 ) || exit 127 
@@ -1007,6 +1009,18 @@ if ${test_cmd} $# -lt 1 ; then
 	);
 
 elif ${test_cmd}  "x${1}" = "xconfig" ; then
+
+    echo CFLAGS="${CFLAGS}"
+    echo CXXFLAGS="${CXXFLAGS}"
+    echo CPPFLAGS="${CPPFLAGS}"
+    echo LDFLAGS="${LDFLAGS}"
+    echo CC="${CC}"
+    echo CXX="${CXX}"
+    echo MULTIPLAT_MAKEFLAGS="${MULTIPLAT_MAKEFLAGS}"
+    echo MAKE_CMD=${MAKE_CMD}
+
+
+
     if ${test_cmd} "x${2}" = "x--help" ; then
 	set +x;
     fi
@@ -1093,6 +1107,19 @@ elif ${test_cmd}  "x${1}" = "xconfig" ; then
     \rm -f ${build_dir}/.libs/*.{a,la,so}
 
 elif ${test_cmd}  "x${1}" = "xmake" ; then
+
+
+    echo CFLAGS="${CFLAGS}"
+    echo CXXFLAGS="${CXXFLAGS}"
+    echo CPPFLAGS="${CPPFLAGS}"
+    echo LDFLAGS="${LDFLAGS}"
+    echo CC="${CC}"
+    echo CXX="${CXX}"
+    echo MULTIPLAT_MAKEFLAGS="${MULTIPLAT_MAKEFLAGS}"
+    echo MAKE_CMD=${MAKE_CMD}
+
+
+
     if ${test_cmd} \! -f Makefile; then
 	cp ${HOME}/.${HOST}.${PLAT}.rcslib_configure_options ${build_dir}/.${HOST}.${PLAT}.rcslib_configure_options.${pid}
 	set > ${build_dir}/.config_set_env.${pid}
@@ -1207,6 +1234,19 @@ elif ${test_cmd}  "x${1}" = "xmake" ; then
     fi
 
 elif ${test_cmd}  "x${1}" = "xcheck" ; then
+
+    echo CFLAGS="${CFLAGS}"
+    echo CXXFLAGS="${CXXFLAGS}"
+    echo CPPFLAGS="${CPPFLAGS}"
+    echo LDFLAGS="${LDFLAGS}"
+    echo CC="${CC}"
+    echo CXX="${CXX}"
+    echo MULTIPLAT_MAKEFLAGS="${MULTIPLAT_MAKEFLAGS}"
+    echo MAKE_CMD=${MAKE_CMD}
+
+
+
+
     if ${test_cmd} \! -f Makefile; then
 	cp ${HOME}/.${HOST}.${PLAT}.rcslib_configure_options ${build_dir}/.${HOST}.${PLAT}.rcslib_configure_options.${pid}
 	set > ${build_dir}/.config_set_env.${pid}
@@ -1372,6 +1412,17 @@ elif ${test_cmd}  "x${1}" = "xclean" ; then
     exit 0;
 
 elif ${test_cmd}  "x${1}" = "xdist" ; then
+
+
+    echo CFLAGS="${CFLAGS}"
+    echo CXXFLAGS="${CXXFLAGS}"
+    echo CPPFLAGS="${CPPFLAGS}"
+    echo LDFLAGS="${LDFLAGS}"
+    echo CC="${CC}"
+    echo CXX="${CXX}"
+    echo MULTIPLAT_MAKEFLAGS="${MULTIPLAT_MAKEFLAGS}"
+    echo MAKE_CMD=${MAKE_CMD}
+
     if ${test_cmd} \! -f Makefile  ; then
 	( if test "x${DEBUG}" != x ; then set -x ; fi;  ${rcsdir}/configure --prefix=${install_dir} ${host_arg_to_add} ${CONFIG_OPTS} ) || (echo "configure failed." >&2 ; exit 127 ) || exit 127 
 	\rm -f ${build_dir}/*.{a,la,so}
@@ -1401,6 +1452,19 @@ elif ${test_cmd}  "x${1}" = "xdist" ; then
 
 
 elif ${test_cmd}  "x${1}" = "xdistcheck" ; then
+
+
+    echo CFLAGS="${CFLAGS}"
+    echo CXXFLAGS="${CXXFLAGS}"
+    echo CPPFLAGS="${CPPFLAGS}"
+    echo LDFLAGS="${LDFLAGS}"
+    echo CC="${CC}"
+    echo CXX="${CXX}"
+    echo MULTIPLAT_MAKEFLAGS="${MULTIPLAT_MAKEFLAGS}"
+    echo MAKE_CMD=${MAKE_CMD}
+
+
+
     \rm -rf /tmp/tni_*
     \rm -rf /tmp/*.nml
     \rm -rf /tmp/*.log
@@ -1435,6 +1499,9 @@ elif ${test_cmd}  "x${1}" = "xdistcheck" ; then
 	   done
        )
     fi
+else
+    echo "First argument (${1}) not recognized. Use one of distcheck, dist, clean, distclean, check, make or config."
+    exit 1 
 fi
 
 

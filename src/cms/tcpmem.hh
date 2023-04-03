@@ -75,7 +75,7 @@ public:
 
 protected:
   void setup_polling();
-  CMS_STATUS handle_old_replies ();
+  CMS_STATUS handle_old_replies (double timeout);
   void send_diag_info ();
   char diag_info_buf[0x400];
   int recvd_bytes;

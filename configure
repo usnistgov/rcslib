@@ -18122,6 +18122,9 @@ else
    ## AC_MSG_NOTICE([CPPFLAGS : ${CPPFLAGS}])
 fi
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: enable_debug_print : ${enable_debug_print}" >&5
+printf "%s\n" "$as_me: enable_debug_print : ${enable_debug_print}" >&6;}
+
 if test "x${enable_debug_print}" != "xyes" ; then
    CPPFLAGS="${CPPFLAGS} -DDISABLE_RCS_DEBUG_PRINT"
    ## AC_MSG_NOTICE([CPPFLAGS : ${CPPFLAGS}])
@@ -22356,6 +22359,14 @@ fi
 fi
 
 #semget
+
+ac_fn_c_check_func "$LINENO" "semtimedop" "ac_cv_func_semtimedop"
+if test "x$ac_cv_func_semtimedop" = xyes
+then :
+
+printf "%s\n" "#define HAVE_SEMTIMEDOP 1" >>confdefs.h
+]
+fi
 
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking POSIX semaphores" >&5

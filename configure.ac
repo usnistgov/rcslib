@@ -1531,6 +1531,8 @@ else
    ## AC_MSG_NOTICE([CPPFLAGS : ${CPPFLAGS}])
 fi
 
+AC_MSG_NOTICE([enable_debug_print : ${enable_debug_print}])
+
 if test "x${enable_debug_print}" != "xyes" ; then
    CPPFLAGS="${CPPFLAGS} -DDISABLE_RCS_DEBUG_PRINT"
    ## AC_MSG_NOTICE([CPPFLAGS : ${CPPFLAGS}])
@@ -3340,6 +3342,7 @@ AC_CHECK_FUNC(semget,
 ])
 #semget
 
+AC_CHECK_FUNC(semtimedop,AC_DEFINE(HAVE_SEMTIMEDOP,1,[Define to 1 if you have semtimedop.])])
 
 AC_MSG_NOTICE([checking POSIX semaphores])
 

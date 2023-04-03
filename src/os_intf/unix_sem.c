@@ -516,7 +516,7 @@ print_eintr_error_message()
 }
 
 static int
-rcs_sem_wait_notimeout (rcs_sem_t * sem, int *restart_interrupt_ptr)
+rcs_sem_wait_internal (rcs_sem_t * sem, int *restart_interrupt_ptr, const struct timespec *timeout_timespec_ptr)
 {
   int retval = -1;
 
@@ -598,7 +598,7 @@ rcs_sem_wait_notimeout (rcs_sem_t * sem, int *restart_interrupt_ptr)
 		{
 		  return 0;
 		}
-	      rcs_print_debug(PRINT_SEMAPHORE_ACTIVITY,"rcs_sem_wait_notimeout() sem->key=%d(0x%X),sem->semid=%d(0x%X),semval=%d,ncount=%d, sem->blocking_count=%d,retval=%d\n",
+	      rcs_print_debug(PRINT_SEMAPHORE_ACTIVITY,"rcs_sem_wait_internal() sem->key=%d(0x%X),sem->semid=%d(0x%X),semval=%d,ncount=%d, sem->blocking_count=%d,retval=%d\n",
 			      sem->key,sem->key,sem->semid,sem->semid,semval,ncount,sem->blocking_count,retval);
 	      usleep(10000);
 	    }
@@ -613,7 +613,17 @@ rcs_sem_wait_notimeout (rcs_sem_t * sem, int *restart_interrupt_ptr)
       sops[1].sem_num=0;
       sops[1].sem_flg=0;
       sem->blocking_count++;
+      
+#if HAVE_SEMTIMEDOP
+      if(timeout_timespec_ptr != NULL) 
+      {
+      	retval = semtimedop (sem->semid,sops, 2,timeout_timespec_ptr);
+      } else {
+      	retval = semop (sem->semid,sops, 2);
+      }
+#else
       retval = semop (sem->semid,sops, 2);
+#endif
       if(retval == -1)
 	{
 	  errno_copy = errno;
@@ -624,7 +634,7 @@ rcs_sem_wait_notimeout (rcs_sem_t * sem, int *restart_interrupt_ptr)
 	{
 	  sem->blocking_count = semval+1;
 	}
-      rcs_print_debug(PRINT_SEMAPHORE_ACTIVITY,"rcs_sem_wait_notimeout() sem->key=%d(0x%X),sem->semid=%d(0x%X),semval=%d,ncount=%d, sem->blocking_count=%d,retval=%d\n",
+      rcs_print_debug(PRINT_SEMAPHORE_ACTIVITY,"rcs_sem_wait_internal() sem->key=%d(0x%X),sem->semid=%d(0x%X),semval=%d,ncount=%d, sem->blocking_count=%d,retval=%d\n",
 		      sem->key,sem->key,sem->semid,sem->semid,semval,ncount,sem->blocking_count,retval);
       
     }
@@ -708,6 +718,8 @@ rcs_sem_wait (rcs_sem_t * sem,
 {
   const char *errstring=0;
   int errnum=0;
+ 
+
 #ifdef POSIX_SEMAPHORES
   //  int sem_getvalue_ret=0;
 #else
@@ -797,7 +809,7 @@ rcs_sem_wait (rcs_sem_t * sem,
     }
   if (timeout < 0)
     {
-      retval = rcs_sem_wait_notimeout (sem,restart_interrupt_ptr);
+      retval = rcs_sem_wait_internal (sem,restart_interrupt_ptr,NULL);
       if (retval == -1)
 	{
 	  errstring=strerror(errno);
@@ -851,6 +863,9 @@ rcs_sem_wait (rcs_sem_t * sem,
       return retval;
     }
   start_time = etime ();
+  
+#ifndef HAVE_SEMTIMEDOP
+
   old_sigalarm_handler = signal (SIGALRM, semwait_alarm_handler);
 
   if (old_sigalarm_handler == SIG_ERR)
@@ -866,6 +881,8 @@ rcs_sem_wait (rcs_sem_t * sem,
   getitimer (ITIMER_REAL, &sem_itimer_backup);
   sem_itimer_backup.it_value.tv_sec = 0;
   sem_itimer_backup.it_value.tv_usec = 0;
+
+#endif
   do
     {
       if(restart_interrupt_ptr && !*restart_interrupt_ptr)
@@ -876,11 +893,17 @@ rcs_sem_wait (rcs_sem_t * sem,
 	  return -1;
 	  semwait_restart_ptr=0;
 	}
+	
+#ifndef HAVE_SEMTIMEDOP
+ 
       sem_itimer.it_interval.tv_sec = time_left;
       sem_itimer.it_interval.tv_usec = (fmod (time_left + 1.0, 1.0) * 1E6);
       sem_itimer.it_value.tv_sec = sem_itimer.it_interval.tv_sec;
       sem_itimer.it_value.tv_usec = sem_itimer.it_interval.tv_usec;
       setitimer (ITIMER_REAL, &sem_itimer, &sem_itimer_backup);
+      
+#endif
+
 #if 0
       rcs_print_debug (PRINT_SEMAPHORE_ACTIVITY,
 		       "Semaphore itimer setup: \n\tit_interval {%d secs and %d usecs}\n\tit_value {%d secs and %d  usecs}\n",
@@ -891,10 +914,26 @@ rcs_sem_wait (rcs_sem_t * sem,
 #endif
       timeout_set=1;
       semwait_restart_ptr = restart_interrupt_ptr;
-      retval = rcs_sem_wait_notimeout (sem,restart_interrupt_ptr);
+      
+#ifndef HAVE_SEMTIMEDOP
+      retval = rcs_sem_wait_internal (sem,restart_interrupt_ptr,NULL);
+      
+#else 
+      struct timespec semtimedop_timespec;
+      semtimedop_timespec.tv_sec = (time_t) timeout;
+      semtimedop_timespec.tv_nsec = (long) (1e9* (timeout -semtimedop_timespec.tv_sec ));
+      
+      retval = rcs_sem_wait_internal (sem,restart_interrupt_ptr,&semtimedop_timespec);
+#endif
+
       timeout_set=0;
       semwait_restart_ptr=0;
+      
+#ifndef HAVE_SEMTIMEDOP
       setitimer (ITIMER_REAL, &sem_itimer_backup, &sem_itimer);
+#endif
+      
+      
 #if 0
       rcs_print_debug (PRINT_SEMAPHORE_ACTIVITY,
 		       "Semaphore itimer removed.\n");
@@ -904,6 +943,17 @@ rcs_sem_wait (rcs_sem_t * sem,
       time_left = timeout - elapsed_time;
       if (retval == -1)
 	{
+
+#ifdef   HAVE_SEMTIMEDOP
+	if(EAGAIN == errno) 
+	{
+	      retval = -2;
+	      last_semwait_alarm_count = semwait_alarm_count;
+	      continue;
+	}
+#endif 
+
+
 	  if (EINTR == errno
 	      && last_semwait_alarm_count < semwait_alarm_count)
 	    {
@@ -911,20 +961,25 @@ rcs_sem_wait (rcs_sem_t * sem,
 	      last_semwait_alarm_count = semwait_alarm_count;
 	      continue;
 	    }
-	  rcs_print_error ("sem_wait: ERROR: %s %d\n", strerror (errno),
-			   errno);
+	  rcs_print_error ("sem_wait: ERROR: %s %d\n", strerror (errno),errno);
 	  semwait_restart_ptr=0;
 	  return -1;
 	}
     }
   while (time_left > 5e-3 && retval < 0);
   semwait_restart_ptr=0;
+  
+#ifndef HAVE_SEMTIMEDOP
+
   setitimer (ITIMER_REAL, &sem_itimer_backup, NULL);
   if (old_sigalarm_handler == SIG_ERR || old_sigalarm_handler == SIG_DFL)
     {
       old_sigalarm_handler = SIG_IGN;
     }
   signal (SIGALRM, old_sigalarm_handler);
+  
+#endif
+
 #ifdef POSIX_SEMAPHORES
   rcs_print_debug(PRINT_SEMAPHORE_ACTIVITY,
 		  "rcs_sem_wait() : sem=%p, sem->sem=%p sem->key=%d(0x%X) returning.\n",
@@ -1033,6 +1088,7 @@ rcs_sem_wait (rcs_sem_t * sem,
   return (0);
 #endif /* POSIX_SEMAPHORES */
 #endif /* USE_ITIMER_SIGNALS  */
+
 }
 
 int

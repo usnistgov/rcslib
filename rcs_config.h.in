@@ -374,6 +374,9 @@
 /* Define to 1 if you have <semaphore.h> */
 #undef HAVE_SEMAPHORE_H
 
+/* Define to 1 if you have semtimedop. */
+#undef HAVE_SEMTIMEDOP
+
 /* Define to 1 if you have <sem.h>. */
 #undef HAVE_SEM_H
 
